@@ -1,0 +1,1521 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" media="(prefers-color-scheme: light)" content="#FFF1EB">
+<meta name="theme-color" media="(prefers-color-scheme: dark)" content="#1a1225">
+<meta name="color-scheme" content="light dark">
+<title>Batom & Risada</title>
+<style>
+  *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  :root{
+    --bg:#FFF1EB;--card:rgba(255,255,255,.72);--card2:rgba(255,255,255,.55);
+    --borda:rgba(73,54,87,.14);--txt:#493657;--mut:#7a6b85;--mut2:#a89bb0;
+    --b:#8F80D1;--r:#BD80D1;--ceu:#80BBD1;--ok:#6ea87a;--aviso:#c98a5a;
+    --sombra:0 8px 24px rgba(73,54,87,.10);
+    --surf-strong:rgba(255,255,255,.85);--surf-mid:rgba(255,255,255,.72);--surf-soft:rgba(255,255,255,.55);
+    --tabs-bg:rgba(255,241,235,.94);--modal-1:#FFF9F5;--modal-2:#FFF1EB;--modal-borda:rgba(143,128,209,.35);
+    --overlay:rgba(73,54,87,.45);
+    --aquarela:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 800 1400' preserveAspectRatio='xMidYMid slice'><defs><filter id='b' x='-50%25' y='-50%25' width='200%25' height='200%25'><feGaussianBlur stdDeviation='70'/></filter></defs><rect width='800' height='1400' fill='%23FFF1EB'/><g filter='url(%23b)' opacity='0.65'><ellipse cx='120' cy='90' rx='260' ry='180' fill='%238F80D1' opacity='0.45'/><ellipse cx='620' cy='150' rx='280' ry='200' fill='%23BD80D1' opacity='0.40'/><ellipse cx='350' cy='260' rx='220' ry='140' fill='%2380BBD1' opacity='0.30'/><ellipse cx='150' cy='1120' rx='300' ry='240' fill='%238F80D1' opacity='0.35'/><ellipse cx='640' cy='1240' rx='300' ry='220' fill='%23BD80D1' opacity='0.35'/><ellipse cx='420' cy='1320' rx='240' ry='160' fill='%2380BBD1' opacity='0.30'/></g></svg>");
+  }
+  @media (prefers-color-scheme: dark){
+    :root{
+      --bg:#1a1225;--card:rgba(255,255,255,.07);--card2:rgba(255,255,255,.05);
+      --borda:rgba(255,255,255,.11);--txt:#f0e8f8;--mut:#b0a0c0;--mut2:#7a6b8a;
+      --b:#A79BE0;--r:#D6A9E4;--ceu:#A8D6E6;--ok:#7bc490;--aviso:#e0a878;
+      --sombra:0 8px 24px rgba(0,0,0,.35);
+      --surf-strong:rgba(255,255,255,.15);--surf-mid:rgba(255,255,255,.10);--surf-soft:rgba(255,255,255,.06);
+      --tabs-bg:rgba(26,18,37,.94);--modal-1:#2d1f3d;--modal-2:#241a33;--modal-borda:rgba(167,155,224,.30);
+      --overlay:rgba(10,5,25,.65);
+      --aquarela:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 800 1400' preserveAspectRatio='xMidYMid slice'><defs><filter id='b' x='-50%25' y='-50%25' width='200%25' height='200%25'><feGaussianBlur stdDeviation='80'/></filter></defs><rect width='800' height='1400' fill='%231a1225'/><g filter='url(%23b)' opacity='0.78'><ellipse cx='120' cy='90' rx='280' ry='200' fill='%234a3a7a' opacity='0.60'/><ellipse cx='620' cy='150' rx='300' ry='220' fill='%236a4088' opacity='0.55'/><ellipse cx='350' cy='260' rx='240' ry='160' fill='%232e5a75' opacity='0.50'/><ellipse cx='150' cy='1120' rx='320' ry='260' fill='%234a3a7a' opacity='0.50'/><ellipse cx='640' cy='1240' rx='320' ry='240' fill='%236a4088' opacity='0.50'/><ellipse cx='420' cy='1320' rx='260' ry='180' fill='%232e5a75' opacity='0.48'/></g></svg>");
+    }
+  }
+  html{background:var(--bg)}
+  body{background-color:var(--bg);color:var(--txt);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif;font-size:15px;line-height:1.45;min-height:100vh;padding-top:env(safe-area-inset-top,0px);padding-bottom:calc(78px + env(safe-area-inset-bottom,0px));background-image:var(--aquarela);background-repeat:no-repeat;background-size:cover;background-attachment:fixed;background-position:center;transition:background-color .3s,color .3s}
+  .wrap{max-width:560px;margin:0 auto;padding:14px 14px 20px}
+  .date{font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--mut2);text-align:center}
+  h1{font-size:22px;font-weight:800;letter-spacing:-.5px;margin:2px 0 2px;text-align:center}
+  .sub{font-size:12px;color:var(--mut);text-align:center;font-style:italic;margin-bottom:14px}
+  h2{font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--mut);margin:20px 0 8px;font-weight:700}
+  h3{font-size:12px;color:var(--mut);margin:14px 0 6px;font-weight:700;letter-spacing:.5px}
+  .frase{margin:14px 0 4px;font-size:14px;color:var(--txt);font-style:italic;text-align:center;min-height:22px;transition:opacity .4s;padding:0 8px;line-height:1.5}
+  .card{background:var(--card);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border:1px solid var(--borda);border-radius:16px;padding:14px;margin-bottom:10px;box-shadow:var(--sombra)}
+  .card2{background:var(--card2);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border:1px solid var(--borda);border-radius:12px;padding:12px;margin-bottom:8px}
+  .linha{display:flex;align-items:center;justify-content:space-between;gap:10px}
+  .mut{color:var(--mut);font-size:12px}
+  .btn{background:var(--surf-strong);color:var(--txt);border:1px solid var(--borda);border-radius:10px;padding:9px 12px;font-size:13px;font-weight:600;cursor:pointer;transition:transform .12s}
+  .btn.prim{background:var(--b);color:#fff;border-color:var(--b)}
+  .btn.fant{background:transparent;color:var(--mut);border-color:transparent;text-decoration:underline;font-size:12px;padding:4px 6px}
+  .btn:active{transform:scale(.97)}
+
+  .bolinhas-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:8px}
+  .bol{position:relative;aspect-ratio:1;border-radius:50%;border:none;cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;font-weight:800;font-size:14px;line-height:1.1;transition:transform .14s ease,filter .2s,box-shadow .3s;padding:14px 10px;overflow:hidden}
+  .bol:active{transform:scale(.93)}
+  .bol::before{content:'';position:absolute;inset:-2px;border-radius:50%;background:radial-gradient(circle at 30% 25%, rgba(255,255,255,.55), transparent 55%);pointer-events:none}
+  .bol .ic{font-size:36px;margin-bottom:4px;filter:drop-shadow(0 2px 4px rgba(0,0,0,.12))}
+  .bol .nm{font-size:12.5px;font-weight:800;letter-spacing:.2px}
+  .bol .prog{font-size:10.5px;font-weight:700;opacity:.9;margin-top:3px;letter-spacing:.3px}
+  .bol.feito{filter:brightness(1.04) saturate(.9)}
+  .bol.feito::after{content:'✓';position:absolute;top:12px;right:14px;width:22px;height:22px;border-radius:50%;background:rgba(255,255,255,.9);color:var(--ok);font-size:14px;font-weight:900;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 6px rgba(0,0,0,.15)}
+  .bol.marca-21::after{content:'🎉';background:transparent;box-shadow:none;font-size:22px;width:auto;height:auto}
+  .bol.c1{background:linear-gradient(150deg,#A79BE0,#8F80D1);color:#fff;box-shadow:0 10px 30px rgba(143,128,209,.40)}
+  .bol.c2{background:linear-gradient(150deg,#D6A9E4,#BD80D1);color:#fff;box-shadow:0 10px 30px rgba(189,128,209,.40)}
+  .bol.c3{background:linear-gradient(150deg,#A8D6E6,#80BBD1);color:#fff;box-shadow:0 10px 30px rgba(128,187,209,.40)}
+  .bol.c4{background:linear-gradient(150deg,#F7C7BC,#E7A79B);color:#fff;box-shadow:0 10px 30px rgba(231,167,155,.40)}
+  .bol.c5{background:linear-gradient(150deg,#B7D6B9,#8FC79A);color:#fff;box-shadow:0 10px 30px rgba(143,199,154,.40)}
+  .bol.c6{background:linear-gradient(150deg,#F5D6A0,#E7B86B);color:#fff;box-shadow:0 10px 30px rgba(231,184,107,.40)}
+
+  .ci-card{background:var(--card);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border:1px solid var(--borda);border-radius:14px;margin-bottom:8px;overflow:hidden;box-shadow:var(--sombra);transition:box-shadow .2s}
+  .ci-card[open]{box-shadow:0 10px 28px rgba(0,0,0,.18)}
+  .ci-card summary{padding:12px 14px;cursor:pointer;font-weight:700;font-size:14px;list-style:none;display:flex;align-items:center;gap:10px;user-select:none}
+  .ci-card summary::-webkit-details-marker{display:none}
+  .ci-card .ci-ico{font-size:18px;width:22px;text-align:center}
+  .ci-card .ci-tit{flex:1}
+  .ci-card .ci-status{font-size:11px;font-weight:800;padding:3px 9px;border-radius:8px;background:var(--surf-soft);color:var(--mut2);letter-spacing:.3px;min-width:36px;text-align:center}
+  .ci-card .ci-status.parcial{background:rgba(143,128,209,.25);color:var(--b)}
+  .ci-card .ci-status.completo{background:rgba(110,168,122,.25);color:var(--ok)}
+  .ci-card summary::after{content:'▾';color:var(--mut);font-size:12px;margin-left:2px;transition:transform .2s}
+  .ci-card[open] summary::after{transform:rotate(180deg)}
+  .ci-card .conteudo{padding:0 14px 14px}
+
+  .chips{display:flex;flex-wrap:wrap;gap:6px}
+  .chip{background:var(--surf-mid);color:var(--txt);border:1px solid var(--borda);border-radius:999px;padding:6px 11px;font-size:12.5px;cursor:pointer;transition:all .12s}
+  .chip.on{background:var(--b);color:#fff;border-color:var(--b)}
+  .chip.on.alt{background:var(--r);border-color:var(--r)}
+  .chip.pulse{animation:chipPulse 1.3s ease}
+  @keyframes chipPulse{0%{transform:scale(1);box-shadow:0 0 0 0 rgba(189,128,209,.7)}35%{transform:scale(1.18);box-shadow:0 0 0 10px rgba(189,128,209,0)}100%{transform:scale(1);box-shadow:0 0 0 0 rgba(189,128,209,0)}}
+  .escala{margin-bottom:12px}
+  .escala .rot{font-size:12.5px;color:var(--txt);margin-bottom:5px;font-weight:600}
+  .escala .nums{display:grid;grid-template-columns:repeat(10,1fr);gap:3px}
+  .num{aspect-ratio:1;background:var(--surf-mid);color:var(--mut);border:1px solid var(--borda);border-radius:8px;font-size:12px;font-weight:700;cursor:pointer;padding:0;transition:all .12s}
+  .num.on{background:var(--b);color:#fff;border-color:var(--b);transform:scale(1.05)}
+  select,textarea,input{background:var(--surf-strong);color:var(--txt);border:1px solid var(--borda);border-radius:10px;padding:9px 10px;font-size:14px;font-family:inherit;width:100%;outline:none}
+  select:focus,textarea:focus,input:focus{border-color:var(--b)}
+  textarea{resize:vertical;min-height:80px}
+
+  .tabs-bar{position:fixed;bottom:0;left:0;right:0;display:flex;background:var(--tabs-bg);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-top:1px solid var(--borda);padding-bottom:env(safe-area-inset-bottom,0);z-index:50}
+  .tabs-bar button{flex:1;background:none;border:none;color:var(--mut);padding:8px 1px 9px;font-size:9.5px;font-weight:700;display:flex;flex-direction:column;align-items:center;gap:2px;cursor:pointer;letter-spacing:.1px;transition:color .15s}
+  .tabs-bar button .ti{font-size:17px}
+  .tabs-bar button.on{color:var(--txt)}
+  .tabs-bar button.on .ti{transform:scale(1.15);transition:transform .2s}
+
+  .aviso{background:rgba(201,138,90,.18);border:1px solid rgba(201,138,90,.35);color:var(--aviso);border-radius:12px;padding:10px 12px;font-size:12.5px;margin-bottom:8px}
+  .okmsg{background:rgba(110,168,122,.18);border:1px solid rgba(110,168,122,.35);color:var(--ok);border-radius:12px;padding:10px 12px;font-size:12.5px;margin-bottom:8px}
+  .premio{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:10px 12px;background:var(--surf-mid);border:1px solid var(--borda);border-radius:12px;margin-bottom:6px}
+  .premio .nm{font-size:13.5px;font-weight:600}
+  .premio .tg{font-size:10.5px;color:var(--mut);margin-top:3px}
+  .tag{display:inline-block;background:rgba(143,128,209,.20);color:var(--b);padding:2px 8px;border-radius:6px;font-size:10px;margin-right:3px;font-weight:600}
+  .tag.r{background:rgba(189,128,209,.20);color:var(--r)}
+  .tag.c{background:rgba(128,187,209,.20);color:var(--ceu)}
+  .confete{position:fixed;top:-20px;pointer-events:none;animation:cair 2s linear forwards;z-index:100}
+  @keyframes cair{0%{transform:translateY(0) rotate(0);opacity:1}100%{transform:translateY(110vh) rotate(720deg);opacity:0}}
+  .col2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+  .lista-item{display:flex;justify-content:space-between;align-items:start;gap:8px;background:var(--surf-mid);border:1px solid var(--borda);padding:8px 10px;border-radius:10px;margin-bottom:6px;font-size:13.5px}
+  .lista-item .txt{flex:1}
+  .deg{display:flex;gap:10px;align-items:center;padding:10px 0;border-bottom:1px solid var(--borda)}
+  .deg:last-child{border:none}
+  .deg .bol2{width:26px;height:26px;min-width:26px;border-radius:50%;background:rgba(143,128,209,.20);color:var(--mut);font-size:12px;font-weight:800;display:flex;align-items:center;justify-content:center}
+  .deg.on .bol2{background:var(--b);color:#fff}
+  .deg .dt{flex:1;font-size:13.5px}
+  .deg .dt small{display:block;color:var(--mut);font-size:11px}
+  details.generic{background:var(--card);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border:1px solid var(--borda);border-radius:16px;margin-bottom:10px;overflow:hidden;box-shadow:var(--sombra)}
+  details.generic summary{padding:13px 14px;cursor:pointer;font-weight:700;font-size:14px;list-style:none;display:flex;justify-content:space-between;align-items:center}
+  details.generic summary::-webkit-details-marker{display:none}
+  details.generic summary::after{content:'▾';color:var(--mut);font-size:12px;transition:transform .2s}
+  details.generic[open] summary::after{transform:rotate(180deg)}
+  details.generic .conteudo{padding:0 14px 14px}
+  .hab{background:var(--card);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border:1px solid var(--borda);border-radius:16px;padding:12px 14px;margin-bottom:10px;box-shadow:var(--sombra)}
+  .hab .nome{font-weight:700;font-size:15px}
+  .hab .para{font-size:11px;color:var(--mut);font-style:italic;margin-top:1px}
+  .hab .barra{height:8px;background:rgba(143,128,209,.20);border-radius:5px;margin-top:10px;overflow:hidden}
+  .hab .fill{height:100%;background:linear-gradient(90deg,var(--b),var(--r));border-radius:5px;transition:width .4s}
+  .hab .fill.ok{background:linear-gradient(90deg,#7bc490,#6ea87a)}
+  .hab .info{display:flex;justify-content:space-between;font-size:11px;color:var(--mut);margin-top:5px}
+
+  .relatorio{margin-top:14px;padding:16px 17px;background:linear-gradient(135deg, rgba(143,128,209,.18), rgba(189,128,209,.12));border:1px solid rgba(143,128,209,.32);border-radius:14px;font-size:14px;line-height:1.7;color:var(--txt);animation:aparece .4s ease}
+  @keyframes aparece{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+  .relatorio .titulo{font-weight:800;font-size:11px;text-transform:uppercase;letter-spacing:2px;color:var(--b);margin-bottom:10px}
+  .relatorio p{margin-bottom:12px}
+  .relatorio p:last-child{margin-bottom:0}
+  .relatorio b{color:var(--b)}
+  .relatorio .base{font-weight:700;color:var(--b);font-size:11px;text-transform:uppercase;letter-spacing:1.6px;display:block;margin-bottom:4px}
+  .relatorio .sug{display:inline-block;background:var(--surf-strong);color:var(--txt);border:1px solid rgba(143,128,209,.45);border-radius:12px;padding:7px 12px;font-size:13px;font-weight:700;cursor:pointer;margin:3px 4px 3px 0;transition:all .14s;font-family:inherit;text-align:left;line-height:1.25;vertical-align:middle}
+  .relatorio .sug .g{display:block;font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.9px;color:var(--mut);margin-bottom:1px}
+  .relatorio .sug .n{color:var(--b)}
+  .relatorio .sug .n::before{content:'+ ';font-weight:900}
+  .relatorio .sug:active{transform:scale(.96);background:var(--b)}
+  .relatorio .sug:active .g,.relatorio .sug:active .n{color:#fff}
+
+  .convite{background:linear-gradient(135deg, rgba(143,128,209,.22), rgba(189,128,209,.14));border:1px solid rgba(143,128,209,.35);border-radius:16px;padding:16px;display:flex;align-items:center;gap:14px;cursor:pointer;transition:transform .14s;box-shadow:var(--sombra)}
+  .convite:active{transform:scale(.98)}
+  .convite .cEmoji{font-size:34px;flex-shrink:0}
+  .convite .cTxt{flex:1}
+  .convite .cTit{font-weight:800;font-size:15px;color:var(--txt);margin-bottom:2px}
+  .convite .cSub{font-size:12px;color:var(--mut);line-height:1.4}
+  .convite .cArrow{font-size:20px;color:var(--b);font-weight:700}
+
+  .cat-bloco{background:var(--card);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border:1px solid var(--borda);border-radius:14px;padding:12px 12px 6px;margin-bottom:8px;box-shadow:var(--sombra)}
+  .cat-titulo{font-size:11px;font-weight:800;letter-spacing:1.6px;text-transform:uppercase;color:var(--b);margin-bottom:8px;display:flex;align-items:center;gap:6px}
+  .cat-sugestao{display:flex;justify-content:space-between;align-items:center;gap:10px;background:var(--surf-mid);border:1px solid var(--borda);padding:10px 12px;border-radius:10px;margin-bottom:6px;font-size:13.5px;cursor:pointer;transition:transform .14s,background .14s}
+  .cat-sugestao:active{transform:scale(.98);background:rgba(143,128,209,.18)}
+  .cat-sugestao .txt{flex:1}
+  .cat-sugestao .add{font-size:18px;color:var(--b);font-weight:900;min-width:24px;text-align:center}
+  .cat-sugestao.ja-tem .add{color:var(--ok);font-size:14px}
+  .cat-sugestao.ja-tem{opacity:.65}
+
+  .modal-overlay{position:fixed;inset:0;z-index:150;background:var(--overlay);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);opacity:0;pointer-events:none;transition:opacity .3s;display:flex;align-items:center;justify-content:center;padding:20px;overflow-y:auto}
+  .modal-overlay.ativo{opacity:1;pointer-events:auto}
+  .modal-caixa{background:linear-gradient(160deg,var(--modal-1),var(--modal-2));border:1px solid var(--modal-borda);border-radius:22px;padding:26px 22px 22px;max-width:400px;width:100%;box-shadow:0 20px 60px rgba(0,0,0,.45);transform:translateY(20px) scale(.95);transition:transform .35s cubic-bezier(.2,.9,.3,1.2);text-align:center;margin:auto}
+  .modal-overlay.ativo .modal-caixa{transform:translateY(0) scale(1)}
+  .modal-emoji{font-size:58px;line-height:1;margin-bottom:14px}
+  .modal-pergunta{font-size:15.5px;font-weight:800;color:var(--txt);margin-bottom:10px;line-height:1.35}
+  .modal-nome{font-size:21px;font-weight:800;background:linear-gradient(135deg,var(--b),var(--r));-webkit-background-clip:text;background-clip:text;color:transparent;margin-bottom:6px;letter-spacing:-.3px}
+  .modal-unidade{font-size:12px;color:var(--mut);font-style:italic;margin-bottom:16px}
+  .modal-para{font-size:13.5px;line-height:1.7;color:var(--txt);text-align:left;background:rgba(143,128,209,.14);border-left:3px solid var(--b);border-radius:10px;padding:13px 15px;margin-bottom:18px;display:none;animation:aparece .4s ease}
+  .modal-botoes{display:flex;gap:10px}
+  .modal-btn{flex:1;border-radius:12px;padding:13px 16px;font-size:14px;font-weight:800;cursor:pointer;font-family:inherit;border:1px solid var(--borda);transition:transform .14s;letter-spacing:.2px}
+  .modal-btn:active{transform:scale(.96)}
+  .modal-btn.sec{background:var(--surf-mid);color:var(--mut)}
+  .modal-btn.prim{background:linear-gradient(135deg,var(--b),var(--r));color:#fff;border-color:transparent;box-shadow:0 8px 22px rgba(143,128,209,.45)}
+
+  .termo-nums{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin-bottom:14px}
+  .termo-num{aspect-ratio:1;border-radius:10px;border:1px solid var(--borda);background:var(--surf-mid);font-family:inherit;font-weight:800;font-size:15px;color:var(--mut);cursor:pointer;padding:0;transition:all .14s}
+  .termo-num.on{background:var(--b);color:#fff;border-color:var(--b);transform:scale(1.10)}
+  .termo-num:active{transform:scale(.95)}
+  .termo-cmts{text-align:left;margin-top:6px}
+  .termo-cmt{font-size:13px;line-height:1.55;padding:10px 12px;border-radius:10px;margin-bottom:8px;background:rgba(143,128,209,.14);border-left:3px solid var(--b);animation:aparece .35s ease}
+  .termo-cmt:last-child{margin-bottom:0}
+  .termo-cmt .lbl{font-size:10px;letter-spacing:1.2px;text-transform:uppercase;font-weight:800;color:var(--b);display:block;margin-bottom:3px}
+
+  .la-2col{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  .la-col-tit{font-size:10.5px;font-weight:800;letter-spacing:1.2px;text-transform:uppercase;color:var(--mut2);margin-bottom:5px}
+  .la-col-tit.contraste{color:var(--r)}
+  .la-col-tit.clareza{color:var(--b)}
+  .la-item{background:var(--surf-mid);border:1px solid var(--borda);border-radius:9px;padding:7px 9px;margin-bottom:5px;font-size:12.5px;line-height:1.4;display:flex;justify-content:space-between;gap:6px;align-items:flex-start}
+  .la-item .x{color:var(--mut2);cursor:pointer;font-size:14px;line-height:1;padding:0 2px}
+  .la-item.clareza-item{cursor:pointer;transition:transform .12s,background .12s;position:relative}
+  .la-item.clareza-item:active{transform:scale(.98);background:rgba(143,128,209,.20)}
+  .la-item .nota{font-size:10px;font-weight:800;padding:2px 6px;border-radius:6px;background:rgba(143,128,209,.20);color:var(--b);min-width:22px;text-align:center}
+  .la-item .nota.alta{background:rgba(110,168,122,.25);color:var(--ok)}
+  .la-item .nota.baixa{background:rgba(201,138,90,.25);color:var(--aviso)}
+  .la-add{background:transparent;border:1px dashed var(--borda);border-radius:9px;padding:6px 9px;font-size:12px;color:var(--mut);width:100%;font-family:inherit;cursor:text;margin-top:2px}
+
+  .orc-linha{display:flex;justify-content:space-between;gap:8px;align-items:center;background:var(--surf-mid);border:1px solid var(--borda);border-radius:10px;padding:8px 10px;margin-bottom:5px;font-size:13px}
+  .orc-linha .nm{flex:1}
+  .orc-linha .vl{font-weight:800;color:var(--b)}
+  .orc-total{display:flex;justify-content:space-between;align-items:center;padding:10px 12px;border-radius:12px;font-weight:800;font-size:14px;margin-top:8px}
+  .orc-total.ok{background:rgba(110,168,122,.20);color:var(--ok)}
+  .orc-total.ruim{background:rgba(201,138,90,.20);color:var(--aviso)}
+  .orc-total.neutro{background:rgba(143,128,209,.16);color:var(--b)}
+
+  /* Desejos e metas */
+  .meta-bloco{background:var(--surf-mid);border:1px solid var(--borda);border-radius:12px;padding:12px 14px;margin-bottom:8px}
+  .meta-bloco .num{font-size:10px;font-weight:800;letter-spacing:2px;color:var(--b);margin-bottom:4px;text-transform:uppercase;background:none;border:none;border-radius:0;padding:0;aspect-ratio:auto;width:auto;height:auto;transform:none}
+  .meta-bloco .tit{font-size:14.5px;font-weight:800;color:var(--txt);margin-bottom:4px}
+  .meta-bloco .desc{font-size:12.5px;color:var(--mut);line-height:1.5}
+  .desejo-tag{display:inline-block;background:rgba(189,128,209,.14);color:var(--r);padding:5px 10px;border-radius:8px;font-size:12px;margin:0 4px 5px 0;font-weight:600}
+
+  .festa-overlay{position:fixed;inset:0;z-index:200;background:radial-gradient(circle at 50% 35%, #2a1b4a 0%, #14082b 55%, #06020f 100%);opacity:0;pointer-events:none;transition:opacity .5s ease;display:flex;align-items:center;justify-content:center;overflow:hidden}
+  .festa-overlay.ativo{opacity:1;pointer-events:auto}
+  .festa-overlay canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
+  .festa-conteudo{position:relative;z-index:2;max-width:440px;width:calc(100% - 32px);padding:28px 22px 26px;text-align:center;color:#fff;transform:translateY(30px) scale(.88);transition:transform .7s cubic-bezier(.2,.9,.3,1.35)}
+  .festa-overlay.ativo .festa-conteudo{transform:translateY(0) scale(1)}
+  .festa-emoji{font-size:76px;line-height:1;margin-bottom:6px;animation:pulsar 1.6s ease-in-out infinite;filter:drop-shadow(0 6px 18px rgba(255,215,107,.5))}
+  @keyframes pulsar{0%,100%{transform:scale(1) rotate(-4deg)}50%{transform:scale(1.15) rotate(4deg)}}
+  .festa-titulo{font-size:44px;font-weight:900;letter-spacing:-1.8px;line-height:1;background:linear-gradient(135deg,#FFE082 10%,#FF9BC7 55%,#BD80D1 100%);-webkit-background-clip:text;background-clip:text;color:transparent;margin-bottom:10px;filter:drop-shadow(0 4px 12px rgba(255,155,199,.35))}
+  .festa-sub{font-size:13px;opacity:.72;margin-bottom:18px;letter-spacing:.3px}
+  .festa-habito{display:inline-block;background:rgba(255,255,255,.10);border:1px solid rgba(255,255,255,.20);padding:10px 20px;border-radius:99px;font-size:15px;font-weight:800;margin-bottom:22px;backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);box-shadow:0 8px 28px rgba(0,0,0,.25)}
+  .festa-bonus{background:linear-gradient(135deg, rgba(255,215,107,.16), rgba(189,128,209,.16));border:1px solid rgba(255,215,107,.35);border-radius:20px;padding:22px 18px;margin-bottom:24px;backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);box-shadow:0 12px 40px rgba(255,215,107,.15), inset 0 0 30px rgba(255,215,107,.06);animation:brilharBonus 2.5s ease-in-out infinite}
+  @keyframes brilharBonus{0%,100%{box-shadow:0 12px 40px rgba(255,215,107,.15), inset 0 0 30px rgba(255,215,107,.06)}50%{box-shadow:0 16px 50px rgba(255,215,107,.35), inset 0 0 40px rgba(255,215,107,.12)}}
+  .festa-bonus-tit{font-size:11px;font-weight:800;letter-spacing:3px;text-transform:uppercase;color:#FFD76B;margin-bottom:12px}
+  .festa-bonus-nome{font-size:24px;font-weight:800;color:#fff;line-height:1.2;margin-bottom:8px;text-shadow:0 2px 12px rgba(255,215,107,.4)}
+  .festa-bonus-tag{font-size:12px;color:rgba(255,255,255,.62);letter-spacing:.3px}
+  .festa-btn{background:linear-gradient(135deg,#FFD76B,#BD80D1);color:#2a1b4a;border:none;border-radius:14px;padding:15px 38px;font-size:15px;font-weight:900;cursor:pointer;font-family:inherit;letter-spacing:.4px;box-shadow:0 10px 30px rgba(189,128,209,.55);transition:transform .15s}
+  .festa-btn:active{transform:scale(.95)}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="date" id="data"></div>
+  <h1>Batom &amp; Risada</h1>
+  <p class="sub">Estou em processo de ficar bem.</p>
+
+  <!-- ============ ABA HOJE ============ -->
+  <section id="tab-hoje">
+    <h2 style="margin-top:6px">Meus hábitos de hoje</h2>
+    <div class="bolinhas-grid" id="bolinhas"></div>
+    <p class="frase" id="frase"></p>
+
+    <h2>Check-in de hoje</h2>
+    <div id="checkinTop"></div>
+
+    <div id="lembretesHoje"></div>
+  </section>
+
+  <!-- ============ ABA CHECK-IN ============ -->
+  <section id="tab-checkin" hidden>
+    <h2 style="margin-top:6px">Check-in de hoje</h2>
+    <div id="checkinResumoTop"></div>
+
+    <details class="ci-card" id="ciSonoBox">
+      <summary><span class="ci-ico">🌙</span><span class="ci-tit">Sono</span><span class="ci-status" id="stSono">0/2</span></summary>
+      <div class="conteudo">
+        <div class="col2" style="grid-template-columns:1fr 1fr;gap:8px">
+          <label class="mut" style="font-size:11.5px">Dormi ontem às
+            <select id="ciDormiu" style="margin-top:4px"></select>
+          </label>
+          <label class="mut" style="font-size:11.5px">Acordei hoje às
+            <select id="ciAcordou" style="margin-top:4px"></select>
+          </label>
+        </div>
+        <div class="mut" id="ciHoras" style="margin-top:8px;font-size:12.5px"></div>
+      </div>
+    </details>
+
+    <details class="ci-card" id="ciRefBox">
+      <summary><span class="ci-ico">🍽️</span><span class="ci-tit">Refeições</span><span class="ci-status" id="stRef">0</span></summary>
+      <div class="conteudo"><div class="chips" id="ciRefeicoes"></div></div>
+    </details>
+
+    <details class="ci-card" id="ciEscBox">
+      <summary><span class="ci-ico">🎚️</span><span class="ci-tit">Como estou hoje</span><span class="ci-status" id="stEsc">0/8</span></summary>
+      <div class="conteudo">
+        <div id="ciEscalas"></div>
+        <div id="relatorioEscalas"></div>
+      </div>
+    </details>
+
+    <details class="ci-card" id="ciPratBox">
+      <summary><span class="ci-ico">🎤</span><span class="ci-tit">Práticas</span><span class="ci-status" id="stPrat">0</span></summary>
+      <div class="conteudo"><div id="ciPraticas"></div></div>
+    </details>
+
+    <details class="ci-card" id="ciObsBox">
+      <summary><span class="ci-ico">📝</span><span class="ci-tit">Observações</span><span class="ci-status" id="stObs">0</span></summary>
+      <div class="conteudo"><textarea id="ciObs" placeholder="Escreva o que quiser..."></textarea></div>
+    </details>
+  </section>
+
+  <!-- ============ ABA HÁBITOS ============ -->
+  <section id="tab-habitos" hidden>
+    <h2>Sugestões na Fila</h2>
+    <div id="sugestoesFilaBox"></div>
+
+    <h2>Fila de hábitos novos</h2>
+    <div id="filaBox"></div>
+
+    <h2>Progresso dos hábitos</h2>
+    <div id="progressoBox"></div>
+
+    <h2>Hora de a Aurora dormir</h2>
+    <div id="auroraBox"></div>
+  </section>
+
+  <!-- ============ ABA ORÇAMENTO ============ -->
+  <section id="tab-orcamento" hidden>
+    <h2 style="margin-top:6px">Finanças no meu ritmo</h2>
+    <div id="financasBox"></div>
+
+    <h2>Orçamento do mês</h2>
+    <div class="card">
+      <label class="mut" style="font-size:12px">Salário estimado do mês</label>
+      <input id="orcSalario" type="number" step="0.01" placeholder="0,00" style="margin-bottom:10px">
+      <div class="mut" style="font-size:12px;margin-bottom:6px">Despesas fixas</div>
+      <div class="col2" style="gap:6px;margin-bottom:8px">
+        <input id="orcNome" placeholder="Ex: Plano de saúde">
+        <input id="orcValor" type="number" step="0.01" placeholder="Valor">
+      </div>
+      <button class="btn prim" id="btnAddOrc" style="width:100%">+ Adicionar despesa</button>
+      <div id="orcLista" style="margin-top:12px"></div>
+      <div id="orcTotais"></div>
+    </div>
+
+    <h2>Histórico (referência)</h2>
+    <details class="generic">
+      <summary>📅 Janeiro 2018</summary>
+      <div class="conteudo">
+        <div class="orc-linha"><span class="nm">Plano de saúde</span><span class="vl">R$ 512,45</span></div>
+        <div class="orc-linha"><span class="nm">Estacionamento</span><span class="vl">R$ 180,00</span></div>
+        <div class="orc-linha"><span class="nm">Celular</span><span class="vl">R$ 90,00</span></div>
+        <div class="mut" style="font-size:11.5px;margin-top:6px">Média de salário: R$ 3.319,97</div>
+      </div>
+    </details>
+    <details class="generic">
+      <summary>📅 Junho 2018</summary>
+      <div class="conteudo">
+        <div class="orc-linha"><span class="nm">Plano de saúde</span><span class="vl">R$ 512,45</span></div>
+        <div class="orc-linha"><span class="nm">Celular</span><span class="vl">R$ 90,00</span></div>
+        <div class="mut" style="font-size:11.5px;margin-top:6px">Salário estimado: R$ 3.000,00</div>
+      </div>
+    </details>
+    <details class="generic">
+      <summary>📅 Outubro 2018</summary>
+      <div class="conteudo">
+        <div class="orc-linha"><span class="nm">Plano de saúde</span><span class="vl">R$ 512,45</span></div>
+        <div class="orc-linha"><span class="nm">Celular</span><span class="vl">R$ 90,00</span></div>
+        <div class="orc-linha"><span class="nm">Estacionamento</span><span class="vl">R$ 200,00</span></div>
+        <div class="orc-linha"><span class="nm">Condomínio</span><span class="vl">R$ 130,00</span></div>
+        <div class="mut" style="font-size:11.5px;margin-top:6px">Salário estimado: R$ 3.000,00</div>
+      </div>
+    </details>
+
+    <h2>Estimativa de mercado</h2>
+    <details class="generic">
+      <summary>🛒 Referência (2018)</summary>
+      <div class="conteudo">
+        <div class="orc-linha"><span class="nm">4 kg de bife</span><span class="vl">~R$ 120</span></div>
+        <div class="orc-linha"><span class="nm">2 kg de linguiça</span><span class="vl">~R$ 36</span></div>
+        <div class="orc-linha"><span class="nm">2 kg de frango</span><span class="vl">~R$ 36</span></div>
+        <div class="orc-linha"><span class="nm">3 pacotes de arroz 5kg</span><span class="vl">~R$ 45</span></div>
+        <div class="mut" style="font-size:11.5px;margin-top:6px">Total aprox. da época: R$ 237</div>
+      </div>
+    </details>
+  </section>
+
+  <!-- ============ ABA PRÊMIOS ============ -->
+  <section id="tab-premios" hidden>
+    <h2 style="margin-top:6px">Sortear um prêmio</h2>
+    <div class="card">
+      <label class="mut" style="font-size:12px">Como está agora?</label>
+      <select id="ctxPremio" style="margin-top:6px">
+        <option value="comAurora">Aurora por perto</option>
+        <option value="emCasa">Aurora dormindo</option>
+        <option value="todos">Alguém fica com ela</option>
+      </select>
+      <label class="linha" style="margin-top:10px">
+        <span class="mut" style="font-size:12.5px">Só prêmios de graça</span>
+        <input type="checkbox" id="soGratis" style="width:auto">
+      </label>
+      <div style="display:flex;gap:8px;margin-top:12px">
+        <button class="btn" id="btnAmostra" style="flex:1">🎲 Sortear agora<br><small class="mut" style="font-size:10px">não gasta</small></button>
+        <button class="btn prim" id="btnGastar" style="flex:1">🎁 Sortear e usar<br><small style="font-size:10px;opacity:.85">marca como usado</small></button>
+      </div>
+    </div>
+
+    <h2>Menu da alegria</h2>
+    <div class="card">
+      <p class="mut" style="font-size:12.5px;margin-bottom:8px">Quando bater vontade de doce, sorteie 1 item por 2 minutos. Se ainda quiser o doce, o doce vale.</p>
+      <button class="btn prim" id="btnMenu" style="width:100%">✨ Sortear 1 item do menu</button>
+      <div id="menuAlegriaLista" style="margin-top:10px"></div>
+    </div>
+
+    <h2>Meus prêmios</h2>
+    <button class="btn" id="btnVerPremios" style="width:100%;margin-bottom:8px">📋 Ver meus prêmios disponíveis</button>
+    <div id="listaPremios" hidden></div>
+
+    <h2>Adicionar prêmio</h2>
+    <div class="card">
+      <input id="pNome" placeholder="Nome do prêmio" style="margin-bottom:6px">
+      <div class="col2" style="margin-bottom:6px">
+        <select id="pOnde">
+          <option value="Aurora">Com a Aurora</option>
+          <option value="só eu em casa">Só eu, em casa</option>
+          <option value="só eu fora">Só eu, fora</option>
+        </select>
+        <select id="pTamanho">
+          <option value="P">Pequeno</option>
+          <option value="M">Médio</option>
+          <option value="G">Grande</option>
+        </select>
+      </div>
+      <label class="linha" style="margin-bottom:8px">
+        <span class="mut" style="font-size:12.5px">De graça</span>
+        <input type="checkbox" id="pGratis" style="width:auto">
+      </label>
+      <button class="btn prim" id="btnAddPremio" style="width:100%">Adicionar</button>
+    </div>
+
+    <h2>Desejos</h2>
+    <div class="card">
+      <p class="mut" style="font-size:12.5px;margin-bottom:10px;line-height:1.55">Não são prêmios. São coisas boas que dependem do mundo. Sem prazo, sem cobrança. Quando rolar, rolou.</p>
+      <div id="desejosBox"></div>
+    </div>
+
+    <h2>Metas de viagem</h2>
+    <div id="metasViagemBox"></div>
+  </section>
+
+  <!-- ============ ABA ATRAÇÃO ============ -->
+  <section id="tab-atracao" hidden>
+    <h2 style="margin-top:6px">Lei da Atração</h2>
+    <p class="mut" style="font-size:12.5px;margin-bottom:10px;line-height:1.5">Do contraste nasce a clareza. Toque numa frase de clareza pra medir: <b>o quanto isso é verdade hoje pra mim?</b></p>
+    <div id="laBox"></div>
+
+    <h2>Conquistas</h2>
+    <div class="card">
+      <div class="mut" style="font-size:12.5px;margin-bottom:6px">Prova contra o pensamento "nada muda".</div>
+      <div class="col2" style="gap:6px">
+        <input id="cqInput" placeholder="Algo que fiz bem...">
+        <button class="btn" id="btnAddCq">Adicionar</button>
+      </div>
+      <div id="cqLista" style="margin-top:10px"></div>
+    </div>
+
+    <h2>Lembretes emocionais</h2>
+    <div class="card">
+      <div class="mut" style="font-size:12.5px;margin-bottom:6px">Frases que você quer ver ao abrir o app.</div>
+      <input id="lemFrase" placeholder="Sua frase" style="margin-bottom:6px">
+      <input id="lemHora" type="time" style="margin-bottom:8px">
+      <button class="btn prim" id="btnAddLemb" style="width:100%">Adicionar lembrete</button>
+      <div id="lemLista" style="margin-top:10px"></div>
+    </div>
+
+    <h2>Cuidados fora do app</h2>
+    <div class="card">
+      <p class="mut" style="font-size:12.5px">Lembrete mensal: consulta com clínico geral (vitamina D) e escolher um terapeuta. Só lembrar, sem acompanhar detalhes.</p>
+    </div>
+  </section>
+</div>
+
+<nav class="tabs-bar">
+  <button data-tab="hoje" class="on"><span class="ti">🏠</span>Hoje</button>
+  <button data-tab="checkin"><span class="ti">📝</span>Check-in</button>
+  <button data-tab="habitos"><span class="ti">🌱</span>Hábitos</button>
+  <button data-tab="orcamento"><span class="ti">💰</span>Orçamento</button>
+  <button data-tab="premios"><span class="ti">🎁</span>Prêmios</button>
+  <button data-tab="atracao"><span class="ti">💫</span>Atração</button>
+</nav>
+
+<!-- Modal fila -->
+<div class="modal-overlay" id="filaModal" hidden>
+  <div class="modal-caixa">
+    <div class="modal-emoji" id="filaModalEmoji">🌱</div>
+    <div class="modal-pergunta" id="filaModalPergunta">Você quer inserir esse novo hábito na sua rotina hoje?</div>
+    <div class="modal-nome" id="filaModalNome">Alongamento</div>
+    <div class="modal-unidade" id="filaModalUnidade">5 minutos, todo dia</div>
+    <div class="modal-para" id="filaModalPara"></div>
+    <div class="modal-botoes" id="filaModalBotoes"></div>
+  </div>
+</div>
+
+<!-- Modal termômetro -->
+<div class="modal-overlay" id="termoModal" hidden>
+  <div class="modal-caixa">
+    <div class="modal-pergunta" id="termoFrase" style="font-size:14.5px;line-height:1.4">...</div>
+    <div class="mut" style="font-size:12px;margin-bottom:14px;font-style:italic">O quanto isso é verdade hoje pra mim?</div>
+    <div class="termo-nums" id="termoNums"></div>
+    <div class="termo-cmts" id="termoCmts"></div>
+    <div class="modal-botoes" style="margin-top:18px">
+      <button class="modal-btn sec" id="termoFechar">Fechar</button>
+    </div>
+  </div>
+</div>
+
+<!-- Festa -->
+<div class="festa-overlay" id="festa" hidden>
+  <canvas id="festaCanvas"></canvas>
+  <div class="festa-conteudo">
+    <div class="festa-emoji">🎉</div>
+    <div class="festa-titulo">21 DIAS!</div>
+    <div class="festa-sub">Você completou o hábito</div>
+    <div class="festa-habito" id="festaHabito">⭐</div>
+    <div class="festa-bonus">
+      <div class="festa-bonus-tit">🎁 Prêmio bônus</div>
+      <div class="festa-bonus-nome" id="festaBonusNome">...</div>
+      <div class="festa-bonus-tag" id="festaBonusTag"></div>
+    </div>
+    <button class="festa-btn" id="festaBtn">Continuar 💛</button>
+  </div>
+</div>
+
+<script>
+const pad = n => String(n).padStart(2,'0');
+const fmtD = d => d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate());
+const hoje = () => fmtD(new Date());
+const addDias = (d,n) => { const x = new Date(d); x.setDate(x.getDate()+n); return x; };
+const $ = id => document.getElementById(id);
+const esc = s => String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+
+const FRASES = [
+  "Estou em processo de ficar bem",
+  "Cada toque é uma prova de que eu me cuido",
+  "Hoje é mais um dia que eu escolho por mim",
+  "O cuidado não precisa ser grande pra ser real"
+];
+
+const FRASES_HABITO = {
+  batom: ["Eu passei batom hoje, e a psiquiatra que se foda.","Batom na boca, psiquiatra no caralho.","Lábios vermelhos, prontuário contestado.","Passei batom. Evidências de vida encontradas.","Batom: 1. Psiquiatra: 0.","Hoje eu tenho batom e opinião.","Batão vermelho e a razão do meu lado.","Cor nos lábios, força no peito."],
+  risada: ["Rindo para manter minha bela cútis.","Gargalhando em prol da saúde dermatológica.","Exercitando os músculos faciais em nome da ciência.","Rindo para manter a cara de quem tem futuro.","Sorrindo para deixar o humor em dia.","Risada: o melhor colágeno natural.","Rindo porque a vida também cabe nisso.","Cada gargalhada é uma vitória silenciosa."],
+  agua: ["Hidratando meu corpitcho saudável.","Hidratando essa máquina maravilhosa.","Água para dentro, caos para fora.","Um copo d'água para lubrificar o equipamento.","Bebendo água em prol da saúde deste monumento.","Hidratação feita. Agora ninguém me segura.","Gole por gole, cuidando de mim.","Água: começo simples, efeito grande."],
+  pijama: ["Neném dormindo bem, mamãe feliz.","Aurora de pijaminha, mamãe contentinha.","Aurora dormindo bem e mamãe derretendo de amor.","Pijaminha vestido, coração aquecido.","Aurora no pijama, mamãe no modo 'que coisa mais linda'.","Dormiu bem, mamãe ganhou o dia.","Pijama, soninho e a felicidade besta da mãe.","Neném confortável, mamãe com o coração quentinho."]
+};
+
+let fraseTimeout;
+function mostrarFraseHabito(id){
+  const arr = FRASES_HABITO[id];
+  if(!arr || !arr.length){ frase(); return; }
+  const el = $('frase');
+  el.style.opacity = 0;
+  clearTimeout(fraseTimeout);
+  setTimeout(()=>{
+    el.textContent = arr[Math.floor(Math.random()*arr.length)];
+    el.style.opacity = 1;
+    fraseTimeout = setTimeout(frase, 6000);
+  }, 250);
+}
+
+const PRATICAS = {
+  'Treino vocal':['Respiração','Aquecimento vocal','Canto'],
+  'Contato físico':['Auto-cafuné','Auto-massagem','Creme no corpo','Creme no rosto / Filtro solar','Carinho no Pituca','Carinho na Nica','Estou na minha mãe','Banho relaxante'],
+  'Diva Premium':['Skincare à noite','Usar uma peça que eu amo','Cantar 1 música por prazer'],
+  'Tempo de qualidade':['Vi vídeos no YouTube','Ouvi música','Dancei (bambolê conta)','Fiz meditação','Passei no jardim do prédio','Cozinhei','Vi filme com pipoca','Li um livro divertido','Caminhei no quarteirão','Viajei','Apreciei beleza de dentro de casa','Mexi no Canva por hobby','Dirigi','Videogame','Duolingo / curso de inteligência emocional','Caminhei no parque','Lavei louça / arrumei a casa','Cantei'],
+  'Palavras de incentivo':['Preenchi este questionário','Falei com amigos','Terapia','Cantei minhas músicas','Escrevi no caderno','Li meu caderno','Fiz um curso online','Li um livro revigorante','Vi vídeos da Ana Beatriz']
+};
+
+function sugerirPraticas(notas, praticas){
+  const sugestoes = [];
+  const jaMarcado = k => !!(praticas && praticas[k]);
+  const fezGrupo = prefixo => Object.keys(praticas||{}).some(k => k.startsWith(prefixo + '|'));
+  const add = (grupo, item) => {
+    const key = grupo + '|' + item;
+    if(!PRATICAS[grupo] || !PRATICAS[grupo].includes(item)) return;
+    if(!jaMarcado(key) && !sugestoes.some(s => s.key === key)){
+      sugestoes.push({ key, label: item, grupo });
+    }
+  };
+  const valores = Object.values(notas).filter(v => typeof v === 'number');
+  const altas = valores.filter(v => v >= 7).length;
+  const baixas = valores.filter(v => v <= 3).length;
+
+  if(notas.fisica && notas.fisica <= 4){ add('Tempo de qualidade','Caminhei no quarteirão'); add('Treino vocal','Canto'); }
+  if((notas.fisica && notas.fisica <= 4) || (notas.danca && notas.danca <= 4)){ add('Tempo de qualidade','Dancei (bambolê conta)'); add('Treino vocal','Canto'); }
+  if(notas.fisica && notas.fisica <= 3){ add('Treino vocal','Aquecimento vocal'); }
+  if(!fezGrupo('Contato físico')){ add('Contato físico','Auto-cafuné'); add('Contato físico','Auto-massagem'); }
+  if((notas.belting && notas.belting <= 4) || (notas.lirico && notas.lirico <= 4)){ add('Treino vocal','Aquecimento vocal'); }
+  if(notas.mental && notas.mental <= 4){ add('Tempo de qualidade','Fiz meditação'); add('Tempo de qualidade','Ouvi música'); add('Palavras de incentivo','Falei com amigos'); add('Palavras de incentivo','Li meu caderno'); }
+  if((notas.organizacao && notas.organizacao <= 4) || (notas.limpeza && notas.limpeza <= 4)){ add('Tempo de qualidade','Lavei louça / arrumei a casa'); }
+  if(notas.autoconf && notas.autoconf <= 5){ add('Palavras de incentivo','Escrevi no caderno'); add('Diva Premium','Usar uma peça que eu amo'); }
+  if(notas.autoconf && notas.autoconf <= 5 && ((notas.belting && notas.belting <= 4) || (notas.lirico && notas.lirico <= 4))){ add('Palavras de incentivo','Cantei minhas músicas'); }
+  if(baixas >= 4){ add('Palavras de incentivo','Terapia'); add('Palavras de incentivo','Li meu caderno'); }
+  if(!fezGrupo('Palavras de incentivo') && baixas >= 3){ add('Palavras de incentivo','Falei com amigos'); }
+  if(altas >= 5){ add('Palavras de incentivo','Falei com amigos'); add('Palavras de incentivo','Cantei minhas músicas'); add('Diva Premium','Skincare à noite'); }
+  if(notas.autoconf && notas.autoconf >= 8 && altas >= 3){ add('Palavras de incentivo','Escrevi no caderno'); }
+  return sugestoes;
+}
+
+function paragrafoCorpo(ci, notas){
+  const partes = [];
+  let temSono = false, temRef = false;
+  if(ci.dormiu && ci.acordou){
+    const horas = horasDormidas(ci.dormiu, ci.acordou);
+    const [h, m] = horas.split('h').map(Number);
+    const numH = h + (m||0)/60;
+    const [dh] = ci.dormiu.split(':').map(Number);
+    let f = '';
+    if(numH < 5){ f = 'Você dormiu ' + horas + ' — menos do que o corpo pedia. Sem culpa: você veio mesmo assim.'; }
+    else if(numH < 6.5){ f = 'Você dormiu ' + horas + '. Noite curta, mas foi o que coube.'; }
+    else if(numH < 7.5){ f = 'Você dormiu ' + horas + ' — uma noite razoável, e isso já sustenta o dia.'; }
+    else if(numH < 9){ f = 'Você dormiu ' + horas + '. Uma boa noite, e o corpo agradece.'; }
+    else { f = 'Você dormiu ' + horas + ' — seu corpo pediu e você deu. Bonito de ver.'; }
+    const dAntes = (dh >= 21 && dh <= 23);
+    const dDepois = (dh >= 0 && dh <= 3);
+    if(dAntes && numH >= 7) f += ' E dormiu cedo, o que soma.';
+    else if(dDepois) f += ' Mesmo dormindo depois da meia-noite, o descanso veio.';
+    if(notas.mental && numH >= 7 && notas.mental >= 7) f += ' Repare: sono bom e mente clara andam juntos.';
+    else if(notas.mental && numH < 6 && notas.mental <= 4) f += ' Pouco sono e mente pesada costumam andar juntos — não é falha sua.';
+    partes.push(f); temSono = true;
+  } else if(ci.dormiu){ partes.push('Você anotou que dormiu às ' + ci.dormiu + ' — bom ter o registro.'); temSono = true; }
+  else if(ci.acordou){ partes.push('Você acordou às ' + ci.acordou + ' — já é saber por onde o dia começou.'); temSono = true; }
+  const refs = ci.refeicoes || [];
+  const n = refs.length;
+  if(n === 1){ partes.push('Uma refeição só hoje — sem cobrança, mas o corpo precisa de mais.'); temRef = true; }
+  else if(n === 2){ partes.push('Duas refeições registradas. Já é presença, e presença conta.'); temRef = true; }
+  else if(n === 3){ partes.push('Três refeições — o corpo foi cuidado com regularidade.'); temRef = true; }
+  else if(n >= 4){ partes.push(n + ' refeições no dia — o corpo foi bem alimentado.'); temRef = true; }
+  if(!temSono && !temRef) return '';
+  return '<p><span class="base">🌱 A base do dia</span>' + partes.join(' ') + '</p>';
+}
+
+function gerarRelatorio(ci){
+  if(!ci) return '';
+  const notas = ci.escalas;
+  const praticas = ci.praticas || {};
+  const temEscalas = notas && Object.keys(notas).filter(k => typeof notas[k] === 'number' && notas[k] >= 1).length > 0;
+  const temCorpo = (ci.dormiu || ci.acordou || (ci.refeicoes && ci.refeicoes.length > 0));
+  if(!temEscalas && !temCorpo) return '';
+  const entradas = temEscalas ? Object.entries(notas).filter(([k,n]) => typeof n === 'number' && n >= 1) : [];
+  const tem = k => notas && typeof notas[k] === 'number' && notas[k] >= 1;
+  const valor = k => notas[k];
+  const banda = n => n >= 7 ? 'alta' : n >= 4 ? 'media' : 'baixa';
+  const NOMES = { danca:'dança', fisica:'disposição física', mental:'disposição mental', organizacao:'organização do lar', limpeza:'limpeza do lar', belting:'Belting', lirico:'canto lírico', autoconf:'autoconfiança' };
+  const nTotal = entradas.length;
+  const altas = entradas.filter(([,n]) => banda(n) === 'alta');
+  const baixas = entradas.filter(([,n]) => banda(n) === 'baixa');
+  const p1 = [];
+  if(nTotal === 8){ p1.push('Hoje você parou e se olhou por inteiro — oito cantos da sua vida, todos registrados com honestidade. Isso, por si só, é um ato de coragem que muita gente não faz.'); }
+  else if(nTotal >= 6){ p1.push('Hoje você se olhou com cuidado. Quase todos os cantos da sua vida apareceram aqui — e registrar isso já é um jeito de se cuidar.'); }
+  else if(nTotal >= 3){ p1.push('Você começou a se olhar hoje. Alguns cantos vieram, outros ainda vão chegar — sem pressa, cada nota é um passo.'); }
+  else if(nTotal >= 1){ p1.push('Cada nota que você marcou é um jeito de se enxergar. Obrigada por isso — mesmo uma só já move algo por dentro.'); }
+  else if(temCorpo){ p1.push('Você parou pra olhar seu dia. Registrar o básico já é um jeito de se cuidar.'); }
+  if(altas.length === 1){ p1.push('E hoje brilhou em <b>' + NOMES[altas[0][0]] + '</b> — repare nisso, porque é fato, não é sorte.'); }
+  else if(altas.length === 2){ p1.push('Hoje brilhou em <b>' + NOMES[altas[0][0]] + '</b> e <b>' + NOMES[altas[1][0]] + '</b> — duas forças juntas, e isso não é coincidência.'); }
+  else if(altas.length >= 3){ const nomes = altas.slice(0,4).map(([k]) => NOMES[k]).join(', '); p1.push('Hoje vários cantos vieram altos — <b>' + nomes + '</b>. Guarde isso: dias assim são prova do que você é capaz de sustentar.'); }
+  const FRASES_FAM = {
+    fisica: { alta:'seu corpo veio com energia — aproveite sem culpa', media:'seu corpo está respondendo no ritmo dele', baixa:'seu corpo pediu pausa, e ouvir isso também é cuidado' },
+    danca: { alta:'a dança está viva em você, te chamando pra se mover', media:'a dança vem aparecendo devagar, encontrando espaço', baixa:'a dança te espera sem cobrança — uma música basta' },
+    mental: { alta:'sua mente veio clara, e isso é um presente raro', media:'sua mente está processando o que precisa, no tempo dela', baixa:'sua mente está pesada, e ainda assim você se olhou — isso é força silenciosa' },
+    autoconf: { alta:'sua autoconfiança está alta — acredite, é fato', media:'sua autoconfiança está se firmando devagar', baixa:'a autoconfiança baixa de hoje não apaga nada do que você já construiu' },
+    organizacao: { alta:'a casa respira organizada, fruto direto do seu cuidado', media:'a organização está encontrando ritmo', baixa:'a casa pode esperar — hoje você cuidou do essencial' },
+    limpeza: { alta:'a limpeza reflete o carinho que você tem pelo próprio espaço', media:'a limpeza vai chegando, degrau por degrau', baixa:'a limpeza não mede o seu valor — o que importa é que você está aqui' },
+    belting: { alta:'seu belting está firme, resultado direto de treino', media:'seu belting está encontrando espaço', baixa:'seu belting está sendo reconstruído com paciência' },
+    lirico: { alta:'o canto lírico floresce em você', media:'o canto lírico está aparecendo devagar', baixa:'o canto lírico está guardado pra você, esperando o tempo certo' }
+  };
+  const fam = [
+    { nome:'Pelo corpo em movimento', itens:['fisica','danca'] },
+    { nome:'Pela mente', itens:['mental','autoconf'] },
+    { nome:'No lar', itens:['organizacao','limpeza'] },
+    { nome:'Na voz', itens:['belting','lirico'] }
+  ];
+  const p2 = [];
+  fam.forEach(f => {
+    const partes = f.itens.filter(tem).map(k => FRASES_FAM[k][banda(valor(k))]);
+    if(partes.length === 1) p2.push(f.nome + ': ' + partes[0] + '.');
+    else if(partes.length === 2) p2.push(f.nome + ': ' + partes[0] + ', e ' + partes[1] + '.');
+  });
+  const p3 = [];
+  const media = nTotal > 0 ? entradas.reduce((a,[,n]) => a + n, 0) / nTotal : null;
+  if(nTotal === 0){ p3.push('Nem sempre dá pra olhar pra dentro. Hoje você olhou pra fora — corpo, comida, rotina. Também é cuidado.'); }
+  else if(baixas.length >= 4){ p3.push('Se hoje foi um dia pesado em muitos cantos, saiba: você veio mesmo assim. Isso não é pouco.'); }
+  else if(media >= 7.5){ p3.push('Hoje foi um dia forte. Considere anotar no <b>caderninho</b> o que fez dar certo — assim, em dias difíceis, você tem prova de que é possível.'); }
+  else if(media >= 5.5){ p3.push('Um dia médio, do jeito que a vida é. Nem toda nota precisa ser alta pra ter valido. Você está em processo — e processo é isso: passos, não saltos.'); }
+  else if(media >= 3.5){ p3.push('Hoje veio mais devagar. Isso também é informação, não fracasso. Amanhã é outra página, e você já sabe onde anotar.'); }
+  else { p3.push('Hoje foi pesado. Tudo bem. Você ainda está aqui, olhando pra si — isso conta muito mais do que qualquer número.'); }
+  if(altas.length >= 4 && tem('autoconf') && banda(valor('autoconf')) === 'alta'){ p3.push('E repare: sua autoconfiança veio alta junto com o resto. Isso não é acaso — é você se vendo com mais carinho.'); }
+  if(tem('fisica') && valor('fisica') <= 3){
+    const jm = praticas['Tempo de qualidade|Caminhei no quarteirão'] || praticas['Tempo de qualidade|Dancei (bambolê conta)'];
+    const jc = praticas['Treino vocal|Canto'] || praticas['Treino vocal|Aquecimento vocal'];
+    if(!jm && !jc){ p3.push('💫 <b>Uma ideia gentil pra hoje:</b> quando o corpo pesa, o canto pode ser um jeito suave de se mover por dentro. Um treino vocal leve, ou um aquecimento em pé, já bastam. Voz e corpo cuidam um do outro.'); }
+  }
+  const sugestoes = temEscalas ? sugerirPraticas(notas, praticas) : [];
+  let p4 = '';
+  if(sugestoes.length){
+    const botoes = sugestoes.slice(0,4).map(s => '<button class="sug" data-prat="' + esc(s.key) + '"><span class="g">' + esc(s.grupo) + '</span><span class="n">' + esc(s.label) + '</span></button>').join('');
+    p4 = '<p><b>Pra somar ao dia:</b><br>' + botoes + '<br><small class="mut" style="font-size:11.5px">Toque para marcar a prática — ela vai brilhar lá em Práticas.</small></p>';
+  }
+  let html = '<div class="relatorio"><div class="titulo">💭 Leitura do dia</div>';
+  if(p1.length) html += '<p>' + p1.join(' ') + '</p>';
+  const corpoHTML = paragrafoCorpo(ci, notas || {});
+  if(corpoHTML) html += corpoHTML;
+  if(p2.length) html += '<p>' + p2.join(' ') + '</p>';
+  if(p3.length) html += '<p>' + p3.join(' ') + '</p>';
+  html += p4 + '</div>';
+  return html;
+}
+
+function atualizaRelatorio(){
+  const ci = S.checkins[hoje()] || {};
+  const el = $('relatorioEscalas');
+  if(!el) return;
+  el.innerHTML = gerarRelatorio(ci);
+  document.querySelectorAll('#relatorioEscalas .sug').forEach(b => { b.onclick = () => marcarPraticaSugerida(b.dataset.prat); });
+}
+
+function marcarPraticaSugerida(key){
+  const ci = S.checkins[hoje()] || (S.checkins[hoje()] = {});
+  ci.praticas = ci.praticas || {};
+  ci.praticas[key] = true;
+  salva();
+  const box = $('ciPratBox'); if(box) box.open = true;
+  const chip = document.querySelector('#ciPraticas [data-prat="' + key.replace(/"/g,'\\"') + '"]');
+  if(chip){ chip.classList.add('on'); chip.classList.add('alt'); setTimeout(()=>{ chip.scrollIntoView({behavior:'smooth',block:'center'}); chip.classList.add('pulse'); setTimeout(()=>chip.classList.remove('pulse'),1400); },120); }
+  confete(['✨','🌸','💫']);
+  atualizaStatusCheckin(); atualizaRelatorio();
+}
+
+const HORAS_DORMIR = ['21:00','21:30','22:00','22:30','23:00','23:30','00:00','00:30','01:00','01:30','02:00','02:30','03:00'];
+const HORAS_ACORDAR = ['04:30','05:00','05:30','06:00','06:30','07:00','07:30','08:00','08:30','09:00','09:30','10:00','10:30','11:00'];
+const REFEICOES = ['Café da manhã','Brunch','Almoço','Lanche da tarde','Jantar','Ceia'];
+const ESCALAS = [
+  ['danca','Prática de dança'],['fisica','Disposição física'],['mental','Disposição mental'],
+  ['organizacao','Organização do lar'],['limpeza','Limpeza do lar'],['belting','Domínio do Belting'],
+  ['lirico','Domínio do Canto Lírico'],['autoconf','Autoconfiança']
+];
+
+const FILA_CATEGORIAS = [
+  { nome:'🌿 Corpo e bem estar', itens:[
+    { nome:'Alongamento', emoji:'🧘', unidade:'5 minutos cronometrados, todo dia', paraQue:'Cuidar do meu corpo',
+      texto:'Alongar é um jeito de conversar com o corpo antes dele precisar gritar. Cinco minutos não mudam o dia — mas mudam como você chega nele. E o corpo aprende: quando você estica, você cuida. É um gesto pequeno, repetido, que diz "estou aqui por você" todos os dias.' },
+    { nome:'Ginástica', emoji:'💪', unidade:'10 minutos, 3 vezes por semana', paraQue:'Fortalecer meu corpo',
+      texto:'Não é sobre performance, é sobre presença. Dez minutos, três vezes por semana. O corpo se reconecta devagar, e cada sessão é uma prova silenciosa de que você escolheu se mover, mesmo quando era mais fácil ficar parada. Força também é constância.' }
+  ]},
+  { nome:'🏡 Lar doce lar', itens:[
+    { nome:'Limpar a casa', emoji:'🧹', unidade:'1 vez por semana, 1h', paraQue:'Ter um espaço meu em paz',
+      texto:'A casa é o primeiro lugar onde a gente mora. Uma hora por semana, sem heroísmo, só com constância. Cada cantinho arrumado é um pedaço de paz que você devolve pra si mesma. Casa cuidada é cabeça mais leve.' },
+    { nome:'Lavar a louça toda noite', emoji:'🍽️', unidade:'toda noite, antes de dormir', paraQue:'Fechar o dia com cuidado',
+      texto:'Lavar a louça toda noite é um gesto de virar a página do dia. Não é sobre a louça em si, é sobre acordar amanhã com um espaço que te espera em paz. Cinco, dez minutos — e você dorme sabendo que o dia foi fechado com carinho. Um pequeno ritual de encerramento, que diz ao corpo: pode descansar.' },
+    { nome:'Limpar a geladeira', emoji:'🧊', unidade:'antes do mercado da semana', paraQue:'Cuidar do que me alimenta',
+      texto:'Limpar a geladeira antes do mercado é um ritual de virar a página. Você abre, olha o que tem, joga fora o que estragou, limpa as prateleiras. É menos sobre a geladeira e mais sobre a relação com o que você coloca dentro de você. Cuidar do que te alimenta é uma forma de dizer: mereço o fresco, o bom, o de verdade.' },
+    { nome:'Marmita no trabalho', emoji:'🍱', unidade:'2 dias da semana', paraQue:'Cuidar de mim também fora de casa',
+      texto:'Levar a marmita é um ato silencioso de amor-próprio. Dois dias por semana, você escolhe o que entra no seu corpo e economiza sem perceber. É cuidado que cabe na bolsa — e que diz, mesmo em dia corrido, que você não se esqueceu de você.' },
+    { nome:'Mercado', emoji:'🛒', unidade:'1 vez por semana', paraQue:'Abastecer minha casa com cuidado',
+      texto:'Fazer o mercado com calma, uma vez por semana, é um gesto de planejamento e de carinho com a sua rotina. Você escolhe o que vai nutrir seu corpo e sua casa nos próximos dias. Fazer uma lista antes, ir sem pressa, e voltar com as sacolas sabendo que a semana está cuidada — isso também é um jeito de se proteger.' }
+  ]},
+  { nome:'👑 Próspera & Diva', itens:[
+    { nome:'Anotar 1 gasto por dia', emoji:'💰', unidade:'2 minutos por dia, no caderninho', paraQue:'Prosperar com consciência',
+      texto:'Anotar um gasto por dia é saber para onde vai o que é seu. Dois minutos, no caderninho, sem culpa. Prosperar começa com enxergar — e você está aprendendo a ver. Cada anotação é um tijolinho de uma vida financeira mais sua.' }
+  ]},
+  { nome:'🌙 Ritmo da Aurora', itens:[
+    { nome:'Aurora dormindo às 23:30', emoji:'🌙', unidade:'só depois de 21 dias do pijama', paraQue:'Cuidar do sono dela',
+      texto:'Esse hábito é diferente: ele não é sobre você, é sobre a Aurora. Mas também é sobre você — sobre o sono dela e o seu, sobre noites mais tranquilas para as duas. Ele só destrava depois dos 21 dias do pijama, com calma, porque rotina boa se constrói degrau por degrau.' }
+  ]}
+];
+
+function AREAS_INICIAIS(){
+  return [
+    { id:'patrimonio', nome:'🏠 Patrimônio',
+      contraste:['Não quero que destruam meu patrimônio','Não quero ter que resolver problemas que não criei','Não quero alguém que desrespeite meu lar'],
+      clareza:['Estou em processo de zelar pelo meu patrimônio','Eu arrumo a minha casa','Eu limpo minha casa','Estou em processo de preservar meus objetos em casa'] },
+    { id:'carreira', nome:'💼 Carreira',
+      contraste:['Não quero que pechinchem meu preço','Sensação de desvalorização','Falta de reconhecimento'],
+      clareza:['Estou em processo de crescer nos negócios','Meu valor é o que eu decido','Eu prezo pela minha segurança financeira'] },
+    { id:'relMeu', nome:'💛 Relacionamento (meu)',
+      contraste:['Não quero me sentir insuficiente','Não quero me culpar por ser inconstante'],
+      clareza:['Estou em processo de gostar cada vez mais de mim','Eu me trato com honestidade','Estou em processo de cuidar do meu bem estar'] },
+    { id:'amizades', nome:'👥 Amizades',
+      contraste:['Não quero me cercar de pessoas que me diminuem','Não quero amizade que não soma'],
+      clareza:['Estou em processo de atrair relações harmoniosas','Quero pessoas comprometidas','Escolho melhor as pessoas da minha vida'] },
+    { id:'bemestar', nome:'✨ Bem-estar',
+      contraste:['Não quero uma vida sedentária','Não quero me sentir cansada sempre'],
+      clareza:['Estou em processo de ter a saúde ideal','Estou em processo de cuidar do meu corpo','Estou em processo de me tornar mais próspera'] }
+  ];
+}
+
+/* ============== LISTA DE PRÊMIOS — REORGANIZADA ============== */
+/* Regra: prêmio não depende de ninguém aparecer, nem de dinheiro que não tem.
+   O que depende do mundo vira Desejo. O que é muito grande vira Meta. */
+
+const PREMIOS_INICIAIS = [
+  // === FÁCEIS — 5 min, sozinha, de graça ===
+  ['Meia luz com música',                                'Aurora',        'P', true],
+  ['Cantar uma música',                                  'Aurora',        'P', true],
+  ['Dançar uma música',                                  'Aurora',        'P', true],
+  ['Passar perfume',                                     'Aurora',        'P', true],
+  ['Ver a lua',                                          'Aurora',        'P', true],
+  ['Passear no jardim do prédio',                        'Aurora',        'P', true],
+  ['Ver Barbixas no YouTube',                            'só eu em casa', 'P', true],
+  ['Ler 15 minutos de um livro',                         'Aurora',        'P', true],
+  ['Tocar uma nota no piano',                            'Aurora',        'P', true],
+  ['Skincare à noite, sem pressa',                       'só eu em casa', 'P', true],
+  ['Banho longo com música',                             'só eu em casa', 'P', true],
+  ['Ouvir música no fone com os olhos fechados',         'só eu em casa', 'P', true],
+  ['Puzzle em inglês',                                   'só eu em casa', 'P', true],
+  ['Brincar com a Nica',                                 'Aurora',        'P', true],
+
+  // === MÉDIOS — 30 min a 1h ===
+  ['Hidratação no cabelo ouvindo música',                'só eu em casa', 'M', false],
+  ['Pipoca com filme',                                   'Aurora',        'M', false],
+  ['Sorvete com açaí',                                   'Aurora',        'M', false],
+  ['Fazer um bolo',                                      'Aurora',        'M', false],
+  ['Pizza em casa',                                      'Aurora',        'M', false],
+  ['Jantar à luz de velas em casa, sozinha',             'só eu em casa', 'M', false],
+  ['Videogame',                                          'só eu em casa', 'M', true],
+  ['Uma hora de piano sem pressa',                       'Aurora',        'M', true],
+  ['Maquiagem sem pressa',                               'Aurora',        'M', false],
+  ['Aquele filme que eu quero ver há tempo',             'só eu em casa', 'M', true],
+
+  // === GRANDES — conquista de 21 dias ===
+  ['Sapato bonito ou roupa nova',                        'só eu em casa', 'G', false],
+  ['Um livro novo',                                      'só eu em casa', 'G', false],
+  ['Uma flor ou planta nova pra casa',                   'Aurora',        'G', false],
+  ['Uma coisinha nova pro quarto',                       'só eu em casa', 'G', false],
+  ['Kit de skincare novo',                               'só eu em casa', 'G', false],
+  ['Um dia só pra mim — dormir até tarde',               'só eu em casa', 'G', true],
+  ['Jantar fora sozinha',                                'só eu fora',    'G', false],
+  ['Ingresso pra stand-up (sozinha)',                    'só eu fora',    'G', false]
+];
+
+const DESEJOS_REF = [
+  'Parque Horto com a Aurora',
+  'Cinema',
+  'Karaokê com amiga',
+  'Jantar fora com amiga',
+  'Receber uma amiga em casa',
+  'Barzinho com vinho',
+  'Teatro, ópera, stand-up ao vivo com alguém',
+  'Atibaia',
+  'E o que mais vier depois dela'
+];
+
+const METAS_VIAGEM_REF = [
+  { num:'Meta 1', tit:'Um dia fora de casa',      desc:'Atibaia, um parque, um lugar novo perto. Volta no mesmo dia.' },
+  { num:'Meta 2', tit:'Um fim de semana simples', desc:'Alguma cidade pequena, casa de alguém, pousada barata.' },
+  { num:'Meta 3', tit:'A viagem grande',          desc:'Aquela que você quer de verdade.' }
+];
+
+const MENU_ALEGRIA = ['Meia luz','Cantar uma música','Dançar uma música','Passar perfume','Maquiagem rápida','Ver a lua','Tocar uma nota no piano','Passear no jardim do prédio','Ouvir música no fone','YouTube (com Aurora dormindo)'];
+const CORES = ['c1','c2','c3','c4','c5','c6'];
+
+function feitos20Anteriores(){
+  const feitos = {};
+  for(let i=1;i<=20;i++) feitos[fmtD(addDias(new Date(), -i))] = true;
+  return feitos;
+}
+
+function estadoInicial(){
+  const f20 = feitos20Anteriores();
+  return {
+    versao: 11,
+    habitos: [
+      { id:'batom', emoji:'💄', emojis:['💄','💋','💗','✨'], nome:'Passei batom', paraQue:'Reafirmar meu valor', unidade:'1 vez ao dia', feitos:{...f20}, cor:'c1' },
+      { id:'risada', emoji:'😄', emojis:['😂','🤣','💜','✨'], nome:'Dei risada', paraQue:'Cultivar leveza', unidade:'1 vez ao dia', feitos:{...f20}, cor:'c2' },
+      { id:'agua', emoji:'💧', emojis:['💧','🥤','✨'], nome:"Copo d'água ao acordar", paraQue:'Cuidar do meu bem-estar', unidade:'1 copo', feitos:{...f20}, cor:'c3' },
+      { id:'pijama', emoji:'🌙', emojis:['🌙','🛏️','⭐'], nome:'Aurora dorme de pijama', paraQue:'Cuidar da rotina dela', unidade:'1 vez', feitos:{...f20}, cor:'c4' }
+    ],
+    proximoHabitoLiberaEm: Date.now(),
+    filaIndice: 0,
+    aurora: { ativo:false, meta:'00:00', historico:{} },
+    financas: { degrau: 0 },
+    premios: PREMIOS_INICIAIS.map((p,i)=>({ id:'p'+i+'_'+Math.random().toString(36).slice(2,6), nome:p[0], onde:p[1], tamanho:p[2], gratis:p[3], usado:false })),
+    menuAlegria: MENU_ALEGRIA.map(n=>({ nome:n })),
+    conquistas: {
+      itens: [
+        { txt:'Reformei a sala', quando:'3 anos' },{ txt:'Comprei o piano', quando:'3 anos' },
+        { txt:'Saí da casa', quando:'3 anos' },{ txt:'Emagreci', quando:'3 anos' },
+        { txt:'Moro perto do metrô', quando:'3 anos' },{ txt:'Caminho para o imóvel próprio', quando:'3 anos' },
+        { txt:'Gravei a música com a câmera', quando:'leonina' },{ txt:'Ousei fazer 2 takes', quando:'leonina' },
+        { txt:'Abri a empresa em 31/07', quando:'leonina' },{ txt:'Gravei vídeo de peruca', quando:'leonina' },
+        { txt:'Aprendi a mexer no zoom', quando:'leonina' },{ txt:'Abri conta PJ', quando:'leonina' }
+      ],
+      semanais: {}
+    },
+    leiAtracao: { areas: AREAS_INICIAIS(), termometro: {}, historico: [] },
+    orcamento: { salario: 0, itens: [] },
+    lembretes: [],
+    checkins: {}
+  };
+}
+
+function completaHabito(h, idx){
+  const defaults = {
+    batom:{emoji:'💄',emojis:['💄','💋','💗','✨']}, risada:{emoji:'😄',emojis:['😂','🤣','💜','✨']},
+    agua:{emoji:'💧',emojis:['💧','🥤','✨']}, pijama:{emoji:'🌙',emojis:['🌙','🛏️','⭐']}
+  };
+  const d = defaults[h.id] || { emoji:h.emoji||'⭐', emojis:h.emojis||['⭐','✨','🌸'] };
+  if(!h.emoji) h.emoji = d.emoji;
+  if(!h.emojis) h.emojis = d.emojis;
+  if(!h.cor) h.cor = CORES[(idx||0) % CORES.length];
+  return h;
+}
+
+function garanteNovosCampos(s){
+  if(!s.leiAtracao) s.leiAtracao = { areas: AREAS_INICIAIS(), termometro: {}, historico: [] };
+  if(!s.leiAtracao.areas || !s.leiAtracao.areas.length) s.leiAtracao.areas = AREAS_INICIAIS();
+  if(!s.leiAtracao.termometro) s.leiAtracao.termometro = {};
+  if(!s.leiAtracao.historico) s.leiAtracao.historico = [];
+  if(!s.orcamento) s.orcamento = { salario: 0, itens: [] };
+  if(!s.conquistas) s.conquistas = { itens: [], semanais: {} };
+  if(!s.lembretes) s.lembretes = [];
+  return s;
+}
+
+function migra(s){
+  if(!s) return s;
+  const map = { 'Cuidar das plantinhas':'Passear no jardim do prédio', 'Brincar com a Nica e o Loro':'Brincar com a Nica' };
+  if(s.premios) s.premios = s.premios.map(p=>({ ...p, nome: map[p.nome]||p.nome }));
+  if(s.menuAlegria) s.menuAlegria = s.menuAlegria.map(m=>({ nome: map[m.nome]||m.nome }));
+  if(s.checkins){
+    Object.keys(s.checkins).forEach(d=>{
+      const ci = s.checkins[d];
+      if(ci.praticas){
+        Object.keys(ci.praticas).forEach(k=>{
+          if(k.startsWith('Rumo à bolsa')){ delete ci.praticas[k]; return; }
+          if(k.includes('Curti o meu jardim')){ ci.praticas[k.replace('Curti o meu jardim','Passei no jardim do prédio')] = true; delete ci.praticas[k]; }
+        });
+      }
+      if(Array.isArray(ci.refeicoes)) ci.refeicoes = ci.refeicoes.filter(r=>r!=='Dia de natal ainda não sei');
+    });
+  }
+  if(s.batom || s.risada){
+    if(!Array.isArray(s.habitos)) s.habitos = [];
+    let hB = s.habitos.find(h=>h.id==='batom');
+    let hR = s.habitos.find(h=>h.id==='risada');
+    if(!hB){ hB = { id:'batom', nome:'Passei batom', paraQue:'Reafirmar meu valor', unidade:'1 vez ao dia', feitos:{} }; s.habitos.unshift(hB); }
+    if(!hR){ hR = { id:'risada', nome:'Dei risada', paraQue:'Cultivar leveza', unidade:'1 vez ao dia', feitos:{} }; s.habitos.splice(1,0,hR); }
+    Object.keys(s.batom||{}).forEach(d=>{ if(s.batom[d]) hB.feitos[d] = true; });
+    Object.keys(s.risada||{}).forEach(d=>{ if(s.risada[d]) hR.feitos[d] = true; });
+    delete s.batom; delete s.risada;
+  }
+  if(Array.isArray(s.habitos)) s.habitos = s.habitos.map((h,i)=>completaHabito(h,i));
+  if(s.contraste) delete s.contraste;
+  s.versao = 11;
+  return garanteNovosCampos(s);
+}
+
+function migraV10(s){
+  if(!s) return s;
+  const f20 = feitos20Anteriores();
+  if(Array.isArray(s.habitos)){
+    s.habitos = s.habitos.map(h => ({ ...h, feitos:{...f20}, premioPego:false, festejou21:false }));
+  }
+  s.versao = 11;
+  return garanteNovosCampos(s);
+}
+
+/* V10 → V11: preserva tudo (hábitos, check-ins, conquistas, atrações) e só substitui a lista de prêmios */
+function migraV11(s){
+  if(!s) return s;
+  s.premios = PREMIOS_INICIAIS.map((p,i)=>({ id:'p'+i+'_'+Math.random().toString(36).slice(2,6), nome:p[0], onde:p[1], tamanho:p[2], gratis:p[3], usado:false }));
+  s.versao = 11;
+  return garanteNovosCampos(s);
+}
+
+function carrega(){
+  try{ const raw = localStorage.getItem('batomRisadaV11'); if(raw) return garanteNovosCampos(JSON.parse(raw)); }catch(e){}
+  try{ const raw = localStorage.getItem('batomRisadaV10'); if(raw) return migraV11(JSON.parse(raw)); }catch(e){}
+  try{ const raw = localStorage.getItem('batomRisadaV9'); if(raw) return migraV10(JSON.parse(raw)); }catch(e){}
+  try{ const raw = localStorage.getItem('batomRisadaV8'); if(raw) return migraV10(JSON.parse(raw)); }catch(e){}
+  try{ const raw = localStorage.getItem('batomRisadaV7'); if(raw) return migraV10(JSON.parse(raw)); }catch(e){}
+  try{ const raw = localStorage.getItem('batomRisadaV6'); if(raw) return migraV10(migra(JSON.parse(raw))); }catch(e){}
+  try{ const raw = localStorage.getItem('batomRisadaV5'); if(raw) return migraV10(migra(JSON.parse(raw))); }catch(e){}
+  try{ const raw = localStorage.getItem('batomRisadaV4'); if(raw) return migraV10(migra(JSON.parse(raw))); }catch(e){}
+  try{
+    const old = JSON.parse(localStorage.getItem('batom')||'null');
+    if(old && (old.batom||old.risada)){
+      const s = estadoInicial();
+      const hB = s.habitos.find(h=>h.id==='batom');
+      const hR = s.habitos.find(h=>h.id==='risada');
+      (old.batom||[]).forEach(v=>{ const ts = typeof v==='number'?v:new Date(v+'T12:00:00').getTime(); hB.feitos[fmtD(new Date(ts))] = true; });
+      (old.risada||[]).forEach(v=>{ const ts = typeof v==='number'?v:new Date(v+'T12:00:00').getTime(); hR.feitos[fmtD(new Date(ts))] = true; });
+      return migraV10(s);
+    }
+  }catch(e){}
+  return estadoInicial();
+}
+let S = carrega();
+function salva(){ try{ localStorage.setItem('batomRisadaV11', JSON.stringify(S)); }catch(e){} }
+
+function frase(){
+  const el = $('frase');
+  el.style.opacity = 0;
+  setTimeout(()=>{ el.textContent = FRASES[Math.floor(Math.random()*FRASES.length)]; el.style.opacity=1; }, 250);
+}
+function confete(emojis){
+  const arr = emojis && emojis.length ? emojis : ['✨','🌸','💫'];
+  for(let i=0;i<14;i++) setTimeout(()=>{
+    const el = document.createElement('div');
+    el.className='confete';
+    el.textContent = arr[Math.floor(Math.random()*arr.length)];
+    el.style.left = Math.random()*100+'vw';
+    el.style.fontSize = (18+Math.random()*20)+'px';
+    document.body.appendChild(el);
+    setTimeout(()=>el.remove(),2000);
+  }, i*55);
+}
+
+function atualizaStatusCheckin(){
+  const ci = S.checkins[hoje()] || {};
+  const nSono = (ci.dormiu?1:0) + (ci.acordou?1:0);
+  const elS = $('stSono');
+  if(elS){ elS.textContent = nSono===2?'✓':nSono+'/2'; elS.className = 'ci-status ' + (nSono===2?'completo':nSono>0?'parcial':''); }
+  const nRef = (ci.refeicoes||[]).length;
+  const elR = $('stRef');
+  if(elR){ elR.textContent = nRef>0?'✓ '+nRef:'0'; elR.className = 'ci-status ' + (nRef>0?'completo':''); }
+  const nEsc = ci.escalas ? Object.values(ci.escalas).filter(v=>v!==undefined && v!==null).length : 0;
+  const elE = $('stEsc');
+  if(elE){ elE.textContent = nEsc===8?'✓':nEsc+'/8'; elE.className = 'ci-status ' + (nEsc===8?'completo':nEsc>0?'parcial':''); }
+  const nPrat = ci.praticas ? Object.keys(ci.praticas).length : 0;
+  const elP = $('stPrat');
+  if(elP){ elP.textContent = nPrat>0?'✓ '+nPrat:'0'; elP.className = 'ci-status ' + (nPrat>0?'completo':''); }
+  const temObs = (ci.observacoes||'').trim().length > 0;
+  const elO = $('stObs');
+  if(elO){ elO.textContent = temObs?'✓':'0'; elO.className = 'ci-status ' + (temObs?'completo':''); }
+}
+
+function renderCheckinResumos(){
+  const ci = S.checkins[hoje()] || {};
+  const preenchidos = [
+    (ci.dormiu || ci.acordou) ? 'sono' : null,
+    (ci.refeicoes||[]).length ? 'refeições' : null,
+    ci.escalas && Object.values(ci.escalas).some(v=>typeof v === 'number' && v >= 1) ? 'estado' : null,
+    ci.praticas && Object.keys(ci.praticas).length ? 'práticas' : null,
+    (ci.observacoes||'').trim() ? 'observações' : null
+  ].filter(Boolean);
+  const resumoLinha = [];
+  if(ci.dormiu && ci.acordou) resumoLinha.push('🌙 '+horasDormidas(ci.dormiu,ci.acordou));
+  else if(ci.dormiu) resumoLinha.push('🌙 dormi às '+ci.dormiu);
+  else if(ci.acordou) resumoLinha.push('🌙 acordei às '+ci.acordou);
+  if(ci.refeicoes?.length) resumoLinha.push('🍽️ '+ci.refeicoes.length+' refeições');
+  if(ci.escalas?.autoconf) resumoLinha.push('💛 autoconfiança '+ci.escalas.autoconf+'/10');
+  const elHoje = $('checkinTop');
+  if(elHoje){
+    if(preenchidos.length === 0){
+      elHoje.innerHTML = `<div class="convite" id="conviteCheckin"><span class="cEmoji">📝</span><div class="cTxt"><div class="cTit">Check-in de hoje</div><div class="cSub">Um minutinho pra se olhar. Sono, comida, como você está.</div></div><span class="cArrow">›</span></div>`;
+    } else {
+      elHoje.innerHTML = `<div class="convite" id="conviteCheckin"><span class="cEmoji">✅</span><div class="cTxt"><div class="cTit">Check-in começado</div><div class="cSub">${resumoLinha.join(' · ') || preenchidos.join(' · ')}</div></div><span class="cArrow">›</span></div>`;
+    }
+    const btn = $('conviteCheckin'); if(btn) btn.onclick = ()=> trocaAba('checkin');
+  }
+  const elCi = $('checkinResumoTop');
+  if(elCi){
+    if(preenchidos.length === 0) elCi.innerHTML = `<div class="aviso">Ainda sem check-in hoje. Sem pressa — preenche o que couber.</div>`;
+    else elCi.innerHTML = `<div class="okmsg">${resumoLinha.join(' · ') || ('Já preencheu: '+preenchidos.join(', '))}</div>`;
+  }
+}
+
+function renderHoje(){
+  $('data').textContent = new Date().toLocaleDateString('pt-BR',{weekday:'long',day:'numeric',month:'long'});
+  const h = hoje();
+  $('bolinhas').innerHTML = S.habitos.map(hb=>{
+    const on = !!hb.feitos[h];
+    const feitos = Object.keys(hb.feitos).length;
+    const completo = feitos >= 21;
+    return `<button class="bol ${hb.cor||'c1'} ${on?'feito':''} ${completo?'marca-21':''}" data-hab="${hb.id}"><span class="ic">${hb.emoji||'⭐'}</span><span class="nm">${esc(hb.nome)}</span><span class="prog">${feitos} de 21</span></button>`;
+  }).join('');
+  document.querySelectorAll('#bolinhas .bol').forEach(b=>{ b.onclick = ()=> toggleHabito(b.dataset.hab); });
+  const agora = new Date();
+  const hhmm = pad(agora.getHours())+':'+pad(agora.getMinutes());
+  const lem = (S.lembretes||[]).filter(l => hhmm >= l.hora);
+  $('lembretesHoje').innerHTML = lem.length ? '<h2>Lembretes</h2>'+lem.map(l=>`<div class="card2">💭 ${esc(l.frase)}</div>`).join('') : '';
+  atualizaStatusCheckin();
+  renderCheckinResumos();
+}
+
+function toggleHabito(id){
+  const hb = S.habitos.find(x=>x.id===id); if(!hb) return;
+  const h = hoje();
+  if(hb.feitos[h]){
+    confete(hb.emojis);
+    if(FRASES_HABITO[id]) mostrarFraseHabito(id); else frase();
+    return;
+  }
+  hb.feitos[h]=true;
+  confete(hb.emojis);
+  if(FRASES_HABITO[id]) mostrarFraseHabito(id); else frase();
+  const total = Object.keys(hb.feitos).length;
+  if(total >= 21 && !hb.festejou21){ hb.festejou21 = true; setTimeout(()=> abrirFesta(hb), 550); }
+  salva(); renderHoje(); renderHabitos();
+}
+
+function horasDormidas(dormiu, acordou){
+  const [dh,dm] = dormiu.split(':').map(Number);
+  const [ah,am] = acordou.split(':').map(Number);
+  let min = (ah*60+am) - (dh*60+dm);
+  if(min < 0) min += 24*60;
+  return Math.floor(min/60)+'h'+pad(min%60);
+}
+
+let ciMontado = false;
+function montaCheckin(){
+  if(ciMontado) return; ciMontado = true;
+  const ci = S.checkins[hoje()] || (S.checkins[hoje()] = {});
+  const selD = $('ciDormiu'), selA = $('ciAcordou');
+  selD.innerHTML = '<option value="">—</option>'+HORAS_DORMIR.map(h=>`<option value="${h}">${h}</option>`).join('');
+  selA.innerHTML = '<option value="">—</option>'+HORAS_ACORDAR.map(h=>`<option value="${h}">${h}</option>`).join('');
+  selD.value = ci.dormiu||''; selA.value = ci.acordou||'';
+  const upHoras = ()=>{ $('ciHoras').textContent = (ci.dormiu&&ci.acordou)?('Você dormiu '+horasDormidas(ci.dormiu,ci.acordou)):''; };
+  selD.onchange = ()=>{ ci.dormiu = selD.value||undefined; salva(); upHoras(); atualizaRelatorio(); atualizaStatusCheckin(); renderCheckinResumos(); };
+  selA.onchange = ()=>{ ci.acordou = selA.value||undefined; salva(); upHoras(); atualizaRelatorio(); atualizaStatusCheckin(); renderCheckinResumos(); };
+  upHoras();
+  $('ciRefeicoes').innerHTML = REFEICOES.map(r=>{ const on = (ci.refeicoes||[]).includes(r); return `<button type="button" class="chip ${on?'on':''}" data-ref="${esc(r)}">${esc(r)}</button>`; }).join('');
+  $('ciRefeicoes').onclick = e=>{
+    const b = e.target.closest('[data-ref]'); if(!b) return;
+    const r = b.dataset.ref;
+    ci.refeicoes = ci.refeicoes||[];
+    const i = ci.refeicoes.indexOf(r);
+    if(i>=0) ci.refeicoes.splice(i,1); else ci.refeicoes.push(r);
+    b.classList.toggle('on'); salva(); atualizaStatusCheckin(); atualizaRelatorio(); renderCheckinResumos();
+  };
+  $('ciEscalas').innerHTML = ESCALAS.map(([k,rot])=>{
+    const v = ci.escalas?.[k]||0;
+    return `<div class="escala" data-esc="${k}"><div class="rot">${esc(rot)}</div><div class="nums">${[1,2,3,4,5,6,7,8,9,10].map(n=>`<button type="button" class="num ${v===n?'on':''}" data-n="${n}">${n}</button>`).join('')}</div></div>`;
+  }).join('');
+  $('ciEscalas').onclick = e=>{
+    const b = e.target.closest('[data-n]'); if(!b) return;
+    const escEl = b.closest('[data-esc]'); if(!escEl) return;
+    const k = escEl.dataset.esc, n = +b.dataset.n;
+    ci.escalas = ci.escalas||{};
+    ci.escalas[k] = (ci.escalas[k]===n)?undefined:n;
+    salva();
+    escEl.querySelectorAll('.num').forEach(x=>x.classList.toggle('on', +x.dataset.n===ci.escalas[k]));
+    atualizaStatusCheckin(); atualizaRelatorio(); renderCheckinResumos();
+  };
+  $('ciPraticas').innerHTML = Object.entries(PRATICAS).map(([grupo,itens])=>{
+    return `<div style="margin-bottom:12px"><div class="mut" style="font-size:11.5px;margin-bottom:5px;font-weight:700;letter-spacing:.3px;text-transform:uppercase">${esc(grupo)}</div><div class="chips">${itens.map(it=>{ const on = (ci.praticas||{})[grupo+'|'+it]; return `<button type="button" class="chip ${on?'on alt':''}" data-prat="${esc(grupo)}|${esc(it)}">${esc(it)}</button>`; }).join('')}</div></div>`;
+  }).join('');
+  $('ciPraticas').onclick = e=>{
+    const b = e.target.closest('[data-prat]'); if(!b) return;
+    const k = b.dataset.prat;
+    ci.praticas = ci.praticas||{};
+    if(ci.praticas[k]) delete ci.praticas[k]; else ci.praticas[k]=true;
+    b.classList.toggle('on'); b.classList.toggle('alt'); salva(); atualizaStatusCheckin(); atualizaRelatorio(); renderCheckinResumos();
+  };
+  const obs = $('ciObs');
+  obs.value = ci.observacoes||'';
+  obs.oninput = ()=>{ ci.observacoes = obs.value; salva(); atualizaStatusCheckin(); renderCheckinResumos(); };
+  atualizaRelatorio();
+}
+
+let filaItemAtual = null;
+function abrirModalFila(item){
+  filaItemAtual = item;
+  const overlay = $('filaModal');
+  $('filaModalEmoji').textContent = item.emoji;
+  $('filaModalPergunta').textContent = 'Você quer inserir esse novo hábito na sua rotina hoje?';
+  $('filaModalNome').textContent = item.nome;
+  $('filaModalUnidade').textContent = item.unidade;
+  $('filaModalPara').style.display = 'none';
+  $('filaModalPara').textContent = '';
+  $('filaModalBotoes').innerHTML = `<button class="modal-btn sec" id="filaNao">Ainda não</button><button class="modal-btn prim" id="filaSim">Sim, quero</button>`;
+  $('filaNao').onclick = fecharModalFila;
+  $('filaSim').onclick = mostrarImportanciaFila;
+  overlay.hidden = false;
+  requestAnimationFrame(()=> overlay.classList.add('ativo'));
+  document.body.style.overflow = 'hidden';
+}
+function mostrarImportanciaFila(){
+  if(!filaItemAtual) return;
+  $('filaModalPergunta').textContent = 'Por que isso importa';
+  $('filaModalNome').textContent = filaItemAtual.nome;
+  $('filaModalUnidade').textContent = filaItemAtual.unidade;
+  $('filaModalPara').textContent = filaItemAtual.texto || '';
+  $('filaModalPara').style.display = 'block';
+  $('filaModalBotoes').innerHTML = `<button class="modal-btn sec" id="filaCancelar">Voltar</button><button class="modal-btn prim" id="filaAdicionar">Adicionar à minha rotina</button>`;
+  $('filaCancelar').onclick = fecharModalFila;
+  $('filaAdicionar').onclick = ()=>{ adicionarHabitoFila(filaItemAtual); fecharModalFila(); };
+}
+function fecharModalFila(){
+  const overlay = $('filaModal');
+  overlay.classList.remove('ativo');
+  setTimeout(()=>{ overlay.hidden = true; document.body.style.overflow=''; }, 320);
+  filaItemAtual = null;
+}
+function adicionarHabitoFila(item){
+  if(S.habitos.some(h => h.nome === item.nome)){ alert('Você já tem esse hábito na sua rotina. 💛'); return; }
+  S.habitos.push({ id:'h'+Date.now(), emoji:item.emoji, emojis:[item.emoji,'✨','🌸'], nome:item.nome, paraQue:item.paraQue||'—', unidade:item.unidade, feitos:{}, cor:CORES[S.habitos.length % CORES.length], festejou21:false, premioPego:false });
+  salva();
+  confete([item.emoji,'✨','🌸']);
+  renderHoje(); renderHabitos();
+  setTimeout(()=> trocaAba('hoje'), 350);
+}
+
+function renderHabitos(){
+  $('progressoBox').innerHTML = S.habitos.map(hb=>{
+    const feitos = Object.keys(hb.feitos).length;
+    const pronto = feitos>=21;
+    return `<div class="hab"><div class="linha"><div><div class="nome">${hb.emoji||'⭐'} ${esc(hb.nome)}</div><div class="para">Para: ${esc(hb.paraQue||'—')} · ${esc(hb.unidade||'')}</div></div></div><div class="barra"><div class="fill ${pronto?'ok':''}" style="width:${Math.min(100,(feitos/21)*100)}%"></div></div><div class="info"><span>${feitos} de 21 dias</span><span>${pronto?'✓ completo':'faltam '+Math.max(0,21-feitos)}</span></div><div style="display:flex;gap:8px;margin-top:10px">${pronto && !hb.premioPego ? `<button class="btn prim" data-premiar="${hb.id}" style="flex:1">🎁 Pegar meu prêmio</button>`:''}${hb.premioPego?`<span class="mut" style="font-size:11.5px;align-self:center">prêmio já pego ✓</span>`:''}<button class="btn fant" data-apagar="${hb.id}">apagar</button></div></div>`;
+  }).join('');
+  document.querySelectorAll('#progressoBox [data-apagar]').forEach(b=>{ b.onclick = ()=>{ const hb = S.habitos.find(x=>x.id===b.dataset.apagar); if(!hb) return; if(confirm(`Apagar o hábito "${hb.nome}"? Os dias feitos vão junto.`)){ S.habitos = S.habitos.filter(x=>x.id!==hb.id); salva(); renderHabitos(); renderHoje(); } }; });
+  document.querySelectorAll('#progressoBox [data-premiar]').forEach(b=>{ b.onclick = ()=>{ const hb = S.habitos.find(x=>x.id===b.dataset.premiar); const p = sortearPremio(false); hb.premioPego = true; salva(); confete(['🎁','✨','💗']); alert('🎁 '+hb.nome+'\n\nSeu prêmio: '+p.nome+'\n('+p.onde+' · '+tamNome(p.tamanho)+')'); renderHabitos(); }; });
+
+  $('sugestoesFilaBox').innerHTML = FILA_CATEGORIAS.map(cat => `<div class="cat-bloco"><div class="cat-titulo">${cat.nome}</div>${cat.itens.map(item => { const jaTem = S.habitos.some(h => h.nome === item.nome); return `<div class="cat-sugestao ${jaTem?'ja-tem':''}" data-fila="${esc(item.nome)}"><div class="txt"><b>${item.emoji} ${esc(item.nome)}</b><br><span class="mut">${esc(item.unidade)}</span></div><div class="add">${jaTem?'✓':'+'}</div></div>`; }).join('')}</div>`).join('');
+  document.querySelectorAll('#sugestoesFilaBox [data-fila]').forEach(el=>{ el.onclick = ()=>{ const nome = el.dataset.fila; const item = FILA_CATEGORIAS.flatMap(c=>c.itens).find(i=>i.nome===nome); if(!item) return; if(S.habitos.some(h => h.nome === item.nome)){ alert('Você já tem esse hábito na sua rotina. 💛'); return; } abrirModalFila(item); }; });
+
+  const restante = S.proximoHabitoLiberaEm - Date.now();
+  const liberado = restante <= 0;
+  $('filaBox').innerHTML = liberado ? `<div class="okmsg">Toque em qualquer sugestão acima pra adicionar à sua rotina. Sem pressa — um por semana, começando pequeno.</div>` : `<div class="aviso">Próxima sugestão libera em ${Math.ceil(restante/86400000)} dia(s).<br><br><button class="btn" id="btnAdiar" style="width:100%">Adiar por mais 1 semana</button></div>`;
+  if($('btnAdiar')) $('btnAdiar').onclick = ()=>{ S.proximoHabitoLiberaEm = Math.max(Date.now(), S.proximoHabitoLiberaEm) + 7*86400000; salva(); renderHabitos(); };
+
+  const pij = S.habitos.find(h=>h.id==='pijama');
+  const pijOk = pij && Object.keys(pij.feitos).length>=21;
+  const metaAtual = S.aurora.meta || '00:00';
+  const escada = ['00:00','23:30','23:00','22:30'];
+  $('auroraBox').innerHTML = !pijOk ? `<div class="aviso">A escada da Aurora só destrava depois que o hábito "Aurora dorme de pijama" completar 21 dias.</div>` : `<div class="card"><div class="mut">Meta atual</div><div style="font-size:26px;font-weight:800">${metaAtual}</div><div class="linha" style="margin-top:10px"><span class="mut" style="font-size:12.5px">Hoje ela dormiu até</span><select id="auroraHoje" style="width:auto"><option value="">—</option>${escada.concat(['00:30','01:00']).map(h=>`<option value="${h}" ${S.aurora.historico[hoje()]===h?'selected':''}>${h}</option>`).join('')}</select></div><button class="btn" id="btnSobeDegrau" style="width:100%;margin-top:12px" ${metaAtual==='22:30'?'disabled':''}>${metaAtual==='22:30'?'Meta final atingida 🌙':'Subir um degrau'}</button></div><div class="card"><div class="mut" style="font-size:11.5px;margin-bottom:6px;font-weight:600">Escada</div>${escada.map(h=>`<div class="deg ${h===metaAtual?'on':''}"><span class="bol2"></span><div class="dt">${h}</div></div>`).join('')}</div>`;
+  if($('auroraHoje')) $('auroraHoje').onchange = e=>{ if(e.target.value) S.aurora.historico[hoje()] = e.target.value; else delete S.aurora.historico[hoje()]; salva(); };
+  if($('btnSobeDegrau')) $('btnSobeDegrau').onclick = ()=>{ const i = escada.indexOf(metaAtual); if(i<escada.length-1){ S.aurora.meta = escada[i+1]; salva(); renderHabitos(); } };
+}
+
+function renderOrcamento(){
+  const degraus = [
+    'Abrir o app do banco e olhar o saldo, por 30 segundos',
+    'Escrever o saldo no caderninho',
+    'Anotar 1 gasto por dia, em 2 minutos',
+    '10 minutos de revisão por semana'
+  ];
+  $('financasBox').innerHTML = `<div class="card">${degraus.map((d,i)=>{ const on = i <= S.financas.degrau; return `<div class="deg ${on?'on':''}"><span class="bol2">${i+1}</span><div class="dt">${esc(d)}<small>${on?'confortável':'só sobe quando o anterior estiver confortável'}</small></div></div>`; }).join('')}<div style="display:flex;gap:8px;margin-top:10px"><button class="btn" id="btnRetro" style="flex:1" ${S.financas.degrau<=0?'disabled':''}>← Voltar um</button><button class="btn prim" id="btnAvan" style="flex:1" ${S.financas.degrau>=degraus.length-1?'disabled':''}>Subir um →</button></div></div>`;
+  if($('btnRetro')) $('btnRetro').onclick = ()=>{ S.financas.degrau--; salva(); renderOrcamento(); };
+  if($('btnAvan')) $('btnAvan').onclick = ()=>{ S.financas.degrau++; salva(); renderOrcamento(); };
+
+  $('orcSalario').value = S.orcamento.salario || '';
+
+  const itens = S.orcamento.itens || [];
+  $('orcLista').innerHTML = itens.length ? itens.map((it,i)=>`<div class="orc-linha"><span class="nm">${esc(it.nome)}</span><span class="vl">R$ ${(+it.valor).toFixed(2).replace('.',',')}</span><button class="btn fant" data-remover="${i}">×</button></div>`).join('') : `<div class="mut" style="font-size:12px;text-align:center;padding:8px">Nenhuma despesa ainda.</div>`;
+  document.querySelectorAll('#orcLista [data-remover]').forEach(b=>{ b.onclick = ()=>{ S.orcamento.itens.splice(+b.dataset.remover,1); salva(); renderOrcamento(); }; });
+
+  const totalDesp = itens.reduce((a,it)=>a + (+it.valor||0), 0);
+  const sal = +S.orcamento.salario || 0;
+  const sobra = sal - totalDesp;
+  const cls = sobra > 0 ? 'ok' : (sobra < 0 ? 'ruim' : 'neutro');
+  const sinal = sobra > 0 ? 'Sobra' : (sobra < 0 ? 'Falta' : 'Empata');
+  $('orcTotais').innerHTML = `
+    <div class="orc-total neutro"><span>Despesas</span><span>R$ ${totalDesp.toFixed(2).replace('.',',')}</span></div>
+    ${sal > 0 ? `<div class="orc-total ${cls}"><span>${sinal}</span><span>R$ ${Math.abs(sobra).toFixed(2).replace('.',',')}</span></div>` : ''}
+  `;
+}
+$('btnAddOrc').onclick = ()=>{
+  const nome = $('orcNome').value.trim();
+  const valor = parseFloat($('orcValor').value);
+  if(!nome || !valor) return alert('Preencha nome e valor.');
+  S.orcamento.itens.push({ nome, valor });
+  $('orcNome').value=''; $('orcValor').value='';
+  salva(); renderOrcamento();
+};
+$('orcSalario').oninput = ()=>{
+  S.orcamento.salario = parseFloat($('orcSalario').value) || 0;
+  salva(); renderOrcamento();
+};
+
+function gerarComentarios(frase, valor){
+  let acolhedor, provocador, pratico;
+  if(valor <= 3){
+    acolhedor = 'É só um retrato de hoje. Frases como essa são processo, não prova. Você já está olhando pra ela — isso já é movimento.';
+    provocador = 'O que seria o menor sinal de que isso já começa a ser verdade? Não precisa ser grande. Só um sinal.';
+    pratico = 'Hoje, o mínimo possível já basta. Uma respiração, uma frase escrita, um copo d\'água.';
+  } else if(valor <= 6){
+    acolhedor = 'Nem frio nem quente — você está no meio do caminho, e isso já é estar em movimento.';
+    provocador = 'O que seria isso num dia comum, sem evento nenhum? Sem plateia, sem data especial?';
+    pratico = 'Escolha uma microação pra hoje. Só uma. Sem compromisso com amanhã.';
+  } else {
+    acolhedor = 'Repare que isso já é real. Não é sorte, é você. Reconheça antes de seguir.';
+    provocador = 'Se você fosse sua amiga, o que diria pra você sobre isso?';
+    pratico = 'Anote no caderninho o que fez isso dar certo. Em dia difícil, você vai querer reler.';
+  }
+  return [
+    { tipo:'🌸 Com carinho', txt: acolhedor },
+    { tipo:'🔍 Pra provocar', txt: provocador },
+    { tipo:'✨ Pra fazer agora', txt: pratico }
+  ];
+}
+
+function renderLA(){
+  const la = S.leiAtracao;
+  $('laBox').innerHTML = la.areas.map((area, ai) => {
+    const contrasteHTML = area.contraste.map((t,i)=>`<div class="la-item"><span>${esc(t)}</span><span class="x" data-la-rm="c|${ai}|${i}">×</span></div>`).join('');
+    const clarezaHTML = area.clareza.map((t,i)=>{
+      const termo = la.termometro[t];
+      const nota = termo ? `<span class="nota ${termo.valor>=7?'alta':termo.valor<=3?'baixa':''}">${termo.valor}</span>` : '';
+      return `<div class="la-item clareza-item" data-la-click="${esc(t)}"><span>${esc(t)}</span>${nota}</div>`;
+    }).join('');
+    return `<details class="generic"><summary>${area.nome}</summary><div class="conteudo">
+      <div class="la-2col">
+        <div>
+          <div class="la-col-tit contraste">Contraste</div>
+          ${contrasteHTML}
+          <input class="la-add" placeholder="+ adicionar contraste" data-la-add="c|${ai}">
+        </div>
+        <div>
+          <div class="la-col-tit clareza">Clareza</div>
+          ${clarezaHTML}
+          <input class="la-add" placeholder="+ adicionar clareza" data-la-add="l|${ai}">
+        </div>
+      </div>
+    </div></details>`;
+  }).join('');
+
+  document.querySelectorAll('#laBox [data-la-rm]').forEach(el=>{
+    el.onclick = ()=>{
+      const [tipo, ai, i] = el.dataset.laRm.split('|');
+      const area = S.leiAtracao.areas[+ai];
+      if(tipo === 'c') area.contraste.splice(+i,1);
+      else area.clareza.splice(+i,1);
+      salva(); renderLA();
+    };
+  });
+  document.querySelectorAll('#laBox [data-la-add]').forEach(inp=>{
+    inp.onkeydown = e=>{
+      if(e.key !== 'Enter') return;
+      const v = inp.value.trim(); if(!v) return;
+      const [tipo, ai] = inp.dataset.laAdd.split('|');
+      const area = S.leiAtracao.areas[+ai];
+      if(tipo === 'c') area.contraste.push(v); else area.clareza.push(v);
+      salva(); renderLA();
+    };
+  });
+  document.querySelectorAll('#laBox [data-la-click]').forEach(el=>{
+    el.onclick = ()=> abrirTermo(el.dataset.laClick);
+  });
+}
+
+let termoFraseAtual = null;
+let termoValorAtual = null;
+
+function abrirTermo(frase){
+  termoFraseAtual = frase;
+  termoValorAtual = null;
+  $('termoFrase').textContent = '« ' + frase + ' »';
+  const atual = S.leiAtracao.termometro[frase]?.valor || 0;
+  $('termoNums').innerHTML = [1,2,3,4,5,6,7,8,9,10].map(n => `<button class="termo-num ${atual===n?'on':''}" data-tn="${n}">${n}</button>`).join('');
+  $('termoCmts').innerHTML = '';
+  document.querySelectorAll('#termoNums [data-tn]').forEach(b=>{
+    b.onclick = ()=> escolherTermo(+b.dataset.tn);
+  });
+  const overlay = $('termoModal');
+  overlay.hidden = false;
+  requestAnimationFrame(()=> overlay.classList.add('ativo'));
+  document.body.style.overflow = 'hidden';
+}
+function escolherTermo(n){
+  termoValorAtual = n;
+  document.querySelectorAll('#termoNums .termo-num').forEach(b=>{ b.classList.toggle('on', +b.dataset.tn === n); });
+  const frase = termoFraseAtual;
+  S.leiAtracao.termometro[frase] = { valor: n, data: hoje() };
+  S.leiAtracao.historico.push({ frase, valor: n, data: hoje() });
+  salva();
+  const cmts = gerarComentarios(frase, n);
+  $('termoCmts').innerHTML = cmts.map(c => `<div class="termo-cmt"><span class="lbl">${esc(c.tipo)}</span>${esc(c.txt)}</div>`).join('');
+}
+$('termoFechar').onclick = ()=>{
+  const overlay = $('termoModal');
+  overlay.classList.remove('ativo');
+  setTimeout(()=>{ overlay.hidden = true; document.body.style.overflow=''; renderLA(); }, 320);
+};
+
+function renderAtracaoSecoes(){
+  $('cqLista').innerHTML = S.conquistas.itens.map((c,i)=>`<div class="lista-item"><div class="txt">${esc(c.txt)} <span class="mut">· ${esc(c.quando)}</span></div><button class="btn fant" data-cq="${i}">×</button></div>`).join('');
+  document.querySelectorAll('#cqLista [data-cq]').forEach(b=>{ b.onclick = ()=>{ S.conquistas.itens.splice(+b.dataset.cq,1); salva(); renderAtracaoSecoes(); }; });
+
+  $('lemLista').innerHTML = S.lembretes.map((l,i)=>`<div class="lista-item"><div class="txt">${esc(l.frase)} <span class="mut">· ${esc(l.hora)}</span></div><button class="btn fant" data-lem="${i}">×</button></div>`).join('');
+  document.querySelectorAll('#lemLista [data-lem]').forEach(b=>{ b.onclick = ()=>{ S.lembretes.splice(+b.dataset.lem,1); salva(); renderAtracaoSecoes(); renderHoje(); }; });
+}
+
+$('btnAddCq').onclick = ()=>{
+  const v = $('cqInput').value.trim(); if(!v) return;
+  S.conquistas.itens.unshift({ txt:v, quando:'agora' });
+  $('cqInput').value=''; salva(); renderAtracaoSecoes();
+};
+$('cqInput').onkeydown = e=>{ if(e.key==='Enter') $('btnAddCq').click(); };
+
+$('btnAddLemb').onclick = ()=>{
+  const f = $('lemFrase').value.trim(), h = $('lemHora').value;
+  if(!f||!h) return alert('Preencha frase e hora.');
+  S.lembretes.push({ id:'l'+Date.now(), frase:f, hora:h });
+  $('lemFrase').value=''; $('lemHora').value='';
+  salva(); renderAtracaoSecoes(); renderHoje();
+};
+
+const tamNome = t => t==='P'?'Pequeno':t==='M'?'Médio':'Grande';
+function filtraPremios(ctx, soGratis){
+  let lista = S.premios.filter(p=>!p.usado);
+  if(soGratis) lista = lista.filter(p=>p.gratis);
+  if(ctx==='comAurora') lista = lista.filter(p=>p.onde==='Aurora');
+  else if(ctx==='emCasa') lista = lista.filter(p=>p.onde==='Aurora'||p.onde==='só eu em casa');
+  return lista;
+}
+function sortearPremio(gastar, bonus){
+  const ctx = $('ctxPremio')?.value || 'todos';
+  const soG = $('soGratis')?.checked || false;
+  let lista = filtraPremios(ctx, soG);
+  if(bonus){ const gB = lista.filter(p=>p.tamanho==='G'); if(gB.length) lista = gB; }
+  if(!lista.length){ alert('Nenhum prêmio disponível com esse filtro.'); return null; }
+  const grandes = lista.filter(p=>p.tamanho==='G');
+  const medias = lista.filter(p=>p.tamanho==='M');
+  const pool = grandes.length?grandes:(medias.length?medias:lista);
+  const pick = pool[Math.floor(Math.random()*pool.length)];
+  if(gastar){ pick.usado = true; salva(); renderPremios(); }
+  return pick;
+}
+function renderPremios(){
+  $('listaPremios').innerHTML = S.premios.map(p=>`<div class="premio"><div style="flex:1"><div class="nm">${esc(p.nome)}${p.usado?' <span class="mut">· usado</span>':''}</div><div class="tg"><span class="tag">${esc(p.onde)}</span><span class="tag c">${tamNome(p.tamanho)}</span>${p.gratis?'<span class="tag r">grátis</span>':''}</div></div></div>`).join('');
+  $('menuAlegriaLista').innerHTML = S.menuAlegria.map(m=>`<span class="tag" style="font-size:11.5px;padding:4px 9px;margin-bottom:4px;display:inline-block">${esc(m.nome)}</span>`).join(' ');
+
+  // Desejos
+  $('desejosBox').innerHTML = DESEJOS_REF.map(d => `<span class="desejo-tag">${esc(d)}</span>`).join('');
+
+  // Metas de viagem
+  $('metasViagemBox').innerHTML = METAS_VIAGEM_REF.map(m => `
+    <div class="meta-bloco">
+      <div class="num">${esc(m.num)}</div>
+      <div class="tit">${esc(m.tit)}</div>
+      <div class="desc">${esc(m.desc)}</div>
+    </div>
+  `).join('');
+}
+
+function trocaAba(t){
+  document.querySelectorAll('section[id^="tab-"]').forEach(s=>s.hidden = (s.id !== 'tab-'+t));
+  document.querySelectorAll('.tabs-bar button').forEach(b=>b.classList.toggle('on', b.dataset.tab===t));
+  if(t==='hoje') renderHoje();
+  if(t==='checkin'){ atualizaStatusCheckin(); renderCheckinResumos(); atualizaRelatorio(); }
+  if(t==='habitos') renderHabitos();
+  if(t==='orcamento') renderOrcamento();
+  if(t==='premios') renderPremios();
+  if(t==='atracao'){ renderLA(); renderAtracaoSecoes(); }
+  window.scrollTo({ top:0, behavior:'instant' });
+}
+document.querySelectorAll('.tabs-bar button').forEach(b=>{ b.onclick = ()=> trocaAba(b.dataset.tab); });
+
+$('btnAmostra').onclick = ()=>{ const p = sortearPremio(false); if(!p) return; alert('🎲 Amostra:\n\n'+p.nome+'\n('+p.onde+' · '+tamNome(p.tamanho)+')'); };
+$('btnGastar').onclick = ()=>{ const p = sortearPremio(true); if(!p) return; confete(['🎁','✨','💗']); alert('🎁 Prêmio usado:\n\n'+p.nome+'\n('+p.onde+' · '+tamNome(p.tamanho)+')'); };
+$('btnMenu').onclick = ()=>{ const m = S.menuAlegria[Math.floor(Math.random()*S.menuAlegria.length)]; alert('✨ Faça agora, por 2 minutos:\n\n'+m.nome+'\n\nSe ainda quiser o doce, o doce vale.'); };
+$('btnAddPremio').onclick = ()=>{
+  const nome = $('pNome').value.trim(); if(!nome) return;
+  S.premios.push({ id:'p'+Date.now(), nome, onde:$('pOnde').value, tamanho:$('pTamanho').value, gratis:$('pGratis').checked, usado:false });
+  $('pNome').value=''; $('pGratis').checked=false;
+  salva(); renderPremios();
+};
+$('btnVerPremios').onclick = ()=>{
+  const lista = $('listaPremios');
+  const aberto = !lista.hidden;
+  lista.hidden = aberto;
+  $('btnVerPremios').textContent = aberto ? '📋 Ver meus prêmios disponíveis' : '🙈 Esconder meus prêmios';
+};
+
+let festaAnim = null;
+function iniciarFogos(canvas){
+  const ctx = canvas.getContext('2d');
+  let w, h, dpr;
+  function setup(){ dpr = window.devicePixelRatio || 1; w = window.innerWidth; h = window.innerHeight; canvas.width = w*dpr; canvas.height = h*dpr; canvas.style.width = w+'px'; canvas.style.height = h+'px'; ctx.setTransform(dpr,0,0,dpr,0,0); }
+  setup();
+  window.addEventListener('resize', setup);
+  const estrelas = [];
+  for(let i=0;i<90;i++){ estrelas.push({ x:Math.random()*w, y:Math.random()*h, r:Math.random()*1.6+.3, a:.3+Math.random()*.7, f:.02+Math.random()*.05 }); }
+  const particulas = [];
+  function explodir(x, y, corBase){
+    const n = 70 + Math.floor(Math.random()*50);
+    const hue = corBase != null ? corBase : Math.random()*360;
+    for(let i=0;i<n;i++){
+      const ang = Math.random()*Math.PI*2;
+      const vel = Math.random()*4.5 + 1.2;
+      particulas.push({ x, y, vx:Math.cos(ang)*vel, vy:Math.sin(ang)*vel, vida:1, decai:0.008+Math.random()*0.016, cor:`hsl(${(hue + Math.random()*60 - 30 + 360)%360}, 92%, ${60+Math.random()*20}%)`, tam:1.6+Math.random()*2.2 });
+    }
+  }
+  ctx.fillStyle = '#14082b'; ctx.fillRect(0,0,w,h);
+  let t = 0, animId, parado = false;
+  function loop(){
+    if(parado) return;
+    animId = requestAnimationFrame(loop);
+    t++;
+    ctx.globalCompositeOperation = 'source-over';
+    ctx.fillStyle = 'rgba(10, 5, 25, 0.16)';
+    ctx.fillRect(0, 0, w, h);
+    ctx.globalCompositeOperation = 'lighter';
+    estrelas.forEach(e=>{ const a = e.a * (0.4 + 0.6*Math.abs(Math.sin(t*e.f + e.x*0.01))); ctx.beginPath(); ctx.fillStyle = `rgba(255,255,255,${a})`; ctx.arc(e.x, e.y, e.r, 0, Math.PI*2); ctx.fill(); });
+    if(t % 22 === 0 || Math.random() < 0.012){ explodir(w*(0.12+Math.random()*0.76), h*(0.10+Math.random()*0.42)); }
+    for(let i=particulas.length-1;i>=0;i--){
+      const p = particulas[i];
+      p.x += p.vx; p.y += p.vy; p.vy += 0.035; p.vx *= 0.985; p.vy *= 0.985; p.vida -= p.decai;
+      if(p.vida <= 0 || p.y > h + 30){ particulas.splice(i,1); continue; }
+      ctx.beginPath(); ctx.fillStyle = p.cor; ctx.globalAlpha = Math.max(0, p.vida); ctx.shadowBlur = 14; ctx.shadowColor = p.cor; ctx.arc(p.x, p.y, p.tam*Math.max(0.2, p.vida), 0, Math.PI*2); ctx.fill();
+    }
+    ctx.globalAlpha = 1; ctx.shadowBlur = 0; ctx.globalCompositeOperation = 'source-over';
+    if(t === 3){ explodir(w*0.35, h*0.28); explodir(w*0.68, h*0.22); }
+  }
+  loop();
+  return { parar(){ parado = true; if(animId) cancelAnimationFrame(animId); window.removeEventListener('resize', setup); } };
+}
+function abrirFesta(hb){
+  const overlay = $('festa');
+  const canvas = $('festaCanvas');
+  $('festaHabito').textContent = (hb.emoji||'⭐') + ' ' + hb.nome;
+  const bonus = sortearPremio(false, true);
+  if(bonus){ $('festaBonusNome').textContent = bonus.nome; $('festaBonusTag').textContent = bonus.onde + ' · ' + tamNome(bonus.tamanho) + (bonus.gratis ? ' · grátis' : ''); }
+  else { $('festaBonusNome').textContent = 'Sem prêmios disponíveis'; $('festaBonusTag').textContent = 'Adicione mais na aba Prêmios'; }
+  overlay.hidden = false;
+  requestAnimationFrame(()=> overlay.classList.add('ativo'));
+  document.body.style.overflow = 'hidden';
+  if(festaAnim) festaAnim.parar();
+  festaAnim = iniciarFogos(canvas);
+  confete(['🎉','✨','💛','💜','🎊']);
+  $('festaBtn').onclick = ()=>{
+    if(festaAnim){ festaAnim.parar(); festaAnim = null; }
+    overlay.classList.remove('ativo');
+    setTimeout(()=>{ overlay.hidden = true; document.body.style.overflow=''; }, 450);
+  };
+}
+
+montaCheckin();
+renderHoje();
+frase();
+</script>
+</body>
+</html>
