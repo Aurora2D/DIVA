@@ -1,0 +1,336 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>DIVA</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{width:100%;height:100%;overflow:hidden;background:#f6e6e0}
+.stage{position:fixed;inset:0}
+.stage svg{display:block;width:100%;height:100%}
+#grain{position:absolute;inset:0;width:100%;height:100%;opacity:.055;mix-blend-mode:multiply;pointer-events:none}
+</style>
+</head>
+<body>
+
+<div class="stage" role="img" aria-label="Abertura DIVA: ondas de aquarela se abrem nas diagonais. Uma gota dourada revela o emblema DIVA.">
+<svg id="svg" viewBox="0 0 1000 1000" aria-hidden="true">
+<defs>
+  <filter id="watercolor" x="-3%" y="-6%" width="106%" height="112%" color-interpolation-filters="sRGB">
+    <feTurbulence type="fractalNoise" baseFrequency=".014 .026" numOctaves="1" seed="18" result="flow"/>
+    <feDisplacementMap in="SourceGraphic" in2="flow" scale="12" xChannelSelector="R" yChannelSelector="G" result="wet"/>
+    <feTurbulence type="fractalNoise" baseFrequency=".22" numOctaves="1" seed="7" result="grain"/>
+    <feColorMatrix in="grain" type="matrix" values="0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  .65 .65 .65 0 -.18" result="density"/>
+    <feComposite in="wet" in2="density" operator="in" result="pigment"/>
+    <feBlend in="pigment" in2="wet" mode="multiply"/>
+  </filter>
+  <filter id="goldLeaf" x="-20%" y="-20%" width="140%" height="140%" color-interpolation-filters="sRGB">
+    <feTurbulence type="fractalNoise" baseFrequency=".09" numOctaves="1" seed="3" result="goldNoise"/>
+    <feDisplacementMap in="SourceGraphic" in2="goldNoise" scale="3" xChannelSelector="R" yChannelSelector="G" result="leaf"/>
+    <feComposite in="goldNoise" in2="leaf" operator="in" result="fleck"/>
+    <feBlend in="leaf" in2="fleck" mode="soft-light"/>
+  </filter>
+  <filter id="paperGrain" x="0" y="0" width="100%" height="100%">
+    <feTurbulence type="fractalNoise" baseFrequency=".6" numOctaves="1" seed="12"/>
+    <feColorMatrix type="saturate" values="0"/>
+  </filter>
+  <radialGradient id="wash" cx=".35" cy=".35" r=".75"><stop stop-color="#fff6f0" stop-opacity=".06"/><stop offset=".68" stop-color="#f0b6ac" stop-opacity=".12"/><stop offset="1" stop-color="#dca18e" stop-opacity=".34"/></radialGradient>
+
+  <radialGradient id="gPaper" cx=".5" cy=".46" r=".75">
+    <stop offset="0" stop-color="#fdf6f2"/><stop offset=".55" stop-color="#f9ece6"/><stop offset="1" stop-color="#f3dfd8"/>
+  </radialGradient>
+  <radialGradient id="gPaperFade" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#fdf6f2"/><stop offset=".45" stop-color="#f9ece6"/><stop offset="1" stop-color="#f3dfd8"/></radialGradient>
+  <radialGradient id="gGlow" cx=".5" cy=".5" r=".5">
+    <stop offset="0" stop-color="#fff8ef" stop-opacity=".9"/><stop offset=".6" stop-color="#fff1e4" stop-opacity=".35"/><stop offset="1" stop-color="#fff" stop-opacity="0"/>
+  </radialGradient>
+  <linearGradient id="gPlum" x1="0" x2="1">
+    <stop offset="0" stop-color="#80314f"/><stop offset=".45" stop-color="#b6627c"/><stop offset="1" stop-color="#954364"/>
+  </linearGradient>
+  <linearGradient id="gRose" x1="0" x2="1">
+    <stop offset="0" stop-color="#d9849a"/><stop offset=".5" stop-color="#eaa6b4"/><stop offset="1" stop-color="#c96a88"/>
+  </linearGradient>
+  <linearGradient id="gLav" x1="0" x2="1">
+    <stop offset="0" stop-color="#a28ba7"/><stop offset=".5" stop-color="#cfb0d2"/><stop offset="1" stop-color="#b09ab2"/>
+  </linearGradient>
+  <linearGradient id="gGold" x1="0" x2="1" y1="0" y2=".3">
+    <stop offset="0" stop-color="#fbe7a8"/><stop offset=".3" stop-color="#d4a24c"/><stop offset=".55" stop-color="#a8742e"/><stop offset=".8" stop-color="#f3d48a"/><stop offset="1" stop-color="#c38d3d"/>
+  </linearGradient>
+  <radialGradient id="gDisc" cx=".42" cy=".38" r=".7">
+    <stop offset="0" stop-color="#fdeee8"/><stop offset=".6" stop-color="#f8dcd3"/><stop offset="1" stop-color="#f1c9c0"/>
+  </radialGradient>
+  <linearGradient id="gSheen" x1="0" y1="0" x2="1" y2="1">
+    <stop offset="0" stop-color="#fff" stop-opacity=".75"/><stop offset=".35" stop-color="#fff" stop-opacity="0"/>
+  </linearGradient>
+  <radialGradient id="gDrop" cx=".35" cy=".3" r=".8">
+    <stop offset="0" stop-color="#fff5cd"/><stop offset=".45" stop-color="#cc9850"/><stop offset="1" stop-color="#a94367"/>
+  </radialGradient>
+  <radialGradient id="gSpark" cx=".5" cy=".5" r=".5">
+    <stop offset="0" stop-color="#fff"/><stop offset=".25" stop-color="#fff6dc" stop-opacity=".9"/><stop offset="1" stop-color="#ffe7b0" stop-opacity="0"/>
+  </radialGradient>
+  <linearGradient id="gSmile" x1="0" x2="1">
+    <stop offset="0" stop-color="#b9506f"/><stop offset=".5" stop-color="#d77289"/><stop offset="1" stop-color="#e79aaa"/>
+  </linearGradient>
+  <linearGradient id="gShine" x1="0" x2="1" y1="0" y2=".35">
+    <stop offset=".4" stop-color="#fff" stop-opacity="0"/><stop offset=".5" stop-color="#fff" stop-opacity=".7"/><stop offset=".6" stop-color="#fff" stop-opacity="0"/>
+  </linearGradient>
+
+  <clipPath id="inkClip"><path id="inkPath" d="M0 0Z"/></clipPath>
+  <clipPath id="discClip"><circle cx="495" cy="460" r="217"/></clipPath>
+  <clipPath id="smileClip"><rect id="smileRect" x="380" y="520" width="0" height="120"/></clipPath>
+  <clipPath id="upperClip"><path d="M-1000-1000H2000V-300C1450 140 1110 90 850 240S620 475 430 560S60 680-300 1300H-1000Z"/></clipPath>
+  <clipPath id="lowerClip"><path d="M2000 2000H-1000V1300C-450 860-110 910 150 760S380 525 570 440S940 320 1300-300H2000Z"/></clipPath>
+</defs>
+
+<!-- 1. Papel + ondas fixas nos cantos -->
+<rect x="-1500" y="-1500" width="4000" height="4000" fill="#f3dfd8"/><circle cx="495" cy="460" r="900" fill="url(#gPaperFade)"/>
+<g id="cornerTL" filter="url(#watercolor)" transform="rotate(-45 500 500)"></g>
+<g id="cornerBR" filter="url(#watercolor)" transform="translate(112 112) rotate(-45 500 500)"></g>
+<g id="dots"></g>
+<circle cx="495" cy="460" r="300" fill="url(#gGlow)"/>
+
+<!-- 2. Emblema (revelado pela mancha de tinta) -->
+<g id="logo" clip-path="url(#inkClip)">
+  <g id="disco">
+    <circle cx="495" cy="460" r="225" fill="url(#wash)"/>
+    <circle cx="495" cy="460" r="216" fill="url(#gSheen)" opacity=".24"/>
+  </g>
+  <g id="aro" style="transform-origin:495px 460px">
+    <circle cx="495" cy="460" r="226" fill="none" stroke="url(#gGold)" stroke-width="4.2"/>
+    <circle cx="497" cy="457" r="227" fill="none" stroke="url(#gGold)" stroke-width="1.6" opacity=".7"/>
+    <circle cx="492" cy="463" r="223" fill="none" stroke="#f6dfa6" stroke-width="1" opacity=".6"/>
+    <circle cx="510" cy="236" r="40" fill="url(#gSpark)"/>
+    <circle cx="300" cy="560" r="26" fill="url(#gSpark)" opacity=".8"/>
+    <circle cx="560" cy="684" r="30" fill="url(#gSpark)" opacity=".8"/>
+  </g>
+  <g id="simbolo" transform="translate(139 105) scale(.72)" fill="none" stroke="url(#gGold)" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round">
+    <path class="petal" d="M497 333C481 350 478 382 497 402C516 382 513 350 497 333Z"/>
+    <path class="petal" d="M486 401C467 399 452 384 450 364C466 366 479 377 485 391"/>
+    <path class="petal" d="M508 401C527 399 542 384 544 364C528 366 515 377 509 391"/>
+  </g>
+  <text id="nome" x="497" y="517" text-anchor="middle" font-family="'Cormorant Garamond',Georgia,serif" font-weight="500" font-size="152" letter-spacing="-3" fill="#64243f">DIVA</text>
+  <path id="sorriso" clip-path="url(#smileClip)" d="M398 548Q495 620 594 535Q512 642 398 548Z" fill="url(#gSmile)"/>
+  <rect id="shine" x="0" y="0" width="1000" height="1000" fill="url(#gShine)" clip-path="url(#discClip)" opacity="0"/>
+</g>
+
+<circle id="ripple" cx="495" cy="460" r="15" fill="none" stroke="#d5a257" stroke-width="1.5" opacity="0"/>
+
+<!-- 3. Cortinas -->
+<g id="curtains">
+  <g id="upper" clip-path="url(#upperClip)">
+    <g id="upperStack" transform="rotate(-45 500 500)"></g>
+    <path d="M2000-300C1450 140 1110 90 850 240S620 475 430 560S60 680-300 1300" fill="none" stroke="url(#gGold)" stroke-width="5"/>
+  </g>
+  <g id="lower" clip-path="url(#lowerClip)">
+    <g id="lowerStack" transform="rotate(-45 500 500)"></g>
+    <path d="M-1000 1300C-450 860-110 910 150 760S380 525 570 440S940 320 1300-300" fill="none" stroke="url(#gGold)" stroke-width="5"/>
+  </g>
+</g>
+
+<!-- 4. Gota -->
+<path id="drop" d="M0-22C8-10 13 0 13 7A13 13 0 0 1-13 7C-13 0-8-10 0-22Z" fill="url(#gDrop)" opacity="0"/>
+</svg>
+<canvas id="grain" aria-hidden="true"></canvas>
+</div>
+
+
+
+<script>
+const NS='http://www.w3.org/2000/svg', $=id=>document.getElementById(id);
+const el=(tag,attrs,parent)=>{const e=document.createElementNS(NS,tag);for(const k in attrs)e.setAttribute(k,attrs[k]);parent&&parent.appendChild(e);return e};
+
+/* ---------- Geração das faixas de aquarela (determinística) ---------- */
+function edge(y,amp,f,ph,reverse){
+  const pts=[];for(let x=-900;x<=1900;x+=60){pts.push([x,y+amp*2.4*Math.sin(x*f+ph)+amp*.65*Math.sin(x*f*2.3+ph*1.7)])}
+  if(reverse)pts.reverse();return pts;
+}
+function smooth(points,move=true){let d=(move?'M':'L')+points[0].join(' ');for(let i=1;i<points.length-1;i++){const p=points[i],q=points[i+1];d+='Q'+p.join(' ')+' '+((p[0]+q[0])/2)+' '+((p[1]+q[1])/2)}return d+'L'+points[points.length-1].join(' ')}
+function bandPath(y0,y1,amp,f,ph){
+  const top=edge(y0,amp,f,ph,false),bot=edge(y1,amp*.8,f*1.1,ph+1.3,true);
+  return smooth(top)+smooth(bot,false)+'Z';
+}
+function linePath(y,amp,f,ph){return smooth(edge(y,amp,f,ph))}
+// [y0, y1, cor, opacidade, amplitude, frequência, fase]  — tipo 'g' = fio dourado
+const UPPER=[
+  [-400,-10,'url(#gPlum)',.78,26,.004,0],
+  [-60,80,'url(#gRose)',.56,22,.005,1],
+  ['g',60,11,18,.005,1.4],
+  [50,210,'#e48fa4',.38,30,.0035,2],
+  [170,330,'#f0b3bc',.36,24,.004,3],
+  ['g',310,4,20,.0045,3.3],
+  [280,440,'#f6d0cf',.38,20,.005,4],
+  [400,560,'#f0c3cb',.3,18,.006,5],
+  ['g',480,2.5,14,.006,5.2],
+];
+const LOWER=UPPER.map(b=>b[0]==='g'?['g',1000-b[1],b[2],b[3],b[4],b[5]+.7]:[1000-b[1],1000-b[0],b[2],b[3],b[4],b[5],b[6]+.7])
+  .map((b,i)=>{if(i===0){b[2]='url(#gLav)';b[3]=.60}if(i===1)b[2]='#d98fb0';if(i===3)b[2]='#c9a0cc';return b});
+const riverPaths=[];
+function drawStack(g,bands,yMin,yMax){
+  const flows=g.id==='cornerTL'||g.id==='cornerBR';
+  for(const b of bands){
+    if(b[0]==='g'){if(b[1]<yMin||b[1]>yMax)continue;
+      const path=el('path',{d:linePath(b[1],b[3],b[4],b[5]),fill:'none',stroke:'url(#gGold)','stroke-width':b[2],'stroke-linecap':'round',opacity:.78},g);if(flows)riverPaths.push({id:g.id,path,gold:true,y:b[1],amp:b[3],f:b[4],ph:b[5]});continue}
+    const y0=Math.max(b[0],yMin),y1=Math.min(b[1],yMax);if(y1<=y0)continue;
+    const path=el('path',{d:bandPath(y0,y1,b[4],b[5],b[6]),fill:b[2],opacity:b[3]},g);
+    if(flows)riverPaths.push({id:g.id,path,gold:false,y0,y1,amp:b[4],f:b[5],ph:b[6]});
+  }
+}
+// cortinas: base de papel + faixas completas
+el('rect',{x:-900,y:-500,width:2800,height:1100,fill:'#fae8e1',opacity:.8},$('upperStack'));drawStack($('upperStack'),UPPER,-600,600);
+el('rect',{x:-900,y:400,width:2800,height:1100,fill:'#fae8e1',opacity:.8},$('lowerStack'));drawStack($('lowerStack'),LOWER,400,1600);
+// cantos que ficam no final (só a parte externa da pilha)
+drawStack($('cornerTL'),UPPER,-600,140);
+drawStack($('cornerBR'),LOWER.map(b=>b[0]==='g'?b:[b[0]+30,b[1],b[2],b[3],b[4],b[5],b[6]]),640,1600);
+// respingos
+[[150,255,7,'#e7a2ad'],[185,240,4,'#d9b06a'],[95,290,9,'#f1bcc3'],[115,350,3,'#d9b06a'],[870,320,7,'#e9a2b2'],[880,455,9,'#dc8ea1'],[830,300,3,'#c98aa0'],[860,400,3,'#a46077'],[395,820,3,'#d9b06a'],[440,830,2.5,'#e7a2ad'],[612,745,6,'#efc0c6'],[340,800,4,'#e7a2ad']]
+  .forEach(([cx,cy,r,f])=>el('circle',{cx,cy,r,fill:f,opacity:.8},$('dots')));
+
+
+
+/* ---------- Encaixe na tela (retrato ou paisagem) ---------- */
+function fit(){const W=innerWidth||1,H=innerHeight||1,a=H/W,svg=$('svg');
+  if(a>=1){const h=1000*a;svg.setAttribute('viewBox',`0 ${500-h/2} 1000 ${h}`)}
+  else{const w=1000/a;svg.setAttribute('viewBox',`${500-w/2} 0 ${w} 1000`)}}
+fit();
+
+/* ---------- Texturas pré-calculadas ----------
+   O filtro de aquarela (ruído + deslocamento + grão) pesava a cada quadro.
+   Agora: o ruído é gerado UMA vez em memória; o deslocamento vira geometria
+   (os pontos das bordas são empurrados pelo mesmo ruído) e o grão vira uma máscara fixa. */
+function noiseCanvas(x,y,w,h,scale,filterBody,keepAlpha){return new Promise(res=>{
+  const W=Math.max(1,Math.ceil(w*scale)),H=Math.max(1,Math.ceil(h*scale));
+  const opaque=keepAlpha?'':'<feColorMatrix type="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 0 1"/>';
+  const svg=`<svg xmlns="${NS}" width="${W}" height="${H}" viewBox="${x} ${y} ${w} ${h}" preserveAspectRatio="none"><filter id="n" filterUnits="userSpaceOnUse" x="${x}" y="${y}" width="${w}" height="${h}" ${filterBody[0]}>${filterBody[1]}${opaque}</filter><rect x="${x}" y="${y}" width="${w}" height="${h}" filter="url(#n)"/></svg>`;
+  const img=new Image();
+  img.onload=()=>{const c=document.createElement('canvas');c.width=W;c.height=H;c.getContext('2d',{willReadFrequently:true}).drawImage(img,0,0);res(c)};
+  img.onerror=()=>res(null);
+  img.src='data:image/svg+xml;charset=utf-8,'+encodeURIComponent(svg);
+})}
+const toURL=c=>new Promise(r=>c.toBlob(b=>r(URL.createObjectURL(b)),'image/png'));
+const bakedURLs=[],flowMaps={};   // flowMaps[id] = {x,y,w,h,W,H,data}
+const DISP=12;                    // mesma força do feDisplacementMap original
+function displace(id,px,py){      // empurra um ponto da borda pelo ruído (inversa aproximada do deslocamento)
+  const m=flowMaps[id];if(!m)return [px,py];
+  const i=Math.min(m.W-1,Math.max(0,((px-m.x)/m.w*m.W)|0)),j=Math.min(m.H-1,Math.max(0,((py-m.y)/m.h*m.H)|0)),k=(j*m.W+i)*4;
+  return [px-DISP*(m.data[k]/255-.5),py-DISP*(m.data[k+1]/255-.5)];
+}
+async function bakeTextures(){
+  const svgEl=$('svg'),rect=svgEl.getBoundingClientRect(),dpr=Math.min(2,window.devicePixelRatio||1);
+  const scale=Math.max(.5,rect.width/svgEl.viewBox.baseVal.width*dpr),defs=svgEl.querySelector('defs');
+  bakedURLs.splice(0).forEach(u=>URL.revokeObjectURL(u));
+  const S=svgEl.getScreenCTM();
+  for(const g of [$('cornerTL'),$('cornerBR')]){
+    g.removeAttribute('filter');delete flowMaps[g.id];
+    const inv=g.getScreenCTM().inverse().multiply(S);
+    const vb=svgEl.viewBox.baseVal,pts=[[vb.x,vb.y],[vb.x+vb.width,vb.y],[vb.x,vb.y+vb.height],[vb.x+vb.width,vb.y+vb.height]].map(([x,y])=>new DOMPoint(x,y).matrixTransform(inv));
+    const bb=g.getBBox(),pad=40;
+    const x0=Math.max(bb.x-pad,Math.min(...pts.map(p=>p.x))-pad),x1=Math.min(bb.x+bb.width+pad,Math.max(...pts.map(p=>p.x))+pad);
+    const y0=Math.max(bb.y-pad,Math.min(...pts.map(p=>p.y))-pad),y1=Math.min(bb.y+bb.height+pad,Math.max(...pts.map(p=>p.y))+pad);
+    const x=Math.floor(x0),y=Math.floor(y0),w=Math.ceil(x1-x0),h=Math.ceil(y1-y0);
+    if(w<=0||h<=0)continue;
+    const srgb='color-interpolation-filters="sRGB"';
+    const [flowC,grainC]=await Promise.all([
+      noiseCanvas(x,y,w,h,Math.min(scale,.5),[srgb,'<feTurbulence type="fractalNoise" baseFrequency=".014 .026" numOctaves="1" seed="18"/>']),
+      noiseCanvas(x,y,w,h,scale,[srgb,'<feTurbulence type="fractalNoise" baseFrequency=".22" numOctaves="1" seed="7"/>'])]);
+    if(!flowC||!grainC){g.setAttribute('filter','url(#watercolor)');continue}   // plano B: filtro original
+    // deslocamento -> geometria
+    flowMaps[g.id]={x,y,w,h,W:flowC.width,H:flowC.height,data:flowC.getContext('2d').getImageData(0,0,flowC.width,flowC.height).data};
+    // grão -> máscara fixa (mesma fórmula do feColorMatrix original)
+    const gx=grainC.getContext('2d'),gd=gx.getImageData(0,0,grainC.width,grainC.height),d=gd.data;
+    for(let k=0;k<d.length;k+=4){const a=Math.max(0,Math.min(1,.65*(d[k]+d[k+1]+d[k+2])/255-.18));d[k]=d[k+1]=d[k+2]=255;d[k+3]=a*255}
+    gx.putImageData(gd,0,0);const url=await toURL(grainC);bakedURLs.push(url);
+    const mid='gm-'+g.id;document.getElementById(mid)?.remove();
+    const mk=el('mask',{id:mid,maskUnits:'userSpaceOnUse',x:-2000,y:-2000,width:5000,height:5000},defs);
+    el('image',{href:url,x,y,width:w,height:h,preserveAspectRatio:'none',transform:g.getAttribute('transform')},mk);
+    let u=document.getElementById('grain-'+g.id);
+    if(!u){u=el('use',{id:'grain-'+g.id,href:'#'+g.id,style:'mix-blend-mode:multiply'});g.after(u)}
+    u.setAttribute('mask',`url(#${mid})`);
+  }
+  renderRiver(lastRiverT);
+  // grão do papel: desenhado uma vez num canvas por cima, fora do SVG
+  const VB=svgEl.viewBox.baseVal,pg=await noiseCanvas(VB.x,VB.y,VB.width,VB.height,scale,['','<feTurbulence type="fractalNoise" baseFrequency=".6" numOctaves="1" seed="12"/><feColorMatrix type="saturate" values="0"/>'],true);
+  if(pg){const c=$('grain');c.width=pg.width;c.height=pg.height;c.getContext('2d').drawImage(pg,0,0)}
+}
+let resizeT;addEventListener('resize',()=>{fit();clearTimeout(resizeT);resizeT=setTimeout(bakeTextures,400)});
+
+/* ---------- Pétalas: comprimento para o efeito de "desenhar" ---------- */
+const petals=[...document.querySelectorAll('.petal')];petals.forEach(p=>{const L=p.getTotalLength();p.dataset.len=L;p.style.strokeDasharray=L});
+
+/* ---------- Linha do tempo (pura: t -> estado) ---------- */
+const DURATION=6;
+const clamp=x=>Math.max(0,Math.min(1,x));
+const ease=x=>{x=clamp(x);return x*x*(3-2*x)};
+const phase=(t,a,b)=>ease((t-a)/(b-a));
+const CX=495,CY=460;
+
+function render(t){
+  // cortinas abrem na diagonal e somem
+  const open=phase(t,.25,3.4),exit=phase(t,2.6,3.6);
+  $('upper').setAttribute('transform',`translate(${-540*open} ${-490*open})`);
+  $('lower').setAttribute('transform',`translate(${540*open} ${490*open})`);
+  $('curtains').setAttribute('opacity',1-exit);
+
+  // gota cai e "espirra"
+  const fall=phase(t,1.25,2.25),splash=phase(t,2.2,2.65);
+  const dy=-80+(CY+80)*fall;
+  $('drop').setAttribute('opacity',t<1.25?0:1-splash);
+  $('drop').setAttribute('transform',`translate(${CX} ${dy}) scale(${1-.75*splash} ${1+.3*fall-.6*splash})`);
+
+  // anel de onda na água
+  const ring=phase(t,2.25,3.5);
+  $('ripple').setAttribute('opacity',(t>2.25?1:0)*(1-ring)*.55);
+  $('ripple').setAttribute('r',15+ring*330);
+
+  // mancha de tinta que revela o emblema
+  const spread=phase(t,2.23,4.15),r=1+260*spread;let d='';
+  for(let i=0;i<=96;i++){const a=i/96*Math.PI*2,wob=(1-spread)*(.075*Math.sin(a*7+t*2)+.045*Math.sin(a*11-t)),rr=r*(1+wob);
+    d+=(i?'L':'M')+(CX+Math.cos(a)*rr).toFixed(2)+' '+(CY+Math.sin(a)*rr*.96).toFixed(2)}
+  $('inkPath').setAttribute('d',d+'Z');
+
+  // camadas do emblema
+  const vDisco=phase(t,2.2,2.9),vAro=phase(t,2.6,3.7),vSimb=phase(t,3.1,3.9),vNome=phase(t,3.4,4.3),vSor=phase(t,3.9,4.75);
+  $('disco').setAttribute('opacity',vDisco);
+  $('aro').setAttribute('opacity',vAro);
+  $('aro').setAttribute('transform',`rotate(${-14*(1-vAro)} ${CX} ${CY}) translate(${CX} ${CY}) scale(${.93+.07*vAro}) translate(${-CX} ${-CY})`);
+  $('simbolo').setAttribute('opacity',Math.min(1,vSimb*2));
+  petals.forEach(p=>p.style.strokeDashoffset=p.dataset.len*(1-vSimb));
+  $('nome').setAttribute('opacity',vNome);
+  $('nome').setAttribute('transform',`translate(0 ${12*(1-vNome)})`);
+  $('smileRect').setAttribute('width',240*vSor);
+
+  // brilho final
+  const sh=clamp((t-4.55)/1.1);
+  $('shine').setAttribute('opacity',Math.sin(sh*Math.PI)*.75);
+  $('shine').setAttribute('x',-350+sh*700);
+
+}
+
+function riverEdge(y,amp,f,ph,t,reverse,id){
+  const m=flowMaps[id],step=m?14:60,xa=m?Math.max(-900,m.x-20):-900,xb=m?Math.min(1900,m.x+m.w+20):1900;
+  const pts=[];for(let x=xa;x<=xb+step-1;x+=step){const wave=x*.009+ph;
+    const drift=7*(Math.sin(wave-t*.65)-Math.sin(wave))+3*(Math.sin(x*.017+ph-t*.95)-Math.sin(x*.017+ph));
+    const p=[x,y+amp*2.4*Math.sin(x*f+ph)+amp*.65*Math.sin(x*f*2.3+ph*1.7)+drift];
+    const q=displace(id,p[0],p[1]);pts.push([+q[0].toFixed(1),+q[1].toFixed(1)]);
+  }if(reverse)pts.reverse();return pts;
+}
+let lastRiverT=0;
+function renderRiver(t){lastRiverT=t;for(const b of riverPaths){
+  const top=riverEdge(b.gold?b.y:b.y0,b.amp,b.f,b.ph,t,false,b.id);
+  const d=b.gold?smooth(top):smooth(top)+smooth(riverEdge(b.y1,b.amp*.8,b.f*1.1,b.ph+1.3,t,true,b.id),false)+'Z';
+  b.path.setAttribute('d',d);
+}}
+let frame,start;
+let lastPaint=-Infinity,introDone=false;
+let avisou=false;const avisa=()=>{if(!avisou){avisou=true;parent.postMessage('diva-splash-fim','*')}};
+function tick(now){if(now-lastPaint<32){frame=requestAnimationFrame(tick);return}lastPaint=now;const t=Math.min((now-start)/1000,DURATION);if(t<DURATION||!introDone){render(t);introDone=t>=DURATION}if((now-start)/1000>=DURATION+.5)avisa();renderRiver((now-start)/1000);frame=requestAnimationFrame(tick)}
+function play(){introDone=false;lastPaint=-Infinity;cancelAnimationFrame(frame);start=performance.now();frame=requestAnimationFrame(tick)}
+window.diva={render,play};
+render(0);
+Promise.all([document.fonts?document.fonts.ready:null,bakeTextures().catch(()=>{})]).then(()=>matchMedia('(prefers-reduced-motion: reduce)').matches?(render(DURATION),setTimeout(avisa,1200)):play());
+addEventListener('pointerdown',avisa);addEventListener('keydown',avisa);
+</script>
+</body>
+</html>

@@ -7,7 +7,8 @@ App de hábitos diários para o bem-estar pessoal (Android e web).
 | Pasta | O que tem |
 |---|---|
 | `index.html` | App DIVA (versão web). |
-| `logo/` | Animação do logo DIVA em aquarela vetorial (SVG + JS, sem PNG). Abra `logo/index.html` no navegador. |
+| `logo/index.html` | Animação do logo com controles (repetir, linha do tempo) — para estudar/ajustar. |
+| `logo/splash.html` | Versão tela cheia usada como abertura do app. Uma cópia dela fica embutida no `index.html` (bloco "ABERTURA DIVA"). |
 
 ## Animação do logo
 
