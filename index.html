@@ -1476,11 +1476,11 @@ addEventListener('pointerdown',avisa);addEventListener('keydown',avisa);
       <div class="ai-tit">A Lei da Atração, um passo de cada vez</div>
       <p>Você não precisa ter lido nenhum livro pra usar este espaço. 💜</p>
       <p>Aqui, a Lei da Atração é um caminho pra <b>clareza</b>. Quando você entende o que realmente quer, fica mais fácil enxergar o <b>menor passo possível</b> pra chegar lá: algo pequeno o bastante pra caber no seu dia.</p>
-      <p>E voltar à sua declaração uma vez por semana mantém você conectada ao que deseja, e costuma trazer ideias novas de próximos passos.</p>
+      <p>E voltar à sua declaração uma vez por semana, num momento em que você estiver tranquila, mantém você conectada ao que deseja e costuma trazer ideias novas de próximos passos.</p>
       <p><b>1 · Clareza:</b> quando algo incomodar, pergunte <i>"Então, o que eu quero?"</i></p>
       <p><b>2 · Declaração:</b> escreva o desejo numa frase que soe verdadeira pra você.</p>
       <p><b>3 · Permissão:</b> quando vier um <i>"não posso porque…"</i>, lembre de outras pessoas que já conseguiram.</p>
-      <p><b>✦ Voltar à declaração:</b> uma vez por semana, releia o que você escreveu.</p>
+      <p><b>✦ Voltar à declaração:</b> uma vez por semana, quando tiver um tempo calmo, releia o que você escreveu.</p>
       <p><b>✦ Menor passo:</b> com o desejo claro, escolha a menor ação possível pra hoje.</p>
       <button type="button" class="btn btn-full" id="btnHabitoDeclaracao" style="margin:4px 0 10px">🌱 Transformar em hábito: ler minha declaração (1×/semana)</button>
       <p class="ai-fim"><i>Inspirado no livro Lei da Atração, de Michael Losier. A leitura semanal e o menor passo são um jeito próprio do DIVA.</i></p>
@@ -2509,7 +2509,7 @@ function formatarNucleoIdeal(t){
 }
 function limparTextoDesejo(t){
   let s=String(t||'').trim();
-  s=s.replace(/^(estou em processo de|estou no processo de|adoro a ideia de|adoro saber que|adoro a sensação de quando|adoro me ver|estou animado\(a\) com a ideia de|eu decidi|cada vez mais|me anima|muitas coisas podem acontecer para|amo a ideia de|me faz bem pensar em|eu escolho|fico feliz em|tenho vontade de|estou aprendendo a|hoje eu me permito|eu mereço|passo a passo, estou abrindo espaço na minha vida para)\s*/i,'');
+  s=s.replace(/^(estou em processo de|estou no processo de|adoro a ideia de|adoro saber que|adoro a sensação de quando|adoro me ver|estou animado\(a\) com a ideia de|eu decidi|cada vez mais|me anima|muitas coisas podem acontecer para|amo a ideia de|me faz bem pensar em|eu escolho|fico feliz em|tenho vontade de|estou aprendendo a|hoje eu me permito|eu mereço|a cada dia, de todas as formas, eu me abro mais para)\s*/i,'');
   s=s.replace(/\s+/g,' ').trim();
   if(s) s=s.charAt(0).toUpperCase()+s.slice(1);
   return s;
@@ -2530,9 +2530,9 @@ const ABERTURA_FIXA=t=>{
   // se ainda não tem "ideal" logo após o substantivo, formata
   if(!/\bideal\b/i.test(nucleo)) nucleo=formatarNucleoIdeal(nucleo);
   nucleo=nucleo.charAt(0).toLowerCase()+nucleo.slice(1);
-  return`Passo a passo, estou abrindo espaço na minha vida para <b>${esc(nucleo)}</b>.`;
+  return`A cada dia, de todas as formas, eu me abro mais para <b>${esc(nucleo)}</b>.`;
 };
-const FECHAMENTO_FIXO=`Cada pequeno passo que eu dou traz o meu desejo um pouco mais perto.`;
+const FECHAMENTO_FIXO=`Eu deixo essa ideia descansar em mim, e ela segue trabalhando enquanto eu vivo o meu dia.`;
 
 function novoIdDz(){return 'd'+Date.now().toString(36)+Math.random().toString(36).slice(2,6);}
 
@@ -5118,7 +5118,7 @@ function montarDeclaracao(d){
   partes.push(FECHAMENTO_FIXO);
   return partes;
 }
-const ABERTURA_TODOS=`Passo a passo, estou abrindo espaço na minha vida para realizações em todas as áreas.`;
+const ABERTURA_TODOS=`A cada dia, de todas as formas, eu me abro mais para realizações em todas as áreas da minha vida.`;
 function montarDeclaracaoTodos(){
   const ds=desejosAtivos().filter(d=>d.corpo&&d.corpo.some(c=>limparTextoDesejo(c.texto)));
   if(!ds.length)return null;
@@ -6040,7 +6040,7 @@ function irParaDeclaracao(){
     setTimeout(()=>{const b=document.querySelector('[data-atr-sec="declaracao"]');if(b)b.click();},250);
   },fechar.length?340:0);
 }
-const HABITO_LER_DECLARACAO={id:'ler_declaracao',emoji:'📜',emojis:['📜','✨','💛'],nome:'Ler minha declaração',unidade:'1×/semana',paraQue:'Me manter conectada ao que eu desejo',texto:'Reler o que você escreveu traz clareza e ideias novas de próximos passos.',grupo:'mente',dims:['direcao','autopercepcao']};
+const HABITO_LER_DECLARACAO={id:'ler_declaracao',emoji:'📜',emojis:['📜','✨','💛'],nome:'Ler minha declaração',unidade:'1×/semana',paraQue:'Me manter conectada ao que eu desejo',texto:'Escolha um momento tranquilo da sua semana, quando estiver relaxada. Reler o que você escreveu traz clareza e ideias novas de próximos passos.',grupo:'mente',dims:['direcao','autopercepcao']};
 function habitoLerDeclaracao(){
   if(S.habitos.some(h=>h.nome===HABITO_LER_DECLARACAO.nome)){mostrarToast('Você já tem esse hábito 💛');return;}
   if(S.habitos.some(h=>!h.pausado)&&!habitoLiberado()){const dias=diasAteLiberar();mostrarToast('Sem pressa. Próximo hábito libera em '+dias+' dia'+(dias===1?'':'s')+'.');return;}
