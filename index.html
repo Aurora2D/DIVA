@@ -1474,7 +1474,7 @@ addEventListener('pointerdown',avisa);addEventListener('keydown',avisa);
     <h2 style="margin-top:6px"><svg class="ic"><use href="#i-atracao"/></svg>Lei da Atração</h2>
     <div class="atr-intro">
       <div class="ai-tit">A Lei da Atração, um passo de cada vez</div>
-      <p>Você não precisa ter lido nenhum livro pra usar este espaço. 💜</p>
+      <p>Este espaço foi pensado pra você, do jeito que você chegar. 💜</p>
       <p>Aqui, a Lei da Atração é um caminho pra <b>clareza</b>. Quando você entende o que realmente quer, fica mais fácil enxergar o <b>menor passo possível</b> pra chegar lá: algo pequeno o bastante pra caber no seu dia.</p>
       <p>E voltar à sua declaração uma vez por semana, num momento em que você estiver tranquila, mantém você conectada ao que deseja e costuma trazer ideias novas de próximos passos.</p>
       <p><b>1 · Clareza:</b> quando algo incomodar, pergunte <i>"Então, o que eu quero?"</i></p>
@@ -2502,6 +2502,11 @@ function nucleoParaUsar(d){
 }
 
 function formatarNucleoIdeal(t){
+  // desejo que começa com verbo fica do jeito que foi escrito ("ter tempo pra mim")
+  const limpo=(limparTextoDesejo(t)||String(t||'').trim());
+  // e frase sem artigo também ("tempo pra mim"); só "o/a ..." ganha o "ideal"
+  if(limpo&&!/^(o|a|os|as)\s/i.test(limpo))
+    return limpo.charAt(0).toLowerCase()+limpo.slice(1);
   const {art,subst,resto}=decomporNucleo(t);
   const comp=resto?(resto.match(/^(pelo|pela|pelos|pelas|por|para|com|sem|em|no|na|do|da|dos|das|de)\b/i)?(' '+resto):(contrairDe(resto))):'';
   if(art) return (art+' '+subst+' ideal'+comp).replace(/\s+/g,' ').trim();
@@ -2509,7 +2514,7 @@ function formatarNucleoIdeal(t){
 }
 function limparTextoDesejo(t){
   let s=String(t||'').trim();
-  s=s.replace(/^(estou em processo de|estou no processo de|adoro a ideia de|adoro saber que|adoro a sensação de quando|adoro me ver|estou animado\(a\) com a ideia de|eu decidi|cada vez mais|me anima|muitas coisas podem acontecer para|amo a ideia de|me faz bem pensar em|eu escolho|fico feliz em|tenho vontade de|estou aprendendo a|hoje eu me permito|eu mereço|a cada dia, de todas as formas, eu me abro mais para)\s*/i,'');
+  s=s.replace(/^(estou em processo de|estou no processo de|adoro a ideia de|adoro saber que|adoro a sensação de quando|adoro me ver|estou animado\(a\) com a ideia de|eu decidi|cada vez mais|me anima|muitas coisas podem acontecer para|amo a ideia de|me faz bem pensar em|eu escolho|fico feliz em|tenho vontade de|estou aprendendo a|hoje eu me permito|eu mereço|amo saber que posso|amo a ideia de|me sinto feliz ao imaginar que posso|a cada dia, de todas as formas, eu me abro mais para)\s*/i,'');
   s=s.replace(/\s+/g,' ').trim();
   if(s) s=s.charAt(0).toUpperCase()+s.slice(1);
   return s;
@@ -2517,13 +2522,14 @@ function limparTextoDesejo(t){
 
 /* ===== Losier: modelos do corpo da Declaração de Desejo ===== */
 const MODELOS_CORPO=[
-  {k:'ad_ideia',pre:'Me faz bem pensar em',ph:'ex: decidir o meu valor com autonomia'},
-  {k:'eu_decidi',pre:'Eu escolho',ph:'ex: cobrar com base no que ofereço'},
-  {k:'ad_sensacao',pre:'Fico feliz em',ph:'ex: valorizar o que eu ensino'},
-  {k:'animado_ideia',pre:'Tenho vontade de',ph:'ex: honrar o preço das minhas aulas'},
-  {k:'cada_vez',pre:'Estou aprendendo a',ph:'ex: escolher o que aceito cobrar'},
-  {k:'me_anima',pre:'Hoje eu me permito',ph:'ex: definir o valor do meu trabalho'},
-  {k:'ad_saber',pre:'Eu mereço',ph:'ex: sustentar o meu preço com leveza'}
+  {k:'ad_ideia',pre:'Adoro a ideia de',ph:'ex: decidir o meu valor com autonomia'},
+  {k:'ad_saber',pre:'Amo saber que posso',ph:'ex: sustentar o meu preço com leveza'},
+  {k:'animado_ideia',pre:'Amo a ideia de',ph:'ex: honrar o preço das minhas aulas'},
+  {k:'ad_sensacao',pre:'Me sinto feliz ao imaginar que posso',ph:'ex: valorizar o que eu ensino'},
+  {k:'eu_decidi',pre:'Eu decidi',ph:'ex: cobrar com base no que ofereço'},
+  /* inícios antigos: só aparecem em frases já escritas, não são oferecidos de novo */
+  {k:'cada_vez',pre:'Eu decidi',ph:'',oculto:true},
+  {k:'me_anima',pre:'Amo a ideia de',ph:'',oculto:true}
 ];
 const ABERTURA_FIXA=t=>{
   let nucleo=(t||'').trim()||'o desejo ideal';
@@ -5087,7 +5093,7 @@ function dzSalvaCampos(){
 }
 function renderCorpoCorpo(d){
   const chaves=d.corpo.map(c=>c.k);
-  const modelos=MODELOS_CORPO.filter(m=>!chaves.includes(m.k));
+  const modelos=MODELOS_CORPO.filter(m=>!m.oculto&&!chaves.includes(m.k));
   let html='<div class="corpo-lista">';
   d.corpo.forEach((c,i)=>{
     const mod=MODELOS_CORPO.find(m=>m.k===c.k);
@@ -5250,9 +5256,9 @@ function dzRender(){
   const nucleoEditavel=(d.nucleo||'').trim()||nucleoAtual;
   $('dzP2').innerHTML=
     `<div class="abertura-fixa">${ABERTURA_FIXA(nucleoAtual)}</div>`
-    +`<div class="mut" style="font-size:11px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;margin:8px 0 4px">Substantivo na abertura</div>`
-    +`<input id="dzNucleo" value="${esc(nucleoEditavel)}" placeholder="ex: a decisão ideal do meu valor…" style="margin-bottom:4px;font-size:14px">`
-    +`<div class="mut" style="font-size:11.5px;margin:0 0 10px;line-height:1.45">Se o app inventar algo estranho (tipo “querimento”), corrige aqui — vale pra declaração inteira.</div>`
+    +`<div class="mut" style="font-size:11px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;margin:8px 0 4px">Como o desejo aparece na abertura</div>`
+    +`<input id="dzNucleo" value="${esc(nucleoEditavel)}" placeholder="ex: valorizar o meu trabalho" style="margin-bottom:4px;font-size:14px">`
+    +`<div class="mut" style="font-size:11.5px;margin:0 0 10px;line-height:1.45">Se quiser, ajuste aqui. Vale pra declaração inteira.</div>`
     +renderCorpoCorpo(d)
     +renderMenorPasso(d);
   const gs=d.gravetos||[];
