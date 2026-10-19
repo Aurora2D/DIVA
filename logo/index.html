@@ -152,7 +152,7 @@ output{font-size:11px;min-width:40px;font-variant-numeric:tabular-nums}
 </div>
 
 <footer><small>Duas ondas. Uma gota. DIVA.</small><button id="replay" type="button">↻ Repetir animação</button></footer>
-<div class="timeline"><input id="seek" type="range" min="0" max="6" step="0.01" value="0" aria-label="Posição da animação"><output id="time">0,0 s</output></div>
+<div class="timeline"><input id="seek" type="range" min="0" max="1.72" step="0.005" value="0" aria-label="Posição da animação"><output id="time">0,0 s</output></div>
 <p class="note">Arraste a barra para explorar cada instante da aquarela.</p>
 </main>
 
@@ -272,7 +272,19 @@ let resizeT;addEventListener('resize',()=>{clearTimeout(resizeT);resizeT=setTime
 const petals=[...document.querySelectorAll('.petal')];petals.forEach(p=>{const L=p.getTotalLength();p.dataset.len=L;p.style.strokeDasharray=L});
 
 /* ---------- Linha do tempo (pura: t -> estado) ---------- */
-const DURATION=6;
+/* ---------- Ritmo tirado do vídeo de referência (InShot_20261019_131007971) ----------
+   Cada par = [tempo real em s, momento da coreografia original de 6 "tempos"].
+   Interpolação cúbica monotônica: a velocidade muda sem trancos entre os trechos. */
+const RITMO=[[0,.6],[.40,2.04],[1.07,3.28],[1.25,3.80],[1.40,4.20],[1.47,4.50],[1.60,5.15],[1.72,6]];
+const warp=(()=>{const X=RITMO.map(p=>p[0]),Y=RITMO.map(p=>p[1]),n=X.length,d=[],m=[];
+  for(let i=0;i<n-1;i++)d.push((Y[i+1]-Y[i])/(X[i+1]-X[i]));
+  m[0]=d[0];m[n-1]=d[n-2];for(let i=1;i<n-1;i++)m[i]=d[i-1]*d[i]<=0?0:(d[i-1]+d[i])/2;
+  for(let i=0;i<n-1;i++){if(d[i]===0){m[i]=m[i+1]=0;continue}const a=m[i]/d[i],b=m[i+1]/d[i],h=a*a+b*b;if(h>9){const k=3/Math.sqrt(h);m[i]=k*a*d[i];m[i+1]=k*b*d[i]}}
+  return T=>{if(T<=X[0])return Y[0];if(T>=X[n-1])return Y[n-1];let i=0;while(T>X[i+1])i++;
+    const h=X[i+1]-X[i],s=(T-X[i])/h,s2=s*s,s3=s2*s;
+    return (2*s3-3*s2+1)*Y[i]+(s3-2*s2+s)*h*m[i]+(-2*s3+3*s2)*Y[i+1]+(s3-s2)*h*m[i+1]}})();
+
+const DURATION=1.72;           // duração real da entrada (s), conforme o vídeo de referência
 const clamp=x=>Math.max(0,Math.min(1,x));
 const ease=x=>{x=clamp(x);return x*x*(3-2*x)};
 const phase=(t,a,b)=>ease((t-a)/(b-a));
@@ -289,7 +301,7 @@ const CX=495,CY=460;
 function measure(){const sv=$('svg'),r=sv.getBoundingClientRect(),v=sv.viewBox.baseVal;K=Math.min(r.width/v.width,r.height/v.height)||1}
 addEventListener('resize',measure);
 
-function render(t){
+function render(T){const t=warp(T);
   // cortinas: começam devagar e vão acelerando até sair da tela; se dissolvem no embalo final
   const open=seg(t,.1,2.6,inAccel),exit=seg(t,2.0,2.8,inOutSine);
   const cu=$('curtUp').style,cl=$('curtLo').style;
@@ -334,7 +346,7 @@ function render(t){
   const sh=seg(t,4.5,5.7,inOutCubic);
   $('shine').setAttribute('opacity',Math.sin(sh*Math.PI)*.75);
   $('shine').setAttribute('x',-350+sh*700);
-  $('seek').value=t;$('time').value=t.toFixed(1).replace('.',',')+' s';
+  $('seek').value=T;$('time').value=T.toFixed(2).replace('.',',')+' s';
 }
 
 function riverEdge(y,amp,f,ph,t,reverse,id){
@@ -346,7 +358,7 @@ function riverEdge(y,amp,f,ph,t,reverse,id){
   }if(reverse)pts.reverse();return pts;
 }
 let lastRiverT=0,riverDrawn=false;
-const RIVER_START=2.8;
+const RIVER_START=.9;          // em segundos reais
 function renderRiver(tt){const t=Math.max(0,tt-RIVER_START);if(t===0&&lastRiverT===0&&riverDrawn)return;riverDrawn=true;lastRiverT=t;for(const b of riverPaths){
   const top=riverEdge(b.gold?b.y:b.y0,b.amp,b.f,b.ph,t,false,b.id);
   const d=b.gold?smooth(top):smooth(top)+smooth(riverEdge(b.y1,b.amp*.8,b.f*1.1,b.ph+1.3,t,true,b.id),false)+'Z';
