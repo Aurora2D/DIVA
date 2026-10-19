@@ -6,7 +6,7 @@
 <meta name="theme-color" media="(prefers-color-scheme: light)" content="#FFF1EB">
 <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#1a1225">
 <meta name="color-scheme" content="light dark">
-<title>Batom &amp; Risada</title>
+<title>DIVA</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 :root{
@@ -1349,7 +1349,7 @@ addEventListener('pointerdown',avisa);addEventListener('keydown',avisa);
     <div class="date" id="data"></div>
     <button class="btn-config" id="btnConfig" title="Configurações"><svg class="ic"><use href="#i-config"/></svg></button>
   </div>
-  <h1>Batom &amp; Risada</h1>
+  <h1>DIVA</h1>
   <p class="sub" id="subSaudacao">Estou em processo de ficar bem.</p>
   <p class="mut" style="text-align:center;font-size:12.5px;line-height:1.5;margin:-6px 0 12px">Hábitos pequenos, no seu ritmo. Você personaliza tudo.</p>
 
@@ -1617,7 +1617,7 @@ addEventListener('pointerdown',avisa);addEventListener('keydown',avisa);
     <div class="rel-scroll" style="padding-top:0">
       <div class="rel-titulo" style="font-size:18px;margin-bottom:16px">Configurações</div>
       <div id="cfgCorpo"></div>
-      <div class="cfg-rodape">Batom &amp; Risada · feito com cuidado</div>
+      <div class="cfg-rodape">DIVA · feito com cuidado</div>
     </div>
   </div>
 </div>
@@ -6738,7 +6738,7 @@ function exportarNotasAntigas(){
   (S.leiAtracao.desejos||[]).forEach(d=>{(d.notas||[]).forEach(n=>todas.push({...n,desejoTexto:d.texto}));});
   if(!todas.length){avisar('Você ainda não guardou nenhuma nota na aba Atração.');return;}
   todas.sort((a,b)=>(a.data||'').localeCompare(b.data||''));
-  let txt='Minhas notas de atenção — Batom & Risada\n';
+  let txt='Minhas notas de atenção — DIVA\n';
   txt+='='.repeat(46)+'\n\n';
   let mesAtual='';
   todas.forEach(n=>{
@@ -6748,7 +6748,7 @@ function exportarNotasAntigas(){
     txt+=data+' — '+n.desejoTexto+'\n';
     txt+='  '+n.texto+'\n\n';
   });
-  const nome='batom-risada-notas-'+hoje()+'.txt';
+  const nome='diva-notas-'+hoje()+'.txt';
   const blob=new Blob([txt],{type:'text/plain'});
   const url=URL.createObjectURL(blob);
   const a=document.createElement('a');a.href=url;a.download=nome;document.body.appendChild(a);a.click();document.body.removeChild(a);
@@ -6758,9 +6758,9 @@ function exportarNotasAntigas(){
 function renderLembretes(){$('lemLista').innerHTML=S.lembretes.map((l,i)=>`<div class="lista-item"><div class="txt">${esc(l.frase)} <span class="mut">· ${esc(l.hora)}</span></div><button class="btn fant" data-lem="${i}">×</button></div>`).join('');document.querySelectorAll('#lemLista [data-lem]').forEach(b=>{b.onclick=()=>{S.lembretes.splice(+b.dataset.lem,1);salva();renderLembretes();renderHoje();};});}
 $('btnAddLemb').onclick=()=>{const f=$('lemFrase').value.trim(),h=$('lemHora').value;if(!f||!h)return avisar('Preencha frase e hora.');S.lembretes.push({id:'l'+Date.now(),frase:f,hora:h});$('lemFrase').value='';$('lemHora').value='';salva();renderLembretes();renderHoje();};
 async function exportarBackup(){
-  const data=JSON.stringify(S,null,2);const nome='batom-risada-backup-'+hoje()+'.json';
+  const data=JSON.stringify(S,null,2);const nome='diva-backup-'+hoje()+'.json';
   const blob=new Blob([data],{type:'application/json'});const file=new File([blob],nome,{type:'application/json'});
-  if(navigator.canShare&&navigator.canShare({files:[file]})){try{await navigator.share({files:[file],title:'Backup Batom & Risada'});return;}catch(err){if(err&&err.name==='AbortError')return;}}
+  if(navigator.canShare&&navigator.canShare({files:[file]})){try{await navigator.share({files:[file],title:'Backup DIVA'});return;}catch(err){if(err&&err.name==='AbortError')return;}}
   try{const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download=nome;document.body.appendChild(a);a.click();document.body.removeChild(a);setTimeout(()=>URL.revokeObjectURL(url),1500);}
   catch(e){avisar('Não consegui baixar aqui.');}
 }
