@@ -82,14 +82,16 @@ html,body{width:100%;height:100%;overflow:hidden;background:#f6e6e0}
   <clipPath id="inkClip"><path id="inkPath" d="M0 0Z"/></clipPath>
   <clipPath id="discClip"><circle cx="495" cy="460" r="217"/></clipPath>
   <clipPath id="smileClip"><rect id="smileRect" x="380" y="520" width="0" height="120"/></clipPath>
+  <clipPath id="upBox"><rect id="upBoxR" x="-20" y="-20" width="1580" height="1530"/></clipPath>
+  <clipPath id="loBox"><rect id="loBoxR" x="-560" y="-510" width="1580" height="1530"/></clipPath>
   <clipPath id="upperClip"><path d="M-1000-1000H2000V-300C1450 140 1110 90 850 240S620 475 430 560S60 680-300 1300H-1000Z"/></clipPath>
   <clipPath id="lowerClip"><path d="M2000 2000H-1000V1300C-450 860-110 910 150 760S380 525 570 440S940 320 1300-300H2000Z"/></clipPath>
 </defs>
 
 <!-- 1. Papel + ondas fixas nos cantos -->
 <rect x="-1500" y="-1500" width="4000" height="4000" fill="#f3dfd8"/><circle cx="495" cy="460" r="900" fill="url(#gPaperFade)"/>
-<g id="cornerTL" filter="url(#watercolor)" transform="rotate(-45 500 500)"></g>
-<g id="cornerBR" filter="url(#watercolor)" transform="translate(112 112) rotate(-45 500 500)"></g>
+<g id="cornerTL" transform="rotate(-45 500 500)"></g>
+<g id="cornerBR" transform="translate(112 112) rotate(-45 500 500)"></g>
 <g id="dots"></g>
 <circle cx="495" cy="460" r="300" fill="url(#gGlow)"/>
 
@@ -121,17 +123,16 @@ html,body{width:100%;height:100%;overflow:hidden;background:#f6e6e0}
 
 </svg>
 <!-- 3. Cortinas: camadas separadas, só deslizam e esmaecem (sem redesenhar) -->
-<svg class="layer vb" id="curtUp" viewBox="0 0 1000 1000" aria-hidden="true"><g id="upper" clip-path="url(#upperClip)">
+<svg class="layer vb" id="curtUp" viewBox="0 0 1000 1000" aria-hidden="true"><g clip-path="url(#upBox)"><g id="upper" clip-path="url(#upperClip)">
     <g id="upperStack" transform="rotate(-45 500 500)"></g>
     <path d="M2000-300C1450 140 1110 90 850 240S620 475 430 560S60 680-300 1300" fill="none" stroke="url(#gGold)" stroke-width="5"/>
-  </g></svg>
-<svg class="layer vb" id="curtLo" viewBox="0 0 1000 1000" aria-hidden="true"><g id="lower" clip-path="url(#lowerClip)">
+  </g></g></svg>
+<svg class="layer vb" id="curtLo" viewBox="0 0 1000 1000" aria-hidden="true"><g clip-path="url(#loBox)"><g id="lower" clip-path="url(#lowerClip)">
     <g id="lowerStack" transform="rotate(-45 500 500)"></g>
     <path d="M-1000 1300C-450 860-110 910 150 760S380 525 570 440S940 320 1300-300" fill="none" stroke="url(#gGold)" stroke-width="5"/>
-  </g></svg>
+  </g></g></svg>
 <!-- 4. Gota -->
 <svg class="layer vb" id="dropSvg" viewBox="0 0 1000 1000" aria-hidden="true"><path id="drop" d="M0-22C8-10 13 0 13 7A13 13 0 0 1-13 7C-13 0-8-10 0-22Z" fill="url(#gDrop)" opacity="0"/></svg>
-<canvas id="grain" aria-hidden="true"></canvas>
 </div>
 
 
@@ -192,7 +193,12 @@ drawStack($('cornerBR'),LOWER.map(b=>b[0]==='g'?b:[b[0]+30,b[1],b[2],b[3],b[4],b
 /* ---------- Encaixe na tela (retrato ou paisagem) ---------- */
 function fit(){const W=innerWidth||1,H=innerHeight||1,a=H/W,svg=$('svg');
   const v=a>=1?`0 ${500-500*a} 1000 ${1000*a}`:`${500-500/a} 0 ${1000/a} 1000`;
-  document.querySelectorAll('svg.vb').forEach(e=>e.setAttribute('viewBox',v));measure()}
+  document.querySelectorAll('svg.vb').forEach(e=>e.setAttribute('viewBox',v));
+  const [vx,vy,vw,vh]=v.split(' ').map(Number),W2=vw+540+40,H2=vh+490+40;
+  const u=$('upBoxR'),l=$('loBoxR');
+  u.setAttribute('x',vx-20);u.setAttribute('y',vy-20);u.setAttribute('width',W2);u.setAttribute('height',H2);
+  l.setAttribute('x',vx-560);l.setAttribute('y',vy-510);l.setAttribute('width',W2);l.setAttribute('height',H2);
+  measure()}
 fit();
 
 /* ---------- Texturas pré-calculadas ----------
@@ -211,8 +217,12 @@ function noiseCanvas(x,y,w,h,scale,filterBody,keepAlpha){return new Promise(res=
 const toURL=c=>new Promise(r=>c.toBlob(b=>r(URL.createObjectURL(b)),'image/png'));
 const bakedURLs=[],flowMaps={};   // flowMaps[id] = {x,y,w,h,W,H,data}
 const DISP=12;                    // mesma força do feDisplacementMap original
-function displace(id,px,py){      // empurra um ponto da borda pelo ruído (inversa aproximada do deslocamento)
-  const m=flowMaps[id];if(!m)return [px,py];
+/* ruído suave barato (value noise) — dá a borda irregular de aquarela sem gerar texturas */
+const hash=(i,j)=>{const h=Math.sin(i*127.1+j*311.7)*43758.5453;return h-Math.floor(h)};
+const vnoise=(x,y)=>{const i=Math.floor(x),j=Math.floor(y),fx=x-i,fy=y-j,u=fx*fx*(3-2*fx),v=fy*fy*(3-2*fy);
+  const a=hash(i,j),b=hash(i+1,j),c=hash(i,j+1),d=hash(i+1,j+1);return a+(b-a)*u+(c-a)*v+(a-b-c+d)*u*v};
+function displace(id,px,py){      // empurra um ponto da borda pelo ruído
+  const m=flowMaps[id];if(!m){const n1=vnoise(px*.014,py*.026),n2=vnoise(px*.014+17.3,py*.026+5.1);return [px-DISP*(n1-.5)*1.6,py-DISP*(n2-.5)*1.6]}
   const i=Math.min(m.W-1,Math.max(0,((px-m.x)/m.w*m.W)|0)),j=Math.min(m.H-1,Math.max(0,((py-m.y)/m.h*m.H)|0)),k=(j*m.W+i)*4;
   return [px-DISP*(m.data[k]/255-.5),py-DISP*(m.data[k+1]/255-.5)];
 }
@@ -253,7 +263,7 @@ async function bakeTextures(){
   const VB=svgEl.viewBox.baseVal,pg=await noiseCanvas(VB.x,VB.y,VB.width,VB.height,scale,['','<feTurbulence type="fractalNoise" baseFrequency=".6" numOctaves="1" seed="12"/><feColorMatrix type="saturate" values="0"/>'],true);
   if(pg){const c=$('grain');c.width=pg.width;c.height=pg.height;c.getContext('2d').drawImage(pg,0,0)}
 }
-let resizeT;addEventListener('resize',()=>{fit();clearTimeout(resizeT);resizeT=setTimeout(bakeTextures,400)});
+addEventListener('resize',fit);
 
 /* ---------- Pétalas: comprimento para o efeito de "desenhar" ---------- */
 const petals=[...document.querySelectorAll('.petal')];petals.forEach(p=>{const L=p.getTotalLength();p.dataset.len=L;p.style.strokeDasharray=L});
@@ -336,7 +346,7 @@ function render(T){const t=warp(T);
 }
 
 function riverEdge(y,amp,f,ph,t,reverse,id){
-  const m=flowMaps[id],step=m?14:60,xa=m?Math.max(-900,m.x-20):-900,xb=m?Math.min(1900,m.x+m.w+20):1900;
+  const m=flowMaps[id],step=m?14:22,xa=m?Math.max(-900,m.x-20):-600,xb=m?Math.min(1900,m.x+m.w+20):1600;
   const pts=[];for(let x=xa;x<=xb+step-1;x+=step){const wave=x*.009+ph;
     const drift=7*(Math.sin(wave-t*.65)-Math.sin(wave))+3*(Math.sin(x*.017+ph-t*.95)-Math.sin(x*.017+ph));
     const p=[x,y+amp*2.4*Math.sin(x*f+ph)+amp*.65*Math.sin(x*f*2.3+ph*1.7)+drift];
@@ -350,14 +360,18 @@ function renderRiver(tt){const t=Math.max(0,tt-RIVER_START);if(t===0&&lastRiverT
   const d=b.gold?smooth(top):smooth(top)+smooth(riverEdge(b.y1,b.amp*.8,b.f*1.1,b.ph+1.3,t,true,b.id),false)+'Z';
   b.path.setAttribute('d',d);
 }}
-let frame,start;
+let frame,start,lastNow=0,decorrido=0;
 let lastPaint=-Infinity,introDone=false;
 let avisou=false;const avisa=()=>{if(!avisou){avisou=true;parent.postMessage('diva-splash-fim','*')}};
-function tick(now){if(introDone&&now-lastPaint<32){frame=requestAnimationFrame(tick);return}lastPaint=now;const t=Math.min((now-start)/1000,DURATION);if(t<DURATION||!introDone){render(t);introDone=t>=DURATION}if((now-start)/1000>=DURATION+.5)avisa();renderRiver((now-start)/1000);frame=requestAnimationFrame(tick)}
-function play(){introDone=false;lastPaint=-Infinity;cancelAnimationFrame(frame);start=performance.now();frame=requestAnimationFrame(tick)}
+function tick(now){decorrido+=Math.min(now-lastNow,34);lastNow=now;const t=Math.min(decorrido/1000,DURATION);if(!introDone){render(t);introDone=t>=DURATION}if(decorrido/1000>=DURATION+.45){avisa();return}frame=requestAnimationFrame(tick)}
+function play(){introDone=false;decorrido=0;cancelAnimationFrame(frame);lastNow=performance.now();frame=requestAnimationFrame(tick)}
 window.diva={render,play};
 measure();render(0);
-Promise.all([document.fonts?document.fonts.ready:null,bakeTextures().catch(()=>{})]).then(()=>matchMedia('(prefers-reduced-motion: reduce)').matches?(render(DURATION),setTimeout(avisa,1200)):play());
+renderRiver(0);   // ondas dos cantos: desenhadas uma vez (na abertura elas ficam paradas)
+const fonte=Promise.race([document.fonts?document.fonts.ready:Promise.resolve(),new Promise(r=>setTimeout(r,400))]);
+const liberado=new Promise(r=>{addEventListener('message',e=>{if(e.data==='diva-go')r()});setTimeout(r,2500)});
+parent.postMessage('diva-pronto','*');
+Promise.all([fonte,liberado]).then(()=>matchMedia('(prefers-reduced-motion: reduce)').matches?(render(DURATION),setTimeout(avisa,1200)):requestAnimationFrame(()=>play()));
 addEventListener('pointerdown',avisa);addEventListener('keydown',avisa);
 </script>
 </body>
