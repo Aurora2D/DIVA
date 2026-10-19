@@ -7692,7 +7692,11 @@ function sitRotulo(sit){return sit?String(sit.rot||'').replace(/\{nome\}/g,nomeC
 function situacoes(){if(!Array.isArray(S.situacoes)||!S.situacoes.length)S.situacoes=situacoesPadrao(cuida());return S.situacoes;}
 function sitPorId(id){return situacoes().find(s=>s.id===id)||null;}
 const TAG_ROTULO=()=>({junto:cuida()?'Com '+nomeCuidado()+' junto':'Com alguém junto',descanso:cuida()?'Quando '+nomeCuidado()+' descansa':'Em casa, em silêncio',livre:cuida()?'Quando alguém fica com '+nomeCuidado():'Quando estou livre'});
+/* prêmios que só fazem sentido à noite (ver a lua, as estrelas...) não saem de dia */
+const PREMIO_SO_NOITE=/\blua\b|\bluar\b|estrela|c[ée]u (à|a|de) noite|c[ée]u noturno/i;
+function ehNoite(d){const h=(d||new Date()).getHours();return h>=18||h<5;}
 function premioCabe(p,sit){
+  if(PREMIO_SO_NOITE.test(p&&p.nome||'')&&!ehNoite())return false;
   if(!sit)return true;
   if(p.custo==='planejar')return false;
   const dur=p.dur||(p.tamanho==='P'?5:p.tamanho==='M'?15:30);
