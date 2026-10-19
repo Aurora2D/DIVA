@@ -81,6 +81,13 @@ h3{font-size:12px;color:var(--mut);margin:14px 0 6px;font-weight:700;letter-spac
 .ci-card[open] summary::after{transform:rotate(180deg)}
 .ci-card .conteudo{padding:0 14px 14px}
 .chips{display:flex;flex-wrap:wrap;gap:6px}
+.pp-box{margin:14px 0;padding:12px;border:1px dashed var(--b);border-radius:14px;background:var(--surf-soft)}
+.pp-box h4{margin:0 0 4px;font-size:14px}
+.pp-linha{display:flex;gap:6px;align-items:center;margin-top:8px}
+.pp-linha input{flex:1;min-width:0;background:var(--surf-mid);color:var(--txt);border:1px solid var(--borda);border-radius:10px;padding:9px 10px;font-size:13.5px;font-family:inherit}
+.pp-ex{font-size:11.5px;line-height:1.45;margin-top:6px}
+.pp-add{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.pp-add:empty{display:none}
 .pe-grupo{margin-bottom:14px;padding:10px;border:1px solid var(--borda);border-radius:14px;background:var(--surf-soft)}
 .pe-grupo-tit{display:flex;gap:6px;align-items:center;margin-bottom:8px}
 .pe-grupo-tit input{font-weight:800}
@@ -1718,6 +1725,7 @@ addEventListener('pointerdown',avisa);addEventListener('keydown',avisa);
   <div class="modal-caixa alta" style="text-align:left;max-width:460px">
     <h3 style="margin:0 0 4px">✏️ Minhas práticas</h3>
     <p class="mut" style="font-size:12.5px;line-height:1.45;margin:0 0 12px">Tire, renomeie ou adicione. O que você já marcou em outros dias continua no seu diário.</p>
+    <div id="peProprias"></div>
     <div id="praticasEditorCorpo"></div>
     <div class="pe-novo-grupo">
       <input type="text" id="peNovoGrupo" maxlength="40" placeholder="Nome de um grupo novo">
@@ -7031,10 +7039,51 @@ function praticasExpandirPorEstilo(principal,secundaria){
   try{renderPraticasCheckin();}catch(e){}
   return n;
 }
+/* ============ PRÁTICA SÓ SUA ============ */
+const GRUPO_PROPRIAS='⭐ Minhas práticas';
+const PRATICAS_PROPRIAS_EX=['Cantar uma música que eu amo','Regar minhas plantas','Tocar violão por 10 minutos','Brincar com meu bichinho'];
+function praticaPropriaHTML(pref){
+  return `<div class="pp-box">
+    <h4>⭐ Tem alguma prática só sua?</h4>
+    <p class="mut" style="font-size:12.5px;line-height:1.45;margin:0">Algo que você adora e gostaria de ver aqui.</p>
+    <div class="pp-linha"><input type="text" id="${pref}PpInput" maxlength="60" placeholder="Escreva a sua prática"><button type="button" class="btn prim" id="${pref}PpBtn">Adicionar</button></div>
+    <div class="mut pp-ex">Por exemplo: ${PRATICAS_PROPRIAS_EX.map(esc).join(' · ')}</div>
+    <div class="pp-add" id="${pref}PpLista"></div>
+  </div>`;
+}
+/* coloca a prática no grupo "Minhas práticas" (no topo) de um conjunto de práticas */
+function praticaPropriaNoConjunto(conj,txt){
+  const ja=Object.values(conj).some(l=>l.includes(txt));
+  if(ja)return {conj,novo:false};
+  const novo={[GRUPO_PROPRIAS]:(conj[GRUPO_PROPRIAS]||[]).concat(txt)};
+  Object.keys(conj).forEach(g=>{if(g!==GRUPO_PROPRIAS)novo[g]=conj[g];});
+  return {conj:novo,novo:true};
+}
+function ligarPraticaPropria(pref,aoAdicionar){
+  const inp=$(pref+'PpInput'),btn=$(pref+'PpBtn'),lista=$(pref+'PpLista');if(!inp||!btn)return;
+  const vai=()=>{
+    const txt=(inp.value||'').trim().replace(/\s+/g,' ');if(!txt){inp.focus();return;}
+    const ok=aoAdicionar(txt);
+    if(ok){lista.insertAdjacentHTML('beforeend',`<span class="chip on">✓ ${esc(txt)}</span>`);mostrarToast('Adicionada ✓');}
+    else mostrarToast('Essa você já tem 💛');
+    inp.value='';inp.focus();
+  };
+  btn.onclick=vai;inp.onkeydown=e=>{if(e.key==='Enter'){e.preventDefault();vai();}};
+}
+function adicionarPraticaPropria(txt){
+  const r=praticaPropriaNoConjunto(S.praticas||PRATICAS,txt);
+  if(!r.novo)return false;
+  S.praticas=r.conj;PRATICAS=S.praticas;
+  if(S.praticasRemovidas)S.praticasRemovidas=S.praticasRemovidas.filter(x=>x!==txt);
+  salva();try{renderPraticasCheckin();}catch(e){}
+  return true;
+}
 let _peRascunho=null;
 function abrirEditorPraticas(){
   _peRascunho=clonarPraticas(PRATICAS);
   renderEditorPraticas();
+  $('peProprias').innerHTML=praticaPropriaHTML('pe');
+  ligarPraticaPropria('pe',txt=>{lerEditorPraticas();const r=praticaPropriaNoConjunto(_peRascunho,txt);if(!r.novo)return false;_peRascunho=r.conj;renderEditorPraticas();return true;});
   $('peNovoGrupo').value='';
   abrirOverlay($('praticasEditorModal'));
 }
@@ -7517,7 +7566,9 @@ function estiloMostrarResultado(){
     });
     html+=`</div>`;
   });
+  html+=praticaPropriaHTML('er');
   $('estiloResultadoCorpo').innerHTML=html;
+  ligarPraticaPropria('er',adicionarPraticaPropria);
   $('estiloResultadoCorpo').querySelectorAll('[data-estilo-prat]').forEach(el=>{
     el.onclick=()=>{
       if(el.classList.contains('ja-tem')){mostrarToast('Você já tem esse hábito 💛');return;}
