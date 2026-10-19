@@ -2514,7 +2514,7 @@ function formatarNucleoIdeal(t){
 }
 function limparTextoDesejo(t){
   let s=String(t||'').trim();
-  s=s.replace(/^(estou em processo de|estou no processo de|adoro a ideia de|adoro saber que|adoro a sensação de quando|adoro me ver|estou animado\(a\) com a ideia de|eu decidi|cada vez mais|me anima|muitas coisas podem acontecer para|amo a ideia de|me faz bem pensar em|eu escolho|fico feliz em|tenho vontade de|estou aprendendo a|hoje eu me permito|eu mereço|amo saber que posso|amo a ideia de|me sinto feliz ao imaginar que posso|a cada dia, de todas as formas, eu me abro mais para)\s*/i,'');
+  s=s.replace(/^(estou em processo de|estou no processo de|adoro a ideia de|adoro saber que|adoro a sensação de quando|adoro me ver|estou animado\(a\) com a ideia de|eu decidi|cada vez mais|me anima|muitas coisas podem acontecer para|amo a ideia de|me faz bem pensar em|eu escolho|fico feliz em|tenho vontade de|estou aprendendo a|hoje eu me permito|eu mereço|amo saber que posso|amo a ideia de|me sinto feliz ao imaginar que posso|é tão bom saber que posso|me empolga pensar em|amo sentir que posso|sinto alegria em|eu estou em processo de|a cada dia, de todas as formas, eu me abro mais para)\s*/i,'');
   s=s.replace(/\s+/g,' ').trim();
   if(s) s=s.charAt(0).toUpperCase()+s.slice(1);
   return s;
@@ -2527,6 +2527,10 @@ const MODELOS_CORPO=[
   {k:'animado_ideia',pre:'Amo a ideia de',ph:'ex: honrar o preço das minhas aulas'},
   {k:'ad_sensacao',pre:'Me sinto feliz ao imaginar que posso',ph:'ex: valorizar o que eu ensino'},
   {k:'eu_decidi',pre:'Eu decidi',ph:'ex: cobrar com base no que ofereço'},
+  {k:'e_bom_saber',pre:'É tão bom saber que posso',ph:'ex: escolher os meus horários'},
+  {k:'me_empolga',pre:'Me empolga pensar em',ph:'ex: abrir uma turma nova'},
+  {k:'amo_sentir',pre:'Amo sentir que posso',ph:'ex: contar com o meu próprio ritmo'},
+  {k:'sinto_alegria',pre:'Sinto alegria em',ph:'ex: ver o meu trabalho reconhecido'},
   /* inícios antigos: só aparecem em frases já escritas, não são oferecidos de novo */
   {k:'cada_vez',pre:'Eu decidi',ph:'',oculto:true},
   {k:'me_anima',pre:'Amo a ideia de',ph:'',oculto:true}
@@ -2536,7 +2540,9 @@ const ABERTURA_FIXA=t=>{
   // se ainda não tem "ideal" logo após o substantivo, formata
   if(!/\bideal\b/i.test(nucleo)) nucleo=formatarNucleoIdeal(nucleo);
   nucleo=nucleo.charAt(0).toLowerCase()+nucleo.slice(1);
-  return`A cada dia, de todas as formas, eu me abro mais para <b>${esc(nucleo)}</b>.`;
+  // verbo encaixa direto ("ter tempo pra mim"); o resto ganha "ter" na frente
+  const frase=/^[a-záàâãéêíóôõúç]+(ar|er|ir|ôr)\b/i.test(nucleo)?nucleo:'ter '+nucleo;
+  return`Eu estou em processo de <b>${esc(frase)}</b>, do meu jeito e no meu tempo.`;
 };
 const FECHAMENTO_FIXO=`Eu deixo essa ideia descansar em mim, e ela segue trabalhando enquanto eu vivo o meu dia.`;
 
@@ -5124,7 +5130,7 @@ function montarDeclaracao(d){
   partes.push(FECHAMENTO_FIXO);
   return partes;
 }
-const ABERTURA_TODOS=`A cada dia, de todas as formas, eu me abro mais para realizações em todas as áreas da minha vida.`;
+const ABERTURA_TODOS=`Eu estou em processo de ter realizações em todas as áreas da minha vida, do meu jeito e no meu tempo.`;
 function montarDeclaracaoTodos(){
   const ds=desejosAtivos().filter(d=>d.corpo&&d.corpo.some(c=>limparTextoDesejo(c.texto)));
   if(!ds.length)return null;
