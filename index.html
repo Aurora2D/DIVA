@@ -81,6 +81,11 @@ h3{font-size:12px;color:var(--mut);margin:14px 0 6px;font-weight:700;letter-spac
 .ci-card[open] summary::after{transform:rotate(180deg)}
 .ci-card .conteudo{padding:0 14px 14px}
 .chips{display:flex;flex-wrap:wrap;gap:6px}
+.mapa-intervalo{margin-top:12px;padding:16px;border-radius:16px;border:1px solid rgba(189,128,209,.35);background:linear-gradient(135deg, rgba(143,128,209,.12), rgba(232,160,190,.10))}
+.mapa-intervalo .mi-tit{font-weight:900;font-size:16px;margin-bottom:8px;color:var(--txt)}
+.mapa-intervalo p{font-size:13.5px;line-height:1.55;margin:0 0 10px}
+.mapa-intervalo .mi-destaque{font-weight:700;color:var(--b)}
+.mapa-intervalo .mi-rodape{font-size:11.5px;margin:10px 0 0;text-align:center}
 .pp-box{margin:14px 0;padding:12px;border:1px dashed var(--b);border-radius:14px;background:var(--surf-soft)}
 .pp-box h4{margin:0 0 4px;font-size:14px}
 .pp-linha{display:flex;gap:6px;align-items:center;margin-top:8px}
@@ -5886,20 +5891,22 @@ function renderCiclo(){
     if(pend&&temRel){
       html+=`<div class="ciclo-topo" style="background:linear-gradient(135deg, rgba(255,215,107,.25), rgba(189,128,209,.20));border-color:rgba(255,215,107,.5)"><div class="num" style="color:#8a5a00">🎁 Mapa completo</div><div class="sub"><b>Sua leitura está pronta.</b> Sem pressa pra ler.</div><button class="btn prim btn-full" id="btnLerRelatorio" style="margin-top:14px;background:linear-gradient(135deg,#FFD76B,#BD80D1);color:#2a1b4a;border:none;padding:14px;font-size:15px;font-weight:900">📖 Ler relatório</button></div>`;
     } else {
-      html+=`<div class="ciclo-topo"><div class="num">${nMapas?('🗺️ Mapa · '+(nMapas+(hist.some(h=>h.data===c.atual.data)?0:1))+'º'):'🗺️ Mapa completo'}</div><div class="sub">Pode fazer outro quando quiser — não tem espera.</div></div>`;
+      html+=`<div class="ciclo-topo"><div class="num">${nMapas?('🗺️ Mapa · '+(nMapas+(hist.some(h=>h.data===c.atual.data)?0:1))+'º'):'🗺️ Mapa completo'}</div><div class="sub">${mapaLiberado()?'Já passaram 21 dias: o próximo mapa está liberado quando você quiser.':'O próximo mapa libera 21 dias depois deste.'}</div></div>`;
     }
     const mapa=renderMapa(c.atual,anteriorParaCmp);
     if(mapa.trim())html+=mapa;else html+=`<div class="mapa-vazio">Ainda sem dados deste ciclo.</div>`;
     if(temRel&&!pend){html+=`<button class="btn prim btn-full" id="btnVerRel" style="margin-top:12px">💭 Ver leitura profunda</button>`;}
-    html+=`<button class="btn prim btn-full" id="btnAbrirMapaWizard" style="margin-top:12px;padding:14px">🗺️ Fazer outro mapa</button>`;
+    html+=mapaLiberado()?`<button class="btn prim btn-full" id="btnAbrirMapaWizard" style="margin-top:12px;padding:14px">🗺️ Fazer outro mapa</button>`:mapaIntervaloHTML();
   } else if(parcial){
     html+=`<div class="ciclo-topo"><div class="num">${nMapas?'🔄 Continuando':'🌱 Primeiro mapa'}</div><div class="sub">${nMapas?'Você já tem '+nMapas+' mapa(s) no histórico. Continue este.':'Quando você estiver com tempo, responda. Sem pressa.'}</div></div>`;
     html+=`<button class="btn prim btn-full" id="btnContinuarMapa" style="margin-top:8px;padding:16px;font-size:15px">🗺️ Continuar mapa</button>`;
     html+=`<div class="mut" style="font-size:11px;margin-top:12px;line-height:1.55;text-align:center">3 páginas. Pode pausar e voltar.</div>`;
   } else {
-    html+=`<div class="ciclo-topo"><div class="num">${nMapas?'🔄 Novo mapa':'🌱 Primeiro mapa'}</div><div class="sub">${nMapas?'Você já fez '+nMapas+' mapa(s). Cada um compara com o anterior.':'Quando você estiver com tempo, responda. Sem pressa.'}</div></div>`;
-    html+=`<button class="btn prim btn-full" id="btnAbrirMapaWizard" style="margin-top:8px;padding:16px;font-size:15px">🗺️ Responder ao mapa</button>`;
-    html+=`<div class="mut" style="font-size:11px;margin-top:12px;line-height:1.55;text-align:center">São 3 páginas curtas. Quantos mapas quiser, inclusive no mesmo dia.</div>`;
+    if(mapaLiberado()){
+      html+=`<div class="ciclo-topo"><div class="num">${nMapas?'🔄 Novo mapa':'🌱 Primeiro mapa'}</div><div class="sub">${nMapas?'Você já fez '+nMapas+' mapa(s). Cada um compara com o anterior.':'Quando você estiver com tempo, responda. Sem pressa.'}</div></div>`;
+      html+=`<button class="btn prim btn-full" id="btnAbrirMapaWizard" style="margin-top:8px;padding:16px;font-size:15px">🗺️ Responder ao mapa</button>`;
+      html+=`<div class="mut" style="font-size:11px;margin-top:12px;line-height:1.55;text-align:center">São 3 páginas curtas. Depois de concluir, o próximo mapa libera em 21 dias.</div>`;
+    } else html+=mapaIntervaloHTML();
   }
   html+=renderCheckinNoMapa();
   if(c.historico.length>0){
@@ -5929,6 +5936,7 @@ function renderCiclo(){
   }
   el.innerHTML=html;
   const btnMW=$('btnAbrirMapaWizard');if(btnMW)btnMW.onclick=()=>abrirMapaWizard(0);
+  ligarBotoesDeclaracao(el);
   const btnCont=$('btnContinuarMapa');if(btnCont)btnCont.onclick=()=>{
     // resume at first incomplete group
     let start=0;
@@ -5959,14 +5967,14 @@ function verificaCicloCompleto(){
   if(!S.ciclo.atual)return;
   const total=CICLO_DIMS.length*5;let resp=0;CICLO_DIMS.forEach(d=>{resp+=Object.keys(S.ciclo.atual.respostas[d.key]||{}).length;});
   if(resp!==total)return;
-  const resumo=calculaScoreCiclo(S.ciclo.atual);S.ciclo.atual.resumo=resumo;
+  const resumo=calculaScoreCiclo(S.ciclo.atual);S.ciclo.atual.resumo=resumo;S.ciclo.atual.concluidoEm=hoje();
   const ant=S.ciclo.historico.length>0?S.ciclo.historico[S.ciclo.historico.length-1]:null;
   const antR=ant?(ant.resumo||calculaScoreCiclo(ant)):null;
   const rel=montarRelatorio(resumo,antR,S.ciclo.usados,S.ciclo.historico.length+1);
   S.ciclo.atual.relatorio=rel;S.ciclo.atual.pendenteLeitura=true;S.ciclo.usados=rel.usados;
   // clone para o histórico não compartilhar referência com o atual
   try{S.ciclo.historico.push(JSON.parse(JSON.stringify(S.ciclo.atual)));}catch(e){S.ciclo.historico.push(S.ciclo.atual);}
-  S.ciclo.proximoEm=null; // sem trava de 21 dias — pode refazer quando quiser
+  S.ciclo.proximoEm=null; // o intervalo de 21 dias é calculado pela data de conclusão (mapaLiberado)
   salva();
   mostrarToast('Mapa completo ✓');setTimeout(()=>renderCiclo(),400);
 }
@@ -5978,8 +5986,60 @@ function renderPerguntasGrupo(grupoId){
     return`<div class="ciclo-dim" data-dim="${d.key}"><div class="cab"><span style="font-size:20px">${d.emoji}</span><span class="tit">${d.nome}</span><span class="prog">${r}/5</span></div>${ph}</div>`;
   }).join('');
 }
+/* ============ INTERVALO DE 21 DIAS ENTRE MAPAS ============
+   Conta a partir do dia em que o último mapa foi concluído (não de uma data fixa).
+   No 21º dia libera e fica liberado até ela fazer o próximo. */
+const MAPA_INTERVALO_DIAS=21;
+function mapaUltimaConclusao(){
+  const c=S.ciclo||{};const datas=[];
+  (c.historico||[]).forEach(h=>{if(h&&h.resumo)datas.push(h.concluidoEm||h.data);});
+  if(c.atual&&c.atual.resumo)datas.push(c.atual.concluidoEm||c.atual.data);
+  const ok=datas.filter(d=>/^\d{4}-\d{2}-\d{2}$/.test(d||'')).sort();
+  return ok.length?ok[ok.length-1]:null;
+}
+function mapaLiberaEm(){
+  const u=mapaUltimaConclusao();if(!u)return null;
+  const d=new Date(u+'T12:00:00');d.setDate(d.getDate()+MAPA_INTERVALO_DIAS);return fmtD(d);
+}
+function mapaLiberado(){const l=mapaLiberaEm();return !l||hoje()>=l;}
+function mapaDiasFaltam(){const l=mapaLiberaEm();if(!l)return 0;return Math.max(0,Math.round((new Date(l+'T12:00:00')-new Date(hoje()+'T12:00:00'))/86400000));}
+function mapaIntervaloHTML(){
+  const l=mapaLiberaEm();const falta=mapaDiasFaltam();
+  const dataTxt=l?new Date(l+'T12:00:00').toLocaleDateString('pt-BR',{day:'2-digit',month:'2-digit'}):'';
+  return `<div class="mapa-intervalo">
+    <div class="mi-tit">Seu próximo Mapa Emocional</div>
+    <p class="mi-destaque">Que tal dar um tempinho para você perceber as mudanças que seus hábitos estão trazendo?</p>
+    <p>O Mapa Emocional foi pensado para acompanhar sua evolução ao longo do tempo. Por isso, ele fica disponível novamente a cada 21 dias. Esse intervalo permite que você tenha tempo para experimentar seus hábitos, observar como se sente e reconhecer as mudanças que acontecem no caminho.</p>
+    <p>Você não precisa fazer o mapa exatamente no 21º dia: depois desse prazo, poderá realizá-lo quando quiser. 💗</p>
+    <p>Enquanto isso, que tal revisitar sua Declaração de Lei da Atração?</p>
+    <p>Você pode aproveitar esse momento para reler seus objetivos, conferir seu planejamento e lembrar a si mesma aonde deseja chegar.</p>
+    <button type="button" class="btn prim btn-full" data-ir-declaracao>Revisar minha declaração ✨</button>
+    <p class="mut mi-rodape">Seu próximo mapa estará disponível após completar 21 dias desde o último.${dataTxt?` <b>Libera em ${dataTxt}</b> (faltam ${falta} dia${falta===1?'':'s'}).`:''}</p>
+  </div>`;
+}
+function irParaDeclaracao(){
+  const fechar=document.querySelectorAll('.modal-overlay.ativo');fechar.forEach(o=>fecharOverlay(o));
+  setTimeout(()=>{
+    const t=document.querySelector('[data-tab="atracao"]');if(t)t.click();
+    setTimeout(()=>{const b=document.querySelector('[data-atr-sec="declaracao"]');if(b)b.click();},250);
+  },fechar.length?340:0);
+}
+function ligarBotoesDeclaracao(raiz){(raiz||document).querySelectorAll('[data-ir-declaracao]').forEach(b=>b.onclick=irParaDeclaracao);}
+function avisarMapaIntervalo(){
+  let o=$('mapaIntervaloModal');
+  if(!o){
+    o=document.createElement('div');o.className='modal-overlay';o.id='mapaIntervaloModal';o.hidden=true;
+    o.innerHTML=`<div class="modal-caixa alta" style="text-align:left;max-width:460px"><div id="mapaIntervaloCorpo"></div><div class="modal-botoes" style="margin-top:12px"><button class="modal-btn sec" id="mapaIntervaloFechar" style="flex:1">Fechar</button></div></div>`;
+    document.body.appendChild(o);
+    $('mapaIntervaloFechar').onclick=()=>fecharOverlay(o);
+  }
+  $('mapaIntervaloCorpo').innerHTML=mapaIntervaloHTML();ligarBotoesDeclaracao(o);
+  abrirOverlay(o);
+}
 let mapaWizardPagina=0;
 function abrirMapaWizard(pagina){
+  // começar um mapa novo só depois do intervalo; continuar um mapa em andamento sempre pode
+  if((!S.ciclo.atual||S.ciclo.atual.resumo)&&!mapaLiberado()){avisarMapaIntervalo();return;}
   mapaWizardPagina=typeof pagina==='number'?pagina:0;
   const c=S.ciclo;
   if(!Array.isArray(c.historico))c.historico=[];
