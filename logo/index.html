@@ -283,14 +283,15 @@ const inOutCubic=x=>{x=clamp(x);return x<.5?4*x*x*x:1-Math.pow(-2*x+2,3)/2}; // 
 const inQuad=x=>{x=clamp(x);return x*x};                          // queda com gravidade
 const outBack=x=>{x=clamp(x);const c=1.3;return 1+(c+1)*Math.pow(x-1,3)+c*Math.pow(x-1,2)}; // leve balanço no fim
 const inOutSine=x=>{x=clamp(x);return -(Math.cos(Math.PI*x)-1)/2};                // sem pico de velocidade
+const inAccel=x=>{x=clamp(x);return Math.pow(x,2.6)};                       // arranque lento, aceleração contínua
 const seg=(t,a,b,fn)=>fn((t-a)/(b-a));
 const CX=495,CY=460;
 function measure(){const sv=$('svg'),r=sv.getBoundingClientRect(),v=sv.viewBox.baseVal;K=Math.min(r.width/v.width,r.height/v.height)||1}
 addEventListener('resize',measure);
 
 function render(t){
-  // cortinas: deslizam num ritmo único e macio, e se dissolvem no fim do caminho
-  const open=seg(t,.1,3.5,inOutSine),exit=seg(t,2.5,3.9,inOutSine);
+  // cortinas: começam devagar e vão acelerando até sair da tela; se dissolvem no embalo final
+  const open=seg(t,.1,2.6,inAccel),exit=seg(t,2.0,2.8,inOutSine);
   const cu=$('curtUp').style,cl=$('curtLo').style;
   cu.transform=`translate3d(${-540*open*K}px,${-490*open*K}px,0)`;
   cl.transform=`translate3d(${540*open*K}px,${490*open*K}px,0)`;
@@ -345,7 +346,7 @@ function riverEdge(y,amp,f,ph,t,reverse,id){
   }if(reverse)pts.reverse();return pts;
 }
 let lastRiverT=0,riverDrawn=false;
-const RIVER_START=3.6;
+const RIVER_START=2.8;
 function renderRiver(tt){const t=Math.max(0,tt-RIVER_START);if(t===0&&lastRiverT===0&&riverDrawn)return;riverDrawn=true;lastRiverT=t;for(const b of riverPaths){
   const top=riverEdge(b.gold?b.y:b.y0,b.amp,b.f,b.ph,t,false,b.id);
   const d=b.gold?smooth(top):smooth(top)+smooth(riverEdge(b.y1,b.amp*.8,b.f*1.1,b.ph+1.3,t,true,b.id),false)+'Z';
