@@ -19,6 +19,7 @@ header{margin-bottom:18px}
 h1{font:600 16px "Cormorant Garamond",Georgia,serif;letter-spacing:.34em;margin:0}
 small{font-size:11px;color:var(--muted);letter-spacing:.04em}
 .stage{position:relative;aspect-ratio:1;overflow:hidden;border-radius:10px;box-shadow:0 24px 80px #63324522;background:#faeae2}
+.escuro .stage{background:#221021}
 .stage svg{display:block;width:100%;height:100%}
 .stage .layer{position:absolute;inset:0;pointer-events:none;will-change:transform,opacity;backface-visibility:hidden;overflow:visible}
 #grain{position:absolute;inset:0;width:100%;height:100%;opacity:.055;mix-blend-mode:multiply;pointer-events:none}
@@ -63,7 +64,7 @@ output{font-size:11px;min-width:40px;font-variant-numeric:tabular-nums}
     <stop offset="0" stop-color="#fdf6f2"/><stop offset=".55" stop-color="#f9ece6"/><stop offset="1" stop-color="#f3dfd8"/>
   </radialGradient>
   <radialGradient id="gGlow" cx=".5" cy=".5" r=".5">
-    <stop offset="0" stop-color="#fff8ef" stop-opacity=".9"/><stop offset=".6" stop-color="#fff1e4" stop-opacity=".35"/><stop offset="1" stop-color="#fff" stop-opacity="0"/>
+    <stop offset="0" stop-color="#fff8ef" stop-opacity=".9"/><stop offset=".6" stop-color="#fff1e4" stop-opacity=".35"/><stop offset="1" stop-color="#fff1e4" stop-opacity="0"/>
   </radialGradient>
   <linearGradient id="gPlum" x1="0" x2="1">
     <stop offset="0" stop-color="#80314f"/><stop offset=".45" stop-color="#b6627c"/><stop offset="1" stop-color="#954364"/>
@@ -151,7 +152,7 @@ output{font-size:11px;min-width:40px;font-variant-numeric:tabular-nums}
 <canvas id="grain" aria-hidden="true"></canvas>
 </div>
 
-<footer><small>Duas ondas. Uma gota. DIVA.</small><button id="replay" type="button">↻ Repetir animação</button></footer>
+<footer><small>Duas ondas. Uma gota. DIVA.</small><span style="display:flex;gap:8px"><button id="tema" type="button">◐ Tema escuro</button><button id="replay" type="button">↻ Repetir animação</button></span></footer>
 <div class="timeline"><input id="seek" type="range" min="0" max="1.72" step="0.005" value="0" aria-label="Posição da animação"><output id="time">0,0 s</output></div>
 <p class="note">Arraste a barra para explorar cada instante da aquarela.</p>
 </main>
@@ -369,8 +370,23 @@ let lastPaint=-Infinity,introDone=false;
 function tick(now){if(introDone&&now-lastPaint<32){frame=requestAnimationFrame(tick);return}lastPaint=now;const t=Math.min((now-start)/1000,DURATION);if(t<DURATION||!introDone){render(t);introDone=t>=DURATION}renderRiver((now-start)/1000);frame=requestAnimationFrame(tick)}
 function play(){introDone=false;lastPaint=-Infinity;cancelAnimationFrame(frame);start=performance.now();frame=requestAnimationFrame(tick)}
 $('replay').onclick=play;
+let escuroAtual=null;
+function rotuloTema(){$('tema').textContent=escuroAtual?'◐ Tema claro':'◐ Tema escuro'}
+$('tema').onclick=()=>{escuroAtual=!escuroAtual;aplicaTema(escuroAtual);rotuloTema();play()};
 $('seek').oninput=e=>{cancelAnimationFrame(frame);render(+e.target.value);renderRiver(+e.target.value)};
 window.diva={render,play};
+
+/* ---------- Tema: claro (original) ou escuro (paleta ameixa/violeta) ----------
+   Segue o modo do celular. Não cria outra animação: só troca as cores de cada forma. */
+const PALETA_ESCURA={'#fdf6f2':'#3d1b3a','#f9ece6':'#2f142e','#f3dfd8':'#221021','#fae8e1':'#2c1330','#fff8ef':'#58284f','#fff1e4':'#371935','#fff6f0':'#e6b8dc','#f0b6ac':'#7a3f78','#dca18e':'#b77aa8','#fdeee8':'#4a2246','#f8dcd3':'#3a1a38','#f1c9c0':'#2e132c','#80314f':'#3b2258','#b6627c':'#7b3b80','#954364':'#552a63','#d9849a':'#9b4f90','#eaa6b4':'#c47cab','#c96a88':'#8b3f7f','#a28ba7':'#3c5aa0','#cfb0d2':'#6f92c6','#b09ab2':'#4b6caa','#e48fa4':'#b8629d','#f0b3bc':'#8f5ca8','#f6d0cf':'#5b2f64','#f0c3cb':'#6b3b74','#d98fb0':'#a9518f','#c9a0cc':'#5f82ba','#b9506f':'#cf6c8e','#d77289':'#e48aa7','#e79aaa':'#f2abbf','#64243f':'#f6e6d2','#e7a2ad':'#c87aa8','#f1bcc3':'#9a6ab2','#e9a2b2':'#c27ab2','#dc8ea1':'#d88cb4','#c98aa0':'#b07ab8','#a46077':'#e2b46c','#efc0c6':'#8f6ab2'};
+const temaEscuroDoSistema=()=>{try{return matchMedia('(prefers-color-scheme: dark)').matches}catch(e){return false}};
+function aplicaTema(escuro){
+  document.querySelectorAll('[fill],[stroke],[stop-color]').forEach(e=>{for(const a of ['fill','stroke','stop-color']){
+    const v=e.getAttribute(a);if(!v||v[0]!=='#')continue;const k='data-l-'+a;let base=e.getAttribute(k);
+    if(base==null){base=v.toLowerCase();e.setAttribute(k,base)}e.setAttribute(a,escuro&&PALETA_ESCURA[base]?PALETA_ESCURA[base]:base)}});
+  document.documentElement.classList.toggle('escuro',!!escuro);
+}
+escuroAtual=temaEscuroDoSistema();aplicaTema(escuroAtual);rotuloTema();
 measure();render(0);
 Promise.all([document.fonts?document.fonts.ready:null,bakeTextures().catch(()=>{})]).then(()=>matchMedia('(prefers-reduced-motion: reduce)').matches?render(DURATION):play());
 </script>

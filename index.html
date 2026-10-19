@@ -816,6 +816,7 @@ h2 .ic{width:18px;height:18px;margin:-3px 4px 0 0;color:var(--mut)}
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 html,body{width:100%;height:100%;overflow:hidden;background:#f6e6e0}
+html.escuro,html.escuro body{background:#221021}
 .stage{position:fixed;inset:0}
 .stage svg{display:block;width:100%;height:100%}
 .stage .layer{position:absolute;inset:0;pointer-events:none;will-change:transform,opacity;backface-visibility:hidden;overflow:visible}
@@ -852,7 +853,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:#f6e6e0}
   </radialGradient>
   <radialGradient id="gPaperFade" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#fdf6f2"/><stop offset=".45" stop-color="#f9ece6"/><stop offset="1" stop-color="#f3dfd8"/></radialGradient>
   <radialGradient id="gGlow" cx=".5" cy=".5" r=".5">
-    <stop offset="0" stop-color="#fff8ef" stop-opacity=".9"/><stop offset=".6" stop-color="#fff1e4" stop-opacity=".35"/><stop offset="1" stop-color="#fff" stop-opacity="0"/>
+    <stop offset="0" stop-color="#fff8ef" stop-opacity=".9"/><stop offset=".6" stop-color="#fff1e4" stop-opacity=".35"/><stop offset="1" stop-color="#fff1e4" stop-opacity="0"/>
   </radialGradient>
   <linearGradient id="gPlum" x1="0" x2="1">
     <stop offset="0" stop-color="#80314f"/><stop offset=".45" stop-color="#b6627c"/><stop offset="1" stop-color="#954364"/>
@@ -1174,6 +1175,18 @@ let avisou=false;const avisa=()=>{if(!avisou){avisou=true;parent.postMessage('di
 function tick(now){decorrido+=Math.min(now-lastNow,100);lastNow=now;const t=Math.min(decorrido/1000,DURATION);if(!introDone){render(t);introDone=t>=DURATION}if(decorrido/1000>=DURATION+.45){avisa();return}frame=requestAnimationFrame(tick)}
 function play(){introDone=false;decorrido=0;cancelAnimationFrame(frame);lastNow=performance.now();frame=requestAnimationFrame(tick)}
 window.diva={render,play};
+
+/* ---------- Tema: claro (original) ou escuro (paleta ameixa/violeta) ----------
+   Segue o modo do celular. Não cria outra animação: só troca as cores de cada forma. */
+const PALETA_ESCURA={'#fdf6f2':'#3d1b3a','#f9ece6':'#2f142e','#f3dfd8':'#221021','#fae8e1':'#2c1330','#fff8ef':'#58284f','#fff1e4':'#371935','#fff6f0':'#e6b8dc','#f0b6ac':'#7a3f78','#dca18e':'#b77aa8','#fdeee8':'#4a2246','#f8dcd3':'#3a1a38','#f1c9c0':'#2e132c','#80314f':'#3b2258','#b6627c':'#7b3b80','#954364':'#552a63','#d9849a':'#9b4f90','#eaa6b4':'#c47cab','#c96a88':'#8b3f7f','#a28ba7':'#3c5aa0','#cfb0d2':'#6f92c6','#b09ab2':'#4b6caa','#e48fa4':'#b8629d','#f0b3bc':'#8f5ca8','#f6d0cf':'#5b2f64','#f0c3cb':'#6b3b74','#d98fb0':'#a9518f','#c9a0cc':'#5f82ba','#b9506f':'#cf6c8e','#d77289':'#e48aa7','#e79aaa':'#f2abbf','#64243f':'#f6e6d2','#e7a2ad':'#c87aa8','#f1bcc3':'#9a6ab2','#e9a2b2':'#c27ab2','#dc8ea1':'#d88cb4','#c98aa0':'#b07ab8','#a46077':'#e2b46c','#efc0c6':'#8f6ab2'};
+const temaEscuroDoSistema=()=>{try{return matchMedia('(prefers-color-scheme: dark)').matches}catch(e){return false}};
+function aplicaTema(escuro){
+  document.querySelectorAll('[fill],[stroke],[stop-color]').forEach(e=>{for(const a of ['fill','stroke','stop-color']){
+    const v=e.getAttribute(a);if(!v||v[0]!=='#')continue;const k='data-l-'+a;let base=e.getAttribute(k);
+    if(base==null){base=v.toLowerCase();e.setAttribute(k,base)}e.setAttribute(a,escuro&&PALETA_ESCURA[base]?PALETA_ESCURA[base]:base)}});
+  document.documentElement.classList.toggle('escuro',!!escuro);
+}
+aplicaTema(temaEscuroDoSistema());
 measure();render(0);
 renderRiver(0);   // ondas dos cantos: desenhadas uma vez (na abertura elas ficam paradas)
 const fonte=Promise.race([document.fonts?document.fonts.ready:Promise.resolve(),new Promise(r=>setTimeout(r,400))]);
@@ -1188,6 +1201,7 @@ addEventListener('pointerdown',avisa);addEventListener('keydown',avisa);
 (function(){
   var box=document.getElementById('divaSplash'),tpl=document.getElementById('divaSplashDoc');if(!box||!tpl)return;
   var fr=box.querySelector('iframe'),feito=false;
+  try{if(matchMedia('(prefers-color-scheme: dark)').matches)box.style.background='#221021'}catch(e){}
   function fim(){if(feito)return;feito=true;box.style.opacity='0';box.style.pointerEvents='none';setTimeout(function(){box.remove();tpl.remove()},650)}
   /* telas muito densas: desenha a abertura com menos pixels (fica leve, quase igual) */
   var s=Math.max(1,(window.devicePixelRatio||1)/1.5);
