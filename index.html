@@ -3049,10 +3049,21 @@ let somCtx=null;
 function somLigado(){return !(S.sons&&S.sons.ligado===false);}
 function somContexto(){
   try{
-    if(!somCtx){const AC=window.AudioContext||window.webkitAudioContext;if(!AC)return null;somCtx=new AC();}
+    if(!somCtx){const AC=window.AudioContext||window.webkitAudioContext;if(!AC)return null;somCtx=new AC();somCarregar(somCtx);}
     if(somCtx.state==='suspended')somCtx.resume();
     return somCtx;
   }catch(e){return null;}
+}
+/* sons versão 4: gravados em audio/sons/. Se um arquivo não carregar (ex.: app aberto offline), usa o som gerado abaixo */
+const SOM_ARQ={plim:'audio/sons/plim.mp3',guardado:'audio/sons/guardado.mp3',caixinha:'audio/sons/caixinha.mp3',brilho:'audio/sons/brilho.mp3'};
+const somBuf={};let somCarregou=false;
+function somCarregar(ctx){
+  if(somCarregou||!window.fetch)return;somCarregou=true;
+  Object.keys(SOM_ARQ).forEach(n=>{
+    fetch(SOM_ARQ[n]).then(r=>r.ok?r.arrayBuffer():Promise.reject())
+      .then(ab=>new Promise((ok,ko)=>ctx.decodeAudioData(ab,ok,ko)))
+      .then(b=>{somBuf[n]=b;}).catch(()=>{});
+  });
 }
 /* desbloqueia o áudio no primeiro toque (exigência do iPhone/Chrome) */
 document.addEventListener('pointerdown',function desbloq(){if(somLigado())somContexto();document.removeEventListener('pointerdown',desbloq);},{once:true});
@@ -3095,6 +3106,11 @@ function som(nome){
   try{if(navigator.vibrate)navigator.vibrate(s.vib);}catch(e){}
   const ctx=somContexto();if(!ctx)return;
   try{
+    if(somBuf[nome]){                               // versão 4 (arquivo), já com reverb próprio
+      const src=ctx.createBufferSource();src.buffer=somBuf[nome];
+      const g=ctx.createGain();g.gain.value=1;src.connect(g);g.connect(ctx.destination);
+      src.start(ctx.currentTime+0.01);return;
+    }
     const out=ctx.createGain();out.gain.value=0.3;   // volume geral baixo
     out.connect(ctx.destination);
     s.tocar(ctx,somEspaco(ctx,out),ctx.currentTime+0.01);

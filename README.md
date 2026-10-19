@@ -29,3 +29,7 @@ Cada par é `[segundo real, momento da coreografia]`. Para deixar um trecho mais
 ## Som da abertura
 
 `audio/abertura.mp3` toca junto com a animação de abertura. Os navegadores (principalmente no celular) costumam bloquear som automático quando a página abre sem a pessoa ter tocado na tela; nesse caso a abertura segue em silêncio. No app Android nativo o som toca normalmente.
+
+## Sons do app (versão 4)
+
+Os sons de marcar hábito (`plim`), guardar (`guardado`), prêmio (`caixinha`) e 21 dias (`brilho`) ficam em `audio/sons/`. Para trocar um som, é só substituir o MP3 com o mesmo nome. Se algum arquivo não carregar, o app toca a versão antiga, gerada no código.
