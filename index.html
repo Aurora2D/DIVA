@@ -1356,6 +1356,7 @@ addEventListener('pointerdown',avisa);addEventListener('keydown',avisa);
   <section id="tab-hoje">
     <div id="revisaoHabitosBox"></div>
     <h2 style="margin-top:6px">Meus hábitos de hoje</h2>
+    <p class="mut explica-secao" style="font-size:12px;line-height:1.45;margin:-4px 0 10px">Hábitos são o que você quer construir aos poucos, com uma meta pequena todo dia.</p>
     <div id="gruposHoje"></div>
     <p class="mut" id="dicaRemover" style="font-size:11.5px;text-align:center;margin:8px 0 0"></p>
     <div id="relatoLembreteBox"></div>
@@ -3602,7 +3603,7 @@ function montaCheckin(){
 }
 function renderPraticasCheckin(){
   const ci=S.checkins[hoje()]||(S.checkins[hoje()]={});
-  $('ciPraticas').innerHTML=Object.entries(PRATICAS).map(([grupo,itens])=>`<div style="margin-bottom:12px"><div class="mut" style="font-size:11.5px;margin-bottom:5px;font-weight:700;letter-spacing:.3px;text-transform:uppercase">${esc(grupo)}</div><div class="chips">${itens.map(it=>{const on=(ci.praticas||{})[grupo+'|'+it];return`<button type="button" class="chip ${on?'on alt':''}" data-prat="${esc(grupo)}|${esc(it)}">${esc(it)}</button>`;}).join('')}</div></div>`).join('')+`<button type="button" class="btn btn-full" id="btnEditarPraticas" style="margin-top:4px">✏️ Editar minhas práticas</button>`;
+  $('ciPraticas').innerHTML=`<p class="mut explica-secao" style="font-size:12px;line-height:1.45;margin:0 0 12px">Marque o que você fez de bom pra você hoje. Sem meta, sem cobrança: é só um registro.</p>`+Object.entries(PRATICAS).map(([grupo,itens])=>`<div style="margin-bottom:12px"><div class="mut" style="font-size:11.5px;margin-bottom:5px;font-weight:700;letter-spacing:.3px;text-transform:uppercase">${esc(grupo)}</div><div class="chips">${itens.map(it=>{const on=(ci.praticas||{})[grupo+'|'+it];return`<button type="button" class="chip ${on?'on alt':''}" data-prat="${esc(grupo)}|${esc(it)}">${esc(it)}</button>`;}).join('')}</div></div>`).join('')+`<button type="button" class="btn btn-full" id="btnEditarPraticas" style="margin-top:4px">✏️ Editar minhas práticas</button>`;
   $('btnEditarPraticas').onclick=abrirEditorPraticas;
   $('ciPraticas').onclick=e=>{const b=e.target.closest('[data-prat]');if(!b)return;const k=b.dataset.prat;ci.praticas=ci.praticas||{};if(ci.praticas[k])delete ci.praticas[k];else ci.praticas[k]=true;b.classList.toggle('on');b.classList.toggle('alt');salva();atualizaStatusCheckin();atualizaRelatorio();renderCheckinResumos();renderDiario();};
 }
@@ -7550,7 +7551,7 @@ function estiloMostrarResultado(){
   }
   // práticas prioritárias — clicáveis para virar hábito
   html+=`<div class="mut" style="font-size:11px;font-weight:800;letter-spacing:1.2px;text-transform:uppercase;margin-bottom:6px">Práticas que combinam com você</div>`;
-  html+=`<p class="mut" style="font-size:12px;line-height:1.45;margin:0 0 10px">Toque em uma para adicionar à sua lista de hábitos.</p>`;
+  html+=`<p class="mut" style="font-size:12px;line-height:1.45;margin:0 0 10px">Toque em uma pra virar <b>hábito</b>: algo pra construir com uma meta.${S.praticasModo==='generica'?' As práticas do seu check-in já foram atualizadas.':''}</p>`;
   const ids=[e.principal,e.secundaria];
   ordem.forEach(([id])=>{if(!ids.includes(id))ids.push(id);});
   ids.slice(0,3).forEach(id=>{
