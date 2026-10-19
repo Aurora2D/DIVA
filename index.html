@@ -81,6 +81,31 @@ h3{font-size:12px;color:var(--mut);margin:14px 0 6px;font-weight:700;letter-spac
 .ci-card[open] summary::after{transform:rotate(180deg)}
 .ci-card .conteudo{padding:0 14px 14px}
 .chips{display:flex;flex-wrap:wrap;gap:6px}
+.atr-topo{display:flex;align-items:center;justify-content:space-between;gap:8px;margin:-2px 0 12px;font-size:12.5px}
+.atr-como{white-space:nowrap;flex:0 0 auto;background:none;border:0;color:var(--b);font-weight:800;font-size:12.5px;cursor:pointer;padding:6px 0;font-family:inherit}
+.sessao-card{display:flex;gap:14px;align-items:center;width:100%;text-align:left;margin:0 0 12px;padding:16px;border-radius:18px;border:1px solid rgba(143,128,209,.30);background:linear-gradient(135deg, rgba(143,128,209,.16), rgba(232,160,190,.14));cursor:pointer;font-family:inherit;color:var(--txt)}
+.sessao-card.calma{background:linear-gradient(135deg, rgba(128,187,209,.16), rgba(143,128,209,.12));border-color:rgba(128,187,209,.35)}
+.sessao-card .sc-img{flex:0 0 64px;height:64px;display:block}
+.sessao-card .sc-img svg{width:64px;height:64px;margin:0;display:block}
+.sessao-card .sc-k{font-size:10.5px;font-weight:800;letter-spacing:1.2px;text-transform:uppercase;color:var(--b);margin-bottom:2px}
+.sessao-card .sc-tit{font-weight:900;font-size:15.5px;margin-bottom:3px}
+.sessao-card .sc-sub{font-size:12.5px;line-height:1.45;opacity:.85}
+.sessao-caixa{position:relative;text-align:center;max-width:440px;min-height:420px;display:flex;flex-direction:column}
+.sessao-x{position:absolute;top:10px;right:10px;width:36px;height:36px;border-radius:50%;border:1px solid var(--borda);background:var(--surf-mid);color:var(--txt);font-size:15px;cursor:pointer}
+#sessaoTela{flex:1;display:flex;flex-direction:column;justify-content:center;padding-top:18px}
+.sessao-img{width:150px;height:150px;margin:0 auto 14px}
+.sessao-txt{font-size:18px;line-height:1.5;font-weight:700;margin:0 4px 14px;color:var(--txt)}
+.sessao-sub{font-size:13px;line-height:1.5;margin:-6px 4px 14px;opacity:.85}
+.sessao-lembrete{font-size:13px;line-height:1.5;font-style:italic;text-align:left;padding:10px 12px;border-left:3px solid var(--b);background:var(--surf-soft);border-radius:8px;margin:0 0 14px;max-height:120px;overflow:auto}
+.sessao-campo{width:100%;box-sizing:border-box;min-height:120px;background:var(--surf-mid);color:var(--txt);border:1px solid var(--borda);border-radius:14px;padding:12px;font-size:15px;line-height:1.5;font-family:inherit;resize:vertical;margin-bottom:12px}
+.sessao-campo.grande{min-height:220px}
+.sessao-desejo{font-size:17px;font-weight:800;color:var(--b);margin:0 0 16px;line-height:1.45}
+.sessao-areas{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-bottom:14px}
+.sessao-botoes{display:flex;gap:8px;flex-wrap:wrap}
+.sessao-botoes .modal-btn{flex:1 1 140px}
+.sessao-dots{display:flex;gap:6px;justify-content:center;margin-top:14px}
+.sessao-dots span{width:7px;height:7px;border-radius:50%;background:var(--borda)}
+.sessao-dots span.on{background:var(--b);width:18px;border-radius:4px}
 .atr-intro{margin:0 0 14px;padding:14px 16px;border-radius:16px;border:1px solid rgba(143,128,209,.28);background:linear-gradient(135deg, rgba(143,128,209,.10), rgba(189,128,209,.06))}
 .atr-intro .ai-tit{font-weight:900;font-size:15px;margin-bottom:6px;color:var(--b)}
 .atr-intro p{font-size:13px;line-height:1.55;margin:0 0 8px;color:var(--txt)}
@@ -1472,19 +1497,11 @@ addEventListener('pointerdown',avisa);addEventListener('keydown',avisa);
 
   <section id="tab-atracao" hidden>
     <h2 style="margin-top:6px"><svg class="ic"><use href="#i-atracao"/></svg>Lei da Atração</h2>
-    <div class="atr-intro">
-      <div class="ai-tit">A Lei da Atração, um passo de cada vez</div>
-      <p>Este espaço foi pensado pra você, do jeito que você chegar. 💜</p>
-      <p>Aqui, a Lei da Atração é um caminho pra <b>clareza</b>. Quando você entende o que realmente quer, fica mais fácil enxergar o <b>menor passo possível</b> pra chegar lá: algo pequeno o bastante pra caber no seu dia.</p>
-      <p>E voltar à sua declaração uma vez por semana, num momento em que você estiver tranquila, mantém você conectada ao que deseja e costuma trazer ideias novas de próximos passos.</p>
-      <p><b>1 · Clareza:</b> quando algo incomodar, pergunte <i>"Então, o que eu quero?"</i></p>
-      <p><b>2 · Declaração:</b> escreva o desejo numa frase que soe verdadeira pra você.</p>
-      <p><b>3 · Permissão:</b> quando vier um <i>"não posso porque…"</i>, lembre de outras pessoas que já conseguiram.</p>
-      <p><b>✦ Voltar à declaração:</b> uma vez por semana, quando tiver um tempo calmo, releia o que você escreveu.</p>
-      <p><b>✦ Menor passo:</b> com o desejo claro, escolha a menor ação possível pra hoje.</p>
-      <button type="button" class="btn btn-full" id="btnHabitoDeclaracao" style="margin:4px 0 10px">🌱 Transformar em hábito: ler minha declaração (1×/semana)</button>
-      <p class="ai-fim"><i>Inspirado no livro Lei da Atração, de Michael Losier. A leitura semanal e o menor passo são um jeito próprio do DIVA.</i></p>
+    <div class="atr-topo">
+      <span class="mut">Clareza → declaração → menor passo.</span>
+      <button type="button" class="atr-como" id="btnComoFunciona">✨ Como funciona?</button>
     </div>
+    <div id="atrSessoes"></div>
 
     <div class="atracao-menu" id="atracaoMenu">
       <button type="button" class="atracao-btn" data-atr-sec="clareza">
@@ -1757,6 +1774,33 @@ addEventListener('pointerdown',avisa);addEventListener('keydown',avisa);
       <button class="modal-btn sec" id="peCancelar" style="flex:1">Cancelar</button>
       <button class="modal-btn prim" id="peSalvar" style="flex:1">Salvar</button>
     </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="comoFuncionaModal" hidden>
+  <div class="modal-caixa alta" style="text-align:left;max-width:460px">
+    <div class="atr-intro" style="margin:0;border:0;background:none;padding:0">
+      <div class="ai-tit">A Lei da Atração, um passo de cada vez</div>
+      <p>Este espaço foi pensado pra você, do jeito que você chegar. 💜</p>
+      <p>Aqui, a Lei da Atração é um caminho pra <b>clareza</b>. Quando você entende o que realmente quer, fica mais fácil enxergar o <b>menor passo possível</b> pra chegar lá: algo pequeno o bastante pra caber no seu dia.</p>
+      <p>E voltar à sua declaração uma vez por semana, num momento em que você estiver tranquila, mantém você conectada ao que deseja e costuma trazer ideias novas de próximos passos.</p>
+      <p><b>1 · Clareza:</b> primeiro deixe sair o que incomoda. Depois, com calma, pergunte: <i>"Então, o que eu quero?"</i></p>
+      <p><b>2 · Declaração:</b> escreva o desejo numa frase que soe verdadeira pra você.</p>
+      <p><b>3 · Permissão:</b> quando vier um <i>"não posso porque…"</i>, lembre de outras pessoas que já conseguiram.</p>
+      <p><b>✦ Voltar à declaração:</b> uma vez por semana, quando tiver um tempo calmo, releia o que você escreveu.</p>
+      <p><b>✦ Menor passo:</b> com o desejo claro, escolha a menor ação possível pra hoje.</p>
+      <button type="button" class="btn btn-full" id="btnHabitoDeclaracao" style="margin:4px 0 10px">🌱 Transformar em hábito: ler minha declaração (1×/semana)</button>
+      <p class="ai-fim"><i>Inspirado no livro Lei da Atração, de Michael Losier. A leitura semanal e o menor passo são um jeito próprio do DIVA.</i></p>
+    </div>
+    <div class="modal-botoes" style="margin-top:12px"><button class="modal-btn sec" id="comoFuncionaFechar" style="flex:1">Fechar</button></div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="sessaoModal" hidden>
+  <div class="modal-caixa alta sessao-caixa">
+    <button type="button" class="sessao-x" id="sessaoFechar" aria-label="Fechar">✕</button>
+    <div id="sessaoTela"></div>
+    <div class="sessao-dots" id="sessaoDots"></div>
   </div>
 </div>
 
@@ -5013,6 +5057,7 @@ function renderLivroPermissoes(){
   });
 }
 function renderAtracaoTudo(){
+  try{renderSessoesAtracao();}catch(e){console.warn('sessoes',e);}
   renderContrastesEsperando();
   renderClarezaLista();
   renderDeclaracoesLista();
@@ -7096,6 +7141,89 @@ $('desejoInput') && ($('desejoInput').onkeydown=e=>{if(e.key==='Enter')$('btnAdd
   window.visualViewport.addEventListener('scroll',reposicionar);
 })();
 
+
+/* ============ SESSÕES GUIADAS DA ATRAÇÃO ============
+   Momento 1 · Deixar sair: o desabafo fica guardado (lista de contrastes).
+   Momento 2 · Olhar com outros olhos: em outra hora, o desabafo vira desejo. */
+const SESSAO_IMG={
+  chuva:`<svg viewBox="0 0 150 150" class="sessao-img" aria-hidden="true"><defs><radialGradient id="sgA" cx="40%" cy="40%"><stop offset="0" stop-color="#b9a7e6"/><stop offset="1" stop-color="#b9a7e6" stop-opacity="0"/></radialGradient><radialGradient id="sgB" cx="60%" cy="55%"><stop offset="0" stop-color="#9cc7dc"/><stop offset="1" stop-color="#9cc7dc" stop-opacity="0"/></radialGradient></defs><circle cx="62" cy="62" r="52" fill="url(#sgA)"/><circle cx="90" cy="82" r="50" fill="url(#sgB)"/><g stroke="#8f80d1" stroke-width="3" stroke-linecap="round" opacity=".55"><line x1="55" y1="100" x2="50" y2="114"/><line x1="75" y1="104" x2="70" y2="118"/><line x1="95" y1="100" x2="90" y2="114"/></g></svg>`,
+  calma:`<svg viewBox="0 0 150 150" class="sessao-img" aria-hidden="true"><defs><radialGradient id="sgC" cx="50%" cy="45%"><stop offset="0" stop-color="#f3c2d6"/><stop offset="1" stop-color="#f3c2d6" stop-opacity="0"/></radialGradient><radialGradient id="sgD" cx="45%" cy="60%"><stop offset="0" stop-color="#c9b8ef"/><stop offset="1" stop-color="#c9b8ef" stop-opacity="0"/></radialGradient></defs><circle cx="75" cy="70" r="56" fill="url(#sgC)"/><circle cx="68" cy="88" r="46" fill="url(#sgD)"/><circle cx="75" cy="75" r="16" fill="#fff" opacity=".55"/></svg>`,
+  flor:`<svg viewBox="0 0 150 150" class="sessao-img" aria-hidden="true"><defs><radialGradient id="sgE" cx="50%" cy="50%"><stop offset="0" stop-color="#f6d58e"/><stop offset="1" stop-color="#f6d58e" stop-opacity="0"/></radialGradient></defs><circle cx="75" cy="75" r="62" fill="url(#sgE)"/><g fill="#e8a0be" opacity=".75"><ellipse cx="75" cy="50" rx="13" ry="22"/><ellipse cx="75" cy="100" rx="13" ry="22"/><ellipse cx="50" cy="75" rx="22" ry="13"/><ellipse cx="100" cy="75" rx="22" ry="13"/></g><circle cx="75" cy="75" r="12" fill="#8f80d1" opacity=".8"/></svg>`
+};
+let _sessao=null;
+function contrastesPendentes(){return (S.leiAtracao.contrastes||[]);}
+function renderSessoesAtracao(){
+  const el=$('atrSessoes');if(!el)return;
+  const pend=contrastesPendentes();
+  let html=`<button type="button" class="sessao-card" data-sessao="sair"><span class="sc-img">${SESSAO_IMG.chuva}</span><span><span class="sc-k">Sessão</span><span class="sc-tit" style="display:block">Deixar sair</span><span class="sc-sub">Escreva tudo o que está te incomodando. Sem filtro, sem pressa.</span></span></button>`;
+  if(pend.length){
+    html+=`<button type="button" class="sessao-card calma" data-sessao="olhar"><span class="sc-img">${SESSAO_IMG.calma}</span><span><span class="sc-k">Sessão</span><span class="sc-tit" style="display:block">Olhar com outros olhos</span><span class="sc-sub">Você tem ${pend.length} desabafo${pend.length===1?'':'s'} esperando. Quando estiver mais calma, quer olhar pra ${pend.length===1?'ele':'eles'} de novo?</span></span></button>`;
+  }
+  el.innerHTML=html;
+  el.querySelectorAll('[data-sessao]').forEach(b=>b.onclick=()=>b.dataset.sessao==='sair'?sessaoDeixarSair():sessaoOlhar());
+}
+function sessaoMostrar(){
+  const st=_sessao;const t=st.telas[st.i];
+  let h='';
+  if(t.img)h+=SESSAO_IMG[t.img];
+  if(t.lembrete)h+=`<div class="sessao-lembrete">${esc(t.lembrete())}</div>`;
+  h+=`<div class="sessao-txt">${t.texto}</div>`;
+  if(t.sub)h+=`<div class="sessao-sub">${t.sub}</div>`;
+  if(t.desejo)h+=`<div class="sessao-desejo">${esc(t.desejo())}</div>`;
+  if(t.campo)h+=`<textarea class="sessao-campo ${t.campo.grande?'grande':''}" id="sessaoCampo" placeholder="${esc(t.campo.ph||'')}">${esc(st.dados[t.campo.key]||'')}</textarea>`;
+  if(t.areas){const sel=st.dados.area;h+=`<div class="sessao-areas">${S.leiAtracao.areas.map(a=>`<button type="button" class="chip ${a.id===sel?'on':''}" data-area="${esc(a.id)}">${esc(a.nome)}</button>`).join('')}</div>`;}
+  h+=`<div class="sessao-botoes">${t.botoes.map((b,k)=>`<button type="button" class="modal-btn ${b.prim?'prim':'sec'}" data-sb="${k}">${b.rot}</button>`).join('')}</div>`;
+  $('sessaoTela').innerHTML=h;
+  $('sessaoDots').innerHTML=st.telas.map((_,k)=>`<span class="${k===st.i?'on':''}"></span>`).join('');
+  const campo=$('sessaoCampo');if(campo)setTimeout(()=>campo.focus(),250);
+  $('sessaoTela').querySelectorAll('[data-area]').forEach(b=>b.onclick=()=>{st.dados.area=b.dataset.area;$('sessaoTela').querySelectorAll('[data-area]').forEach(x=>x.classList.toggle('on',x===b));});
+  $('sessaoTela').querySelectorAll('[data-sb]').forEach(b=>b.onclick=()=>{
+    if(campo)st.dados[t.campo.key]=campo.value.trim();
+    t.botoes[+b.dataset.sb].acao();
+  });
+}
+function sessaoAbrir(telas,dados){_sessao={telas,i:0,dados:dados||{}};sessaoMostrar();abrirOverlay($('sessaoModal'));}
+function sessaoProxima(){_sessao.i++;sessaoMostrar();}
+function sessaoFecharTudo(depois){fecharOverlay($('sessaoModal'),()=>{_sessao=null;renderAtracaoTudo();if(depois)depois();});}
+$('sessaoFechar').onclick=()=>sessaoFecharTudo();
+$('btnComoFunciona').onclick=()=>abrirOverlay($('comoFuncionaModal'));
+$('comoFuncionaFechar').onclick=()=>fecharOverlay($('comoFuncionaModal'));
+
+function sessaoDeixarSair(){
+  sessaoAbrir([
+    {img:'chuva',texto:'Aqui você pode deixar sair tudo. Sem filtro, sem pressa.',botoes:[{rot:'Vamos lá',prim:true,acao:sessaoProxima}]},
+    {texto:'Escreva o que está te incomodando.',campo:{key:'desabafo',ph:'Pode escrever tudo, do jeito que vier…',grande:true},botoes:[{rot:'Guardar',prim:true,acao:()=>{
+      const txt=_sessao.dados.desabafo;if(!txt){mostrarToast('Escreva o que quiser antes de guardar');return;}
+      if(!Array.isArray(S.leiAtracao.contrastes))S.leiAtracao.contrastes=[];
+      const bem=S.leiAtracao.areas.find(a=>a.id==='bemestar');
+      S.leiAtracao.contrastes.push({id:'c'+Date.now().toString(36)+Math.random().toString(36).slice(2,5),naoQuero:txt,area:bem?bem.id:S.leiAtracao.areas[0].id,criadoEm:hoje()});
+      salva();sessaoProxima();
+    }}]},
+    {img:'calma',texto:'Pronto. Isso ficou guardado. 💜',sub:'Não precisa fazer nada com isso agora.',botoes:[{rot:'Fechar',prim:true,acao:()=>sessaoFecharTudo()}]}
+  ]);
+}
+function sessaoOlhar(){
+  const c=contrastesPendentes()[0];if(!c){mostrarToast('Nenhum desabafo esperando 💜');return;}
+  const lembrete=()=>c.naoQuero;
+  sessaoAbrir([
+    {lembrete,texto:'Por baixo disso, tem algum medo?',campo:{key:'medo',ph:'Se tiver, escreva aqui…'},botoes:[{rot:'Pular',acao:sessaoProxima},{rot:'Continuar',prim:true,acao:sessaoProxima}]},
+    {lembrete,texto:'E o que você gostaria que fosse diferente?',campo:{key:'pedido',ph:'Escreva do seu jeito…'},botoes:[{rot:'Pular',acao:sessaoProxima},{rot:'Continuar',prim:true,acao:sessaoProxima}]},
+    {texto:'Então, o que você quer?',sub:'Escreva no positivo, do jeito que você quer que seja.',campo:{key:'quero',ph:'ex: ter tempo pra mim'},botoes:[{rot:'Continuar',prim:true,acao:()=>{if(!_sessao.dados.quero){mostrarToast('Escreva o que você quer');return;}sessaoProxima();}}]},
+    {texto:'Em que parte da sua vida mora esse desejo?',areas:true,botoes:[{rot:'Continuar',prim:true,acao:()=>{
+      const dd=_sessao.dados;const cl=limparTextoDesejo(dd.quero)||dd.quero;
+      const d=novoDesejo(dd.area||c.area,cl);
+      d.contrasteOrigem=c.naoQuero;d.nucleo='';
+      if(dd.medo||dd.pedido)d.camadas={medo:dd.medo||'',pedido:dd.pedido||''};
+      S.leiAtracao.desejos.push(d);
+      S.leiAtracao.contrastes=(S.leiAtracao.contrastes||[]).filter(x=>x.id!==c.id);
+      salva();dd.desejoId=d.id;dd.desejoTxt=cl;sessaoProxima();
+    }}]},
+    {img:'flor',texto:'Isso é clareza. 💜',desejo:()=>_sessao.dados.desejoTxt,botoes:[
+      {rot:'Terminar por hoje',acao:()=>sessaoFecharTudo()},
+      {rot:'Escrever minha frase',prim:true,acao:()=>{const id=_sessao.dados.desejoId;sessaoFecharTudo(()=>setTimeout(()=>abrirDesejo(id,2),200));}}
+    ]}
+  ],{area:c.area});
+}
 
 /* ============ PRÁTICAS EDITÁVEIS ============ */
 function clonarPraticas(o){const r={};Object.entries(o||{}).forEach(([g,l])=>{r[g]=(Array.isArray(l)?l:[]).slice();});return r;}
