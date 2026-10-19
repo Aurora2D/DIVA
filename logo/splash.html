@@ -19,7 +19,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:#f6e6e0}
 <body>
 
 <div class="stage" role="img" aria-label="Abertura DIVA: ondas de aquarela se abrem nas diagonais. Uma gota dourada revela o emblema DIVA.">
-<svg id="svg" class="vb" viewBox="0 0 1000 1000" aria-hidden="true">
+<svg id="svg" class="vb" style="will-change:transform" viewBox="0 0 1000 1000" aria-hidden="true">
 <defs>
   <filter id="watercolor" x="-3%" y="-6%" width="106%" height="112%" color-interpolation-filters="sRGB">
     <feTurbulence type="fractalNoise" baseFrequency=".014 .026" numOctaves="1" seed="18" result="flow"/>
@@ -95,6 +95,8 @@ html,body{width:100%;height:100%;overflow:hidden;background:#f6e6e0}
 <g id="dots"></g>
 <circle cx="495" cy="460" r="300" fill="url(#gGlow)"/>
 
+</svg>
+<svg class="layer vb" id="logoSvg" viewBox="0 0 1000 1000" aria-hidden="true">
 <!-- 2. Emblema (revelado pela mancha de tinta) -->
 <g id="logo" clip-path="url(#inkClip)">
   <g id="disco">
@@ -363,7 +365,7 @@ function renderRiver(tt){const t=Math.max(0,tt-RIVER_START);if(t===0&&lastRiverT
 let frame,start,lastNow=0,decorrido=0;
 let lastPaint=-Infinity,introDone=false;
 let avisou=false;const avisa=()=>{if(!avisou){avisou=true;parent.postMessage('diva-splash-fim','*')}};
-function tick(now){decorrido+=Math.min(now-lastNow,34);lastNow=now;const t=Math.min(decorrido/1000,DURATION);if(!introDone){render(t);introDone=t>=DURATION}if(decorrido/1000>=DURATION+.45){avisa();return}frame=requestAnimationFrame(tick)}
+function tick(now){decorrido+=Math.min(now-lastNow,100);lastNow=now;const t=Math.min(decorrido/1000,DURATION);if(!introDone){render(t);introDone=t>=DURATION}if(decorrido/1000>=DURATION+.45){avisa();return}frame=requestAnimationFrame(tick)}
 function play(){introDone=false;decorrido=0;cancelAnimationFrame(frame);lastNow=performance.now();frame=requestAnimationFrame(tick)}
 window.diva={render,play};
 measure();render(0);
