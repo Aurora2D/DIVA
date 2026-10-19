@@ -259,7 +259,8 @@ let resizeT;addEventListener('resize',()=>{fit();clearTimeout(resizeT);resizeT=s
 const petals=[...document.querySelectorAll('.petal')];petals.forEach(p=>{const L=p.getTotalLength();p.dataset.len=L;p.style.strokeDasharray=L});
 
 /* ---------- Linha do tempo (pura: t -> estado) ---------- */
-const DURATION=6;
+const DURATION=2;              // duração real da entrada, em segundos
+const TIME_SCALE=6/DURATION;   // a coreografia foi desenhada em 6 "tempos"; aqui ela roda comprimida
 const clamp=x=>Math.max(0,Math.min(1,x));
 const ease=x=>{x=clamp(x);return x*x*(3-2*x)};
 const phase=(t,a,b)=>ease((t-a)/(b-a));
@@ -276,7 +277,7 @@ const CX=495,CY=460;
 function measure(){const sv=$('svg'),r=sv.getBoundingClientRect(),v=sv.viewBox.baseVal;K=Math.min(r.width/v.width,r.height/v.height)||1}
 addEventListener('resize',measure);
 
-function render(t){
+function render(T){const t=T*TIME_SCALE;
   // cortinas: começam devagar e vão acelerando até sair da tela; se dissolvem no embalo final
   const open=seg(t,.1,2.6,inAccel),exit=seg(t,2.0,2.8,inOutSine);
   const cu=$('curtUp').style,cl=$('curtLo').style;
@@ -332,7 +333,7 @@ function riverEdge(y,amp,f,ph,t,reverse,id){
   }if(reverse)pts.reverse();return pts;
 }
 let lastRiverT=0,riverDrawn=false;
-const RIVER_START=2.8;
+const RIVER_START=2.8/TIME_SCALE;
 function renderRiver(tt){const t=Math.max(0,tt-RIVER_START);if(t===0&&lastRiverT===0&&riverDrawn)return;riverDrawn=true;lastRiverT=t;for(const b of riverPaths){
   const top=riverEdge(b.gold?b.y:b.y0,b.amp,b.f,b.ph,t,false,b.id);
   const d=b.gold?smooth(top):smooth(top)+smooth(riverEdge(b.y1,b.amp*.8,b.f*1.1,b.ph+1.3,t,true,b.id),false)+'Z';
@@ -341,7 +342,7 @@ function renderRiver(tt){const t=Math.max(0,tt-RIVER_START);if(t===0&&lastRiverT
 let frame,start;
 let lastPaint=-Infinity,introDone=false;
 let avisou=false;const avisa=()=>{if(!avisou){avisou=true;parent.postMessage('diva-splash-fim','*')}};
-function tick(now){if(introDone&&now-lastPaint<32){frame=requestAnimationFrame(tick);return}lastPaint=now;const t=Math.min((now-start)/1000,DURATION);if(t<DURATION||!introDone){render(t);introDone=t>=DURATION}if((now-start)/1000>=DURATION+.5)avisa();renderRiver((now-start)/1000);frame=requestAnimationFrame(tick)}
+function tick(now){if(introDone&&now-lastPaint<32){frame=requestAnimationFrame(tick);return}lastPaint=now;const t=Math.min((now-start)/1000,DURATION);if(t<DURATION||!introDone){render(t);introDone=t>=DURATION}if((now-start)/1000>=DURATION+.25)avisa();renderRiver((now-start)/1000);frame=requestAnimationFrame(tick)}
 function play(){introDone=false;lastPaint=-Infinity;cancelAnimationFrame(frame);start=performance.now();frame=requestAnimationFrame(tick)}
 window.diva={render,play};
 measure();render(0);
