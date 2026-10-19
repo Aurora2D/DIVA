@@ -81,6 +81,10 @@ h3{font-size:12px;color:var(--mut);margin:14px 0 6px;font-weight:700;letter-spac
 .ci-card[open] summary::after{transform:rotate(180deg)}
 .ci-card .conteudo{padding:0 14px 14px}
 .chips{display:flex;flex-wrap:wrap;gap:6px}
+.atr-intro{margin:0 0 14px;padding:14px 16px;border-radius:16px;border:1px solid rgba(143,128,209,.28);background:linear-gradient(135deg, rgba(143,128,209,.10), rgba(189,128,209,.06))}
+.atr-intro .ai-tit{font-weight:900;font-size:15px;margin-bottom:6px;color:var(--b)}
+.atr-intro p{font-size:13px;line-height:1.55;margin:0 0 8px;color:var(--txt)}
+.atr-intro .ai-fim{margin:0;color:var(--mut,inherit);opacity:.85}
 .mapa-intervalo{margin-top:12px;padding:16px;border-radius:16px;border:1px solid rgba(189,128,209,.35);background:linear-gradient(135deg, rgba(143,128,209,.12), rgba(232,160,190,.10))}
 .mapa-intervalo .mi-tit{font-weight:900;font-size:16px;margin-bottom:8px;color:var(--txt)}
 .mapa-intervalo p{font-size:13.5px;line-height:1.55;margin:0 0 10px}
@@ -1468,7 +1472,14 @@ addEventListener('pointerdown',avisa);addEventListener('keydown',avisa);
 
   <section id="tab-atracao" hidden>
     <h2 style="margin-top:6px"><svg class="ic"><use href="#i-atracao"/></svg>Lei da Atração</h2>
-    <p class="mut" style="font-size:12.5px;margin-bottom:10px;line-height:1.5">Os três passos do Losier. Um passo de cada vez.</p>
+    <div class="atr-intro">
+      <div class="ai-tit">Como funciona</div>
+      <p>Este espaço segue o método do livro <i>Lei da Atração</i>, de Michael Losier. A ideia é simples: você atrai aquilo a que dá atenção. Por isso, o caminho é tirar o foco do que incomoda e colocar no que você quer.</p>
+      <p><b>1 · Clareza:</b> quando algo te incomodar, pergunte <i>"Então, o que eu quero?"</i> e anote o desejo.</p>
+      <p><b>2 · Declaração:</b> transforme o desejo numa frase que soe verdadeira pra você.</p>
+      <p><b>3 · Permissão:</b> quando aparecer um <i>"não posso porque…"</i>, escreva sobre outras pessoas que já conseguiram. Isso alivia a dúvida.</p>
+      <p class="ai-fim">Um passo de cada vez, no seu ritmo. 💜</p>
+    </div>
 
     <div class="atracao-menu" id="atracaoMenu">
       <button type="button" class="atracao-btn" data-atr-sec="clareza">
