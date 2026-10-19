@@ -2325,13 +2325,16 @@ function todosGrupos(){return GRUPOS.map(g=>g.id==='aurora'?{...g,nome:cuida()?'
 const GRUPOS=[{id:'essencial',emoji:'🎯',nome:'Essenciais'},{id:'musica',emoji:'🎵',nome:'Música'},{id:'mente',emoji:'🧘',nome:'Mente'},{id:'corpo',emoji:'🏃',nome:'Corpo'},{id:'rituais',emoji:'🕯️',nome:'Rituais'},{id:'lar',emoji:'🏡',nome:'Lar'},{id:'aurora',emoji:'🌙',nome:'Ritmo da Aurora'},{id:'outros',emoji:'✨',nome:'Outros'}];
 const grupoDe=h=>h.grupo||'essencial';
 let PRATICAS={'🎤 Treino vocal':['Respiração','Aquecimento vocal','Canto'],'🤍 Contato físico':['Auto-cafuné','Auto-massagem','Creme no corpo','Carinho no Pituca','Carinho na Nica','Banho relaxante','Música enquanto se arruma','Bebida especial','Roupa de cama limpa','Perfume favorito','Batom','Hidratação nos cabelos','Peça de roupa favorita','Joia ou acessório especial'],'🎡 Tempo de qualidade':['Vídeos no YouTube','Música','Dança','Meditação','Jardim do prédio','Culinária','Filme com pipoca','Livro divertido','Caminhada no quarteirão','Viagem','Apreciação da beleza de dentro de casa','Canva por hobby','Direção','Videogame','Duolingo / curso de inteligência emocional','Caminhada no parque','Louça / arrumação da casa','Canto'],'💌 Palavras de incentivo':['Questionário','Conversa com amigos','Terapia','Canto das minhas músicas','Escrita no caderno','Leitura do caderno','Curso online','Livro revigorante','Vídeos da Ana Beatriz']};
-const PRATICAS_GENERICAS={
-  '💌 Palavras':['Escrever 3 linhas no caderno','Mandar mensagem pra uma amiga','Escrever um bilhete gentil pra mim','Ver um vídeo que me inspira','Gravar um áudio de incentivo pra mim'],
-  '⏳ Tempo':['Ficar 5 minutos sem celular','Ouvir uma música sem fazer outra coisa','Ler 5 páginas de um livro','Meditar por 3 minutos','Caminhar 10 minutos'],
-  '🎁 Presentes':['Preparar minha bebida favorita','Passar meu perfume favorito','Passar batom','Vestir minha peça de roupa favorita','Comer algo que eu adoro'],
-  '🛠️ Serviço':['Lavar a louça','Arrumar a cama','Deixar uma refeição pronta pra depois','Separar a roupa do dia seguinte','Fazer a lista de compras'],
-  '🤍 Toque':['Tomar um banho relaxante','Passar creme no corpo','Alongar por 5 minutos','Dançar uma música','Massagear mãos ou pés']
-};
+/* Catálogo por estilo: as 2 primeiras aparecem sem teste; depois do teste o estilo principal abre 8 e o secundário 5 */
+const PRATICAS_CATALOGO=[
+  {id:'palavras',grupo:'💌 Palavras',itens:['Escrever um bilhete gentil pra mim','Mandar mensagem pra uma amiga','Escrever 3 linhas no caderno','Ver um vídeo que me inspira','Gravar um áudio de incentivo pra mim','Anotar uma conquista do dia','Reler um elogio que eu guardei','Escrever 3 coisas pelas quais sou grata']},
+  {id:'tempo',grupo:'⏳ Tempo',itens:['Ficar 5 minutos sem celular','Ouvir uma música sem fazer outra coisa','Ler 5 páginas de um livro','Meditar por 3 minutos','Caminhar 10 minutos','Tomar um café sem pressa','Ficar 5 minutos ao ar livre','Assistir um episódio sem culpa']},
+  {id:'presentes',grupo:'🎁 Presentes',itens:['Preparar minha bebida favorita','Passar batom','Passar meu perfume favorito','Vestir minha peça de roupa favorita','Comer algo que eu adoro','Usar a louça bonita que eu guardo','Colocar uma flor ou planta perto de mim','Montar uma playlist pra mim']},
+  {id:'servico',grupo:'🛠️ Serviço',itens:['Lavar a louça','Arrumar a cama','Deixar uma refeição pronta pra depois','Separar a roupa do dia seguinte','Fazer a lista de compras','Organizar uma gaveta','Lavar uma leva de roupa','Tirar o lixo antes de dormir']},
+  {id:'toque',grupo:'🤍 Toque',itens:['Tomar um banho relaxante','Passar creme no corpo','Alongar por 5 minutos','Dançar uma música','Massagear mãos ou pés','Hidratar o cabelo','Lavar o rosto com calma','Deitar 5 minutos embaixo de uma manta']}
+];
+const PRATICAS_INICIAIS_POR_ESTILO=2,PRATICAS_PRINCIPAL=8,PRATICAS_SECUNDARIA=5;
+const PRATICAS_GENERICAS=Object.fromEntries(PRATICAS_CATALOGO.map(c=>[c.grupo,c.itens.slice(0,PRATICAS_INICIAIS_POR_ESTILO)]));
 const HORAS_DORMIR=['21:00','21:30','22:00','22:30','23:00','23:30','00:00','00:30','01:00','01:30','02:00','02:30','03:00'];
 const HORAS_ACORDAR=['04:30','05:00','05:30','06:00','06:30','07:00','07:30','08:00','08:30','09:00','09:30','10:00','10:30','11:00'];
 const REFEICOES=['Café da manhã','Brunch','Almoço','Lanche da tarde','Jantar','Ceia'];
@@ -3584,12 +3587,16 @@ function montaCheckin(){
   $('ciRefeicoes').onclick=e=>{const b=e.target.closest('[data-ref]');if(!b)return;const r=b.dataset.ref;ci.refeicoes=ci.refeicoes||[];const i=ci.refeicoes.indexOf(r);if(i>=0)ci.refeicoes.splice(i,1);else ci.refeicoes.push(r);b.classList.toggle('on');salva();atualizaStatusCheckin();atualizaRelatorio();renderCheckinResumos();renderDiario();};
   $('ciEscalas').innerHTML=ESCALAS.map(([k,rot])=>{const v=ci.escalas?.[k]||0;return`<div class="escala" data-esc="${k}"><div class="rot">${esc(rot)}</div><div class="nums">${[1,2,3,4,5,6,7,8,9,10].map(n=>`<button type="button" class="num ${v===n?'on':''}" data-n="${n}">${n}</button>`).join('')}</div></div>`;}).join('');
   $('ciEscalas').onclick=e=>{const b=e.target.closest('[data-n]');if(!b)return;const escEl=b.closest('[data-esc]');if(!escEl)return;const k=escEl.dataset.esc,n=+b.dataset.n;ci.escalas=ci.escalas||{};ci.escalas[k]=(ci.escalas[k]===n)?undefined:n;salva();escEl.querySelectorAll('.num').forEach(x=>x.classList.toggle('on',+x.dataset.n===ci.escalas[k]));b.classList.add('salvo-flash');setTimeout(()=>b.classList.remove('salvo-flash'),500);atualizaStatusCheckin();atualizaRelatorio();renderCheckinResumos();renderDiario();};
-  $('ciPraticas').innerHTML=Object.entries(PRATICAS).map(([grupo,itens])=>`<div style="margin-bottom:12px"><div class="mut" style="font-size:11.5px;margin-bottom:5px;font-weight:700;letter-spacing:.3px;text-transform:uppercase">${esc(grupo)}</div><div class="chips">${itens.map(it=>{const on=(ci.praticas||{})[grupo+'|'+it];return`<button type="button" class="chip ${on?'on alt':''}" data-prat="${esc(grupo)}|${esc(it)}">${esc(it)}</button>`;}).join('')}</div></div>`).join('')+`<button type="button" class="btn btn-full" id="btnEditarPraticas" style="margin-top:4px">✏️ Editar minhas práticas</button>`;
-  $('btnEditarPraticas').onclick=abrirEditorPraticas;
-  $('ciPraticas').onclick=e=>{const b=e.target.closest('[data-prat]');if(!b)return;const k=b.dataset.prat;ci.praticas=ci.praticas||{};if(ci.praticas[k])delete ci.praticas[k];else ci.praticas[k]=true;b.classList.toggle('on');b.classList.toggle('alt');salva();atualizaStatusCheckin();atualizaRelatorio();renderCheckinResumos();renderDiario();};
+  renderPraticasCheckin();
   const obs=$('ciObs');obs.value=ci.observacoes||'';obs.oninput=()=>{$('obsFeedback').textContent='Toque em ✓ Salvar pra guardar.';};
   $('btnOkObs').onclick=()=>{ci.observacoes=obs.value;salva();$('obsFeedback').textContent='✓ Salvo';setTimeout(()=>{$('obsFeedback').textContent='';},1500);atualizaStatusCheckin();renderCheckinResumos();renderDiario();};
   atualizaRelatorio();
+}
+function renderPraticasCheckin(){
+  const ci=S.checkins[hoje()]||(S.checkins[hoje()]={});
+  $('ciPraticas').innerHTML=Object.entries(PRATICAS).map(([grupo,itens])=>`<div style="margin-bottom:12px"><div class="mut" style="font-size:11.5px;margin-bottom:5px;font-weight:700;letter-spacing:.3px;text-transform:uppercase">${esc(grupo)}</div><div class="chips">${itens.map(it=>{const on=(ci.praticas||{})[grupo+'|'+it];return`<button type="button" class="chip ${on?'on alt':''}" data-prat="${esc(grupo)}|${esc(it)}">${esc(it)}</button>`;}).join('')}</div></div>`).join('')+`<button type="button" class="btn btn-full" id="btnEditarPraticas" style="margin-top:4px">✏️ Editar minhas práticas</button>`;
+  $('btnEditarPraticas').onclick=abrirEditorPraticas;
+  $('ciPraticas').onclick=e=>{const b=e.target.closest('[data-prat]');if(!b)return;const k=b.dataset.prat;ci.praticas=ci.praticas||{};if(ci.praticas[k])delete ci.praticas[k];else ci.praticas[k]=true;b.classList.toggle('on');b.classList.toggle('alt');salva();atualizaStatusCheckin();atualizaRelatorio();renderCheckinResumos();renderDiario();};
 }
 function sugerirPraticas(notas,praticas){
   const s=[];const jm=k=>!!(praticas&&praticas[k]);const fg=p=>Object.keys(praticas||{}).some(k=>k.startsWith(p+'|'));
@@ -6999,11 +7006,30 @@ function iniciarPraticas(){
         base=clonarPraticas(PRATICAS);
         base['🤍 Contato físico']=base['🤍 Contato físico'].filter(x=>x!=='Carinho na Nica').map(x=>x==='Carinho no Pituca'?'Carinho num bichinho':x);
         base['💌 Palavras de incentivo']=base['💌 Palavras de incentivo'].map(x=>x==='Vídeos da Ana Beatriz'?'Vídeos que me inspiram':x);
-      }else base=clonarPraticas(PRATICAS_GENERICAS);
+      }else{base=clonarPraticas(PRATICAS_GENERICAS);S.praticasModo='generica';}
     }
     S.praticas=base;salva();
   }
+  if(!S.praticasModo&&!S.perfilOriginal&&S.praticas['⏳ Tempo']){S.praticasModo='generica';salva();}
   PRATICAS=S.praticas;
+}
+/* Depois do teste: abre mais práticas nos estilos em que ela pontuou alto. Devolve quantas entraram. */
+function praticasExpandirPorEstilo(principal,secundaria){
+  if(S.praticasModo!=='generica')return 0;
+  const removidas=new Set(S.praticasRemovidas||[]);
+  const todas=new Set(Object.values(S.praticas).flat());
+  let n=0;
+  [[principal,PRATICAS_PRINCIPAL],[secundaria,PRATICAS_SECUNDARIA]].forEach(([id,qtd])=>{
+    const cat=PRATICAS_CATALOGO.find(c=>c.id===id);if(!cat)return;
+    const lista=S.praticas[cat.grupo]||(S.praticas[cat.grupo]=[]);
+    cat.itens.slice(0,qtd).forEach(it=>{if(!todas.has(it)&&!removidas.has(it)){lista.push(it);todas.add(it);n++;}});
+  });
+  // estilo principal e secundário sobem para o topo do check-in
+  const topo=[principal,secundaria].map(id=>(PRATICAS_CATALOGO.find(c=>c.id===id)||{}).grupo).filter(g=>g&&S.praticas[g]);
+  const novo={};topo.forEach(g=>novo[g]=S.praticas[g]);Object.keys(S.praticas).forEach(g=>{if(!novo[g])novo[g]=S.praticas[g];});
+  S.praticas=novo;PRATICAS=S.praticas;salva();
+  try{renderPraticasCheckin();}catch(e){}
+  return n;
 }
 let _peRascunho=null;
 function abrirEditorPraticas(){
@@ -7059,8 +7085,12 @@ $('peSalvar').onclick=()=>{
   // texto digitado em "nova prática" e não confirmado também entra
   $('praticasEditorCorpo').querySelectorAll('[data-pe-nova]').forEach(inp=>{const v=inp.value.trim();if(v){const linha=document.createElement('input');linha.setAttribute('data-pe-item','');linha.value=v;linha.hidden=true;inp.closest('.pe-grupo').appendChild(linha);}});
   lerEditorPraticas();
+  const antes=new Set(Object.values(PRATICAS).flat()),depois=new Set(Object.values(_peRascunho).flat());
+  const tiradas=[...antes].filter(x=>!depois.has(x));
+  if(tiradas.length)S.praticasRemovidas=[...new Set([...(S.praticasRemovidas||[]),...tiradas])].filter(x=>!depois.has(x));
+  else if(S.praticasRemovidas)S.praticasRemovidas=S.praticasRemovidas.filter(x=>!depois.has(x));
   S.praticas=_peRascunho;PRATICAS=S.praticas;salva();
-  fecharOverlay($('praticasEditorModal'),()=>{montaCheckin();const box=$('ciPratBox');if(box)box.open=true;mostrarToast('Guardado ✓');});
+  fecharOverlay($('praticasEditorModal'),()=>{renderPraticasCheckin();const box=$('ciPratBox');if(box)box.open=true;mostrarToast('Guardado ✓');});
 };
 
 /* ============ ESTILO DE AUTOCUIDADO (teste) ============ */
@@ -7417,6 +7447,7 @@ function estiloRenderPagina(){
     estiloPagina++;estiloRenderPagina();$('estiloTesteBody').scrollTop=0;
   };
 }
+let _estiloPratGanhou=0;
 function estiloFinalizar(){
   const scores={A:0,B:0,C:0,D:0,E:0};
   estiloRespostas.forEach(c=>{if(c&&scores[c]!==undefined)scores[c]++;});
@@ -7433,6 +7464,7 @@ function estiloFinalizar(){
     principal,secundaria,diversificado
   };
   salva();
+  _estiloPratGanhou=praticasExpandirPorEstilo(principal,secundaria);
   estiloFecharTeste();
   setTimeout(()=>estiloMostrarResultado(),400);
 }
@@ -7463,6 +7495,10 @@ function estiloMostrarResultado(){
   html+=`<div class="card2" style="margin-bottom:12px"><div class="mut" style="font-size:10.5px;font-weight:800;letter-spacing:1.2px;text-transform:uppercase;color:var(--r);margin-bottom:6px">Preferência secundária</div>
     <div style="font-weight:800;font-size:14px;margin-bottom:4px">${sMeta.emoji} ${esc(sMeta.nome)}</div>
     <p class="mut" style="font-size:12.5px;line-height:1.5;margin:0">Também entra com força nas sugestões, para o cuidado não ficar em uma faixa só.</p></div>`;
+  if(_estiloPratGanhou>0){
+    html+=`<div class="aviso" style="margin-bottom:12px">✨ Seu check-in ganhou <b>${_estiloPratGanhou} prática${_estiloPratGanhou===1?'':'s'}</b> de ${esc(pMeta.nome)} e ${esc(sMeta.nome)}. Elas já aparecem primeiro na lista.</div>`;
+    _estiloPratGanhou=0;
+  }
   // práticas prioritárias — clicáveis para virar hábito
   html+=`<div class="mut" style="font-size:11px;font-weight:800;letter-spacing:1.2px;text-transform:uppercase;margin-bottom:6px">Práticas que combinam com você</div>`;
   html+=`<p class="mut" style="font-size:12px;line-height:1.45;margin:0 0 10px">Toque em uma para adicionar à sua lista de hábitos.</p>`;
