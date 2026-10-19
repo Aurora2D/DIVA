@@ -25,3 +25,7 @@ const RITMO=[[0,.6],[.40,2.04],[1.07,3.28],[1.25,3.80],[1.40,4.20],[1.47,4.50],[
 ```
 
 Cada par é `[segundo real, momento da coreografia]`. Para deixar um trecho mais lento, aumente o segundo real daquele ponto (e dos seguintes). Depois de mudar o `splash.html`, copie o conteúdo para o bloco "ABERTURA DIVA" do `index.html`.
+
+## Som da abertura
+
+`audio/abertura.mp3` toca junto com a animação de abertura. Os navegadores (principalmente no celular) costumam bloquear som automático quando a página abre sem a pessoa ter tocado na tela; nesse caso a abertura segue em silêncio. No app Android nativo o som toca normalmente.

@@ -143,6 +143,7 @@ output{font-size:11px;min-width:40px;font-variant-numeric:tabular-nums}
     <g id="upperStack" transform="rotate(-45 500 500)"></g>
     <path d="M2000-300C1450 140 1110 90 850 240S620 475 430 560S60 680-300 1300" fill="none" stroke="url(#gGold)" stroke-width="5"/>
   </g></svg>
+<canvas class="layer" id="curtUpCanvas" aria-hidden="true" style="visibility:hidden;width:100%;height:100%"></canvas>
 <svg class="layer vb" id="curtLo" viewBox="0 0 1000 1000" aria-hidden="true"><g id="lower" clip-path="url(#lowerClip)">
     <g id="lowerStack" transform="rotate(-45 500 500)"></g>
     <path d="M-1000 1300C-450 860-110 910 150 760S380 525 570 440S940 320 1300-300" fill="none" stroke="url(#gGold)" stroke-width="5"/>
@@ -272,6 +273,45 @@ let resizeT;addEventListener('resize',()=>{clearTimeout(resizeT);resizeT=setTime
 /* ---------- Pétalas: comprimento para o efeito de "desenhar" ---------- */
 const petals=[...document.querySelectorAll('.petal')];petals.forEach(p=>{const L=p.getTotalLength();p.dataset.len=L;p.style.strokeDasharray=L});
 
+
+/* ---------- Cortina de cima: onda que recua ----------
+   A cortina é desenhada UMA vez numa imagem em memória (gerada do próprio desenho, sem PNG).
+   A cada quadro só muda o recorte: uma borda em onda que vai recuando até sumir. */
+const onda={pronta:false};
+function prepararOnda(){return new Promise(res=>{try{
+  const sv=$('svg'),vb=sv.viewBox.baseVal,rc=sv.getBoundingClientRect();
+  const dpr0=Math.min(window.devicePixelRatio||1,1.5),cap=Math.min(1,Math.sqrt(1.4e6/((rc.width*dpr0)*(rc.height*dpr0)||1))),dpr=dpr0*cap,pxu=K*dpr,M=140;   // no máx. ~1,4 MP: leve até em tela grande
+  const X=vb.x,Y=vb.y,W=vb.width+M,H=vb.height+M;
+  const up=$('upper').cloneNode(true);up.removeAttribute('clip-path');up.removeAttribute('transform');
+  [...up.children].forEach(c=>{if(c.tagName.toLowerCase()==='path')c.remove()});   // tira o fio dourado fixo da borda antiga
+  const defs=sv.querySelector('defs').outerHTML;
+  const svg=`<svg xmlns="${NS}" width="${Math.ceil(W*pxu)}" height="${Math.ceil(H*pxu)}" viewBox="${X} ${Y} ${W} ${H}" preserveAspectRatio="none">${defs}${up.outerHTML}</svg>`;
+  const img=new Image();
+  img.onload=()=>{const off=document.createElement('canvas');off.width=img.width;off.height=img.height;off.getContext('2d').drawImage(img,0,0);
+    const cv=$('curtUpCanvas');cv.width=Math.round(rc.width*dpr);cv.height=Math.round(rc.height*dpr);
+    Object.assign(onda,{off,cv,ctx:cv.getContext('2d'),pxu,X,Y,pronta:true,ouro:document.documentElement.classList.contains('escuro')?'#e2b46c':'#cf9c48'});
+    cv.style.visibility='visible';$('curtUp').style.visibility='hidden';res()};
+  img.onerror=()=>res();
+  img.src='data:image/svg+xml;charset=utf-8,'+encodeURIComponent(svg);
+}catch(e){res()}})}
+function desenharOnda(t,open,exit){
+  const o=onda,c=o.ctx,cs=.70710678,toPx=(u,v)=>{const x=500+(u-500)*cs+(v-500)*cs,y=500-(u-500)*cs+(v-500)*cs;return [(x-o.X)*o.pxu,(y-o.Y)*o.pxu]};
+  const E=560-1500*open;                       // posição da borda (recua para o canto de cima)
+  const A=34+46*Math.sin(Math.PI*Math.min(1,open*1.15));   // a onda cresce no meio do recuo e assenta
+  const pts=[];for(let u=-900;u<=1900;u+=12){const v=E+A*Math.sin(u*.0058+t*1.9)+A*.45*Math.sin(u*.0135-t*2.6+1.3)+A*.2*Math.sin(u*.031+t*3.1);pts.push(toPx(u,v))}
+  c.setTransform(1,0,0,1,0,0);c.clearRect(0,0,o.cv.width,o.cv.height);
+  const curva=()=>{c.moveTo(pts[0][0],pts[0][1]);for(let i=1;i<pts.length-1;i++){const p=pts[i],q=pts[i+1];c.quadraticCurveTo(p[0],p[1],(p[0]+q[0])/2,(p[1]+q[1])/2)}c.lineTo(pts[pts.length-1][0],pts[pts.length-1][1])};
+  c.save();c.beginPath();curva();
+  const far1=toPx(1900,-2600),far0=toPx(-900,-2600);c.lineTo(far1[0],far1[1]);c.lineTo(far0[0],far0[1]);c.closePath();c.clip();
+  c.drawImage(o.off,-60*open*o.pxu,-55*open*o.pxu);   // leve paralaxe: o pigmento acompanha a onda
+  c.restore();
+  // espuma dourada na crista da onda
+  c.beginPath();curva();
+  c.lineWidth=4.2*o.pxu;c.strokeStyle=o.ouro;c.globalAlpha=.9;c.lineJoin='round';c.stroke();
+  c.lineWidth=1.4*o.pxu;c.strokeStyle='#fbe7a8';c.globalAlpha=.6;c.stroke();c.globalAlpha=1;
+  o.cv.style.opacity=1-exit;
+}
+
 /* ---------- Linha do tempo (pura: t -> estado) ---------- */
 /* ---------- Ritmo tirado do vídeo de referência (InShot_20261019_131007971) ----------
    Cada par = [tempo real em s, momento da coreografia original de 6 "tempos"].
@@ -306,7 +346,7 @@ function render(T){const t=warp(T);
   // cortinas: começam devagar e vão acelerando até sair da tela; se dissolvem no embalo final
   const open=seg(t,.1,2.6,inAccel),exit=seg(t,2.0,2.8,inOutSine);
   const cu=$('curtUp').style,cl=$('curtLo').style;
-  cu.transform=`translate3d(${-540*open*K}px,${-490*open*K}px,0)`;
+  if(onda.pronta)desenharOnda(t,open,exit);else cu.transform=`translate3d(${-540*open*K}px,${-490*open*K}px,0)`;
   cl.transform=`translate3d(${540*open*K}px,${490*open*K}px,0)`;
   cu.opacity=cl.opacity=1-exit;
 
@@ -372,7 +412,7 @@ function play(){introDone=false;lastPaint=-Infinity;cancelAnimationFrame(frame);
 $('replay').onclick=play;
 let escuroAtual=null;
 function rotuloTema(){$('tema').textContent=escuroAtual?'◐ Tema claro':'◐ Tema escuro'}
-$('tema').onclick=()=>{escuroAtual=!escuroAtual;aplicaTema(escuroAtual);rotuloTema();play()};
+$('tema').onclick=()=>{escuroAtual=!escuroAtual;aplicaTema(escuroAtual);rotuloTema();onda.pronta=false;$('curtUp').style.visibility='';prepararOnda().then(play)};
 $('seek').oninput=e=>{cancelAnimationFrame(frame);render(+e.target.value);renderRiver(+e.target.value)};
 window.diva={render,play};
 
@@ -388,7 +428,7 @@ function aplicaTema(escuro){
 }
 escuroAtual=temaEscuroDoSistema();aplicaTema(escuroAtual);rotuloTema();
 measure();render(0);
-Promise.all([document.fonts?document.fonts.ready:null,bakeTextures().catch(()=>{})]).then(()=>matchMedia('(prefers-reduced-motion: reduce)').matches?render(DURATION):play());
+Promise.all([document.fonts?document.fonts.ready:null,bakeTextures().catch(()=>{}),prepararOnda()]).then(()=>matchMedia('(prefers-reduced-motion: reduce)').matches?render(DURATION):play());
 </script>
 </body>
 </html>
