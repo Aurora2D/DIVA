@@ -25,11 +25,13 @@ function montarRelatorioCartaApp(rel,ciclo,extra){
   (S.habitos||[]).forEach(h=>{const n=habDiasNaJanela(h.feitos,ini,fim);if(n>0)lista.push({nome:h.nome,dias:n});});
   Object.entries(S.historicoRemovidos||{}).forEach(([nome,v])=>{if(!v)return;const n=habDiasNaJanela(v.feitos,ini,fim);if(n>0)lista.push({nome,dias:n});});
   lista.sort((a,b)=>b.dias-a.dias);
+  const histAnt=idx>0?hist.slice(0,idx).map(h=>h.resumo||calculaScoreCiclo(h)):[];
   const carta=montarCartaRelatorio({
-    nome:primeiroNome(),dims:r,anterior:rAnt,
+    nome:primeiroNome(),dims:r,anterior:rAnt,historico:histAnt,
     ci:{dias:D.diasComDado,pares},
     habitos:{total:lista.reduce((s,h)=>s+h.dias,0),top:lista.slice(0,2).map(h=>h.nome)}
   });
+  window.__cartaAcao=carta.gata;
   /* texto primeiro */
   const nome=primeiroNome();
   let html=`<div class="rel-titulo">${nome?'Seu retrato dos 21 dias, '+esc(nome):'Seu retrato dos 21 dias'}</div><div class="rel-data">${esc(extra.dataStr)}</div>`;
@@ -40,6 +42,8 @@ function montarRelatorioCartaApp(rel,ciclo,extra){
     if(b.t==='h2')html+=`<div class="rel-h2">${esc(b.txt)}</div>`;
     else if(b.t==='p')html+=`<p class="rel-p">${esc(b.txt)}</p>`;
     else if(b.t==='pergunta')html+=`<div class="rel-pergunta"><div class="rel-pergunta-q">${esc(b.txt)}</div></div>`;
+    else if(b.t==='destaque')html+=`<div class="rel-destaque">${esc(b.txt)}</div>`;
+    else if(b.t==='gesto'){window.__gestoCarta=b.gesto;html+=`<button type="button" class="gesto-btn" id="gestoCartaBtn">${esc(b.gesto.emoji)} ${esc(b.txt)}: ${esc(b.gesto.nome.toLowerCase())}</button>`;}
     else if(b.t==='cuidado')html+=`<p class="rel-p ci-nota">${esc(b.txt)}</p>`;
     else if(b.t==='despedida')html+=`<div class="rel-despedida">${esc(b.txt)}</div>`;
   });
@@ -87,4 +91,19 @@ if(typeof window!=='undefined'&&!window.__gcPrint){
   window.__gcPrint=1;
   window.addEventListener('beforeprint',()=>{document.querySelectorAll('.gc-gaveta').forEach(d=>{d.dataset.eraAberta=d.open?'1':'0';d.open=true;});});
   window.addEventListener('afterprint',()=>{document.querySelectorAll('.gc-gaveta').forEach(d=>{d.open=d.dataset.eraAberta==='1';});});
+}
+
+/* liga o botão "Quero tentar esse gesto": vira hábito no app, respeitando a regra de um hábito novo por vez */
+function ligarBotoesCarta(corpo){
+  const b=corpo&&corpo.querySelector('#gestoCartaBtn');if(!b)return;
+  b.onclick=()=>{
+    const g=window.__gestoCarta;if(!g)return;
+    if(S.habitos.some(h=>h.nome===g.nome)){avisar('Você já tem esse hábito. 💛');return;}
+    if(typeof habitoLiberado==='function'&&!habitoLiberado()){
+      const n=diasAteLiberar();
+      avisar('Seu hábito mais novo ainda está se firmando. Em '+n+(n===1?' dia':' dias')+' esse gesto entra, é só voltar aqui. 💛');return;
+    }
+    adicionarHabitoFila({nome:g.nome,emoji:g.emoji,unidade:g.unidade,paraQue:'Veio do meu retrato dos 21 dias',grupo:g.grupo,dims:[g.dim]});
+    b.textContent='✓ Entrou nos seus hábitos';b.disabled=true;b.classList.add('feito');
+  };
 }

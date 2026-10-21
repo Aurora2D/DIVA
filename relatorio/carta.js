@@ -49,6 +49,21 @@
     regulacao:'três respirações antes de reagir ao que te tira do eixo',
     direcao:'escolher uma única coisa pequena para fazer esta semana, e fazer'
   };
+  const HABITO_GESTO={
+    sobrecarga:{nome:'Tirar uma tarefa da pilha',emoji:'🧺',unidade:'1 tarefa por semana',grupo:'outros'},
+    ansiedade:{nome:'Três minutos de pausa antes de dormir',emoji:'🌙',unidade:'3 minutos',grupo:'outros'},
+    energia:{nome:'Dormir meia hora mais cedo',emoji:'😴',unidade:'meia hora a mais de sono',grupo:'corpo'},
+    corpo:{nome:'Um alongamento curto',emoji:'🫶',unidade:'alguns minutos',grupo:'corpo'},
+    prazer:{nome:'Dez minutos só por gosto',emoji:'🎨',unidade:'10 minutos',grupo:'outros'},
+    conexao:{nome:'Uma conversa honesta com alguém seguro',emoji:'💛',unidade:'1 conversa',grupo:'outros'},
+    autopercepcao:{nome:'Uma frase gentil sobre mim',emoji:'🪞',unidade:'1 frase por dia',grupo:'outros'},
+    regulacao:{nome:'Três respirações antes de reagir',emoji:'🌱',unidade:'3 respirações',grupo:'outros'},
+    direcao:{nome:'Uma coisa pequena da semana',emoji:'🧭',unidade:'1 passo pequeno',grupo:'outros'}
+  };
+  const BEM={sobrecarga:'a carga mais leve',ansiedade:'a mente mais calma',energia:'o seu fôlego',corpo:'o cuidado com o corpo',prazer:'o prazer nos seus dias',conexao:'a companhia das pessoas',autopercepcao:'o seu olhar gentil sobre você',regulacao:'a facilidade de voltar ao seu eixo',direcao:'a sensação de caminho'};
+  const CUIDADO={sobrecarga:'a carga em cima de você',ansiedade:'a mente em alerta',energia:'o seu fôlego',corpo:'o corpo',prazer:'o prazer nos dias',conexao:'a sensação de companhia',autopercepcao:'o seu olhar sobre si',regulacao:'voltar ao seu eixo',direcao:'a sensação de caminho'};
+  const ART={sobrecarga:'a',ansiedade:'a',energia:'a',corpo:'o',prazer:'o',conexao:'a',autopercepcao:'a',regulacao:'a',direcao:'a'};
+  const GATA={pesado:'sim',misto:'curiosa',leve:'pular'};
   const PERGUNTA={
     pesado:'O que, dentre tudo isso, você poderia deixar de carregar sozinha nos próximos 21 dias?',
     misto:'O que tem sustentado você, e como você pode dar um pouco mais de espaço a isso?',
@@ -141,6 +156,15 @@
     const blocos=[];
     const P=txt=>blocos.push({t:'p',txt});
 
+    /* 0. destaque: o essencial em uma frase */
+    const ord=DIMS.filter(d=>B[d.key]!==undefined).sort((x,y)=>B[y.key]-B[x.key]);
+    if(ord.length>=2){
+      const melhor=ord[0],pior0=ord[ord.length-1];
+      let tx;
+      if(B[melhor.key]<45)tx='Foi um ciclo difícil, e o que mais pediu cuidado foi '+CUIDADO[pior0.key]+'. Mesmo assim, '+BEM[melhor.key]+' segurou você.';
+      else tx='O que mais te sustentou neste ciclo foi '+BEM[melhor.key]+', e o que mais pediu cuidado foi '+CUIDADO[pior0.key]+'.';
+      blocos.push({t:'destaque',txt:'Em uma frase: '+tx.charAt(0).toLowerCase()+tx.slice(1)});
+    }
     /* 1. acolher */
     blocos.push({t:'h2',txt:'Como você chegou até aqui'});
     if(tom==='pesado')P('Antes de qualquer número: você chegou ao fim destes 21 dias, e isso já é uma forma de cuidado. O ciclo parece ter sido pesado, e eu quero começar por aí, sem pressa de transformar em lição.');
@@ -211,6 +235,27 @@
       }
     }
 
+    /* 4b. tendência ao longo de vários ciclos */
+    const serie=(D.historico||[]).concat([dims]);
+    if(serie.length>=3){
+      const tend=[];
+      DIMS.forEach(d=>{
+        const v=serie.map(x=>bom(x,d.key)).filter(x=>x!==null);
+        if(v.length<3)return;
+        let n=0,dir=0;
+        for(let i=v.length-1;i>0;i--){const dl=v[i]-v[i-1];const dr=dl>=5?1:dl<=-5?-1:0;if(dr===0)break;if(dir===0)dir=dr;if(dr!==dir)break;n++;}
+        if(n>=2)tend.push({d,n,dir});
+      });
+      tend.sort((a,b)=>b.n-a.n);
+      if(tend.length){
+        blocos.push({t:'h2',txt:'O que se repete ao longo dos ciclos'});
+        const txt=tend.slice(0,2).map(x=>x.dir>0
+          ?'Faz '+(x.n+1)+' ciclos seguidos que '+ART[x.d.key]+' '+x.d.nome.toLowerCase()+' melhora. Isso é tendência, não acaso, e merece ser reconhecido.'
+          :'É o '+(x.n+1)+'º ciclo seguido em que '+ART[x.d.key]+' '+x.d.nome.toLowerCase()+' está pior.').join(' ')+(tend.slice(0,2).some(x=>x.dir<0)?' Não é culpa sua: é um padrão, e padrão se cuida com atenção.':'');
+        P(txt);
+      }
+    }
+
     /* 5. hábitos */
     const H=D.habitos||{total:0,top:[]};
     blocos.push({t:'h2',txt:'Os seus gestos de cuidado'});
@@ -222,6 +267,7 @@
     const pior=DIMS.map(d=>({d,b:B[d.key]})).filter(x=>x.b!==undefined).sort((a,b)=>a.b-b.b)[0];
     if(tom==='leve'&&pior.b>=55)P('Eu não proporia mudar nada. Se quiser um gesto para o próximo ciclo, que seja proteger o que já está funcionando: '+GESTO[pior.d.key]+'. É pequeno de propósito.');
     else P('Eu não proporia mudar tudo. Se for para escolher uma coisa só, que seja esta: '+GESTO[pior.d.key]+'. É pequeno de propósito, para caber na vida real e não virar mais uma cobrança.');
+    blocos.push({t:'gesto',txt:'Quero tentar esse gesto',gesto:Object.assign({dim:pior.d.key},HABITO_GESTO[pior.d.key])});
     blocos.push({t:'pergunta',txt:PERGUNTA[tom]});
     if(B.sobrecarga!==undefined&&B.sobrecarga<30&&B.ansiedade<30)
       blocos.push({t:'cuidado',txt:'Se tudo isso estiver pesado demais, vale conversar com alguém de confiança, uma amiga, alguém da família ou quem você preferir. Você não precisa carregar isso sozinha.'});
@@ -249,7 +295,7 @@
       ps.forEach(p=>{const n=nomeA(p);if(p.ciPct>=55&&p.ciPct-p.mapaBom>10){if(nao.indexOf(n)<0)nao.push(n);}else if(p.ciPct<50){if(vem.indexOf(n)<0)vem.push(n);}});
       if(nao.length||vem.length)barras.eliminacao.push({titulo:TIT[k],naoVem:nao,vem:vem});
     });
-    return {tom,blocos,barras};
+    return {tom,blocos,barras,gata:GATA[tom]};
   }
   root.montarCartaRelatorio=montarCartaRelatorio;
   root.CARTA_DIMS=DIMS;
