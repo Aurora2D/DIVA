@@ -56,3 +56,11 @@ h2 .ic{width:20px;height:20px;color:var(--b)}
 .el-dn{background:rgba(201,138,90,.22);color:#b0703f}
 .el-ne{background:rgba(143,128,209,.22);color:#6f60b8}
 @media(prefers-color-scheme:dark){.el-ok{color:#8fcf9d}.el-dn{color:#e0a982}.el-ne{color:#b3a7ec}}
+
+/* PDF: títulos não ficam sozinhos no fim da página, cartões não se partem, cores saem impressas */
+@media print{
+  .rel-h2,.ci-tt,.el-t{break-after:avoid;page-break-after:avoid}
+  .ci-card-rel,.el-bloco,.gc-frase,.rel-pergunta,.ci-par{break-inside:avoid;page-break-inside:avoid}
+  .rel-numeros{break-before:page;page-break-before:always}
+  .gc-leg i,.el-cp,.ci-bar-row .trk,.ci-bar-row .trk i,.ci-card-rel svg *{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+}
