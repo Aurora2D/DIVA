@@ -10,6 +10,7 @@ renderHoje();
 frase();
 if(!S.onboarding.feito){setTimeout(iniciarOnboarding,300);}
 else {
+  abasAtualizar(false);setTimeout(()=>abasAtualizar(true),2600);
   setTimeout(avisosIniciais,900);
   /* o convite do teste de estilo de autocuidado só aparece depois que algum hábito completou 3 dias (junto com o check-in), uma vez só */
   if(S.habitos.some(h=>Object.keys(h.feitos||{}).length>=3))setTimeout(estiloConvidarSePreciso,2000);

@@ -290,6 +290,8 @@ function mostrarOnbPasso(p){
 function finalizarOnboarding(){
   $('onbOverlay').classList.remove('ativo');
   setTimeout(()=>{$('onbOverlay').hidden=true;document.body.style.overflow='';},500);
+  if(S.tabsLiberadas===undefined){S.tabsLiberadas='progressivo';salva();}
+  abasAtualizar(false);
   renderHoje();setTimeout(avisosIniciais,1200);
 }
 $('onbBtn1').onclick=()=>{const nome=$('onbNome').value.trim();if(!nome){$('onbNome').focus();return;}S.onboarding.nome=nome;salva();mostrarOnbPasso(6);};

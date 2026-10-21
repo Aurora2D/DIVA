@@ -132,7 +132,7 @@ function toggleHabito(id){
     // legado sem travaId
     S.proximoHabitoEm=null;
   }
-  salva();renderHoje();renderHabitos();
+  salva();renderHoje();renderHabitos();abasAtualizar(false);
   let ocupado=false;
   if(disparou){marcoEmAndamento=true;ocupado=true;setTimeout(()=>abrirMarco(hb,total),550);}
   else if(total===1&&celebraDeveConvidar()){ocupado=true;setTimeout(abrirCelebraConvite,800);}

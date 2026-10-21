@@ -51,7 +51,7 @@ No resumo da semana/mês e no retrato dos 21 dias a gatinha aparece no topo (`ga
 
 ## Cache do navegador
 
-Os arquivos ligados no `index.html` levam `?v=20261021r` no endereço. Quando mudar qualquer arquivo de `estilo/`, `atracao/` ou `mascote/`, troque esse valor em todos os links para o navegador buscar a versão nova. A gatinha dos relatórios também tem o tamanho definido no próprio código, para nunca ficar gigante se o CSS ainda estiver em cache.
+Os arquivos ligados no `index.html` levam `?v=20261021s` no endereço. Quando mudar qualquer arquivo de `estilo/`, `atracao/` ou `mascote/`, troque esse valor em todos os links para o navegador buscar a versão nova. A gatinha dos relatórios também tem o tamanho definido no próprio código, para nunca ficar gigante se o CSS ainda estiver em cache.
 
 ## Onde está o código
 
@@ -134,5 +134,8 @@ O relatório dos 21 dias agora é uma carta em texto corrido, com as barras só 
 
 ## Como o código está dividido
 O `index.html` ficou só com a estrutura da tela e o CSS. O JavaScript do app está na pasta `app/`, em arquivos carregados nesta ordem (a ordem importa):
-`base` (utilitários e bancos de texto), `atracao-dados`, `cuidado-premios`, `estado` (estado inicial e onboarding), `hoje`, `checkin`, `habitos`, `atracao-app`, `resumos`, `mapa` (mapa emocional e relatório), `celebrar`, `atracao-extras`, `estilo-autocuidado`, `final` (troca de emojis por ícones) e `iniciar` (liga tudo ao abrir o app, roda por último).
+`base` (utilitários e bancos de texto), `atracao-dados`, `cuidado-premios`, `estado` (estado inicial e onboarding), `hoje`, `checkin`, `habitos`, `atracao-app`, `resumos`, `mapa` (mapa emocional e relatório), `celebrar`, `abas` (abas que abrem aos poucos), `atracao-extras`, `estilo-autocuidado`, `final` (troca de emojis por ícones) e `iniciar` (liga tudo ao abrir o app, roda por último).
 Regra: o que roda na hora em que o app abre fica em `iniciar.js`. Se uma parte nova usar uma função de outra no carregamento, a outra precisa vir antes na lista dos `<script>` do `index.html`.
+
+## Abas que abrem aos poucos
+`app/abas.js`. Quem chega novo vê só Hoje. Check-in abre depois de 3 dias com um hábito, Mapa depois de 7, Celebrar e Atração depois do primeiro mapa. Cada uma chega com uma telinha de boas-vindas (`#abaBoasVindasModal`). Quem já usava o app antes continua vendo tudo, e em Configurações existe "Mostrar todas as abas". Para mudar as regras ou os textos, é só editar `ABAS_REGRAS` no começo do arquivo.

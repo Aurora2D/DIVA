@@ -93,6 +93,7 @@ function renderConfig(){
     +row('cfgRowSaude','folha','Cuidados fora do app',(()=>{const n=cuidadosPendentes().length;return n?n+(n===1?' pendente':' pendentes'):'nada pendente';})())
     +`</div>`;
   h+=`<div class="cfg-grupo-tit">Experiência</div><div class="cfg-grupo">`
+    +row('cfgRowAbas','mapa','Mostrar todas as abas<small>Por padrão elas abrem aos poucos</small>','',sw('cfgAbas',S.tabsLiberadas!=='progressivo'))
     +row('cfgRowSons','sino','Sons<small>Ao marcar hábitos e comemorar</small>','',`<span class="cfg-mini" id="btnOuvirSons">Ouvir</span>`+sw('cfgSons',somLigado()))
     +`</div>`;
   h+=`<div class="cfg-grupo-tit">Seu histórico</div><div class="cfg-grupo">`
@@ -114,6 +115,8 @@ function renderConfig(){
   };
   $('cfgRowLemb').onclick=()=>{renderLembretes();abrirOverlayTopo($('lembretesModal'));};
   $('cfgRowSaude').onclick=abrirCuidados;
+  $('cfgRowAbas').onclick=()=>$('cfgAbas').click();
+  $('cfgAbas').onchange=()=>{S.tabsLiberadas=$('cfgAbas').checked?'todas':'progressivo';salva();abasAtualizar(false);};
   $('cfgRowSons').onclick=()=>$('cfgSons').click();
   $('cfgSons').onchange=()=>{S.sons={ligado:$('cfgSons').checked};salva();if(S.sons.ligado)som('plim');};
   $('btnOuvirSons').onclick=ev=>{ev.stopPropagation();const era=somLigado();if(!era)S.sons={ligado:true};som('plim');setTimeout(()=>som('guardado'),900);setTimeout(()=>som('caixinha'),1700);setTimeout(()=>{som('brilho');if(!era)S.sons={ligado:false};},2900);};
@@ -179,6 +182,7 @@ document.querySelectorAll('.tabs-bar button').forEach(b=>b.classList.toggle('on'
   if(t==='celebrar')renderCelebrar();
   if(t==='atracao'){renderAtracaoTudo();}
   window.scrollTo({top:0,behavior:'instant'});
+  if(typeof abasAtualizar==='function')abasAtualizar(t==='hoje');
 }
 document.querySelectorAll('.tabs-bar button').forEach(b=>{b.onclick=()=>trocaAba(b.dataset.tab);});
 $('btnGerenciar').onclick=()=>{
