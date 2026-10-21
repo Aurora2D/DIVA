@@ -1,12 +1,12 @@
 # Trilha guiada da aba Atração: documentação para integração
 
-Para: Thiago. De: Érica. Arquivo alterado: `index.html` (mais este documento e uma seção no README).
+Para: Thiago. De: Érica. Arquivos: `index.html` (só o esqueleto e os links), a pasta nova `atracao/` (`atracao.js`, `atracao.css`, `gatinha/`), este documento e uma seção no README.
 
 ## O que é
 
-A aba Atração agora é uma trilha de 8 sessões em tela cheia, no visual de aquarela com a gatinha, uma ideia por tela. Os textos vêm do protótipo "Trilha da Atração" (em tom de sessão de terapia) e todas as funções do app continuam: criar desejo, montar a declaração com prefixos, anotar a dúvida, guardar a frase no Livro de Permissões, registrar sinais, escolher o menor passo e virar hábito.
+A aba Atração agora é uma trilha de 7 sessões em tela cheia, no visual de aquarela com a gatinha, uma ideia por tela. Os textos vêm do documento revisado à mão pela Érica (tom de sessão de terapia, com os mantras completos; a sessão Olhar com outros olhos vem do protótipo) e todas as funções do app continuam: criar desejo, montar a declaração com prefixos, anotar a dúvida, guardar a frase no Livro de Permissões, registrar sinais, escolher o menor passo e virar hábito.
 
-O visual usa as variáveis de cor que o app já tem (`--bg`, `--txt`, `--b`, `--borda`, `--surf-mid`, `--modal-1/2`, `--tabs-bg`, `--aquarela`), então claro e escuro funcionam sem trabalho extra. A aquarela das capas e miniaturas é gerada por código (`svAquarela`), sem imagens. A gatinha é uma imagem WebP embutida (`SESSAO_GATA`, cerca de 100 KB).
+O visual usa as variáveis de cor que o app já tem (`--bg`, `--txt`, `--b`, `--borda`, `--surf-mid`, `--modal-1/2`, `--tabs-bg`, `--aquarela`), então claro e escuro funcionam sem trabalho extra. A aquarela das capas e miniaturas é gerada por código (`svAquarela`), sem imagens. A gatinha é um arquivo em `atracao/gatinha/<pose>.webp`. Hoje só existe `abertura.webp`; as outras poses (`deixar-sair`, `clareza`, `permissao`, `menor-passo`) usam a da abertura até o arquivo existir. Para liberar uma pose nova, coloque o arquivo na pasta e inclua o nome em `GATA_POSES` no `atracao.js`. A Érica evolui a gatinha em outro repositório; aqui só se copiam os arquivos novos.
 
 ## As sessões
 
@@ -17,11 +17,12 @@ O visual usa as variáveis de cor que o app já tem (`--bg`, `--txt`, `--b`, `--
 | 3 | olhar | `sessaoOlhar` | `contraste.camadas = {pedido, origem}` |
 | 4 | clareza | `sessaoClareza` | cria o desejo (`novoDesejo`), área, `desejo.camadas = {pedido, origem, importa}`, remove o contraste da fila |
 | 5 | declaracao | `sessaoDeclaracao(d)` | `desejo.corpo[]` (prefixos e textos editáveis), `desejo.sensacao`; botão que chama `habitoLerDeclaracao` |
-| 6 | permissao1 | `sessaoPermissao1(d)` | `desejo.gravetos[]` com `duvida`, `origem`, `seFosse` |
-| 7 | permissao2 | `sessaoPermissao2(d)` | `graveto.alivio`, `solto`, `soltoEm` (vai para o Livro de Permissões), `desejo.evidencias[]`; atalho que abre o Livro |
-| 8 | passo | `sessaoMenorPasso(d)` | `desejo.menorPassos[]`, `desejo.menorPasso`; botão que chama `virarDesejoEmHabito` |
+| 6 | permissao | `sessaoPermissao(d)` (4 etapas: escutar o receio, olhar com curiosidade, nova perspectiva, dar espaço) | `desejo.gravetos[]` com `duvida`, `origem`, `seFosse`; `graveto.alivio`, `solto`, `soltoEm` (vai para o Livro de Permissões); `desejo.evidencias[]`; atalho que abre o Livro |
+| 7 | passo | `sessaoMenorPasso(d)` | `desejo.menorPassos[]`, `desejo.menorPasso`; botão que chama `virarDesejoEmHabito` |
 
 Quem escolhe o menor passo é a pessoa: os exemplos na tela são só texto, nada é sugerido ou preenchido.
+
+"Retomar dúvida" e "Anotar e trabalhar agora" abrem a Permissão direto na etapa 3 (`sessaoPermissaoNaFrase(d, graveto)`).
 
 Ferramentas na mesma tela cheia, abaixo da trilha: `sessaoMeusDesejos` e `sessaoDesejoHub(d)` (abrir cada etapa, editar o texto, soltar, apagar), `sessaoMeusDesabafos` e `sessaoDesabafo(c)`, `sessaoDuvidaRapida` (anotar sem precisar de nada antes, com a opção de trabalhar a dúvida na hora).
 
@@ -40,6 +41,16 @@ Os três botões antigos (Clareza, Declaração, Permissão, `#atracaoMenu`) sa�
 
 `irParaDeclaracao()` abre a sessão de declaração. O HTML antigo dos popups (`secClarezaContent` etc.) e o modal antigo do desejo (`abrirDesejo`) continuam no arquivo, sem botão que leve a eles, para você remover quando quiser. Qualquer outro ponto do app que chame `abrirDesejo(id, passo)` ainda abre o modal antigo.
 
+## Onde está o código
+
+Princípio: função nova entra como arquivo à parte e o `index.html` só a liga por link, em vez de receber centenas de linhas. Assim há menos chance de bug e o arquivo grande fica mais fácil de manter.
+
+- `atracao/atracao.js`: motor, sessões, ferramentas. Carregado no fim do `index.html` (`<script src="atracao/atracao.js">`), depois do script principal, e usa as globais dele (`S`, `salva`, `$`, `esc`...).
+- `atracao/atracao.css`: estilos `sv-*`, carregado no `<head>`.
+- `atracao/gatinha/`: imagens da gatinha.
+- No `index.html` ficam só: os dois links, o markup de `#sessaoModal`, o cabeçalho da aba (`#btnComoFunciona`, `#atrSessoes`) e `irParaDeclaracao()`.
+- A pasta `atracao/` precisa ir junto com o `index.html` no app (como `audio/` e `logo/`).
+
 ## Como o motor funciona
 
 `#sessaoModal` virou uma tela cheia (`.sessao-view`): barra de cima com X e pontinhos, conteúdo, barra de baixo fixa com Voltar e Continuar (ou Concluir na última tela).
@@ -54,7 +65,7 @@ Uma sessão é um objeto: `{id, kicker, titulo, afirma, mascote, limpar:[...], p
 
 - `seguir` roda ao tocar em Continuar. Se devolver `false`, não avança (usado para exigir texto e gravar no modelo).
 - `botoes` troca o botão Continuar (usado na tela "Tenho dúvida / Sim, faz bem").
-- Para editar um texto, mexa nas listas de blocos dentro de cada função `sessaoXxx`.
+- Para editar um texto, mexa nas listas de blocos dentro de cada função `sessaoXxx`, em `atracao/atracao.js`.
 
 ## Mudanças no modelo de dados (atenção)
 
@@ -72,7 +83,7 @@ Uma sessão é um objeto: `{id, kicker, titulo, afirma, mascote, limpar:[...], p
 
 ## Testado e não testado
 
-Testado (Chromium headless, claro e escuro, 390x800): as 8 sessões de ponta a ponta com gravação no modelo, prefixos e edição inline da declaração, "Tenho dúvida", sugestões de permissão, Livro, evidência, menor passo virando hábito, Meus desejos (editar, soltar, apagar), Meus desabafos, dúvida rápida, escolha entre vários desejos, retomar uma sessão do ponto onde parou. Sem erros de página.
+Testado (Chromium headless, claro e escuro, 390x800): as 7 sessões de ponta a ponta com gravação no modelo, prefixos e edição inline da declaração, "Tenho dúvida", sugestões de permissão, Livro, evidência, menor passo virando hábito, Meus desejos (editar, soltar, apagar), Meus desabafos, dúvida rápida, escolha entre vários desejos, retomar uma sessão do ponto onde parou. Sem erros de página.
 
 Não testado: WebView real do Android, teclado do celular sobre os campos, sons.
 
@@ -80,9 +91,9 @@ Não testado: WebView real do Android, teclado do celular sobre os campos, sons.
 
 1. Todas as sessões ficam liberadas (a pessoa pode abrir qualquer uma). O protótipo bloqueava as seguintes até terminar a anterior. Deixei liberado porque quem já tem desejos, ou volta para um segundo desejo, ficaria travada. O card da próxima sessão aparece destacado.
 2. A tela "Em que parte da sua vida mora esse desejo?" (escolha da área) não está no protótipo, foi acrescentada porque o app precisa da área.
-3. As afirmações curtas de cada sessão são as do protótipo, que são mais curtas que as do documento original.
+3. Os mantras são os completos do documento. Nos cards da trilha aparecem cortados em 2 linhas (CSS); na sessão aparecem inteiros.
 4. A retirada do "quero" no começo do desejo (`trSemQuero`) hoje está só na trilha. Pode fazer sentido mover para `limparTextoDesejo`.
 
 ## Mensagem curta para a Érica enviar
 
-> Thiago, atualizei a trilha da Atração na main do DIVA com o novo visual (aquarela, gatinha, telas cheias). Mexi só no index.html. A explicação está em docs/TRILHA_ATRACAO.md, vale ler a parte "Mudanças no modelo de dados".
+> Thiago, atualizei a trilha da Atração na main do DIVA com o novo visual (aquarela, gatinha, telas cheias). Mexi no index.html (só links e esqueleto) e criei a pasta atracao/. A explicação está em docs/TRILHA_ATRACAO.md, vale ler a parte "Mudanças no modelo de dados".

@@ -7,6 +7,7 @@ App de hábitos diários para o bem-estar pessoal (Android e web).
 | Pasta | O que tem |
 |---|---|
 | `index.html` | App DIVA (versão web). |
+| `atracao/` | Trilha da aba Atração: `atracao.js`, `atracao.css` e `gatinha/` (imagens). |
 | `logo/index.html` | Animação do logo com controles (repetir, linha do tempo) — para estudar/ajustar. |
 | `logo/splash.html` | Versão tela cheia usada como abertura do app. Uma cópia dela fica embutida no `index.html` (bloco "ABERTURA DIVA"). |
 
@@ -36,4 +37,4 @@ Os sons de marcar hábito (`plim`), guardar (`guardado`), prêmio (`caixinha`) e
 
 ## Trilha guiada da aba Atração
 
-A aba Atração é uma trilha de 8 sessões em tela cheia (Abertura, Deixar sair, Olhar com outros olhos, Clareza, Declaração, Permissão em duas partes e Menor passo), com aquarela e a gatinha. Os textos ficam nas funções `sessaoAbertura`, `sessaoDeixarSair`, `sessaoOlhar`, `sessaoClareza`, `sessaoDeclaracao`, `sessaoPermissao1`, `sessaoPermissao2` e `sessaoMenorPasso`, no `index.html`, como listas de blocos. Detalhes em `docs/TRILHA_ATRACAO.md`.
+A aba Atração é uma trilha de 7 sessões em tela cheia (Abertura, Deixar sair, Olhar com outros olhos, Clareza, Declaração, Permissão e Menor passo), com aquarela e a gatinha. O código fica em `atracao/atracao.js` e `atracao/atracao.css`, ligados ao `index.html` por link, e a gatinha em `atracao/gatinha/`. Essa pasta precisa ir junto com o `index.html`. Detalhes em `docs/TRILHA_ATRACAO.md`.
