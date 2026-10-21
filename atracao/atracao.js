@@ -100,8 +100,8 @@ function sessaoMostrar(manter){
   const st=_sessao,def=st.def,t=svNorm(st.telas[st.i]);
   st.acoes=[];const binds=[];let h='';
   if(st.i===0&&!def.compacto){
-    h+=`<div class="sv-hero${def.mascote?' com-img':''}">${svAquarela(def.id||'x',420,320,5)}${def.mascote?svMascote('sv-mascote'):''}</div><div class="sv-cab"><p class="sv-kick">${esc(def.kicker)}</p><h1 class="sv-tit">${esc(def.titulo)}</h1>${def.afirma?`<p class="sv-afirma">${esc(def.afirma)}</p>`:''}</div>`;
-  }else h+=`<div class="sv-faixa">${svAquarela(def.id||'x',420,80,3,9)}<span>${esc(def.kicker)} · ${esc(def.titulo)}</span>${def.compacto?'':svMascote('sv-espia')}</div>`;
+    h+=`<div class="sv-hero${def.mascote?' com-img':''}">${def.mascote?svMascote('sv-mascote'):svAquarela(def.id||'x',420,320,5)}</div><div class="sv-cab"><p class="sv-kick">${esc(def.kicker)}</p><h1 class="sv-tit">${esc(def.titulo)}</h1>${def.afirma?`<p class="sv-afirma">${esc(def.afirma)}</p>`:''}</div>`;
+  }else h+=`<div class="sv-faixa">${def.compacto?svAquarela(def.id||'x',420,80,3,9):''}<span>${esc(def.kicker)} · ${esc(def.titulo)}</span>${def.compacto?'':svMascote('sv-espia')}</div>`;
   const ult=st.i===st.telas.length-1;
   h+='<div class="sv-corpo">'+(t.b||[]).map(b=>svBloco(b,st,binds)).join('');
   if(ult&&def.pular)h+=`<button type="button" class="sv-pular" id="svPular">${esc(def.pular.rot)}</button>`;
@@ -206,7 +206,7 @@ function cardTrilha(cls,img,k,t,a,id,fim){
 function renderSessoesAtracao(){
   const el=$('atrSessoes');if(!el)return;
   const e=trEst(),feitas=TRILHA.filter(s=>e.feitas[s.id]).length,primeira=TRILHA.findIndex(s=>!e.feitas[s.id]);
-  let h=`<header class="sv-capa">${svAquarela('capa-trilha',420,260,6)}${svMascote('sv-gata')}<div class="sv-txtc"><h1>Atração</h1><p>Vamos por partes.</p><p class="sv-prog">${feitas} de ${TRILHA.length} sessões</p></div></header><ol class="sv-lista">`;
+  let h=`<header class="sv-capa">${svMascote('sv-gata')}<div class="sv-txtc"><h1>Atração</h1><p>Vamos por partes.</p><p class="sv-prog">${feitas} de ${TRILHA.length} sessões</p></div></header><ol class="sv-lista">`;
   TRILHA.forEach((s,i)=>{
     const ok=e.feitas[s.id],cur=i===primeira,emAnd=!ok&&e.tela[s.id]>0;
     h+=cardTrilha(cur?'atual':'',ok?SV_IC.check:'',esc(s.kicker),esc(s.titulo),esc(s.afirma),s.id,
