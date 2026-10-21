@@ -51,7 +51,7 @@ No resumo da semana/mês e no retrato dos 21 dias a gatinha aparece no topo (`ga
 
 ## Cache do navegador
 
-Os arquivos ligados no `index.html` levam `?v=20261021c` no endereço. Quando mudar qualquer arquivo de `estilo/`, `atracao/` ou `mascote/`, troque esse valor em todos os links para o navegador buscar a versão nova. A gatinha dos relatórios também tem o tamanho definido no próprio código, para nunca ficar gigante se o CSS ainda estiver em cache.
+Os arquivos ligados no `index.html` levam `?v=20261021d` no endereço. Quando mudar qualquer arquivo de `estilo/`, `atracao/` ou `mascote/`, troque esse valor em todos os links para o navegador buscar a versão nova. A gatinha dos relatórios também tem o tamanho definido no próprio código, para nunca ficar gigante se o CSS ainda estiver em cache.
 
 ## Onde está o código
 
@@ -120,3 +120,10 @@ Não testado: WebView real do Android, teclado do celular sobre os campos, sons.
 ## Mensagem curta para a Érica enviar
 
 > Thiago, atualizei a trilha da Atração na main do DIVA com o novo visual (aquarela, gatinha, telas cheias). Mexi no index.html (só links e esqueleto) e criei a pasta atracao/. A explicação está em docs/TRILHA_ATRACAO.md, vale ler a parte "Mudanças no modelo de dados".
+
+## Carta do mapa emocional (relatório dos 21 dias)
+
+O relatório dos 21 dias agora é uma carta em texto corrido, com as barras só no final ("Seus números, para olhar com calma").
+- `relatorio/carta.js`: função pura `montarCartaRelatorio(dados)`. Recebe mapa, ciclo anterior, cruzamentos do check-in e hábitos, e devolve os blocos de texto e as barras. O tom muda conforme o ciclo (leve, misto, pesado). Para mudar a voz, é só editar os textos desse arquivo.
+- `relatorio/carta-app.js`: liga a carta ao app (junta os dados e desenha o HTML). Se algo falhar, o app mostra o relatório antigo.
+- Quando sobrecarga e ansiedade estão muito altas, a carta sugere conversar com alguém de confiança (amiga, família ou quem ela preferir).
