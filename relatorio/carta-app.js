@@ -47,13 +47,18 @@ function montarRelatorioCartaApp(rel,ciclo,extra){
   /* barras só no fim */
   const B=carta.barras;
   html+=`<div class="ci-rel rel-numeros"><div class="rel-h2">${esc(B.titulo)}</div><div class="ci-nota">${esc(B.nota)}</div>`;
+  /* guarda-chuva: o desenho dos 9 gomos, e as frases curtas logo abaixo */
+  const gruposCor={'O que pesa':'peso','O que sustenta':'sustenta','Como você se relaciona':'relaciona'};
+  const itensGC=[];
+  B.grupos.forEach(g=>g.itens.forEach(i=>itensGC.push({rot:i.rot,bom:i.bom,ant:i.delta===null||i.delta===undefined?null:i.bom-i.delta,grupo:gruposCor[g.titulo]||'relaciona'})));
+  if(typeof svgGuardaChuva==='function'&&itensGC.length){
+    html+=`<div class="ci-card-rel"><div class="ci-tt">Seu retrato do ciclo</div><div class="ci-nota" style="margin:0 0 4px">Cada gomo é uma parte de você. Quanto mais preenchido, mais cuidado e mais recurso.</div>${svgGuardaChuva(itensGC)}<div class="gc-leg"><span><i style="background:#c98a5a"></i>O que pesa</span><span><i style="background:#6ea87a"></i>O que sustenta</span><span><i style="background:#8F80D1"></i>Como você se relaciona</span><span>┅ ciclo anterior</span></div></div>`;
+  }
   B.grupos.forEach(g=>{
     if(!g.itens.length)return;
     html+=`<div class="ci-card-rel"><div class="ci-tt">${esc(g.titulo)}</div>`;
     g.itens.forEach(i=>{
-      const tend=i.delta?`<span class="tend">${i.delta>0?'▲':'▼'}</span>`:undefined;
-      html+=ciBarra(i.rot,i.bom,String(i.bom),i.delta?(i.delta>0?'▲':'▼'):undefined,ciCorBarra(i.bom));
-      html+=`<div class="ci-par-txt" style="margin:0 0 8px">${esc(i.legenda)}${i.delta?` (${i.delta>0?'+':''}${i.delta} desde o ciclo anterior)`:''}</div>`;
+      html+=`<div class="gc-frase"><b>${esc(i.rot)}</b> ${i.delta?(i.delta>0?'▲':'▼')+' ':''}<span class="gc-n">${i.bom}</span><div class="ci-par-txt">${esc(i.legenda)}${i.delta?` (${i.delta>0?'+':''}${i.delta} desde o ciclo anterior)`:''}</div></div>`;
     });
     html+=`</div>`;
   });

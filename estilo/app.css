@@ -37,3 +37,10 @@ h2 .ic{width:20px;height:20px;color:var(--b)}
   .gata-rel gatinha-fantoche{opacity:1!important}
 }
 @media (prefers-reduced-motion: reduce){.gata-rel{transition:none}}
+
+/* guarda-chuva do relatório */
+.gc-leg{display:flex;flex-wrap:wrap;gap:4px 14px;justify-content:center;font-size:12px;opacity:.8;margin-top:2px}
+.gc-leg i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:5px;vertical-align:-1px}
+.gc-frase{margin:0 0 8px;font-size:14px}
+.gc-frase .gc-n{opacity:.7;margin-left:4px}
+.gc-frase .ci-par-txt{margin-top:1px}
