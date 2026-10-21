@@ -5751,6 +5751,7 @@ function mostrarResumo(r,tipo){
   $('rsTitulo').textContent=ehMensal?'Seu mês':'Sua semana';
   const primeira=!ehMensal&&S.resumo.historico.length===1;
   $('rsEmoji').textContent=primeira?'🌱':(ehMensal?'📅':'📊');
+  gatinhaRel($('rsEmoji'),'troca',primeira?'tchau':'feliz');
   $('rsTopo').className='rs-topo'+(primeira?' primeira':'');
   $('rsPeriodo').textContent=fmtPeriodoBonito(r.periodo.inicio,r.periodo.fim);
   const nome=primeiroNome();
@@ -6738,7 +6739,7 @@ function abrirRelatorioCompleto(rel,ciclo){
   if(!ciFeito&&meioHtml)html+=meioHtml;
   html+=blocoNotas;
   html+=ciInd;
-  corpo.innerHTML=html;o.hidden=false;requestAnimationFrame(()=>o.classList.add('ativo'));document.body.style.overflow='hidden';
+  corpo.innerHTML=html;gatinhaRel(corpo,'topo','feliz');o.hidden=false;requestAnimationFrame(()=>o.classList.add('ativo'));document.body.style.overflow='hidden';
 }
 $('relatorioFechar').onclick=()=>{const o=$('relatorioOverlay');o.classList.remove('ativo');setTimeout(()=>{o.hidden=true;document.body.style.overflow='';},320);};
 $('relatorioPDF').onclick=()=>setTimeout(()=>{try{window.print();}catch(e){avisar('Não consegui abrir a impressão. Tente pelo menu do navegador.');}},150);
@@ -8023,6 +8024,7 @@ if(!S.onboarding.feito){setTimeout(iniciarOnboarding,300);}
 else {setTimeout(avisosIniciais,900);setTimeout(estiloConvidarSePreciso,2000);}
 </script>
 <script src="mascote/fantoche.js"></script>
+<script src="estilo/gatinha-relatorio.js"></script>
 <script src="atracao/atracao.js"></script>
 </body>
 </html>

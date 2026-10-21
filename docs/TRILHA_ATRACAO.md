@@ -45,6 +45,10 @@ Os três botões antigos (Clareza, Declaração, Permissão, `#atracaoMenu`) sa�
 
 Os títulos do app todo usam a Cormorant Garamond, a mesma do logo. O arquivo é `estilo/app.css` e a fonte fica em `estilo/fontes/` (funciona sem internet). Para mudar a fonte dos títulos, troque `--serif` nesse arquivo. A saudação do topo ficou numa frase só.
 
+## Gatinha nos relatórios
+
+No resumo da semana/mês e no retrato dos 21 dias a gatinha aparece no topo (`gatinhaRel()` em `estilo/gatinha-relatorio.js`, chamada em `mostrarResumo` e `abrirRelatorioCompleto`). No PDF ela sai junto, porque o canvas imprime como imagem. Fora da trilha e dos relatórios ela não aparece.
+
 ## Onde está o código
 
 Princípio: função nova entra como arquivo à parte e o `index.html` só a liga por link, em vez de receber centenas de linhas. Assim há menos chance de bug e o arquivo grande fica mais fácil de manter.

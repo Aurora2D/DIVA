@@ -25,3 +25,15 @@ h2 .ic{width:20px;height:20px;color:var(--b)}
 .grupo-card .grupo-nome,.ci-card .ci-tit{font-family:var(--serif);font-weight:700;font-size:18px;letter-spacing:0}
 #subSaudacao{font-family:var(--serif);font-style:italic;font-weight:600;font-size:16px}
 
+
+/* gatinha nos relatórios (só ali; no resto do app ela não aparece) */
+.gata-rel{width:120px;height:100px;margin:0 auto 6px;overflow:hidden;opacity:0;transition:opacity .35s;
+  -webkit-mask-image:linear-gradient(#000 72%,transparent);mask-image:linear-gradient(#000 72%,transparent)}
+.gata-rel.pronta{opacity:1}
+.gata-rel gatinha-fantoche{width:120px;display:block}
+.rs-emoji.com-gata{font-size:0;filter:none;margin-bottom:0}
+@media print{
+  .gata-rel{opacity:1!important;-webkit-mask-image:none;mask-image:none}
+  .gata-rel gatinha-fantoche{opacity:1!important}
+}
+@media (prefers-reduced-motion: reduce){.gata-rel{transition:none}}
