@@ -75,7 +75,6 @@ function montarRelatorioCartaApp(rel,ciclo,extra){
   }
   html+=`</div>`;
   if(extra.habHtml)html+=extra.habHtml;
-  /* as barras do check-in repetiam o que o círculo e o cartão 'De onde o cansaço vem' já mostram: fica só o sono e as emoções */
-  html+=ciObj.indExtra||'';
+  html+=ciObj.ind||'';
   return html;
 }
