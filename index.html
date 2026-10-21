@@ -8,7 +8,6 @@
 <meta name="color-scheme" content="light dark">
 <title>DIVA</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600&display=swap" rel="stylesheet">
 <style>
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 :root{
@@ -878,6 +877,7 @@ h1.diva-logo{display:flex;flex-direction:column;align-items:center;margin:0 0 6p
 .diva-sorriso{width:70px;height:15px;fill:#D96B83;margin-top:3px;overflow:visible}
 @media print{.diva-coroa{stroke:#D9A441}.diva-nome{color:#493657}}
 </style>
+<link rel="stylesheet" href="estilo/app.css">
 <link rel="stylesheet" href="atracao/atracao.css">
 </head>
 <body>
@@ -1418,7 +1418,6 @@ addEventListener('pointerdown',avisa);addEventListener('keydown',avisa);
     <svg class="diva-sorriso" viewBox="0 0 120 26" aria-hidden="true"><path d="M8 3c14 13 38 15 52 15s38-2 52-15c-12 15-34 21-52 21S20 18 8 3z"/></svg>
   </h1>
   <p class="sub" id="subSaudacao">Estou em processo de ficar bem.</p>
-  <p class="mut" style="text-align:center;font-size:12.5px;line-height:1.5;margin:-6px 0 12px">Hábitos pequenos, no seu ritmo. Você personaliza tudo.</p>
 
   <section id="tab-hoje">
     <div id="revisaoHabitosBox"></div>
@@ -1654,7 +1653,7 @@ addEventListener('pointerdown',avisa);addEventListener('keydown',avisa);
   <div class="rel-caixa" style="max-width:560px">
     <div class="rel-topbar"><button class="rel-btn-fechar" id="configFechar" type="button">✕</button></div>
     <div class="rel-scroll" style="padding-top:0">
-      <div class="rel-titulo" style="font-size:18px;margin-bottom:16px">Configurações</div>
+      <div class="rel-titulo" style="margin-bottom:16px">Configurações</div>
       <div id="cfgCorpo"></div>
       <div class="cfg-rodape">DIVA · feito com cuidado</div>
     </div>
@@ -2021,7 +2020,7 @@ addEventListener('pointerdown',avisa);addEventListener('keydown',avisa);
       <button class="rel-btn-fechar" id="gerenciarFechar" type="button">✕</button>
     </div>
     <div class="rel-scroll" style="padding-top:0">
-      <div class="rel-titulo" style="font-size:18px;margin-bottom:12px">🌱 Gerenciar hábitos</div>
+      <div class="rel-titulo" style="margin-bottom:12px">🌱 Gerenciar hábitos</div>
       <button class="btn btn-full" id="btnRevisarHabitos" style="margin:4px 0 12px">🌱 Revisar meus hábitos</button>
       <div id="avisoRitmo"></div>
       <div id="sugestoesPendentesBox"></div>
@@ -4939,12 +4938,12 @@ function abrirSecaoAtracao(sec){
   renderAtracaoTudo();
   if(sec==='permitir') preencherSelectPermDuvida();
   const body=$('atracaoSecaoBody');
-  body.innerHTML='<div class="rel-titulo" style="font-size:18px;margin-bottom:8px">'+tit[sec]+'</div>';
+  body.innerHTML='<div class="rel-titulo" style="margin-bottom:8px">'+tit[sec]+'</div>';
   // move nodes: clone content by innerHTML to keep ids working — re-bind after
   body.innerHTML+='<div id="atracaoSecaoInner">'+src.innerHTML+'</div>';
   // hide originals' interactive duplicates by emptying? Better: keep originals hidden and sync back on close
   // Actually use the real nodes: appendChild moves them
-  body.innerHTML='<div class="rel-titulo" style="font-size:18px;margin-bottom:8px">'+tit[sec]+'</div>';
+  body.innerHTML='<div class="rel-titulo" style="margin-bottom:8px">'+tit[sec]+'</div>';
   const wrap=document.createElement('div');wrap.id='atracaoSecaoInner';
   body.appendChild(wrap);
   while(src.firstChild) wrap.appendChild(src.firstChild);

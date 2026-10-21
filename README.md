@@ -7,6 +7,7 @@ App de hábitos diários para o bem-estar pessoal (Android e web).
 | Pasta | O que tem |
 |---|---|
 | `index.html` | App DIVA (versão web). |
+| `estilo/` | Estilo geral: títulos na serifada do logo (`app.css`) e a fonte (`fontes/`). |
 | `atracao/` | Trilha da aba Atração: `atracao.js` e `atracao.css`. |
 | `mascote/` | Cópia da gatinha (repositório Aurora2D/Mascote). Atualize com `sh scripts/atualizar-mascote.sh`. |
 | `logo/index.html` | Animação do logo com controles (repetir, linha do tempo) — para estudar/ajustar. |

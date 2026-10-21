@@ -101,3 +101,11 @@ gatinha-fantoche.pronta{opacity:1}
 .sv-faixa .sv-espia{position:absolute;right:10px;top:2px;width:84px;pointer-events:none}
 .sv-faixa span{max-width:calc(100% - 100px)}
 @media (prefers-reduced-motion: reduce){gatinha-fantoche{transition:none}}
+
+/* títulos na serifada do logo (fonte em estilo/app.css) */
+.sv-tit,.sv-sub,.sv-pergunta,.sv-capa h1,.sv-sessao .sv-n{font-family:var(--serif);font-weight:700;letter-spacing:0}
+.sv-tit{font-size:36px;line-height:1.1}
+.sv-capa h1{font-size:44px;line-height:1.05}
+.sv-sessao .sv-n{font-size:19px;line-height:1.2}
+.sv-pergunta{font-size:22px}
+.sv-sub{font-size:22px;text-transform:none}

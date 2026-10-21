@@ -41,6 +41,10 @@ Os três botões antigos (Clareza, Declaração, Permissão, `#atracaoMenu`) sa�
 
 `irParaDeclaracao()` abre a sessão de declaração. O HTML antigo dos popups (`secClarezaContent` etc.) e o modal antigo do desejo (`abrirDesejo`) continuam no arquivo, sem botão que leve a eles, para você remover quando quiser. Qualquer outro ponto do app que chame `abrirDesejo(id, passo)` ainda abre o modal antigo.
 
+## Estilo geral (serifada)
+
+Os títulos do app todo usam a Cormorant Garamond, a mesma do logo. O arquivo é `estilo/app.css` e a fonte fica em `estilo/fontes/` (funciona sem internet). Para mudar a fonte dos títulos, troque `--serif` nesse arquivo. A saudação do topo ficou numa frase só.
+
 ## Onde está o código
 
 Princípio: função nova entra como arquivo à parte e o `index.html` só a liga por link, em vez de receber centenas de linhas. Assim há menos chance de bug e o arquivo grande fica mais fácil de manter.
@@ -49,7 +53,7 @@ Princípio: função nova entra como arquivo à parte e o `index.html` só a lig
 - `atracao/atracao.css`: estilos `sv-*`, carregado no `<head>`.
 - `mascote/`: cópia da gatinha (Aurora2D/Mascote), atualizada pelo script.
 - No `index.html` ficam só: os dois links, o markup de `#sessaoModal`, o cabeçalho da aba (`#btnComoFunciona`, `#atrSessoes`) e `irParaDeclaracao()`.
-- As pastas `atracao/` e `mascote/` precisam ir junto com o `index.html` no app (como `audio/` e `logo/`).
+- As pastas `atracao/`, `mascote/` e `estilo/` precisam ir junto com o `index.html` no app (como `audio/` e `logo/`).
 
 ## A gatinha reage ao que a pessoa faz
 
