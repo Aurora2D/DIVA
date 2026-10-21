@@ -49,6 +49,10 @@ Os títulos do app todo usam a Cormorant Garamond, a mesma do logo. O arquivo é
 
 No resumo da semana/mês e no retrato dos 21 dias a gatinha aparece no topo (`gatinhaRel()` em `estilo/gatinha-relatorio.js`, chamada em `mostrarResumo` e `abrirRelatorioCompleto`). No PDF ela sai junto, porque o canvas imprime como imagem. Fora da trilha e dos relatórios ela não aparece.
 
+## Cache do navegador
+
+Os arquivos ligados no `index.html` levam `?v=20261021b` no endereço. Quando mudar qualquer arquivo de `estilo/`, `atracao/` ou `mascote/`, troque esse valor em todos os links para o navegador buscar a versão nova. A gatinha dos relatórios também tem o tamanho definido no próprio código, para nunca ficar gigante se o CSS ainda estiver em cache.
+
 ## Onde está o código
 
 Princípio: função nova entra como arquivo à parte e o `index.html` só a liga por link, em vez de receber centenas de linhas. Assim há menos chance de bug e o arquivo grande fica mais fácil de manter.

@@ -5,9 +5,11 @@ function gatinhaRel(alvo,modo,acao){
   try{
     if(!alvo||!window.customElements||!customElements.get('gatinha-fantoche'))return false;
     const caixa=document.createElement('div');caixa.className='gata-rel';caixa.setAttribute('aria-hidden','true');
+    /* tamanho inline: a gatinha nunca fica gigante, mesmo se o CSS ainda estiver em cache */
+    caixa.style.cssText='width:120px;height:100px;margin:0 auto 6px;overflow:hidden';
     caixa.innerHTML='<gatinha-fantoche pose="sentada" src-base="mascote/assets/pecas/"></gatinha-fantoche>';
     if(modo==='troca'){alvo.textContent='';alvo.classList.add('com-gata');alvo.appendChild(caixa);}else alvo.insertBefore(caixa,alvo.firstChild);
-    const g=caixa.firstChild;
+    const g=caixa.firstChild;g.style.cssText='display:block;width:120px';
     g.addEventListener('ready',()=>{caixa.classList.add('pronta');try{setTimeout(()=>g.play(acao||'feliz'),500);}catch(e){}},{once:true});
     return true;
   }catch(e){return false;}
