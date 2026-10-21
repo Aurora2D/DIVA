@@ -238,6 +238,17 @@
       })})),
       cruzamentos:{titulo:'Seu dia a dia e o mapa',itens:(D.ci.pares||[]).map(p=>({rot:p.lbl+' × '+p.mlbl,ci:Math.round(p.ciPct),mapa:Math.round(p.mapaBom),legenda:p.txt||''}))}
     };
+    /* de onde cada peso vem e de onde não vem (para o desenho no fim) */
+    const TIT={sobrecarga:'Sobrecarga alta',ansiedade:'Ansiedade alta',energia:'Energia baixa',corpo:'Corpo pedindo atenção',regulacao:'Regulação difícil'};
+    const nomeA=p=>p.lbl.charAt(0).toLowerCase()+p.lbl.slice(1);
+    barras.eliminacao=[];
+    ['sobrecarga','ansiedade','energia','corpo','regulacao'].forEach(k=>{
+      if(B[k]===undefined||B[k]>=50)return;
+      const ps=(D.ci.pares||[]).filter(p=>p.dim===k&&typeof p.ciPct==='number'&&typeof p.mapaBom==='number');
+      const nao=[],vem=[];
+      ps.forEach(p=>{const n=nomeA(p);if(p.ciPct>=55&&p.ciPct-p.mapaBom>10){if(nao.indexOf(n)<0)nao.push(n);}else if(p.ciPct<50){if(vem.indexOf(n)<0)vem.push(n);}});
+      if(nao.length||vem.length)barras.eliminacao.push({titulo:TIT[k],naoVem:nao,vem:vem});
+    });
     return {tom,blocos,barras};
   }
   root.montarCartaRelatorio=montarCartaRelatorio;

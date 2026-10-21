@@ -62,12 +62,16 @@ function montarRelatorioCartaApp(rel,ciclo,extra){
     });
     html+=`</div>`;
   });
-  if(B.cruzamentos.itens.length){
-    html+=`<div class="ci-card-rel"><div class="ci-tt">${esc(B.cruzamentos.titulo)}</div>`;
-    B.cruzamentos.itens.forEach(i=>{
-      html+=`<div class="ci-par"><div class="ci-par-t"><span>${esc(i.rot)}</span></div>${ciBarra('Dia a dia',i.ci,String(i.ci),undefined,ciCorBarra(i.ci))}${ciBarra('Mapa',i.mapa,String(i.mapa),undefined,ciCorBarra(i.mapa))}<div class="ci-par-txt">${esc(i.legenda)}</div></div>`;
+  if(B.eliminacao&&B.eliminacao.length){
+    html+=`<div class="ci-card-rel"><div class="ci-tt">De onde o cansaço vem</div><div class="ci-nota" style="margin:0 0 4px">Cada coisa que pesa no mapa, ao lado do seu dia a dia: de onde ela não vem e de onde vem.</div>`;
+    B.eliminacao.forEach(e=>{
+      html+=`<div class="el-bloco"><div class="el-t">${esc(e.titulo)}</div>`;
+      if(e.naoVem.length)html+=`<div class="el-lin"><span class="el-l">não vem de</span>${e.naoVem.map(x=>`<span class="el-cp el-ok">✓ ${esc(x)}</span>`).join('')}</div>`;
+      if(e.vem.length)html+=`<div class="el-lin"><span class="el-l">vem junto de</span>${e.vem.map(x=>`<span class="el-cp el-dn">${esc(x)}</span>`).join('')}</div>`;
+      else html+=`<div class="el-lin"><span class="el-l">vem de</span><span class="el-cp el-ne">algo que o check-in não mede</span></div>`;
+      html+=`</div>`;
     });
-    html+=`<div class="ci-nota">As barras estão na mesma direção: quanto mais cheia, melhor.</div></div>`;
+    html+=`</div>`;
   }
   html+=`</div>`;
   if(extra.habHtml)html+=extra.habHtml;

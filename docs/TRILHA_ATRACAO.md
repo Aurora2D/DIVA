@@ -51,7 +51,7 @@ No resumo da semana/mês e no retrato dos 21 dias a gatinha aparece no topo (`ga
 
 ## Cache do navegador
 
-Os arquivos ligados no `index.html` levam `?v=20261021h` no endereço. Quando mudar qualquer arquivo de `estilo/`, `atracao/` ou `mascote/`, troque esse valor em todos os links para o navegador buscar a versão nova. A gatinha dos relatórios também tem o tamanho definido no próprio código, para nunca ficar gigante se o CSS ainda estiver em cache.
+Os arquivos ligados no `index.html` levam `?v=20261021i` no endereço. Quando mudar qualquer arquivo de `estilo/`, `atracao/` ou `mascote/`, troque esse valor em todos os links para o navegador buscar a versão nova. A gatinha dos relatórios também tem o tamanho definido no próprio código, para nunca ficar gigante se o CSS ainda estiver em cache.
 
 ## Onde está o código
 
@@ -128,3 +128,4 @@ O relatório dos 21 dias agora é uma carta em texto corrido, com as barras só 
 - `relatorio/carta-app.js`: liga a carta ao app (junta os dados e desenha o HTML). Se algo falhar, o app mostra o relatório antigo.
 - Quando sobrecarga e ansiedade estão muito altas, a carta sugere conversar com alguém de confiança (amiga, família ou quem ela preferir).
 - `relatorio/guarda-chuva.js`: desenha o gráfico "guarda-chuva" (um gomo por dimensão, cor por grupo, ciclo anterior tracejado). Usado em `carta-app.js` no lugar das 9 barras.
+- Os cruzamentos do check-in com o mapa aparecem em "De onde o cansaço vem": para cada peso do mapa (sobrecarga, ansiedade, energia, corpo, regulação), de onde ele não vem e de onde vem junto. Os dados saem de `barras.eliminacao` em `relatorio/carta.js`.

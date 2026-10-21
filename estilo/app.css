@@ -44,3 +44,15 @@ h2 .ic{width:20px;height:20px;color:var(--b)}
 .gc-frase{margin:0 0 8px;font-size:14px}
 .gc-frase .gc-n{opacity:.7;margin-left:4px}
 .gc-frase .ci-par-txt{margin-top:1px}
+
+/* "De onde o cansaço vem" no relatório */
+.el-bloco{border-top:1px dashed rgba(128,120,140,.3);padding:10px 0 4px}
+.el-bloco:first-of-type{border-top:0}
+.el-t{font-family:var(--serif,Georgia,serif);font-weight:700;font-size:16px;margin-bottom:6px}
+.el-lin{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin:4px 0}
+.el-l{font-size:12px;opacity:.7;width:84px;flex:none}
+.el-cp{font-size:12.5px;padding:3px 10px;border-radius:12px}
+.el-ok{background:rgba(110,168,122,.22);color:#4d8a5a}
+.el-dn{background:rgba(201,138,90,.22);color:#b0703f}
+.el-ne{background:rgba(143,128,209,.22);color:#6f60b8}
+@media(prefers-color-scheme:dark){.el-ok{color:#8fcf9d}.el-dn{color:#e0a982}.el-ne{color:#b3a7ec}}
