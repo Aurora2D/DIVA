@@ -29,8 +29,8 @@ def script(m):
     txt = ler(caminho).replace('</script', '<\\/script')
     pre = ('<script>' + js_assets + '</script>\n') if caminho == 'mascote/fantoche.js' else ''
     return pre + '<script>\n' + txt + '\n</script>'
-html = re.sub(r'<script src="((?:mascote|estilo|atracao|relatorio)/[^"?]+)(?:\?[^"]*)?"></script>', script, html)
+html = re.sub(r'<script src="((?:mascote|estilo|atracao|relatorio|app)/[^"?]+)(?:\?[^"]*)?"></script>', script, html)
 
-assert not re.search(r'(?:href|src)="(?:estilo|atracao|mascote|relatorio)/', html), 'sobrou arquivo externo'
+assert not re.search(r'(?:href|src)="(?:estilo|atracao|mascote|relatorio|app)/', html), 'sobrou arquivo externo'
 open(saida, 'w', encoding='utf-8').write(html)
 print(saida, round(len(html) / 1024), 'KB')

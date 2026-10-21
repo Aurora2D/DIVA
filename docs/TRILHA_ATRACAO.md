@@ -131,3 +131,8 @@ O relatório dos 21 dias agora é uma carta em texto corrido, com as barras só 
 - `relatorio/guarda-chuva.js`: desenha o gráfico "guarda-chuva" (um gomo por dimensão, cor por grupo, ciclo anterior tracejado). Usado em `carta-app.js` no lugar das 9 barras.
 - Os cruzamentos do check-in com o mapa aparecem em "De onde o cansaço vem": para cada peso do mapa (sobrecarga, ansiedade, energia, corpo, regulação), de onde ele não vem e de onde vem junto. Os dados saem de `barras.eliminacao` em `relatorio/carta.js`.
 - A carta também traz: uma frase de destaque no começo, uma tendência quando há 3 ou mais ciclos seguidos na mesma direção, a gatinha com ação conforme o tom do ciclo (pesado: sim, misto: curiosa, leve: pular) e o botão "Quero tentar esse gesto", que cria o hábito pelo `adicionarHabitoFila` respeitando a regra de um hábito novo por vez (`ligarBotoesCarta` em `relatorio/carta-app.js`).
+
+## Como o código está dividido
+O `index.html` ficou só com a estrutura da tela e o CSS. O JavaScript do app está na pasta `app/`, em arquivos carregados nesta ordem (a ordem importa):
+`base` (utilitários e bancos de texto), `atracao-dados`, `cuidado-premios`, `estado` (estado inicial e onboarding), `hoje`, `checkin`, `habitos`, `atracao-app`, `resumos`, `mapa` (mapa emocional e relatório), `celebrar`, `atracao-extras`, `estilo-autocuidado`, `final` (troca de emojis por ícones) e `iniciar` (liga tudo ao abrir o app, roda por último).
+Regra: o que roda na hora em que o app abre fica em `iniciar.js`. Se uma parte nova usar uma função de outra no carregamento, a outra precisa vir antes na lista dos `<script>` do `index.html`.
