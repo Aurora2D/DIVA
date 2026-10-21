@@ -7,9 +7,9 @@
 .sv-capa{position:relative;overflow:hidden;border-radius:22px;background:linear-gradient(160deg,var(--modal-1),var(--modal-2));border:1px solid var(--borda);padding:56px 22px 22px}
 .sv-capa>*:not(.sv-wash){position:relative}
 .sv-capa .sv-gata{position:absolute;right:8px;bottom:-14px;width:118px;cursor:pointer;-webkit-tap-highlight-color:transparent}
-.sv-capa .sv-txtc{max-width:62%}
-.sv-capa h1{font-weight:900;font-size:34px;line-height:1.1;margin:0 0 6px;letter-spacing:-.5px;color:var(--txt)}
-.sv-capa p{margin:0;font-size:16px;font-weight:600;color:var(--txt)}
+.sv-capa .sv-txtc{max-width:62%;text-align:left}
+.sv-capa h1{text-align:left;font-weight:900;font-size:34px;line-height:1.1;margin:0 0 6px;letter-spacing:-.5px;color:var(--txt)}
+.sv-capa p{text-align:left;margin:0;font-size:16px;font-weight:600;color:var(--txt)}
 .sv-capa .sv-prog{margin-top:14px;font-size:13px;color:var(--mut);font-weight:600;letter-spacing:.3px}
 .sv-lista{display:flex;flex-direction:column;gap:12px;padding:18px 0 8px;margin:0;list-style:none}
 .sv-secao{margin:14px 2px 0;font-size:11px;font-weight:800;letter-spacing:1.4px;text-transform:uppercase;color:var(--mut)}
