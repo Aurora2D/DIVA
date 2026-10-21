@@ -216,6 +216,7 @@ function renderSessoesAtracao(){
   const ativos=desejosAtivos(),pend=contrastesPendentes();
   h+='<p class="sv-secao">Seus desejos e ferramentas</p><ol class="sv-lista" style="padding-top:10px">';
   if(ativos.length)h+=cardTrilha('','','Seus desejos',`Meus desejos (${ativos.length})`,'Continuar de onde parou, editar, soltar ou apagar.','desejos',`<span class="sv-fim">${SV_IC.seta}</span>`);
+  if(temDeclaracoes())h+=cardTrilha('','','Passo 2','Declaração completa','Todos os seus desejos numa frase só.','decltodos',`<span class="sv-fim">${SV_IC.seta}</span>`);
   if(pend.length)h+=cardTrilha('','','Contraste',`Meus desabafos (${pend.length})`,'Reler com outros olhos o que você já deixou sair.','desabafos',`<span class="sv-fim">${SV_IC.seta}</span>`);
   h+=cardTrilha('','','Permissão','Anotar uma dúvida','Sem precisar de nada antes. Só de anotar, ela perde força.','duvida',`<span class="sv-fim">${SV_IC.seta}</span>`);
   h+='</ol>';
@@ -225,7 +226,7 @@ function renderSessoesAtracao(){
 }
 function abrirSessaoPorId(id){
   if(SV_ABRIR[id]){SV_ABRIR[id]();return;}
-  ({desejos:sessaoMeusDesejos,desabafos:sessaoMeusDesabafos,duvida:sessaoDuvidaRapida})[id]();
+  ({desejos:sessaoMeusDesejos,desabafos:sessaoMeusDesabafos,duvida:sessaoDuvidaRapida,decltodos:sessaoDeclaracaoCompleta})[id]();
 }
 
 /* ---------- 1. Abertura ---------- */
@@ -341,7 +342,7 @@ function sessaoDeclaracao(d){
     {b:[['sub','Ajuste até soar verdadeiro'],['p','Leia em voz alta ou em pensamento e perceba a sensação no corpo. Busque sentir tranquilidade, alívio ou um entusiasmo suave.'],['p','Se a frase soar distante, troque o prefixo abaixo para testar novas combinações:'],['html',seletor,ligar]],
       botoes:[{rot:'Tenho dúvida',acao:()=>{d.sensacao='duvida';salva();sessaoIr('permissao');}},
         {rot:'Sim, faz bem',prim:true,acao:()=>{d.sensacao='boa';salva();confete(['✨','💫','🌟']);sessaoProxima('feliz');}}]},
-    [['p','Reserve um momento do dia para reler sua declaração. Sem transformar em obrigação: o objetivo é apenas acostumar sua mente com uma sensação positiva e aberta.'],['atalho',{rot:'Transformar em hábito: ler minha declaração',acao:()=>habitoLerDeclaracao()}]]
+    [['p','Reserve um momento do dia para reler sua declaração. Sem transformar em obrigação: o objetivo é apenas acostumar sua mente com uma sensação positiva e aberta.'],['atalho',{rot:'Transformar em hábito: ler minha declaração',acao:()=>habitoLerDeclaracao()}],...(temDeclaracoes()?[['atalho',{rot:'Ver a declaração completa, de todos os desejos',acao:sessaoDeclaracaoCompleta}]]:[])]
   ]});
 }
 
@@ -453,7 +454,8 @@ function sessaoMeusDesejos(){
   const todos=[];let html='';
   grupos.forEach(([nome,g])=>{html+=`<p class="sv-dica" style="margin:6px 0 8px"><b>${esc(nome)}</b></p>`;
     g.forEach(d=>{const o=svLinhaDesejo(d);todos.push(o);html+=svOpcoes([Object.assign({},o)]).replace('data-op="0"',`data-op="${todos.length-1}"`);});});
-  sessaoAbrir(svUtil('desejos','Seus desejos','Meus desejos',[['p','Escolha um desejo para continuar de onde parou.'],['html',()=>html,r=>svLigarOpcoes(r,todos)]],
+  const topo=temDeclaracoes()?[['atalho',{rot:'Ver a declaração completa, de todos os desejos',acao:sessaoDeclaracaoCompleta}]]:[];
+  sessaoAbrir(svUtil('desejos','Seus desejos','Meus desejos',[...topo,['p','Escolha um desejo para continuar de onde parou.'],['html',()=>html,r=>svLigarOpcoes(r,todos)]],
     [{rot:'Fechar',acao:()=>sessaoFecharTudo()},{rot:'Novo desejo',prim:true,acao:()=>sessaoClareza({livre:true})}]),{});
 }
 function sessaoDesejoHub(d){
@@ -492,6 +494,19 @@ function sessaoSoltarDesejo(d){
       if(noLugar){const novo=novoDesejo(d.area||'vontades',paraInfinitivoSugestao(noLugar)||noLugar);novo.veioDeSoltar=d.id;S.leiAtracao.desejos.push(novo);salva();sessaoDesejoHub(novo);}
       else if(desejosAtivos().length)sessaoMeusDesejos();else sessaoFecharTudo();
     }}]),{lugar:''});
+}
+
+/* Declaração completa: a frase de todos os desejos juntos (o app monta abertura e fecho) */
+function temDeclaracoes(){try{return !!montarDeclaracaoTodos();}catch(e){return false;}}
+function sessaoDeclaracaoCompleta(){
+  const partes=montarDeclaracaoTodos();
+  if(!partes){mostrarToast('Monte a declaração de um desejo primeiro 💜');sessaoMeusDesejos();return;}
+  sessaoAbrir(svUtil('decltodos','Passo 2','Declaração completa',[
+    ['p','Aqui estão todos os seus desejos juntos, numa declaração só. O app monta o começo e o fim da frase.'],
+    ['html',()=>`<div class="declaracao-montada"><span class="dm-lb">Declaração completa · todos os desejos</span>${partes.map(x=>`<div style="margin-bottom:8px">${x}</div>`).join('')}</div>`],
+    ['p','Leia em voz alta. Se algo soar distante, abra o desejo e ajuste as palavras na Declaração.'],
+    ['atalho',{rot:'Transformar em hábito: ler minha declaração',acao:()=>habitoLerDeclaracao()}]],
+    [{rot:'Voltar',acao:()=>sessaoMeusDesejos()},{rot:'Fechar',prim:true,acao:()=>sessaoFecharTudo()}]),{});
 }
 
 /* Meus desabafos: o que já foi deixado sair */

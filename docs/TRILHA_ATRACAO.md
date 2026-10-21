@@ -24,7 +24,7 @@ Quem escolhe o menor passo é a pessoa: os exemplos na tela são só texto, nada
 
 "Retomar dúvida" e "Anotar e trabalhar agora" abrem a Permissão direto na etapa 3 (`sessaoPermissaoNaFrase(d, graveto)`).
 
-Ferramentas na mesma tela cheia, abaixo da trilha: `sessaoMeusDesejos` e `sessaoDesejoHub(d)` (abrir cada etapa, editar o texto, soltar, apagar), `sessaoMeusDesabafos` e `sessaoDesabafo(c)`, `sessaoDuvidaRapida` (anotar sem precisar de nada antes, com a opção de trabalhar a dúvida na hora).
+Ferramentas na mesma tela cheia, abaixo da trilha: `sessaoMeusDesejos` e `sessaoDesejoHub(d)` (abrir cada etapa, editar o texto, soltar, apagar), `sessaoMeusDesabafos` e `sessaoDesabafo(c)`, `sessaoDeclaracaoCompleta` (a declaração com todos os desejos juntos, que usa `montarDeclaracaoTodos`; aparece como card na aba, no topo de Meus desejos e na última tela da Declaração), `sessaoDuvidaRapida` (anotar sem precisar de nada antes, com a opção de trabalhar a dúvida na hora).
 
 ## Aba Atração dentro das sessões
 
@@ -51,7 +51,7 @@ No resumo da semana/mês e no retrato dos 21 dias a gatinha aparece no topo (`ga
 
 ## Cache do navegador
 
-Os arquivos ligados no `index.html` levam `?v=20261021b` no endereço. Quando mudar qualquer arquivo de `estilo/`, `atracao/` ou `mascote/`, troque esse valor em todos os links para o navegador buscar a versão nova. A gatinha dos relatórios também tem o tamanho definido no próprio código, para nunca ficar gigante se o CSS ainda estiver em cache.
+Os arquivos ligados no `index.html` levam `?v=20261021c` no endereço. Quando mudar qualquer arquivo de `estilo/`, `atracao/` ou `mascote/`, troque esse valor em todos os links para o navegador buscar a versão nova. A gatinha dos relatórios também tem o tamanho definido no próprio código, para nunca ficar gigante se o CSS ainda estiver em cache.
 
 ## Onde está o código
 
