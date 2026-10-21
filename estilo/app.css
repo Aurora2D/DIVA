@@ -64,3 +64,10 @@ h2 .ic{width:20px;height:20px;color:var(--b)}
   .rel-numeros{break-before:page;page-break-before:always}
   .gc-leg i,.el-cp,.ci-bar-row .trk,.ci-bar-row .trk i,.ci-card-rel svg *{-webkit-print-color-adjust:exact;print-color-adjust:exact}
 }
+.gc-gaveta{margin-top:10px;border-top:1px dashed rgba(128,120,140,.3);padding-top:8px}
+.gc-gaveta summary{cursor:pointer;font-weight:600;font-size:14px}
+.gc-grupo{font-size:11px;letter-spacing:.1em;text-transform:uppercase;opacity:.7;margin:12px 0 4px}
+@media print{
+  .ci-card-rel.gc-card{break-inside:auto;page-break-inside:auto}
+  .gc-card svg{break-after:avoid}
+}

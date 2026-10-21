@@ -46,22 +46,26 @@ function montarRelatorioCartaApp(rel,ciclo,extra){
   if(!obsFeito)html+=meio;
   /* barras só no fim */
   const B=carta.barras;
-  html+=`<div class="ci-rel rel-numeros"><div class="rel-h2">${esc(B.titulo)}</div><div class="ci-nota">${esc(B.nota)}</div>`;
-  /* guarda-chuva: o desenho dos 9 gomos, e as frases curtas logo abaixo */
+  html+=`<div class="ci-rel rel-numeros"><div class="rel-h2">${esc(B.titulo)}</div><div class="ci-nota">Aqui estão dois retratos seus. O primeiro vem do que você respondeu no mapa. O segundo vem do que você registrou nos seus dias. Não são notas: barra mais cheia é sempre mais cuidado e mais recurso.</div>`;
+  /* 1. como você se sentiu: o mapa (guarda-chuva) */
   const gruposCor={'O que pesa':'peso','O que sustenta':'sustenta','Como você se relaciona':'relaciona'};
   const itensGC=[];
   B.grupos.forEach(g=>g.itens.forEach(i=>itensGC.push({rot:i.rot,bom:i.bom,ant:i.delta===null||i.delta===undefined?null:i.bom-i.delta,grupo:gruposCor[g.titulo]||'relaciona'})));
   if(typeof svgGuardaChuva==='function'&&itensGC.length){
-    html+=`<div class="ci-card-rel"><div class="ci-tt">Seu retrato do ciclo</div><div class="ci-nota" style="margin:0 0 4px">Cada gomo é uma parte de você. Quanto mais preenchido, mais cuidado e mais recurso.</div>${svgGuardaChuva(itensGC)}<div class="gc-leg"><span><i style="background:#c98a5a"></i>O que pesa</span><span><i style="background:#6ea87a"></i>O que sustenta</span><span><i style="background:#8F80D1"></i>Como você se relaciona</span><span>┅ ciclo anterior</span></div></div>`;
-  }
-  B.grupos.forEach(g=>{
-    if(!g.itens.length)return;
-    html+=`<div class="ci-card-rel"><div class="ci-tt">${esc(g.titulo)}</div>`;
-    g.itens.forEach(i=>{
-      html+=`<div class="gc-frase"><b>${esc(i.rot)}</b> ${i.delta?(i.delta>0?'▲':'▼')+' ':''}<span class="gc-n">${i.bom}</span><div class="ci-par-txt">${esc(i.legenda)}${i.delta?` (${i.delta>0?'+':''}${i.delta} desde o ciclo anterior)`:''}</div></div>`;
+    html+=`<div class="ci-card-rel gc-card"><div class="ci-tt">Como você se sentiu · o mapa</div>${svgGuardaChuva(itensGC)}<div class="gc-leg"><span><i style="background:#c98a5a"></i>O que pesa</span><span><i style="background:#6ea87a"></i>O que sustenta</span><span><i style="background:#8F80D1"></i>Como você se relaciona</span><span>┅ ciclo anterior</span></div>`;
+    html+=`<details class="gc-gaveta"><summary>O que cada parte diz</summary>`;
+    B.grupos.forEach(g=>{
+      if(!g.itens.length)return;
+      html+=`<div class="gc-grupo">${esc(g.titulo)}</div>`;
+      g.itens.forEach(i=>{
+        html+=`<div class="gc-frase"><b>${esc(i.rot)}</b> ${i.delta?(i.delta>0?'▲':'▼')+' ':''}<span class="gc-n">${i.bom}</span><div class="ci-par-txt">${esc(i.legenda)}${i.delta?` (${i.delta>0?'+':''}${i.delta} desde o ciclo anterior)`:''}</div></div>`;
+      });
     });
-    html+=`</div>`;
-  });
+    html+=`</details></div>`;
+  }
+  /* 2. como foram seus dias: o check-in */
+  if(ciObj.indLinhas)html+=`<div class="ci-card-rel"><div class="ci-tt">Como foram seus dias · o check-in</div><div class="ci-nota" style="margin:0 0 4px">Média dos seus 21 dias.</div>${ciObj.indLinhas}</div>`;
+  /* 3. de onde o cansaço vem */
   if(B.eliminacao&&B.eliminacao.length){
     html+=`<div class="ci-card-rel"><div class="ci-tt">De onde o cansaço vem</div><div class="ci-nota" style="margin:0 0 4px">Cada coisa que pesa no mapa, ao lado do seu dia a dia: de onde ela não vem e de onde vem.</div>`;
     B.eliminacao.forEach(e=>{
@@ -75,6 +79,12 @@ function montarRelatorioCartaApp(rel,ciclo,extra){
   }
   html+=`</div>`;
   if(extra.habHtml)html+=extra.habHtml;
-  html+=ciObj.ind||'';
+  html+=ciObj.indExtra||'';
   return html;
+}
+/* a gaveta "O que cada parte diz" abre sozinha na hora de imprimir/salvar em PDF */
+if(typeof window!=='undefined'&&!window.__gcPrint){
+  window.__gcPrint=1;
+  window.addEventListener('beforeprint',()=>{document.querySelectorAll('.gc-gaveta').forEach(d=>{d.dataset.eraAberta=d.open?'1':'0';d.open=true;});});
+  window.addEventListener('afterprint',()=>{document.querySelectorAll('.gc-gaveta').forEach(d=>{d.open=d.dataset.eraAberta==='1';});});
 }
