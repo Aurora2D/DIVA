@@ -36,4 +36,4 @@ Os sons de marcar hábito (`plim`), guardar (`guardado`), prêmio (`caixinha`) e
 
 ## Trilha guiada da aba Atração
 
-A aba Atração tem uma trilha em sessões guiadas (Abertura, Deixar sair, Clareza, Declaração, Permissão, Menor passo), feita sobre o motor de sessões que já existia (`sessaoAbrir`). Os textos ficam nas funções `sessaoAbertura`, `sessaoDeixarSair`, `sessaoOlhar`, `sessaoClareza`, `sessaoDeclaracao`, `sessaoPermissao` e `sessaoMenorPasso`, logo antes do bloco "PRÁTICAS EDITÁVEIS" do `index.html`. Cada tela é um objeto simples (`kicker`, `titulo`, `afirma`, `corpo`, `html`, `campos`, `botoes`...). Detalhes em `docs/TRILHA_ATRACAO.md`.
+A aba Atração é uma trilha de 8 sessões em tela cheia (Abertura, Deixar sair, Olhar com outros olhos, Clareza, Declaração, Permissão em duas partes e Menor passo), com aquarela e a gatinha. Os textos ficam nas funções `sessaoAbertura`, `sessaoDeixarSair`, `sessaoOlhar`, `sessaoClareza`, `sessaoDeclaracao`, `sessaoPermissao1`, `sessaoPermissao2` e `sessaoMenorPasso`, no `index.html`, como listas de blocos. Detalhes em `docs/TRILHA_ATRACAO.md`.
