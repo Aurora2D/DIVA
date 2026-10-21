@@ -51,7 +51,7 @@ No resumo da semana/mês e no retrato dos 21 dias a gatinha aparece no topo (`ga
 
 ## Cache do navegador
 
-Os arquivos ligados no `index.html` levam `?v=20261021o` no endereço. Quando mudar qualquer arquivo de `estilo/`, `atracao/` ou `mascote/`, troque esse valor em todos os links para o navegador buscar a versão nova. A gatinha dos relatórios também tem o tamanho definido no próprio código, para nunca ficar gigante se o CSS ainda estiver em cache.
+Os arquivos ligados no `index.html` levam `?v=20261021p` no endereço. Quando mudar qualquer arquivo de `estilo/`, `atracao/` ou `mascote/`, troque esse valor em todos os links para o navegador buscar a versão nova. A gatinha dos relatórios também tem o tamanho definido no próprio código, para nunca ficar gigante se o CSS ainda estiver em cache.
 
 ## Onde está o código
 

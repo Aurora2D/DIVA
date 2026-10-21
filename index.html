@@ -877,8 +877,8 @@ h1.diva-logo{display:flex;flex-direction:column;align-items:center;margin:0 0 6p
 .diva-sorriso{width:70px;height:15px;fill:#D96B83;margin-top:3px;overflow:visible}
 @media print{.diva-coroa{stroke:#D9A441}.diva-nome{color:#493657}}
 </style>
-<link rel="stylesheet" href="estilo/app.css?v=20261021o">
-<link rel="stylesheet" href="atracao/atracao.css?v=20261021o">
+<link rel="stylesheet" href="estilo/app.css?v=20261021p">
+<link rel="stylesheet" href="atracao/atracao.css?v=20261021p">
 </head>
 <body>
 <!-- ===== ABERTURA DIVA (logo animado) — fonte em logo/splash.html ===== -->
@@ -3573,6 +3573,7 @@ function checarTresDias(){
   if(S.proximoHabitoEm){S.proximoHabitoEm=null;S.habitoTravaId=null;salva();}
   if(S.ultimoConviteEm&&hoje()<fmtD(addDias(new Date(S.ultimoConviteEm),3)))return;
   if(S.tresDiasJaMostradoEm===hoje())return;
+  if(S.tresDiasUnicaVez)return; /* o convite aparece uma vez só, sem repetir a cada 3 dias */
   setTimeout(()=>abrirTresDias(candidato),900);
 }
 let hbTresDias=null;
@@ -3582,7 +3583,7 @@ function abrirTresDias(hb){
   $('tresDiasTitulo').textContent='3 dias, '+nome+'! 🎉';
   $('tresDiasTexto').innerHTML='Você completou 3 dias com <b>'+esc(hb.nome)+'</b>. Isso já conta como começo de verdade.<br><br>Quer trazer um hábito novo para a sua lista agora, ou prefere ficar mais um pouco só com o que já tem?';
   $('tresDiasModal').hidden=false;requestAnimationFrame(()=>$('tresDiasModal').classList.add('ativo'));document.body.style.overflow='hidden';
-  S.tresDiasJaMostradoEm=hoje();salva();
+  S.tresDiasJaMostradoEm=hoje();S.tresDiasUnicaVez=true;salva();
 }
 $('tresDiasSim').onclick=()=>{
   S.ultimoConviteEm=Date.now();salva();
@@ -4301,7 +4302,7 @@ function tresDiasVaiAparecer(){
   if(!habitoLiberado())return false;
   if(S.ultimoConviteEm&&hoje()<fmtD(addDias(new Date(S.ultimoConviteEm),3)))return false;
   if(!S.habitos.filter(x=>!x.pausado).some(hb=>Object.keys(hb.feitos).length>=3))return false;
-  if(S.tresDiasJaMostradoEm===hoje())return false;
+  if(S.tresDiasJaMostradoEm===hoje()||S.tresDiasUnicaVez)return false;
   return true;
 }
 function sortearMensagemMarco(n){
@@ -4319,7 +4320,7 @@ function abrirMensagemMarco(hb,n,depois){
   if(!lista||!lista.length){depois();return;}
   const m=sortearMensagemMarco(n);
   const fmt=t=>esc(t).replace(/\{hábito\}/g,'<b>“'+esc(hb.nome)+'”</b>').replace(/\*(.+?)\*/g,'<i>$1</i>');
-  const convite=habitoLiberado()?CONVITES_MARCO[m.tom]:'';
+  const convite=''; /* a mensagem de marco só celebra, sem convite para hábito novo */
   $('msgMarcoEmoji').textContent=n===3?'🎉':n===7?'🌟':'👑';
   $('msgMarcoTexto').innerHTML=m.p.map(p=>'<p>'+fmt(p)+'</p>').join('')+(convite?'<div class="msg-convite">'+fmt(convite)+'</div>':'')+extraMarco(hb);
   const o=$('msgMarcoModal');
@@ -8028,11 +8029,11 @@ frase();
 if(!S.onboarding.feito){setTimeout(iniciarOnboarding,300);}
 else {setTimeout(avisosIniciais,900);setTimeout(estiloConvidarSePreciso,2000);}
 </script>
-<script src="mascote/fantoche.js?v=20261021o"></script>
-<script src="estilo/gatinha-relatorio.js?v=20261021o"></script>
-<script src="relatorio/carta.js?v=20261021o"></script>
-<script src="relatorio/guarda-chuva.js?v=20261021o"></script>
-<script src="relatorio/carta-app.js?v=20261021o"></script>
-<script src="atracao/atracao.js?v=20261021o"></script>
+<script src="mascote/fantoche.js?v=20261021p"></script>
+<script src="estilo/gatinha-relatorio.js?v=20261021p"></script>
+<script src="relatorio/carta.js?v=20261021p"></script>
+<script src="relatorio/guarda-chuva.js?v=20261021p"></script>
+<script src="relatorio/carta-app.js?v=20261021p"></script>
+<script src="atracao/atracao.js?v=20261021p"></script>
 </body>
 </html>
