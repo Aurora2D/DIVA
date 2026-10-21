@@ -291,7 +291,6 @@ function finalizarOnboarding(){
   $('onbOverlay').classList.remove('ativo');
   setTimeout(()=>{$('onbOverlay').hidden=true;document.body.style.overflow='';},500);
   renderHoje();setTimeout(avisosIniciais,1200);
-  setTimeout(estiloConvidarSePreciso,2200);
 }
 $('onbBtn1').onclick=()=>{const nome=$('onbNome').value.trim();if(!nome){$('onbNome').focus();return;}S.onboarding.nome=nome;salva();mostrarOnbPasso(6);};
 $('onbCuidaSim').onclick=()=>{
