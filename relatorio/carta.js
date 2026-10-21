@@ -170,8 +170,27 @@
     }[tom];
     ordem.forEach((x,i)=>P(aberturaFio[i]+' '+x.f.texto(B,L,D)));
 
-    /* 3. quando o dia a dia e o mapa discordam */
-    const div=(D.ci.pares||[]).filter(p=>typeof p.dif==='number'&&Math.abs(p.dif)>15&&p.txt).sort((a,b)=>Math.abs(b.dif)-Math.abs(a.dif)).slice(0,2);
+    /* 3. de onde o cansaço vem e de onde não vem: cruza as áreas do dia a dia com o que pesa no mapa */
+    const pesadas=['sobrecarga','ansiedade','energia','corpo','regulacao'].filter(k=>B[k]!==undefined&&B[k]<50);
+    const todos=(D.ci.pares||[]).filter(p=>typeof p.ciPct==='number'&&typeof p.mapaBom==='number');
+    const usados=new Set();
+    const nomeArea=p=>p.lbl.charAt(0).toLowerCase()+p.lbl.slice(1);
+    const unicos=a=>{const v=new Set();return a.filter(p=>{const n=nomeArea(p);if(v.has(n))return false;v.add(n);return true;});};
+    const deHeavy=todos.filter(p=>pesadas.indexOf(p.dim)>=0);
+    const naoVem=unicos(deHeavy.filter(p=>p.ciPct>=55&&p.ciPct-p.mapaBom>10));
+    const vem=unicos(deHeavy.filter(p=>p.ciPct<50&&!naoVem.some(n=>nomeArea(n)===nomeArea(p))));
+    if(pesadas.length&&(naoVem.length||vem.length)){
+      blocos.push({t:'h2',txt:'De onde o cansaço não está vindo'});
+      const pesoNomes=lista(pesadas.map(k=>dim(k).nome.toLowerCase()));
+      let t='Quando eu coloco o que pesa no mapa ('+pesoNomes+') lado a lado com o seu dia a dia, dá para fazer uma espécie de eliminação. ';
+      if(naoVem.length)t+='Não está vindo de: '+lista(naoVem.map(nomeArea))+'. Nessas áreas você estava bem nos dias, então o peso não nasce aí. ';
+      if(vem.length)t+='Ele aparece junto de: '+lista(vem.map(nomeArea))+'. É por aí que vale cuidar primeiro. ';
+      else t+='E isso é um achado: o peso parece vir de algo que o check-in não mede, como o que você carrega por dentro, expectativas, relações. Vale olhar para lá com carinho. ';
+      if(naoVem.length&&vem.length)t+='O resto está de pé, e não precisa de esforço extra agora.';
+      P(t.trim());
+      naoVem.concat(vem).forEach(p=>usados.add(p));
+    }
+    const div=todos.filter(p=>!usados.has(p)&&Math.abs(p.dif)>15&&p.txt).sort((a,b)=>Math.abs(b.dif)-Math.abs(a.dif)).slice(0,2);
     if(div.length){
       blocos.push({t:'h2',txt:'Onde o dia a dia e o mapa discordam'});
       P('Tem um detalhe que me chamou atenção: às vezes o que você sente no mapa e o que você viveu nos dias não conta a mesma história, e isso é informação, não erro. '+div.map(p=>p.txt).join(' '));
