@@ -47,22 +47,25 @@ function montarRelatorioCartaApp(rel,ciclo,extra){
   /* barras só no fim */
   const B=carta.barras;
   html+=`<div class="ci-rel rel-numeros"><div class="rel-h2">${esc(B.titulo)}</div><div class="ci-nota">${esc(B.nota)}</div>`;
+  /* versão enxuta: só barras, sem frases (as frases já estão na carta) */
   B.grupos.forEach(g=>{
     if(!g.itens.length)return;
     html+=`<div class="ci-card-rel"><div class="ci-tt">${esc(g.titulo)}</div>`;
-    g.itens.forEach(i=>{
-      const tend=i.delta?`<span class="tend">${i.delta>0?'▲':'▼'}</span>`:undefined;
-      html+=ciBarra(i.rot,i.bom,String(i.bom),i.delta?(i.delta>0?'▲':'▼'):undefined,ciCorBarra(i.bom));
-      html+=`<div class="ci-par-txt" style="margin:0 0 8px">${esc(i.legenda)}${i.delta?` (${i.delta>0?'+':''}${i.delta} desde o ciclo anterior)`:''}</div>`;
-    });
+    g.itens.forEach(i=>{html+=ciBarra(i.rot,i.bom,String(i.bom),i.delta?(i.delta>0?'▲':'▼'):undefined,ciCorBarra(i.bom));});
     html+=`</div>`;
   });
-  if(B.cruzamentos.itens.length){
-    html+=`<div class="ci-card-rel"><div class="ci-tt">${esc(B.cruzamentos.titulo)}</div>`;
-    B.cruzamentos.itens.forEach(i=>{
-      html+=`<div class="ci-par"><div class="ci-par-t"><span>${esc(i.rot)}</span></div>${ciBarra('Dia a dia',i.ci,String(i.ci),undefined,ciCorBarra(i.ci))}${ciBarra('Mapa',i.mapa,String(i.mapa),undefined,ciCorBarra(i.mapa))}<div class="ci-par-txt">${esc(i.legenda)}</div></div>`;
+  html+=`<div class="ci-nota">▲ melhorou e ▼ ficou mais difícil desde o ciclo anterior. Barra mais cheia é sempre melhor.</div>`;
+  const cr=B.cruzamentos.itens.map(i=>{
+    const dif=i.ci-i.mapa,media=(i.ci+i.mapa)/2;
+    const st=dif>15?['Dia a dia melhor','up']:dif<-15?['Dia a dia mais pesado','dn']:media>=55?['Se sustentam','ok']:['Pedem cuidado','dn'];
+    return{i,st,peso:Math.max(Math.abs(dif),55-media)};
+  }).sort((a,b)=>b.peso-a.peso).slice(0,5);
+  if(cr.length){
+    html+=`<div class="ci-card-rel"><div class="ci-tt">${esc(B.cruzamentos.titulo)}: os ${cr.length===1?'principal':cr.length+' principais'}</div>`;
+    cr.forEach(x=>{
+      html+=`<div class="ci-par"><div class="ci-par-t"><span>${esc(x.i.rot)}</span><span class="st ${x.st[1]}">${x.st[0]}</span></div>${ciBarra('Dia a dia',x.i.ci,String(x.i.ci),undefined,ciCorBarra(x.i.ci))}${ciBarra('Mapa',x.i.mapa,String(x.i.mapa),undefined,ciCorBarra(x.i.mapa))}</div>`;
     });
-    html+=`<div class="ci-nota">As barras estão na mesma direção: quanto mais cheia, melhor.</div></div>`;
+    html+=`</div>`;
   }
   html+=`</div>`;
   if(extra.habHtml)html+=extra.habHtml;
