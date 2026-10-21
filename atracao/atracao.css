@@ -6,7 +6,7 @@
 .sv-ic{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;flex:none}
 .sv-capa{position:relative;overflow:hidden;border-radius:22px;background:linear-gradient(160deg,var(--modal-1),var(--modal-2));border:1px solid var(--borda);padding:56px 22px 22px}
 .sv-capa>*:not(.sv-wash){position:relative}
-.sv-capa .sv-gata{position:absolute;right:12px;bottom:-4px;width:104px;height:auto;filter:drop-shadow(0 4px 8px rgba(73,54,87,.18));pointer-events:none}
+.sv-capa .sv-gata{position:absolute;right:8px;bottom:-14px;width:118px;cursor:pointer;-webkit-tap-highlight-color:transparent}
 .sv-capa .sv-txtc{max-width:62%}
 .sv-capa h1{font-weight:900;font-size:34px;line-height:1.1;margin:0 0 6px;letter-spacing:-.5px;color:var(--txt)}
 .sv-capa p{margin:0;font-size:16px;font-weight:600;color:var(--txt)}
@@ -37,7 +37,7 @@
 @keyframes svEntra{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
 .sv-hero{position:relative;overflow:hidden;border-radius:22px;background:linear-gradient(160deg,var(--modal-1),var(--modal-2));border:1px solid var(--borda);min-height:132px;display:flex;justify-content:center;align-items:flex-end}
 .sv-hero.com-img{padding:26px 0 0;min-height:0}
-.sv-hero .sv-mascote{position:relative;display:block;width:min(52%,210px);height:auto;filter:drop-shadow(0 6px 10px rgba(73,54,87,.18))}
+.sv-hero .sv-mascote{position:relative;display:block;width:min(52%,210px);filter:drop-shadow(0 6px 10px rgba(73,54,87,.18))}
 .sv-cab{padding:20px 4px 6px;text-align:center}
 .sv-kick{margin:0 0 4px;font-size:11px;font-weight:800;letter-spacing:2px;text-transform:uppercase;color:var(--b)}
 .sv-tit{margin:0 0 10px;font-weight:900;font-size:28px;line-height:1.15;letter-spacing:-.5px;text-wrap:balance;color:var(--txt)}
@@ -94,3 +94,10 @@ body.sv-aberta .toast{bottom:calc(96px + env(safe-area-inset-bottom,0px))}
 .sv-gaveta summary::-webkit-details-marker{display:none}
 .sv-gaveta blockquote{margin:0;padding:0 16px 14px;white-space:pre-wrap;font-size:15px;line-height:1.6;color:var(--txt)}
 .sv-sessao .sv-a{display:-webkit-box;-webkit-line-clamp:2;line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+
+/* gatinha (Aurora2D/Mascote): aparece suave quando as peças carregam */
+gatinha-fantoche{opacity:0;transition:opacity .35s}
+gatinha-fantoche.pronta{opacity:1}
+.sv-faixa .sv-espia{position:absolute;right:10px;top:2px;width:84px;pointer-events:none}
+.sv-faixa span{max-width:calc(100% - 100px)}
+@media (prefers-reduced-motion: reduce){gatinha-fantoche{transition:none}}

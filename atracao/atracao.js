@@ -11,10 +11,21 @@
    ['atalho',{rot,acao}] ['lembrete',{titulo,texto:fn}] ['campo',{key,rot,dica,opcional,grande,ph}]
    ['html',string|fn,bind?]. Uma tela pode ter também seguir:fn (roda ao continuar; false trava),
    botoes:[{rot,prim,acao}] (no lugar do Continuar) e semVoltar:true. */
-/* A gatinha fica em atracao/gatinha/<pose>.webp. Poses que existem em GATA_POSES; as outras usam a "abertura".
-   Para trocar a arte, substitua os arquivos (o nome da pose é o nome do arquivo). */
-const GATA_POSES=['abertura'];
-const svGata=pose=>'atracao/gatinha/'+(GATA_POSES.includes(pose)?pose:'abertura')+'.webp';
+/* A gatinha vem do repositório Aurora2D/Mascote, copiado em mascote/ (script: scripts/atualizar-mascote.sh).
+   Aqui só a usamos: <gatinha-fantoche> + cat.play('acao'). Ações disponíveis: ver mascote/LEIA-ME.md.
+   Se o motor dela não carregar, a tela funciona sem a gatinha. */
+const MASCOTE_BASE='mascote/assets/pecas/';
+const svMascote=(cls,pose)=>window.customElements&&customElements.get('gatinha-fantoche')?`<gatinha-fantoche class="${cls}" pose="${pose||'sentada'}" src-base="${MASCOTE_BASE}" aria-hidden="true"></gatinha-fantoche>`:'';
+/* reações: o que a gatinha faz em cada interação. Para mudar, troque os nomes das ações aqui. */
+const MASCOTE_ENTRADA={abertura:'tchau',sair:'suspirar',clareza:'curiosa',permissao:'curiosa',passo:'feliz'};
+function svReage(acao,atraso){
+  const go=()=>{const c=document.querySelector('#sessaoTela gatinha-fantoche');if(!c)return;
+    const f=()=>{try{if(typeof c.play==='function')c.play(acao);}catch(e){}};
+    if(c.classList.contains('pronta'))f();else c.addEventListener('ready',f,{once:true});};
+  setTimeout(go,atraso==null?350:atraso);
+}
+/* a gatinha aparece suave quando termina de carregar as peças */
+document.addEventListener('ready',e=>{if(e.target&&e.target.tagName==='GATINHA-FANTOCHE')e.target.classList.add('pronta');},true);
 const SV_ALT='Gatinha branca em aquarela, sentada e sorrindo, com uma mancha rosa na orelha e um olho azul e outro dourado.';
 const SV_CORES={lilas:'#BD80D1',lav:'#8F80D1',ceu:'#80BBD1',rosa:'#D96B83',petala:'#EFBCCB',ouro:'#D9A441'};
 const SV_PAL={abertura:['lilas','ceu','petala','ouro'],sair:['lav','ceu','lilas'],olhar:['ceu','petala','lav'],clareza:['ouro','petala','lilas'],declaracao:['rosa','petala','lav'],permissao:['lilas','rosa','petala'],passo:['ouro','ceu','rosa'],desejos:['lav','petala','ceu'],desabafos:['ceu','petala','lav'],duvida:['lilas','rosa','petala'],escolha:['lav','ceu','petala'],'capa-trilha':['lav','ceu','petala']};
@@ -89,8 +100,8 @@ function sessaoMostrar(manter){
   const st=_sessao,def=st.def,t=svNorm(st.telas[st.i]);
   st.acoes=[];const binds=[];let h='';
   if(st.i===0&&!def.compacto){
-    h+=`<div class="sv-hero${def.mascote?' com-img':''}">${svAquarela(def.id||'x',420,320,5)}${def.mascote?`<img class="sv-mascote" src="${svGata(def.mascote)}" width="640" height="960" alt="${esc(SV_ALT)}">`:''}</div><div class="sv-cab"><p class="sv-kick">${esc(def.kicker)}</p><h1 class="sv-tit">${esc(def.titulo)}</h1>${def.afirma?`<p class="sv-afirma">${esc(def.afirma)}</p>`:''}</div>`;
-  }else h+=`<div class="sv-faixa">${svAquarela(def.id||'x',420,80,3,9)}<span>${esc(def.kicker)} · ${esc(def.titulo)}</span></div>`;
+    h+=`<div class="sv-hero${def.mascote?' com-img':''}">${svAquarela(def.id||'x',420,320,5)}${def.mascote?svMascote('sv-mascote'):''}</div><div class="sv-cab"><p class="sv-kick">${esc(def.kicker)}</p><h1 class="sv-tit">${esc(def.titulo)}</h1>${def.afirma?`<p class="sv-afirma">${esc(def.afirma)}</p>`:''}</div>`;
+  }else h+=`<div class="sv-faixa">${svAquarela(def.id||'x',420,80,3,9)}<span>${esc(def.kicker)} · ${esc(def.titulo)}</span>${def.compacto?'':svMascote('sv-espia')}</div>`;
   const ult=st.i===st.telas.length-1;
   h+='<div class="sv-corpo">'+(t.b||[]).map(b=>svBloco(b,st,binds)).join('');
   if(ult&&def.pular)h+=`<button type="button" class="sv-pular" id="svPular">${esc(def.pular.rot)}</button>`;
@@ -116,6 +127,8 @@ function sessaoMostrar(manter){
   };
   binds.forEach(f=>f($('sessaoTela')));
   if(t.bind)t.bind($('sessaoTela'));
+  if(!manter){const r=st.reacao;st.reacao=null;
+    if(st.i===0&&!def.compacto&&def.mascote)svReage(MASCOTE_ENTRADA[def.id]||'feliz',700);else if(r)svReage(r);}
   if(!manter&&!t.semFoco){const f=el.querySelector('textarea');if(f)setTimeout(()=>{try{f.focus({preventScroll:true});}catch(e){}},300);}
 }
 function sessaoAtualizar(){sessaoMostrar(true);}
@@ -131,9 +144,9 @@ function sessaoAbrir(def,dados){
 function sessaoSeguir(){
   const st=_sessao,t=svNorm(st.telas[st.i]);
   if(t.seguir&&t.seguir()===false)return;
-  if(st.i<st.telas.length-1){st.i++;sessaoMostrar();}else sessaoConcluir();
+  if(st.i<st.telas.length-1){st.i++;st.reacao=t.reage||'sim';sessaoMostrar();}else sessaoConcluir();
 }
-function sessaoProxima(){_sessao.i++;sessaoMostrar();}
+function sessaoProxima(reacao){_sessao.i++;_sessao.reacao=reacao||'sim';sessaoMostrar();}
 function sessaoConcluir(msg){
   const st=_sessao,def=st.def;let m=msg||'';
   if(svEhTrilha(def)){
@@ -149,6 +162,7 @@ $('sessaoFechar').onclick=()=>sessaoFecharTudo();
 $('sessaoTela').addEventListener('input',e=>{
   const k=e.target.dataset&&e.target.dataset.campo;if(!k||!_sessao)return;
   _sessao.dados[k]=e.target.value;if(svEhTrilha(_sessao.def))salva();
+  const agora=Date.now();if(!_sessao.ouveEm||agora-_sessao.ouveEm>5000){_sessao.ouveEm=agora;svReage('orelhas',0);}   /* a gatinha "escuta" enquanto você escreve */
 });
 $('sessaoTela').addEventListener('click',e=>{
   const a=e.target.closest('[data-ac]');if(a&&_sessao&&_sessao.acoes[+a.dataset.ac])_sessao.acoes[+a.dataset.ac]();
@@ -192,7 +206,7 @@ function cardTrilha(cls,img,k,t,a,id,fim){
 function renderSessoesAtracao(){
   const el=$('atrSessoes');if(!el)return;
   const e=trEst(),feitas=TRILHA.filter(s=>e.feitas[s.id]).length,primeira=TRILHA.findIndex(s=>!e.feitas[s.id]);
-  let h=`<header class="sv-capa">${svAquarela('capa-trilha',420,260,6)}<img class="sv-gata" src="${svGata('abertura')}" alt="" width="604" height="960"><div class="sv-txtc"><h1>Atração</h1><p>Vamos por partes.</p><p class="sv-prog">${feitas} de ${TRILHA.length} sessões</p></div></header><ol class="sv-lista">`;
+  let h=`<header class="sv-capa">${svAquarela('capa-trilha',420,260,6)}${svMascote('sv-gata')}<div class="sv-txtc"><h1>Atração</h1><p>Vamos por partes.</p><p class="sv-prog">${feitas} de ${TRILHA.length} sessões</p></div></header><ol class="sv-lista">`;
   TRILHA.forEach((s,i)=>{
     const ok=e.feitas[s.id],cur=i===primeira,emAnd=!ok&&e.tela[s.id]>0;
     h+=cardTrilha(cur?'atual':'',ok?SV_IC.check:'',esc(s.kicker),esc(s.titulo),esc(s.afirma),s.id,
@@ -207,6 +221,7 @@ function renderSessoesAtracao(){
   h+='</ol>';
   el.innerHTML=h;
   el.querySelectorAll('[data-sessao]').forEach(b=>b.onclick=()=>abrirSessaoPorId(b.dataset.sessao));
+  const gc=el.querySelector('gatinha-fantoche');if(gc)gc.onclick=()=>{try{gc.play(['feliz','tchau','curiosa'][Math.floor(Math.random()*3)]);}catch(e){}};
 }
 function abrirSessaoPorId(id){
   if(SV_ABRIR[id]){SV_ABRIR[id]();return;}
@@ -230,7 +245,7 @@ function sessaoDeixarSair(){
   sessaoAbrir({...trMeta('sair'),limpar:['incomodo'],pular:{rot:'Já sei o que quero: ir para a Clareza',ate:'clareza'},telas:[
     [['p','Antes de falarmos sobre o que você quer, acolha o que está sentindo agora.'],['p','Às vezes, passamos tanto tempo tentando dar conta de tudo que nem conseguimos parar para reconhecer o que nos incomoda. Na Lei da Atração, chamamos de contraste aquilo que nos mostra, pela experiência do que não queremos, o que gostaríamos de viver de outra maneira.']],
     [['p','Aqui, você não precisa organizar seus pensamentos, encontrar soluções ou buscar o lado bom das coisas. Vamos apenas colocar para fora.'],['p','Faça uma lista em tópicos: vá anotando o que está pesando, exatamente como vier à cabeça.']],
-    {b:[['campo',{key:'incomodo',rot:'Minha lista de incômodos',dica:'Anote em tópicos curtos. Não precisa filtrar, pontuar ou justificar. Podem ser dois itens ou vinte. Não existe jeito certo.',grande:true}]],
+    {reage:'suspirar',b:[['campo',{key:'incomodo',rot:'Minha lista de incômodos',dica:'Anote em tópicos curtos. Não precisa filtrar, pontuar ou justificar. Podem ser dois itens ou vinte. Não existe jeito certo.',grande:true}]],
       seguir:()=>{
         const v=(R.incomodo||'').trim();if(!v){mostrarToast('Escreva o que quiser antes de continuar');return false;}
         if(!Array.isArray(S.leiAtracao.contrastes))S.leiAtracao.contrastes=[];
@@ -279,7 +294,7 @@ function sessaoClareza(opc){
     [['p','Agora, experimente dar um passo na direção oposta: em vez de permanecer no que deseja deixar para trás, imagine o que gostaria de encontrar no lugar.'],['html',dica],['p','Perceba a diferença: não estamos apagando o que você sente, mas abrindo espaço para imaginar o que você quer cultivar.']],
     {b:[['html',gaveta],['campo',{key:'quero',rot:'O que eu quero no lugar?',dica:'Comece por um verbo, no positivo.'}]],
       seguir:()=>{if(!(R.quero||'').trim()){mostrarToast('Escreva o que você quer');return false;}}},
-    {b:[['sub','Em que parte da sua vida mora esse desejo?'],['html',areas,ligarAreas]],
+    {reage:'brilho',b:[['sub','Em que parte da sua vida mora esse desejo?'],['html',areas,ligarAreas]],
       seguir:()=>{
         const cl=limparTextoDesejo(trSemQuero(R.quero))||trSemQuero(R.quero);
         let d=R.desejoCriado&&S.leiAtracao.desejos.find(x=>x.id===R.desejoCriado);
@@ -325,7 +340,7 @@ function sessaoDeclaracao(d){
     [['sub','Como sua frase foi montada'],['lembrete',{titulo:'O que você quer',texto:()=>trTexto(d)}],['p','Combinamos o desejo que você escreveu com um prefixo acolhedor. Os prefixos funcionam como uma ponte: eles tiram a resistência da mente, permitindo que você leia a frase com naturalidade e sem a sensação de estar se forçando a acreditar em algo irreal.'],['html',()=>trDeclHTML(d)]],
     {b:[['sub','Ajuste até soar verdadeiro'],['p','Leia em voz alta ou em pensamento e perceba a sensação no corpo. Busque sentir tranquilidade, alívio ou um entusiasmo suave.'],['p','Se a frase soar distante, troque o prefixo abaixo para testar novas combinações:'],['html',seletor,ligar]],
       botoes:[{rot:'Tenho dúvida',acao:()=>{d.sensacao='duvida';salva();sessaoIr('permissao');}},
-        {rot:'Sim, faz bem',prim:true,acao:()=>{d.sensacao='boa';salva();confete(['✨','💫','🌟']);sessaoProxima();}}]},
+        {rot:'Sim, faz bem',prim:true,acao:()=>{d.sensacao='boa';salva();confete(['✨','💫','🌟']);sessaoProxima('feliz');}}]},
     [['p','Reserve um momento do dia para reler sua declaração. Sem transformar em obrigação: o objetivo é apenas acostumar sua mente com uma sensação positiva e aberta.'],['atalho',{rot:'Transformar em hábito: ler minha declaração',acao:()=>habitoLerDeclaracao()}]]
   ]});
 }
@@ -369,7 +384,7 @@ function sessaoPermissao(d){
         ['campo',{key:'seFosse',rot:'Quem eu poderia ser ou o que eu experimentaria se não acreditasse totalmente nesse pensamento?',opcional:true}],
         ['p','O objetivo não é provar que a sua dúvida está errada, mas perceber que um medo antigo não precisa definir todas as suas possibilidades de futuro.']],
       seguir:()=>{const g=trGraveto(d);if(g){g.origem=(R.origemIdeia||'').trim();g.seFosse=(R.seFosse||'').trim();salva();}}},
-    {b:[['sub','3. Experimente uma nova perspectiva'],vozLemb,['p','Imagine o que uma pessoa querida, que ama você e respeita seu tempo, diria sobre essa situação.'],['p','Escreva uma frase de permissão que ofereça esse mesmo olhar acolhedor. Não precisa prometer que tudo será perfeito, apenas lembrar que você pode aprender, pedir ajuda ou caminhar no seu tempo.'],['p','Se ajudar, comece com: “Eu estou em processo de...”'],['html',sugestoes,ligarSug],['campo',{key:'permissao',rot:'Minha frase de permissão'}]],
+    {reage:'brilho',b:[['sub','3. Experimente uma nova perspectiva'],vozLemb,['p','Imagine o que uma pessoa querida, que ama você e respeita seu tempo, diria sobre essa situação.'],['p','Escreva uma frase de permissão que ofereça esse mesmo olhar acolhedor. Não precisa prometer que tudo será perfeito, apenas lembrar que você pode aprender, pedir ajuda ou caminhar no seu tempo.'],['p','Se ajudar, comece com: “Eu estou em processo de...”'],['html',sugestoes,ligarSug],['campo',{key:'permissao',rot:'Minha frase de permissão'}]],
       seguir:()=>{
         const v=(R.permissao||'').trim();if(!v){mostrarToast('Escreva a sua frase ou toque numa sugestão');return false;}
         const g=trGraveto(d);if(!g)return false;
@@ -399,7 +414,7 @@ function sessaoMenorPasso(d){
   if(!Array.isArray(d.menorPassos))d.menorPassos=[];
   const R=trSinc('passo',d.id,['passo','passoId'],{passo:(d.menorPasso&&d.menorPasso.texto)||''});
   sessaoAbrir({...trMeta('passo'),limpar:['passo','passoId'],telas:[
-    {b:[['lembrete',{titulo:'Seu desejo',texto:()=>trTexto(d)}],['p','Chegamos ao momento de dar corpo ao seu desejo na rotina real.'],['p','Não tente reorganizar sua vida inteira hoje. Pense em algo simples, que leve de 5 a 15 minutos, e que ajude você a dar um pequeno passo em direção ao que quer.'],['p','Exemplos: fazer uma pesquisa rápida, enviar uma mensagem, arrumar uma gaveta, guardar um material ou reservar 10 minutos de silêncio.'],
+    {reage:'feliz',b:[['lembrete',{titulo:'Seu desejo',texto:()=>trTexto(d)}],['p','Chegamos ao momento de dar corpo ao seu desejo na rotina real.'],['p','Não tente reorganizar sua vida inteira hoje. Pense em algo simples, que leve de 5 a 15 minutos, e que ajude você a dar um pequeno passo em direção ao que quer.'],['p','Exemplos: fazer uma pesquisa rápida, enviar uma mensagem, arrumar uma gaveta, guardar um material ou reservar 10 minutos de silêncio.'],
         ['campo',{key:'passo',rot:'Qual é o menor passo que posso dar hoje?'}]],
       seguir:()=>{
         const v=(R.passo||'').trim();if(!v){mostrarToast('Escreva o seu menor passo');return false;}
@@ -409,7 +424,7 @@ function sessaoMenorPasso(d){
         d.menorPasso=item;salva();confete(['🌱','✨','💫']);
       }},
     [['sub','Seu passo está guardado'],['lembrete',{titulo:'Meu menor passo',texto:()=>R.passo}],['p','Quando concluir, reconheça o que fez. Não porque um pequeno passo resolve tudo de uma vez, mas porque ele é a prova viva de que você já começou a construir o que deseja.'],['fecho','Você pode começar de onde está, com o que tem e no ritmo que consegue sustentar.'],
-      ['html','<button type="button" class="sv-atalho" id="svVirarHab"><span>🌱 Transformar em hábito</span></button><p class="sv-dica" style="margin-top:8px">Opcional. Um hábito novo por vez: o próximo libera 3 dias depois. Se preferir, o passo fica guardado e você decide depois.</p>',r=>{const b=r.querySelector('#svVirarHab');if(b)b.onclick=()=>virarDesejoEmHabito(d,R.passo);}]]
+      ['html','<button type="button" class="sv-atalho" id="svVirarHab"><span>🌱 Transformar em hábito</span></button><p class="sv-dica" style="margin-top:8px">Opcional. Um hábito novo por vez: o próximo libera 3 dias depois. Se preferir, o passo fica guardado e você decide depois.</p>',r=>{const b=r.querySelector('#svVirarHab');if(b)b.onclick=()=>{svReage('brilho',0);virarDesejoEmHabito(d,R.passo);};}]]
   ]});
 }
 

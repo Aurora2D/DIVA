@@ -1,12 +1,12 @@
 # Trilha guiada da aba Atração: documentação para integração
 
-Para: Thiago. De: Érica. Arquivos: `index.html` (só o esqueleto e os links), a pasta nova `atracao/` (`atracao.js`, `atracao.css`, `gatinha/`), este documento e uma seção no README.
+Para: Thiago. De: Érica. Arquivos: `index.html` (só o esqueleto e os links), as pastas novas `atracao/` (`atracao.js`, `atracao.css`) e `mascote/` (a gatinha) e `scripts/atualizar-mascote.sh`, este documento e uma seção no README.
 
 ## O que é
 
 A aba Atração agora é uma trilha de 7 sessões em tela cheia, no visual de aquarela com a gatinha, uma ideia por tela. Os textos vêm do documento revisado à mão pela Érica (tom de sessão de terapia, com os mantras completos; a sessão Olhar com outros olhos vem do protótipo) e todas as funções do app continuam: criar desejo, montar a declaração com prefixos, anotar a dúvida, guardar a frase no Livro de Permissões, registrar sinais, escolher o menor passo e virar hábito.
 
-O visual usa as variáveis de cor que o app já tem (`--bg`, `--txt`, `--b`, `--borda`, `--surf-mid`, `--modal-1/2`, `--tabs-bg`, `--aquarela`), então claro e escuro funcionam sem trabalho extra. A aquarela das capas e miniaturas é gerada por código (`svAquarela`), sem imagens. A gatinha é um arquivo em `atracao/gatinha/<pose>.webp`. Hoje só existe `abertura.webp`; as outras poses (`deixar-sair`, `clareza`, `permissao`, `menor-passo`) usam a da abertura até o arquivo existir. Para liberar uma pose nova, coloque o arquivo na pasta e inclua o nome em `GATA_POSES` no `atracao.js`. A Érica evolui a gatinha em outro repositório; aqui só se copiam os arquivos novos.
+O visual usa as variáveis de cor que o app já tem (`--bg`, `--txt`, `--b`, `--borda`, `--surf-mid`, `--modal-1/2`, `--tabs-bg`, `--aquarela`), então claro e escuro funcionam sem trabalho extra. A aquarela das capas e miniaturas é gerada por código (`svAquarela`), sem imagens. A gatinha é a do repositório Aurora2D/Mascote (componente `<gatinha-fantoche>`, peças em aquarela que se mexem). Uma cópia fica em `mascote/` (`fantoche.js` e `assets/pecas/`; a versão copiada está em `mascote/VERSAO.txt`). Para trazer as novidades dela: `sh scripts/atualizar-mascote.sh` e depois commit da pasta `mascote/`. Ninguém edita `mascote/` à mão, a Érica evolui a gatinha no repositório dela.
 
 ## As sessões
 
@@ -47,9 +47,20 @@ Princípio: função nova entra como arquivo à parte e o `index.html` só a lig
 
 - `atracao/atracao.js`: motor, sessões, ferramentas. Carregado no fim do `index.html` (`<script src="atracao/atracao.js">`), depois do script principal, e usa as globais dele (`S`, `salva`, `$`, `esc`...).
 - `atracao/atracao.css`: estilos `sv-*`, carregado no `<head>`.
-- `atracao/gatinha/`: imagens da gatinha.
+- `mascote/`: cópia da gatinha (Aurora2D/Mascote), atualizada pelo script.
 - No `index.html` ficam só: os dois links, o markup de `#sessaoModal`, o cabeçalho da aba (`#btnComoFunciona`, `#atrSessoes`) e `irParaDeclaracao()`.
-- A pasta `atracao/` precisa ir junto com o `index.html` no app (como `audio/` e `logo/`).
+- As pastas `atracao/` e `mascote/` precisam ir junto com o `index.html` no app (como `audio/` e `logo/`).
+
+## A gatinha reage ao que a pessoa faz
+
+No `atracao.js` o app só usa a API dela: `svMascote()` cria o `<gatinha-fantoche>` e `svReage('acao')` toca uma ação (`cat.play`). As reações ficam em um lugar só, para trocar fácil:
+
+- `MASCOTE_ENTRADA`: o que ela faz quando a sessão abre (abertura: tchau; sair: suspirar; clareza e permissão: curiosa; menor passo: feliz).
+- `reage:'acao'` em uma tela: o que ela faz ao chegar nela (Deixar sair guardado: suspirar; desejo criado e frase de permissão: brilho; menor passo guardado: feliz). Sem `reage`, ela balança a cabeça dizendo sim ao avançar.
+- "Sim, faz bem" na declaração: feliz. "Transformar em hábito": brilho. Enquanto a pessoa escreve, as orelhas mexem de tempos em tempos. Tocar na gatinha da capa faz ela reagir.
+- Nas telas de dentro ela espia no canto da faixa de cima; na primeira tela da sessão aparece inteira.
+
+Quando a Érica criar ações ou poses novas, basta usar o nome novo nesses pontos. Se o motor da gatinha não carregar, as sessões funcionam sem ela.
 
 ## Como o motor funciona
 
