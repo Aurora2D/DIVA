@@ -33,3 +33,7 @@ Cada par é `[segundo real, momento da coreografia]`. Para deixar um trecho mais
 ## Sons do app (versão 4)
 
 Os sons de marcar hábito (`plim`), guardar (`guardado`), prêmio (`caixinha`) e 21 dias (`brilho`) ficam em `audio/sons/`. Para trocar um som, é só substituir o MP3 com o mesmo nome. Se algum arquivo não carregar, o app toca a versão antiga, gerada no código.
+
+## Trilha guiada da aba Atração
+
+A aba Atração tem uma trilha em sessões guiadas (Abertura, Deixar sair, Clareza, Declaração, Permissão, Menor passo), feita sobre o motor de sessões que já existia (`sessaoAbrir`). Os textos ficam nas funções `sessaoAbertura`, `sessaoDeixarSair`, `sessaoOlhar`, `sessaoClareza`, `sessaoDeclaracao`, `sessaoPermissao` e `sessaoMenorPasso`, logo antes do bloco "PRÁTICAS EDITÁVEIS" do `index.html`. Cada tela é um objeto simples (`kicker`, `titulo`, `afirma`, `corpo`, `html`, `campos`, `botoes`...). Detalhes em `docs/TRILHA_ATRACAO.md`.

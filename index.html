@@ -108,6 +108,39 @@ h3{font-size:12px;color:var(--mut);margin:14px 0 6px;font-weight:700;letter-spac
 .sessao-dots{display:flex;gap:6px;justify-content:center;margin-top:14px}
 .sessao-dots span{width:7px;height:7px;border-radius:50%;background:var(--borda)}
 .sessao-dots span.on{background:var(--b);width:18px;border-radius:4px}
+/* sessões guiadas: blocos extras (títulos, parágrafos, exemplos, opções) */
+.sessao-kicker{font-size:10.5px;font-weight:800;letter-spacing:1.2px;text-transform:uppercase;color:var(--b);margin:0 0 4px}
+.sessao-titulo{font-size:24px;font-weight:900;letter-spacing:-.4px;line-height:1.15;margin:0 0 8px;text-wrap:balance}
+.sessao-afirma{font-size:15px;font-weight:800;line-height:1.5;color:var(--b);margin:0 auto 14px;max-width:34ch;text-wrap:balance}
+.sessao-corpo{text-align:left;margin:0 4px 14px}
+.sessao-corpo p{font-size:15px;line-height:1.6;margin:0 0 10px;color:var(--txt)}
+.sessao-corpo p.pergunta{font-size:17px;font-weight:800;line-height:1.4;color:var(--b)}
+.sessao-fecho{font-size:16px;font-weight:700;line-height:1.5;margin:6px 4px 14px;padding-top:14px;border-top:1px solid var(--borda);text-wrap:balance}
+.sessao-html{text-align:left;margin:0 0 14px}
+.sessao-html .chips{margin:0}
+.sessao-bloco-campo{text-align:left;margin:0 0 12px}
+.sessao-rot{display:block;font-size:14px;font-weight:800;line-height:1.4;margin:0 0 6px;color:var(--txt)}
+.sessao-opc{margin-left:6px;font-size:10px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:var(--mut2)}
+.sessao-dica{font-size:12.5px;line-height:1.5;color:var(--mut);margin:0 0 8px}
+.sessao-campo{text-align:left}
+.sessao-exemplo{background:var(--surf-soft);border:1px solid var(--borda);border-radius:14px;padding:12px 14px;margin:0 0 12px;text-align:left}
+.sessao-exemplo p{font-size:14px;line-height:1.55;margin:0 0 8px}
+.sessao-exemplo p:last-child{margin:0}
+.sessao-exemplo span{display:block;font-size:10.5px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:var(--b);margin-bottom:2px}
+.sessao-opt{display:flex;flex-direction:column;gap:2px;width:100%;text-align:left;margin:0 0 8px;padding:11px 14px;min-height:48px;border-radius:14px;border:1px solid var(--borda);background:var(--surf-mid);color:var(--txt);font-family:inherit;font-size:14px;line-height:1.4;cursor:pointer}
+.sessao-opt b{font-weight:800}
+.sessao-opt span{font-size:12.5px;color:var(--mut)}
+.sessao-opt.on{border-color:var(--b);background:rgba(143,128,209,.16)}
+.sessao-opt:active{transform:scale(.98)}
+.sessao-edit{display:block;margin:0 0 8px;text-align:left}
+.sessao-edit span{display:block;font-size:11.5px;font-weight:700;color:var(--mut);margin:0 0 3px}
+.sessao-decl .declaracao-montada{margin:0 0 12px;text-align:left}
+.sessao-cuidado{margin:0 0 12px;padding:12px 14px;border-radius:12px;border:1px dashed var(--borda);font-size:13.5px;line-height:1.5;color:var(--mut);text-align:left}
+.sessao-cuidado b{display:block;font-size:10.5px;font-weight:800;letter-spacing:1.2px;text-transform:uppercase;margin-bottom:3px}
+/* botões sempre à vista, mesmo em telas longas */
+.sessao-caixa .sessao-botoes{position:sticky;bottom:-22px;margin:0 -4px -22px;padding:12px 4px 22px;background:linear-gradient(to top,var(--modal-2) 72%,transparent);z-index:2}
+.sessao-gaveta{text-align:left;border:1px solid var(--borda);border-radius:14px;background:var(--surf-mid);padding:10px 12px;margin:0 0 12px;font-size:13.5px;line-height:1.5}.sessao-gaveta summary{cursor:pointer;font-weight:700;font-size:13px;color:var(--b)}.sessao-gaveta div{white-space:pre-wrap;margin-top:8px}.sessao-passos{text-align:left;margin:0 0 12px}.sessao-passos div{padding:8px 0;font-size:15px;line-height:1.4}.sessao-passos b{display:inline-block;width:22px;height:22px;line-height:22px;text-align:center;border-radius:50%;background:var(--surf-mid);color:var(--b);margin-right:8px;font-size:12px}.sessao-resp{font-size:14.5px;line-height:1.5;color:var(--mut)}
+.sessao-voltar{align-self:center;margin-top:10px;background:none;border:0;color:var(--mut);font-family:inherit;font-size:13px;font-weight:700;text-decoration:underline;text-underline-offset:3px;min-height:40px;cursor:pointer}
 .atr-intro{margin:0 0 14px;padding:14px 16px;border-radius:16px;border:1px solid rgba(143,128,209,.28);background:linear-gradient(135deg, rgba(143,128,209,.10), rgba(189,128,209,.06))}
 .atr-intro .ai-tit{font-weight:900;font-size:15px;margin-bottom:6px;color:var(--b)}
 .atr-intro p{font-size:13px;line-height:1.55;margin:0 0 8px;color:var(--txt)}
@@ -1556,36 +1589,6 @@ addEventListener('pointerdown',avisa);addEventListener('keydown',avisa);
       <button type="button" class="atr-como" id="btnComoFunciona">✨ Como funciona?</button>
     </div>
     <div id="atrSessoes"></div>
-
-    <div class="atracao-menu" id="atracaoMenu">
-      <button type="button" class="atracao-btn" data-atr-sec="clareza">
-        <span class="ab-num">1</span>
-        <div class="ab-body">
-          <span class="ab-tit">Clareza</span>
-          <span class="ab-sub">O que te incomoda → o que você quer</span>
-          <span class="ab-meta" id="metaClareza"></span>
-        </div>
-        <span class="ab-arrow">›</span>
-      </button>
-      <button type="button" class="atracao-btn" data-atr-sec="declaracao">
-        <span class="ab-num">2</span>
-        <div class="ab-body">
-          <span class="ab-tit">Declaração de desejo</span>
-          <span class="ab-sub">Escreva sua frase e veja se soa verdadeira</span>
-          <span class="ab-meta" id="metaDeclaracao"></span>
-        </div>
-        <span class="ab-arrow">›</span>
-      </button>
-      <button type="button" class="atracao-btn" data-atr-sec="permitir">
-        <span class="ab-num">3</span>
-        <div class="ab-body">
-          <span class="ab-tit">Permissão</span>
-          <span class="ab-sub">Anote a dúvida — sem precisar de nada antes</span>
-          <span class="ab-meta" id="metaPermitir"></span>
-        </div>
-        <span class="ab-arrow">›</span>
-      </button>
-    </div>
 
     <div class="livro-perm" id="livroPermissoes">
       <div class="lp-cab">
@@ -6148,7 +6151,7 @@ function irParaDeclaracao(){
   const fechar=document.querySelectorAll('.modal-overlay.ativo');fechar.forEach(o=>fecharOverlay(o));
   setTimeout(()=>{
     const t=document.querySelector('[data-tab="atracao"]');if(t)t.click();
-    setTimeout(()=>{const b=document.querySelector('[data-atr-sec="declaracao"]');if(b)b.click();},250);
+    setTimeout(()=>{try{sessaoComDesejo(sessaoDeclaracao);}catch(e){}},250);
   },fechar.length?340:0);
 }
 const HABITO_LER_DECLARACAO={id:'ler_declaracao',emoji:'📜',emojis:['📜','✨','💛'],nome:'Ler minha declaração',unidade:'1×/semana',paraQue:'Me manter conectada ao que eu desejo',texto:'Escolha um momento tranquilo da sua semana, quando estiver relaxada. Reler o que você escreveu traz clareza e ideias novas de próximos passos.',grupo:'mente',dims:['direcao','autopercepcao']};
@@ -7197,44 +7200,87 @@ $('desejoInput') && ($('desejoInput').onkeydown=e=>{if(e.key==='Enter')$('btnAdd
 
 
 /* ============ SESSÕES GUIADAS DA ATRAÇÃO ============
-   Momento 1 · Deixar sair: o desabafo fica guardado (lista de contrastes).
-   Momento 2 · Olhar com outros olhos: em outra hora, o desabafo vira desejo. */
+   Uma ideia por tela, no mesmo modal (#sessaoModal). Ordem da trilha:
+   Abertura → Deixar sair → Olhar com outros olhos → Passo 1 Clareza → Passo 2 Declaração
+   → Passo 3 Permissão → Menor passo. Tudo grava no modelo que já existe (S.leiAtracao). */
 const SESSAO_IMG={
   chuva:`<svg viewBox="0 0 150 150" class="sessao-img" aria-hidden="true"><defs><radialGradient id="sgA" cx="40%" cy="40%"><stop offset="0" stop-color="#b9a7e6"/><stop offset="1" stop-color="#b9a7e6" stop-opacity="0"/></radialGradient><radialGradient id="sgB" cx="60%" cy="55%"><stop offset="0" stop-color="#9cc7dc"/><stop offset="1" stop-color="#9cc7dc" stop-opacity="0"/></radialGradient></defs><circle cx="62" cy="62" r="52" fill="url(#sgA)"/><circle cx="90" cy="82" r="50" fill="url(#sgB)"/><g stroke="#8f80d1" stroke-width="3" stroke-linecap="round" opacity=".55"><line x1="55" y1="100" x2="50" y2="114"/><line x1="75" y1="104" x2="70" y2="118"/><line x1="95" y1="100" x2="90" y2="114"/></g></svg>`,
   calma:`<svg viewBox="0 0 150 150" class="sessao-img" aria-hidden="true"><defs><radialGradient id="sgC" cx="50%" cy="45%"><stop offset="0" stop-color="#f3c2d6"/><stop offset="1" stop-color="#f3c2d6" stop-opacity="0"/></radialGradient><radialGradient id="sgD" cx="45%" cy="60%"><stop offset="0" stop-color="#c9b8ef"/><stop offset="1" stop-color="#c9b8ef" stop-opacity="0"/></radialGradient></defs><circle cx="75" cy="70" r="56" fill="url(#sgC)"/><circle cx="68" cy="88" r="46" fill="url(#sgD)"/><circle cx="75" cy="75" r="16" fill="#fff" opacity=".55"/></svg>`,
-  flor:`<svg viewBox="0 0 150 150" class="sessao-img" aria-hidden="true"><defs><radialGradient id="sgE" cx="50%" cy="50%"><stop offset="0" stop-color="#f6d58e"/><stop offset="1" stop-color="#f6d58e" stop-opacity="0"/></radialGradient></defs><circle cx="75" cy="75" r="62" fill="url(#sgE)"/><g fill="#e8a0be" opacity=".75"><ellipse cx="75" cy="50" rx="13" ry="22"/><ellipse cx="75" cy="100" rx="13" ry="22"/><ellipse cx="50" cy="75" rx="22" ry="13"/><ellipse cx="100" cy="75" rx="22" ry="13"/></g><circle cx="75" cy="75" r="12" fill="#8f80d1" opacity=".8"/></svg>`
+  flor:`<svg viewBox="0 0 150 150" class="sessao-img" aria-hidden="true"><defs><radialGradient id="sgE" cx="50%" cy="50%"><stop offset="0" stop-color="#f6d58e"/><stop offset="1" stop-color="#f6d58e" stop-opacity="0"/></radialGradient></defs><circle cx="75" cy="75" r="62" fill="url(#sgE)"/><g fill="#e8a0be" opacity=".75"><ellipse cx="75" cy="50" rx="13" ry="22"/><ellipse cx="75" cy="100" rx="13" ry="22"/><ellipse cx="50" cy="75" rx="22" ry="13"/><ellipse cx="100" cy="75" rx="22" ry="13"/></g><circle cx="75" cy="75" r="12" fill="#8f80d1" opacity=".8"/></svg>`,
+  luz:`<svg viewBox="0 0 150 150" class="sessao-img" aria-hidden="true"><defs><radialGradient id="sgF" cx="50%" cy="45%"><stop offset="0" stop-color="#f6d58e"/><stop offset="1" stop-color="#f6d58e" stop-opacity="0"/></radialGradient><radialGradient id="sgG" cx="55%" cy="60%"><stop offset="0" stop-color="#f3c2d6"/><stop offset="1" stop-color="#f3c2d6" stop-opacity="0"/></radialGradient></defs><circle cx="72" cy="68" r="58" fill="url(#sgF)"/><circle cx="86" cy="86" r="46" fill="url(#sgG)"/><path d="M75 36c1.6 10 6 14.4 16 16-10 1.6-14.4 6-16 16-1.6-10-6-14.4-16-16 10-1.6 14.4-6 16-16z" fill="#8f80d1" opacity=".8"/><circle cx="102" cy="98" r="4" fill="#bd80d1" opacity=".7"/></svg>`,
+  porta:`<svg viewBox="0 0 150 150" class="sessao-img" aria-hidden="true"><defs><radialGradient id="sgH" cx="45%" cy="45%"><stop offset="0" stop-color="#c9b8ef"/><stop offset="1" stop-color="#c9b8ef" stop-opacity="0"/></radialGradient><radialGradient id="sgI" cx="55%" cy="65%"><stop offset="0" stop-color="#9cc7dc"/><stop offset="1" stop-color="#9cc7dc" stop-opacity="0"/></radialGradient></defs><circle cx="66" cy="66" r="54" fill="url(#sgH)"/><circle cx="90" cy="88" r="48" fill="url(#sgI)"/><path d="M52 112V76a23 23 0 0 1 46 0v36z" fill="#fff" opacity=".6"/><path d="M52 112V76a23 23 0 0 1 46 0v36" fill="none" stroke="#8f80d1" stroke-width="3" stroke-linecap="round" opacity=".7"/><circle cx="75" cy="86" r="5" fill="#e8a0be" opacity=".85"/></svg>`,
+  passo:`<svg viewBox="0 0 150 150" class="sessao-img" aria-hidden="true"><defs><radialGradient id="sgJ" cx="50%" cy="50%"><stop offset="0" stop-color="#b7d6b9"/><stop offset="1" stop-color="#b7d6b9" stop-opacity="0"/></radialGradient><radialGradient id="sgK" cx="55%" cy="40%"><stop offset="0" stop-color="#f6d58e"/><stop offset="1" stop-color="#f6d58e" stop-opacity="0"/></radialGradient></defs><circle cx="70" cy="86" r="56" fill="url(#sgJ)"/><circle cx="88" cy="58" r="40" fill="url(#sgK)"/><g fill="#8f80d1" opacity=".7"><ellipse cx="58" cy="108" rx="9" ry="13" transform="rotate(-12 58 108)"/><ellipse cx="86" cy="84" rx="8" ry="12" transform="rotate(10 86 84)"/><ellipse cx="102" cy="56" rx="6.5" ry="10" transform="rotate(14 102 56)"/></g></svg>`
 };
 let _sessao=null;
 function contrastesPendentes(){return (S.leiAtracao.contrastes||[]);}
+
+/* ---------- lista de sessões na aba Atração ---------- */
+function cardSessao(id,img,k,tit,sub,cls){
+  return `<button type="button" class="sessao-card ${cls||''}" data-sessao="${id}"><span class="sc-img">${SESSAO_IMG[img]}</span><span><span class="sc-k">${k}</span><span class="sc-tit" style="display:block">${tit}</span><span class="sc-sub">${sub}</span></span></button>`;
+}
 function renderSessoesAtracao(){
   const el=$('atrSessoes');if(!el)return;
-  const pend=contrastesPendentes();
-  let html=`<button type="button" class="sessao-card" data-sessao="sair"><span class="sc-img">${SESSAO_IMG.chuva}</span><span><span class="sc-k">Sessão</span><span class="sc-tit" style="display:block">Deixar sair</span><span class="sc-sub">Escreva tudo o que está te incomodando. Sem filtro, sem pressa.</span></span></button>`;
-  if(pend.length){
-    html+=`<button type="button" class="sessao-card calma" data-sessao="olhar"><span class="sc-img">${SESSAO_IMG.calma}</span><span><span class="sc-k">Sessão</span><span class="sc-tit" style="display:block">Olhar com outros olhos</span><span class="sc-sub">Você tem ${pend.length} desabafo${pend.length===1?'':'s'} esperando. Quando estiver mais calma, quer olhar pra ${pend.length===1?'ele':'eles'} de novo?</span></span></button>`;
+  const pend=contrastesPendentes(),ativos=desejosAtivos();
+  let h=cardSessao('abertura','calma','Comece por aqui','Que bom que você chegou','Um convite para olhar com carinho para o que você deseja.','calma');
+  h+=cardSessao('sair','chuva','Contraste','Deixar sair','Escreva tudo o que está te incomodando. Sem filtro, sem pressa.');
+  if(pend.length)h+=cardSessao('desabafos','calma','Olhar com calma',`Meus desabafos (${pend.length})`,'Reler com outros olhos o que você já deixou sair, quando estiver mais calma.','calma');
+  h+=cardSessao('clareza','flor','Passo 1','Clareza','Do que incomoda para o que você quer no lugar.');
+  if(ativos.length){
+    h+=cardSessao('declaracao','luz','Passo 2','Declaração de desejo','Uma frase leve para manter o desejo por perto.');
+    h+=cardSessao('permissao','porta','Passo 3','Permissão','Escutar a voz que duvida e guardar uma frase que alivia.','calma');
+    h+=cardSessao('passo','passo','Ação','Menor passo','Algo de 5 a 15 minutos que aproxima do que você quer.');
+    h+=cardSessao('desejos','flor',`${ativos.length} ${ativos.length===1?'desejo':'desejos'}`,'Meus desejos','Continuar de onde parou, editar, soltar ou apagar.');
   }
-  el.innerHTML=html;
-  el.querySelectorAll('[data-sessao]').forEach(b=>b.onclick=()=>b.dataset.sessao==='sair'?sessaoDeixarSair():sessaoOlhar());
+  h+=cardSessao('duvida','porta','Permissão','Anotar uma dúvida','Sem precisar de nada antes. Só de anotar, ela perde força.','calma');
+  el.innerHTML=h;
+  el.querySelectorAll('[data-sessao]').forEach(b=>b.onclick=()=>abrirSessaoPorId(b.dataset.sessao));
 }
+function abrirSessaoPorId(id){
+  const m={abertura:sessaoAbertura,sair:sessaoDeixarSair,desabafos:sessaoMeusDesabafos,olhar:sessaoMeusDesabafos,clareza:()=>sessaoClareza(),
+    declaracao:()=>sessaoComDesejo(sessaoDeclaracao),permissao:()=>sessaoComDesejo(sessaoPermissao),passo:()=>sessaoComDesejo(sessaoMenorPasso),
+    desejos:sessaoMeusDesejos,duvida:sessaoDuvidaRapida};
+  if(m[id])m[id]();
+}
+
+/* ---------- motor das telas ----------
+   Campos de uma tela (todos opcionais):
+   img, kicker, titulo, afirma, lembrete(fn), texto, corpo([texto | {pergunta}]), sub, desejo(fn),
+   html(string|fn) + bind(raiz), campo{key,ph,grande}, campos[{key,rot,dica,ph,opcional,grande}],
+   areas, fecho, voltar(true mostra "Voltar"), botoes[{rot,prim,acao}] */
+function sessaoColher(){
+  const st=_sessao;if(!st)return;const t=st.telas[st.i];
+  const c=$('sessaoCampo');if(c&&t.campo)st.dados[t.campo.key]=c.value.trim();
+  $('sessaoTela').querySelectorAll('[data-ck]').forEach(x=>{st.dados[x.dataset.ck]=x.value.trim();});
+}
+function sessaoAtualizar(){sessaoColher();sessaoMostrar();}
 function sessaoMostrar(){
   const st=_sessao;const t=st.telas[st.i];
+  const val=v=>typeof v==='function'?v():v;
   let h='';
   if(t.img)h+=SESSAO_IMG[t.img];
+  if(t.kicker)h+=`<div class="sessao-kicker">${t.kicker}</div>`;
+  if(t.titulo)h+=`<h2 class="sessao-titulo">${t.titulo}</h2>`;
+  if(t.afirma)h+=`<p class="sessao-afirma">${t.afirma}</p>`;
   if(t.lembrete)h+=`<div class="sessao-lembrete">${esc(t.lembrete())}</div>`;
-  h+=`<div class="sessao-txt">${t.texto}</div>`;
+  if(t.texto)h+=`<div class="sessao-txt">${t.texto}</div>`;
+  if(t.corpo)h+=`<div class="sessao-corpo">${val(t.corpo).map(p=>typeof p==='string'?`<p>${p}</p>`:`<p class="pergunta">${p.pergunta}</p>`).join('')}</div>`;
   if(t.sub)h+=`<div class="sessao-sub">${t.sub}</div>`;
   if(t.desejo)h+=`<div class="sessao-desejo">${esc(t.desejo())}</div>`;
+  if(t.html)h+=`<div class="sessao-html">${val(t.html)}</div>`;
+  if(t.campos)h+=t.campos.map(c=>`<div class="sessao-bloco-campo"><label class="sessao-rot" for="sc_${c.key}">${c.rot}${c.opcional?' <span class="sessao-opc">opcional</span>':''}</label>${c.dica?`<p class="sessao-dica">${c.dica}</p>`:''}<textarea class="sessao-campo ${c.grande?'grande':''}" id="sc_${c.key}" data-ck="${c.key}" placeholder="${esc(c.ph||'')}">${esc(st.dados[c.key]||'')}</textarea></div>`).join('');
   if(t.campo)h+=`<textarea class="sessao-campo ${t.campo.grande?'grande':''}" id="sessaoCampo" placeholder="${esc(t.campo.ph||'')}">${esc(st.dados[t.campo.key]||'')}</textarea>`;
   if(t.areas){const sel=st.dados.area;h+=`<div class="sessao-areas">${S.leiAtracao.areas.map(a=>`<button type="button" class="chip ${a.id===sel?'on':''}" data-area="${esc(a.id)}">${esc(a.nome)}</button>`).join('')}</div>`;}
+  if(t.fecho)h+=`<p class="sessao-fecho">${t.fecho}</p>`;
   h+=`<div class="sessao-botoes">${t.botoes.map((b,k)=>`<button type="button" class="modal-btn ${b.prim?'prim':'sec'}" data-sb="${k}">${b.rot}</button>`).join('')}</div>`;
+  if(t.voltar&&st.i>0)h+=`<button type="button" class="sessao-voltar" id="sessaoVoltar">Voltar</button>`;
   $('sessaoTela').innerHTML=h;
   $('sessaoDots').innerHTML=st.telas.map((_,k)=>`<span class="${k===st.i?'on':''}"></span>`).join('');
+  const caixa=$('sessaoModal').querySelector('.modal-caixa');if(caixa)caixa.scrollTop=0;
   const campo=$('sessaoCampo');if(campo)setTimeout(()=>campo.focus(),250);
   $('sessaoTela').querySelectorAll('[data-area]').forEach(b=>b.onclick=()=>{st.dados.area=b.dataset.area;$('sessaoTela').querySelectorAll('[data-area]').forEach(x=>x.classList.toggle('on',x===b));});
-  $('sessaoTela').querySelectorAll('[data-sb]').forEach(b=>b.onclick=()=>{
-    if(campo)st.dados[t.campo.key]=campo.value.trim();
-    t.botoes[+b.dataset.sb].acao();
-  });
+  $('sessaoTela').querySelectorAll('[data-sb]').forEach(b=>b.onclick=()=>{sessaoColher();t.botoes[+b.dataset.sb].acao();});
+  const vb=$('sessaoVoltar');if(vb)vb.onclick=()=>{sessaoColher();st.i--;sessaoMostrar();};
+  if(t.bind)t.bind($('sessaoTela'));
 }
 function sessaoAbrir(telas,dados){_sessao={telas,i:0,dados:dados||{}};sessaoMostrar();abrirOverlay($('sessaoModal'));}
 function sessaoProxima(){_sessao.i++;sessaoMostrar();}
@@ -7243,40 +7289,388 @@ $('sessaoFechar').onclick=()=>sessaoFecharTudo();
 $('btnComoFunciona').onclick=()=>abrirOverlay($('comoFuncionaModal'));
 $('comoFuncionaFechar').onclick=()=>fecharOverlay($('comoFuncionaModal'));
 
-function sessaoDeixarSair(){
+/* ---------- ajudas ---------- */
+const MANTRA_CLAREZA='Eu estou em processo de descobrir o que eu quero, em todas as áreas da minha vida, do meu jeito e no meu tempo.';
+const MANTRA_DECLARACAO='Eu estou em processo de ter realizações em todas as áreas da minha vida, do meu jeito e no meu tempo.';
+const MANTRA_PERMISSAO='Eu estou em processo de me permitir receber realizações em todas as áreas da minha vida, do meu jeito e no meu tempo.';
+const trTexto=d=>limparTextoDesejo(d.texto)||d.texto||'';
+/* o exemplo do texto começa com “Quero…”; na declaração o desejo entra depois de um prefixo, então o “quero” inicial sai */
+const trSemQuero=s=>String(s||'').trim().replace(/^(eu\s+)?(quero|desejo|gostaria de|preciso)\s+/i,'');
+const trDeclHTML=d=>`<div class="declaracao-montada"><span class="dm-lb">Sua declaração</span>${montarDeclaracao(d).map(p=>`<div style="margin-bottom:8px">${p}</div>`).join('')}</div>`;
+const trBase=d=>{const b=trTexto(d).trim();return b?b.charAt(0).toLowerCase()+b.slice(1):'';};
+const trAreaPadrao=()=>{const b=S.leiAtracao.areas.find(a=>a.id==='bemestar');return b?b.id:S.leiAtracao.areas[0].id;};
+/* desejo em foco: 0 desejos → começa pela Clareza; 1 → segue; vários → pergunta qual */
+function sessaoComDesejo(fn){
+  const ds=desejosAtivos();
+  if(!ds.length){mostrarToast('Você ainda não tem um desejo. Vamos começar pela Clareza 💜');sessaoClareza();return;}
+  if(ds.length===1){fn(ds[0]);return;}
+  sessaoAbrir([{kicker:'Escolha',titulo:'Qual desejo?',corpo:['Com qual desejo você quer trabalhar agora?'],
+    html:()=>ds.map(d=>`<button type="button" class="sessao-opt" data-d="${esc(d.id)}"><b>${esc(trTexto(d))}</b></button>`).join(''),
+    bind:r=>r.querySelectorAll('[data-d]').forEach(b=>b.onclick=()=>fn(S.leiAtracao.desejos.find(x=>x.id===b.dataset.d))),
+    botoes:[{rot:'Fechar',acao:()=>sessaoFecharTudo()}]}]);
+}
+
+/* ---------- Abertura ---------- */
+const trRespiro=(img)=>({img:img||'calma',corpo:['Antes de seguirmos, se quiser, respire fundo uma vez e sinta o corpo apoiado onde você está.','Não tem pressa nenhuma aqui.'],voltar:true,botoes:[{rot:'Continuar',prim:true,acao:sessaoProxima}]});
+const trContinuar=[{rot:'Continuar',prim:true,acao:sessaoProxima}];
+
+function sessaoAbertura(){
+  const RESP={cansada:'Obrigada por contar. Então vamos devagar. Hoje não precisa render nada.',ansiosa:'Obrigada por contar. Vamos no seu ritmo, uma coisa de cada vez. Nada aqui é urgente.',esperancosa:'Que bom. Vamos aproveitar essa abertura para olhar com carinho para o que você deseja.',nao_sei:'Tudo bem não saber. Muitas vezes a gente descobre o que sente no caminho.',tranquila:'Que bom que você chegou assim. Vamos manter esse clima.'};
   sessaoAbrir([
-    {img:'chuva',texto:'Aqui você pode deixar sair tudo. Sem filtro, sem pressa.',botoes:[{rot:'Vamos lá',prim:true,acao:sessaoProxima}]},
-    {texto:'Escreva o que está te incomodando.',campo:{key:'desabafo',ph:'Pode escrever tudo, do jeito que vier…',grande:true},botoes:[{rot:'Guardar',prim:true,acao:()=>{
-      const txt=_sessao.dados.desabafo;if(!txt){mostrarToast('Escreva o que quiser antes de guardar');return;}
-      if(!Array.isArray(S.leiAtracao.contrastes))S.leiAtracao.contrastes=[];
-      const bem=S.leiAtracao.areas.find(a=>a.id==='bemestar');
-      S.leiAtracao.contrastes.push({id:'c'+Date.now().toString(36)+Math.random().toString(36).slice(2,5),naoQuero:txt,area:bem?bem.id:S.leiAtracao.areas[0].id,criadoEm:hoje()});
-      salva();sessaoProxima();
-    }}]},
-    {img:'calma',texto:'Pronto. Isso ficou guardado. 💜',sub:'Não precisa fazer nada com isso agora.',botoes:[{rot:'Fechar',prim:true,acao:()=>sessaoFecharTudo()}]}
+    {img:'calma',kicker:'Abertura',titulo:'Que bom que você chegou até aqui',afirma:'Eu posso cuidar da minha vida no meu ritmo.',
+      corpo:['Talvez exista alguma coisa na sua vida que você queira mudar. Talvez você ainda não saiba exatamente o quê.','Tudo bem. Não precisamos resolver isso agora.'],
+      botoes:trContinuar},
+    trRespiro('calma'),
+    {corpo:['Esta trilha é um convite para olhar com mais carinho para o que você deseja, reconhecer o que pode estar dificultando esse caminho e descobrir maneiras de se aproximar da vida que gostaria de viver.'],voltar:true,botoes:trContinuar},
+    {corpo:['Nosso ponto de partida é a Lei da Atração: a proposta de voltar a atenção para aquilo que queremos cultivar, em vez de permanecer apenas naquilo que nos incomoda.','Ao longo desta experiência, vamos explorar três movimentos:'],
+      html:'<div class="sessao-passos"><div><b>1</b> reconhecer o desejo</div><div><b>2</b> mantê-lo por perto</div><div><b>3</b> abrir espaço para acreditar que ele pode fazer parte da sua vida</div></div>',voltar:true,botoes:trContinuar},
+    {texto:'Como você está chegando hoje?',voltar:true,
+      corpo:['Não existe resposta certa. Só um momento para notar.'],
+      html:'<div class="sessao-areas">'+[['cansada','Cansada'],['ansiosa','Ansiosa'],['esperancosa','Esperançosa'],['nao_sei','Não sei dizer'],['tranquila','Tranquila']].map(([k,n])=>`<button type="button" class="chip" data-r="${k}">${n}</button>`).join('')+'</div><p class="sessao-resp" id="trResp" style="margin-top:12px"></p>',
+      bind:r=>r.querySelectorAll('[data-r]').forEach(b=>b.onclick=()=>{r.querySelectorAll('[data-r]').forEach(x=>x.classList.toggle('on',x===b));$('trResp').textContent=RESP[b.dataset.r];}),
+      botoes:trContinuar},
+    {img:'flor',corpo:['Você não precisa ter todas as respostas, nem acreditar em tudo desde o início.','Apenas venha como está.'],fecho:'O que importa agora é começar.',voltar:true,
+      botoes:[{rot:'Fechar',acao:()=>sessaoFecharTudo()},{rot:'Começar: deixar sair',prim:true,acao:sessaoDeixarSair}]}
   ]);
 }
-function sessaoOlhar(){
-  const c=contrastesPendentes()[0];if(!c){mostrarToast('Nenhum desabafo esperando 💜');return;}
-  const lembrete=()=>c.naoQuero;
+
+/* ---------- Contraste: Deixar sair ---------- */
+function sessaoDeixarSair(){
   sessaoAbrir([
-    {lembrete,texto:'Por baixo disso, tem algum medo?',campo:{key:'medo',ph:'Se tiver, escreva aqui…'},botoes:[{rot:'Pular',acao:sessaoProxima},{rot:'Continuar',prim:true,acao:sessaoProxima}]},
-    {lembrete,texto:'E o que você gostaria que fosse diferente?',campo:{key:'pedido',ph:'Escreva do seu jeito…'},botoes:[{rot:'Pular',acao:sessaoProxima},{rot:'Continuar',prim:true,acao:sessaoProxima}]},
-    {texto:'Então, o que você quer?',sub:'Escreva no positivo, do jeito que você quer que seja.',campo:{key:'quero',ph:'ex: ter tempo pra mim'},botoes:[{rot:'Continuar',prim:true,acao:()=>{if(!_sessao.dados.quero){mostrarToast('Escreva o que você quer');return;}sessaoProxima();}}]},
-    {texto:'Em que parte da sua vida mora esse desejo?',areas:true,botoes:[{rot:'Continuar',prim:true,acao:()=>{
-      const dd=_sessao.dados;const cl=limparTextoDesejo(dd.quero)||dd.quero;
-      const d=novoDesejo(dd.area||c.area,cl);
-      d.contrasteOrigem=c.naoQuero;d.nucleo='';
-      if(dd.medo||dd.pedido)d.camadas={medo:dd.medo||'',pedido:dd.pedido||''};
-      S.leiAtracao.desejos.push(d);
-      S.leiAtracao.contrastes=(S.leiAtracao.contrastes||[]).filter(x=>x.id!==c.id);
-      salva();dd.desejoId=d.id;dd.desejoTxt=cl;sessaoProxima();
-    }}]},
-    {img:'flor',texto:'Isso é clareza. 💜',desejo:()=>_sessao.dados.desejoTxt,botoes:[
-      {rot:'Terminar por hoje',acao:()=>sessaoFecharTudo()},
-      {rot:'Escrever minha frase',prim:true,acao:()=>{const id=_sessao.dados.desejoId;sessaoFecharTudo(()=>setTimeout(()=>abrirDesejo(id,2),200));}}
-    ]}
-  ],{area:c.area});
+    {img:'chuva',kicker:'Contraste',titulo:'Deixar sair',afirma:'Eu posso deixar sair o que pesa.',
+      corpo:['Antes de falarmos sobre o que você quer, acolha o que está sentindo agora.'],botoes:trContinuar},
+    {voltar:true,corpo:['Às vezes, passamos tanto tempo tentando dar conta de tudo que nem conseguimos parar para reconhecer o que nos incomoda.','Na Lei da Atração, chamamos de contraste aquilo que nos mostra, pela experiência do que não queremos, o que gostaríamos de viver de outra maneira.'],botoes:trContinuar},
+    {voltar:true,corpo:['Aqui, você não precisa organizar seus pensamentos, encontrar soluções ou buscar o lado bom das coisas.','Vamos apenas colocar para fora.'],botoes:trContinuar},
+    {voltar:true,texto:'Faça uma lista em tópicos',corpo:['Vá anotando o que está pesando, exatamente como vier à cabeça.'],
+      campo:{key:'desabafo',ph:'Anote em tópicos curtos. Não precisa filtrar, pontuar ou justificar. Podem ser dois itens ou vinte. Não existe jeito certo.',grande:true},
+      botoes:[{rot:'Guardar',prim:true,acao:()=>{
+        const txt=_sessao.dados.desabafo;if(!txt){mostrarToast('Escreva o que quiser antes de guardar');return;}
+        if(!Array.isArray(S.leiAtracao.contrastes))S.leiAtracao.contrastes=[];
+        const c={id:'c'+Date.now().toString(36)+Math.random().toString(36).slice(2,5),naoQuero:txt,area:trAreaPadrao(),criadoEm:hoje()};
+        S.leiAtracao.contrastes.push(c);_sessao.dados.contrasteId=c.id;
+        salva();sessaoProxima();
+      }}]},
+    {img:'calma',texto:'Pronto. Isso ficou guardado. 💜',
+      corpo:['Colocar o que pesa em palavras já alivia um pouco. Você fez algo importante agora.','<b>Dica de ritmo:</b> se puder, deixe este registro descansar por algum tempo antes de avançar. Dar espaço aos pensamentos nos ajuda a enxergar com mais clareza. Você poderá voltar e completar esta lista sempre que quiser.'],
+      sub:'Se você já tem clareza e quer continuar agora, fique à vontade para avançar.',
+      botoes:[{rot:'Terminar por hoje',acao:()=>sessaoFecharTudo()},
+        {rot:'Já tenho clareza: continuar',prim:true,acao:()=>{const c=contrastesPendentes().find(x=>x.id===_sessao.dados.contrasteId);sessaoClareza(c);}}]}
+  ]);
+}
+
+/* ---------- Olhar com outros olhos (sobre um desabafo guardado) ---------- */
+function sessaoOlhar(c){
+  if(!c)c=contrastesPendentes()[0];
+  if(!c){mostrarToast('Nenhum desabafo esperando 💜');return;}
+  const lembrete=()=>c.naoQuero;
+  const guardar=()=>{const dd=_sessao.dados;c.camadas={pedido:dd.pedido||'',origem:dd.origem||''};salva();};
+  const cam=c.camadas||{};
+  sessaoAbrir([
+    {lembrete,kicker:'Olhar com calma',titulo:'Olhar com outros olhos',
+      corpo:['Vamos voltar ao que você escreveu?','Leia suas palavras devagar. Imagine que uma amiga querida está contando tudo isso a você.'],botoes:trContinuar},
+    {lembrete,voltar:true,corpo:['Você não precisa julgá-la, corrigir seus sentimentos ou encontrar uma solução imediatamente.','Pode apenas escutá-la.'],botoes:trContinuar},
+    trRespiro('calma'),
+    {lembrete,voltar:true,
+      corpo:['Agora, observe se algum incômodo aparece mais de uma vez. Há alguma situação que parece tocar sempre no mesmo ponto? Alguma coisa que você gostaria muito que fosse diferente?','Escolha aquilo que mais chama sua atenção e fique um instante com essa pergunta:',{pergunta:'Se isso pudesse ser diferente, o que eu gostaria que acontecesse?'}],
+      campo:{key:'pedido',ph:'Escreva do seu jeito…'},
+      sub:'Não se preocupe em encontrar uma resposta perfeita. Às vezes, conseguimos reconhecer com facilidade o que não queremos, mas precisamos de um pouco mais de tempo para descobrir o que queremos no lugar.',
+      botoes:[{rot:'Pular',acao:sessaoProxima},{rot:'Continuar',prim:true,acao:sessaoProxima}]},
+    {voltar:true,
+      corpo:['Se sentir vontade de explorar mais, podemos olhar também para a origem desse incômodo.','Você se lembra de quando começou a pensar assim? Essa sensação acompanha você há muito tempo? Existe alguma voz familiar por trás desse pensamento, alguém que lhe ensinou a olhar para si ou para o mundo dessa maneira?'],
+      campo:{key:'origem',ph:'Se quiser, escreva aqui…'},
+      html:'<div class="sessao-cuidado"><b>Um cuidado</b>Se isso trouxer algo muito pesado, você pode parar por aqui e conversar com alguém de confiança ou com quem te acompanha.</div>',
+      botoes:[{rot:'Pular',acao:sessaoProxima},{rot:'Continuar',prim:true,acao:sessaoProxima}]},
+    {img:'calma',voltar:true,
+      corpo:['Algumas ideias nos acompanham por tantos anos que acabamos confundindo aquilo que aprendemos com aquilo que realmente pensamos. Ao olhar para elas com calma, podemos descobrir que certas crenças já não combinam com quem somos hoje.','Você não precisa encontrar uma origem para tudo. E não precisa decidir nada agora. Apenas observe o que faz sentido para você.'],
+      fecho:'Talvez, por trás daquilo que incomoda, já exista uma pista sobre o que você deseja.',
+      botoes:[{rot:'Terminar por hoje',acao:()=>{guardar();sessaoFecharTudo();}},{rot:'Ir para a Clareza',prim:true,acao:()=>{guardar();sessaoClareza(c);}}]}
+  ],{pedido:cam.pedido||'',origem:cam.origem||''});
+}
+
+/* ---------- Passo 1 · Clareza (cria o desejo) ---------- */
+function sessaoClareza(c){
+  const cam=(c&&c.camadas)||{};
+  const dados={area:(c&&c.area)||trAreaPadrao(),pedido:cam.pedido||'',origem:cam.origem||''};
+  const lista=c?[c]:contrastesPendentes();
+  const gaveta=lista.length?()=>`<details class="sessao-gaveta"><summary>➔ Puxe para ver sua Lista de Incômodos</summary>${lista.map(x=>`<div>${esc(x.naoQuero)}</div>`).join('')}</details>`:'';
+  const lembrete=c?()=>dados.pedido||c.naoQuero:null;
+  const T=[
+    {kicker:'Passo 1',titulo:'Clareza',afirma:MANTRA_CLAREZA,
+      corpo:['Passe os olhos pela sua lista de incômodos com curiosidade, como se estivesse ouvindo uma amiga querida.','Sem julgar, sem se cobrar uma solução rápida.'],
+      html:gaveta||'<p class="sessao-dica">Se você ainda não tem uma lista, tudo bem. Pode escrever o que quer direto.</p>',
+      botoes:trContinuar},
+    {voltar:true,corpo:['Agora, experimente dar um passo na direção oposta: em vez de permanecer no que deseja deixar para trás, imagine o que gostaria de encontrar no lugar.'],
+      html:gaveta,botoes:trContinuar},
+    {voltar:true,texto:'Tente escrever seu desejo no positivo, começando por um verbo.',
+      html:'<div class="sessao-exemplo"><p><span>Em vez de</span>“Não quero mais viver exausta.”</p><p><span>Experimente</span>“Quero cuidar da minha energia e ter mais disposição para viver.”</p></div>',
+      sub:'Perceba a diferença: não estamos apagando o que você sente, mas abrindo espaço para imaginar o que você quer cultivar.',
+      botoes:trContinuar},
+    {voltar:true,texto:'O que eu quero no lugar?',corpo:['Respire e escreva do seu jeito. Pode ajustar depois.'],campo:{key:'quero',ph:'Comece por um verbo, no positivo'},
+      html:gaveta,
+      botoes:[{rot:'Continuar',prim:true,acao:()=>{if(!_sessao.dados.quero){mostrarToast('Escreva o que você quer');return;}sessaoProxima();}}]},
+    {voltar:true,texto:'Em que parte da sua vida mora esse desejo?',areas:true,
+      botoes:[{rot:'Continuar',prim:true,acao:()=>{
+        const dd=_sessao.dados;const cl=limparTextoDesejo(trSemQuero(dd.quero))||trSemQuero(dd.quero);
+        const d=novoDesejo(dd.area||trAreaPadrao(),cl);
+        if(c)d.contrasteOrigem=c.naoQuero;
+        d.nucleo='';
+        if(dd.pedido||dd.origem)d.camadas={pedido:dd.pedido||'',origem:dd.origem||''};
+        S.leiAtracao.desejos.push(d);
+        if(c)S.leiAtracao.contrastes=(S.leiAtracao.contrastes||[]).filter(x=>x.id!==c.id);
+        salva();dd.desejoId=d.id;dd.desejoTxt=cl;sessaoProxima();
+      }}]},
+    {texto:'Se quiser aprofundar um pouco mais:',desejo:()=>_sessao.dados.desejoTxt,
+      campo:{key:'importa',ph:'Por que isso é importante para mim? O que muda na minha vida se eu me aproximar disso?'},
+      botoes:[{rot:'Pular',acao:sessaoProxima},{rot:'Continuar',prim:true,acao:()=>{
+        const dd=_sessao.dados;const d=S.leiAtracao.desejos.find(x=>x.id===dd.desejoId);
+        if(d&&dd.importa){d.camadas=Object.assign({},d.camadas,{importa:dd.importa});salva();}
+        sessaoProxima();
+      }}]},
+    {img:'flor',texto:'Isso é clareza. 💜',desejo:()=>_sessao.dados.desejoTxt,
+      corpo:['Leia essa frase de novo, devagar, como se fosse de alguém que você ama.','Você não precisa ter um plano inteiro agora. Basta reconhecer para onde quer caminhar.'],
+      botoes:[{rot:'Terminar por hoje',acao:()=>sessaoFecharTudo()},
+        {rot:'Escrever minha declaração',prim:true,acao:()=>{const d=S.leiAtracao.desejos.find(x=>x.id===_sessao.dados.desejoId);sessaoDeclaracao(d);}}]}
+  ];
+  if(lembrete)T[3].lembrete=lembrete;
+  sessaoAbrir(T,dados);
+}
+
+/* ---------- Passo 2 · Declaração de desejo ---------- */
+const PREFIXOS_TRILHA=[['eu_decidi','para assumir um compromisso claro'],['ad_ideia','para abrir uma possibilidade leve'],['ad_saber','para reconhecer sua capacidade'],['ad_sensacao','para gerar entusiasmo suave'],['e_bom_saber','para trazer alívio e paz'],['me_empolga','para despertar curiosidade']];
+function sessaoDeclaracao(d){
+  if(!d)return;
+  if(!Array.isArray(d.corpo))d.corpo=[];
+  if(!d.corpo.length){d.corpo.push({k:'ad_ideia',texto:trBase(d)});salva();}
+  const seletor=()=>`<div class="sessao-decl">${trDeclHTML(d)}</div>`+
+    PREFIXOS_TRILHA.map(([k,desc])=>{const m=MODELOS_CORPO.find(x=>x.k===k);const on=d.corpo.some(c=>c.k===k);
+      return `<button type="button" class="sessao-opt ${on?'on':''}" data-pref="${k}"><b>${esc(m.pre)}…</b><span>${desc}</span></button>`;}).join('')+
+    `<p class="sessao-dica">Toque num prefixo para incluir ou tirar. Para ajustar as palavras, edite o texto de cada frase:</p>`+
+    d.corpo.map((c,i)=>{const m=MODELOS_CORPO.find(x=>x.k===c.k);return m?`<label class="sessao-edit"><span>${esc(m.pre)}</span><input type="text" data-ei="${i}" value="${esc(c.texto||'')}" aria-label="${esc(m.pre)}"></label>`:'';}).join('');
+  const ligar=r=>{
+    r.querySelectorAll('[data-pref]').forEach(b=>b.onclick=()=>{
+      const k=b.dataset.pref,i=d.corpo.findIndex(c=>c.k===k);
+      if(i>=0){if(d.corpo.length<2){mostrarToast('Deixe pelo menos uma frase');return;}d.corpo.splice(i,1);}else d.corpo.push({k,texto:trBase(d)});
+      salva();sessaoAtualizar();
+    });
+    r.querySelectorAll('[data-ei]').forEach(inp=>inp.oninput=()=>{
+      const c=d.corpo[+inp.dataset.ei];const v=inp.value.trim();if(!c)return;
+      c.texto=v?v.charAt(0).toLowerCase()+v.slice(1):'';salva();
+      const box=r.querySelector('.sessao-decl');if(box)box.innerHTML=trDeclHTML(d);
+    });
+  };
+  sessaoAbrir([
+    {img:'luz',kicker:'Passo 2',titulo:'Declaração de desejo',afirma:MANTRA_DECLARACAO,
+      corpo:['Agora que você deu nome ao seu desejo, preparamos a sua Declaração Pessoal para mantê-lo por perto na rotina.'],botoes:trContinuar},
+    {voltar:true,desejo:()=>trTexto(d),corpo:['Uma declaração não é uma cobrança: é um lembrete leve de direção.'],botoes:trContinuar},
+    {texto:'Como sua frase foi montada',voltar:true,
+      corpo:['Combinamos o desejo que você escreveu com um prefixo acolhedor.','Os prefixos funcionam como uma ponte: eles tiram a resistência da mente, permitindo que você leia a frase com naturalidade e sem a sensação de estar se forçando a acreditar em algo irreal.'],
+      html:()=>`<div class="sessao-decl">${trDeclHTML(d)}</div>`,botoes:trContinuar},
+    {texto:'Ajuste até soar verdadeiro',voltar:true,
+      corpo:['Leia em voz alta ou em pensamento e perceba a sensação no corpo. Busque sentir tranquilidade, alívio ou um entusiasmo suave.','Se a frase soar distante, troque o prefixo para testar novas combinações:'],
+      html:seletor,bind:ligar,
+      botoes:[{rot:'Tenho dúvida',acao:()=>{d.sensacao='duvida';salva();sessaoPermissao(d);}},
+        {rot:'Sim, faz bem',prim:true,acao:()=>{d.sensacao='boa';salva();confete(['✨','💫','🌟']);sessaoProxima();}}]},
+    {img:'luz',texto:'Que bom perceber isso. 💜',voltar:true,
+      corpo:['Reserve um momento do dia para reler sua declaração.','Sem transformar em obrigação: o objetivo é apenas acostumar sua mente com uma sensação positiva e aberta.'],
+      html:'<button type="button" class="btn btn-full" id="trHabLer">🌱 Transformar em hábito: ler minha declaração</button>',
+      bind:r=>{const b=r.querySelector('#trHabLer');if(b)b.onclick=habitoLerDeclaracao;},
+      botoes:[{rot:'Terminar por hoje',acao:()=>sessaoFecharTudo()},{rot:'Seguir para a Permissão',prim:true,acao:()=>sessaoPermissao(d)}]}
+  ]);
+}
+
+/* ---------- Passo 3 · Permissão (dúvida → frase que alivia → Livro) ---------- */
+function sessaoPermissao(d,g0){
+  if(!d)return;
+  if(!Array.isArray(d.gravetos))d.gravetos=[];
+  const dados={voz:g0?g0.duvida:'',gid:g0?g0.id:null,alivio:g0?(g0.alivio||''):'',origemIdeia:g0?(g0.origem||''):'',seFosse:g0?(g0.seFosse||''):''};
+  const grav=()=>d.gravetos.find(x=>x.id===_sessao.dados.gid);
+  const lembreteDesejo=()=>trTexto(d);
+  const tAliv=()=>{const g=grav();const s=sugerirPermissoes(g?g.duvida:'');return s.frases;};
+  function salvarEvid(){
+    const v=(_sessao.dados.evid||'').trim();if(!v)return;
+    if(!Array.isArray(d.evidencias))d.evidencias=[];
+    d.evidencias.push({id:'e'+Date.now().toString(36)+Math.random().toString(36).slice(2,5),texto:v,data:hoje()});
+    _sessao.dados.evid='';salva();
+  }
+  sessaoAbrir([
+    {img:'porta',kicker:'Passo 3',titulo:'Permissão',afirma:MANTRA_PERMISSAO,
+      corpo:['Às vezes, reconhecer o que queremos é só o começo.','É comum uma parte de nós desejar muito algo, enquanto outra sussurra que não vai dar certo.'],botoes:trContinuar},
+    {voltar:true,corpo:[{pergunta:'Não precisamos brigar com essa voz.'},'Vamos escutá-la e ressignificá-la em 4 etapas curtas.'],
+      html:'<div class="sessao-passos"><div><b>1</b> Escute o receio</div><div><b>2</b> Olhe para essa voz com curiosidade</div><div><b>3</b> Experimente uma nova perspectiva</div><div><b>4</b> Dê espaço para a mudança</div></div>',botoes:trContinuar},
+    trRespiro('porta'),
+    {lembrete:lembreteDesejo,texto:'1. Escute o receio',voltar:true,
+      corpo:['Pense no desejo que você escreveu.','O que essa voz interna diz quando você imagina essa conquista? Qual é o medo que surge?'],
+      campo:{key:'voz',ph:'O que essa voz me diz? Ex: Eu não posso porque…',grande:true},
+      sub:'Pode escrever do jeito que ela fala, sem suavizar.',
+      botoes:[{rot:'Continuar',prim:true,acao:()=>{
+        const dd=_sessao.dados;if(!dd.voz){mostrarToast('Escreva o que a voz diz');return;}
+        let g=grav();
+        if(g)g.duvida=dd.voz;
+        else{g={id:'g'+Date.now().toString(36)+Math.random().toString(36).slice(2,5),duvida:dd.voz,alivio:'',solto:false,criadoEm:hoje()};d.gravetos.push(g);dd.gid=g.id;}
+        salva();
+        if(/porque/i.test(dd.voz))mostrarToast('Você disse “porque”: achou uma crença que pode ser trocada. 🪵');
+        sessaoProxima();
+      }}]},
+    {lembrete:()=>_sessao.dados.voz,voltar:true,corpo:['Obrigada por deixar essa voz falar.','Só de escrever, ela já perde um pouco da força. Agora vamos olhar para ela de outro lugar.'],botoes:trContinuar},
+    {lembrete:()=>_sessao.dados.voz,texto:'2. Olhe para essa voz com curiosidade',voltar:true,
+      corpo:['Tente compreender a origem desse pensamento sem se julgar.'],
+      campos:[{key:'origemIdeia',rot:'De onde vem essa ideia? Ela é uma verdade absoluta ou apenas um aprendizado do passado?',opcional:true},
+        {key:'seFosse',rot:'Quem eu poderia ser ou o que eu experimentaria se não acreditasse totalmente nesse pensamento?',opcional:true}],
+      fecho:'O objetivo não é provar que a sua dúvida está errada, mas perceber que um medo antigo não precisa definir todas as suas possibilidades de futuro.',
+      botoes:[{rot:'Continuar',prim:true,acao:()=>{const g=grav(),dd=_sessao.dados;if(g){g.origem=dd.origemIdeia||'';g.seFosse=dd.seFosse||'';salva();}sessaoProxima();}}]},
+    {lembrete:()=>_sessao.dados.voz,texto:'3. Experimente uma nova perspectiva',voltar:true,
+      corpo:['Imagine o que uma pessoa querida, que ama você e respeita seu tempo, diria sobre essa situação.'],botoes:trContinuar},
+    {lembrete:()=>_sessao.dados.voz,voltar:true,
+      corpo:['Escreva uma frase de permissão que ofereça esse mesmo olhar acolhedor. Não precisa prometer que tudo será perfeito, apenas lembrar que você pode aprender, pedir ajuda ou caminhar no seu tempo.'],
+      html:()=>`<div class="sessao-exemplo"><p><span>Pra aliviar a dúvida</span>Pense em quem já vive o que você quer. Quantas pessoas, só hoje? E na última semana? E no último ano? Escreva sobre elas, não sobre você: isso costuma pesar menos.</p></div>`+
+        tAliv().map(f=>`<button type="button" class="sessao-opt" data-f="${esc(f)}"><span>em terceira pessoa</span>${esc(f)}</button>`).join('')+
+        `<p class="sessao-dica">Se ajudar, comece com: “Eu estou em processo de…”</p><div class="sessao-areas"><button type="button" class="chip" data-f="Eu estou em processo de ">Eu estou em processo de…</button><button type="button" class="chip" data-f="Muitas coisas podem acontecer para ">Muitas coisas podem acontecer…</button></div>`,
+      bind:r=>r.querySelectorAll('[data-f]').forEach(b=>b.onclick=()=>{const a=$('sc_alivio');if(a){a.value=b.dataset.f;a.focus();}}),
+      campos:[{key:'alivio',rot:'Minha frase de permissão',ph:'Toque numa sugestão ou escreva aqui'}],
+      botoes:[{rot:'Guardar no livro',prim:true,acao:()=>{
+        const dd=_sessao.dados,g=grav();if(!g)return;
+        if(!dd.alivio){mostrarToast('Escreva a sua frase ou toque numa sugestão');return;}
+        g.alivio=dd.alivio;g.solto=true;g.soltoEm=hoje();salva();
+        try{renderLivroPermissoes();}catch(e){}
+        mostrarToast('Frase guardada no livro ✓');sessaoProxima();
+      }}]},
+    {img:'porta',texto:'Sinta essa frase.',desejo:()=>_sessao.dados.alivio,
+      corpo:['Leia em voz alta ou em pensamento, devagar. Repare se algo no corpo se acomoda um pouco.'],voltar:false,botoes:trContinuar},
+    {texto:'4. Dê espaço para a mudança',
+      corpo:['Nos próximos dias, mantenha essa nova frase por perto.','Conforme for percebendo pequenas coincidências, novas ideias ou oportunidades no seu dia a dia, por menores que sejam, anote no seu Livro de Permissões. Grandes transformações costumam começar com pequenos sinais.'],
+      campos:[{key:'evid',rot:'Notou algo?',opcional:true,ph:'O que apareceu?'}],
+      botoes:[{rot:'Abrir o Livro de Permissões',acao:()=>{sessaoColher();salvarEvid();sessaoFecharTudo(()=>{try{trocaAba('atracao');}catch(e){}setTimeout(()=>{const l=$('livroPermissoes');if(l)l.scrollIntoView({behavior:'smooth',block:'start'});},200);});}},
+        {rot:'Continuar',prim:true,acao:()=>{sessaoColher();salvarEvid();sessaoProxima();}}]},
+    {img:'porta',texto:'5. Permita-se dar um passo',voltar:true,
+      corpo:['Às vezes, esperamos sentir confiança para só então agir. Mas também podemos descobrir um pouco mais de confiança quando experimentamos fazer alguma coisa.','Não precisa esperar que o medo desapareça. Você pode caminhar com alguma dúvida, respeitando seu tempo e suas possibilidades.'],
+      fecho:'Você pode aprender a confiar em si não apenas pelo que pensa, mas também pelas experiências que constrói.',
+      botoes:[{rot:'Terminar por hoje',acao:()=>sessaoFecharTudo()},{rot:'Escolher o menor passo',prim:true,acao:()=>sessaoMenorPasso(d)}]}
+  ],dados);
+}
+
+/* ---------- Menor passo (e virar hábito) ---------- */
+function sessaoMenorPasso(d){
+  if(!d)return;
+  if(!Array.isArray(d.menorPassos))d.menorPassos=[];
+  const atual=d.menorPasso&&d.menorPasso.texto?d.menorPasso.texto:'';
+  sessaoAbrir([
+    {kicker:'Ação',titulo:'Menor passo',afirma:'Eu posso começar pequeno.',img:'passo',
+      lembrete:()=>trTexto(d),
+      corpo:['Chegamos ao momento de dar corpo ao seu desejo na rotina real.','Não tente reorganizar sua vida inteira hoje. Pense em algo simples, que leve de 5 a 15 minutos, e que ajude você a dar um pequeno passo em direção ao que quer.','(Exemplos: fazer uma pesquisa rápida, enviar uma mensagem, arrumar uma gaveta, guardar um material ou reservar 10 minutos de silêncio).'],
+      campo:{key:'passo',ph:'Qual é o menor passo que posso dar hoje?'},
+      fecho:'Quando concluir, reconheça o que fez. Não porque um pequeno passo resolve tudo de uma vez, mas porque ele é a prova viva de que você já começou a construir o que deseja.',
+      botoes:[{rot:'Guardar meu passo',prim:true,acao:()=>{
+        const v=(_sessao.dados.passo||'').trim();if(!v){mostrarToast('Escreva o seu menor passo');return;}
+        const item={id:'mp'+Date.now().toString(36),texto:v,criadoEm:hoje(),sugestao:paraInfinitivoSugestao(v)};
+        d.menorPassos.push(item);d.menorPasso=item;salva();
+        confete(['🌱','✨','💫']);sessaoProxima();
+      }}]},
+    {img:'passo',texto:'Seu passo está guardado.',desejo:()=>_sessao.dados.passo,
+      corpo:['Se ele for algo para repetir, você pode transformar em hábito. Um hábito novo por vez: o próximo libera 3 dias depois. Se não, tudo bem, o passo é seu e fica guardado.'],
+      html:'<button type="button" class="btn btn-full" id="trVirarHab">🌱 Transformar em hábito</button>',
+      bind:r=>{const b=r.querySelector('#trVirarHab');if(b)b.onclick=()=>virarDesejoEmHabito(d,_sessao.dados.passo);},
+      fecho:'Você pode começar de onde está, com o que tem e no ritmo que consegue sustentar.',
+      botoes:[{rot:'Terminar',prim:true,acao:()=>sessaoFecharTudo()}]}
+  ],{passo:atual});
+}
+
+/* ---------- Meus desabafos (lista de contrastes guardados) ---------- */
+function sessaoMeusDesabafos(){
+  const ps=contrastesPendentes();
+  if(!ps.length){mostrarToast('Nenhum desabafo guardado ainda 💜');sessaoDeixarSair();return;}
+  sessaoAbrir([{kicker:'Contraste',titulo:'Meus desabafos',
+    corpo:['Aqui ficam as listas que você já deixou sair. Escolha uma para olhar com calma.'],
+    html:()=>contrastesPendentes().map(c=>`<button type="button" class="sessao-opt" data-c="${esc(c.id)}"><b>${esc(String(c.naoQuero).slice(0,90))}${String(c.naoQuero).length>90?'…':''}</b><span>${esc(c.criadoEm||'')}</span></button>`).join(''),
+    bind:r=>r.querySelectorAll('[data-c]').forEach(b=>b.onclick=()=>sessaoDesabafo(contrastesPendentes().find(x=>x.id===b.dataset.c))),
+    botoes:[{rot:'Fechar',acao:()=>sessaoFecharTudo()},{rot:'Novo desabafo',prim:true,acao:sessaoDeixarSair}]}]);
+}
+function sessaoOpcoes(acoes){return acoes.map((a,i)=>`<button type="button" class="sessao-opt ${a.on?'on':''}" data-ac="${i}"><b>${a.rot}</b>${a.sub?`<span>${a.sub}</span>`:''}</button>`).join('');}
+function sessaoLigarOpcoes(r,acoes){r.querySelectorAll('[data-ac]').forEach(b=>b.onclick=()=>acoes[+b.dataset.ac].acao());}
+function sessaoDesabafo(c){
+  if(!c)return;
+  const ac=[{rot:'Olhar com outros olhos',sub:'Reler com calma e descobrir o que você quer',acao:()=>sessaoOlhar(c)},
+    {rot:'Já sei o que quero',sub:'Ir direto para a Clareza',acao:()=>sessaoClareza(c)},
+    {rot:'Apagar este desabafo',acao:()=>sessaoConfirmar('Apagar este desabafo?','Ele some de vez. Se só não faz mais sentido agora, você pode deixá-lo guardado.','Apagar',()=>{S.leiAtracao.contrastes=(S.leiAtracao.contrastes||[]).filter(x=>x.id!==c.id);salva();mostrarToast('Desabafo removido');contrastesPendentes().length?sessaoMeusDesabafos():sessaoFecharTudo();},()=>sessaoDesabafo(c))}];
+  sessaoAbrir([{kicker:'Contraste',titulo:'Seu desabafo',
+    html:`<div class="sessao-gaveta" style="white-space:pre-wrap">${esc(c.naoQuero)}</div><p class="sessao-dica">O que você quer fazer com ele agora?</p>`+sessaoOpcoes(ac),
+    bind:r=>sessaoLigarOpcoes(r,ac),
+    botoes:[{rot:'Voltar à lista',acao:sessaoMeusDesabafos}]}]);
+}
+function sessaoConfirmar(tit,txt,rotOk,ok,cancelar){
+  sessaoAbrir([{texto:tit,corpo:[txt],botoes:[{rot:'Cancelar',acao:cancelar||(()=>sessaoFecharTudo())},{rot:rotOk,prim:true,acao:ok}]}]);
+}
+
+/* ---------- Meus desejos (lista e ações de cada um) ---------- */
+function sessaoMeusDesejos(){
+  const ds=desejosAtivos();
+  if(!ds.length){mostrarToast('Você ainda não tem um desejo. Vamos começar pela Clareza 💜');sessaoClareza();return;}
+  sessaoAbrir([{kicker:'Seus desejos',titulo:'Meus desejos',
+    corpo:['Escolha um desejo para continuar de onde parou.'],
+    html:()=>{
+      const lista=desejosAtivos();let h='';
+      S.leiAtracao.areas.forEach(a=>{const g=lista.filter(d=>d.area===a.id);if(!g.length)return;
+        h+=`<p class="sessao-dica" style="margin:12px 0 6px"><b>${esc(a.nome)}</b></p>`+g.map(d=>sessaoLinhaDesejo(d)).join('');});
+      const ids=new Set(S.leiAtracao.areas.map(a=>a.id));const outros=lista.filter(d=>!ids.has(d.area));
+      if(outros.length)h+=`<p class="sessao-dica" style="margin:12px 0 6px"><b>Outros</b></p>`+outros.map(d=>sessaoLinhaDesejo(d)).join('');
+      return h;},
+    bind:r=>r.querySelectorAll('[data-d]').forEach(b=>b.onclick=()=>sessaoDesejoHub(S.leiAtracao.desejos.find(x=>x.id===b.dataset.d))),
+    botoes:[{rot:'Fechar',acao:()=>sessaoFecharTudo()},{rot:'Novo desejo',prim:true,acao:()=>sessaoClareza()}]}]);
+}
+function sessaoLinhaDesejo(d){
+  const tem=d.corpo&&d.corpo.some(c=>(c.texto||'').trim());const ab=(d.gravetos||[]).filter(g=>!g.solto).length;
+  const st=[tem?'declaração ✓':'declaração pendente',ab?`${ab} ${ab===1?'dúvida aberta':'dúvidas abertas'}`:((d.gravetos||[]).length?'permissão ✓':''),d.menorPasso?'menor passo ✓':''].filter(Boolean).join(' · ');
+  return `<button type="button" class="sessao-opt" data-d="${esc(d.id)}"><b>${esc(trTexto(d))}</b><span>${st}</span></button>`;
+}
+function sessaoDesejoHub(d){
+  if(!d)return;
+  const abertas=(d.gravetos||[]).filter(g=>!g.solto);
+  const ac=[{rot:'Declaração',sub:'Montar ou ajustar a frase',acao:()=>sessaoDeclaracao(d)},
+    {rot:'Permissão',sub:'Escutar a voz que duvida',acao:()=>sessaoPermissao(d)},
+    ...abertas.map(g=>({rot:'Retomar dúvida',sub:esc(String(g.duvida).slice(0,90)),acao:()=>sessaoPermissao(d,g)})),
+    {rot:'Menor passo',sub:d.menorPasso?esc(d.menorPasso.texto):'Algo de 5 a 15 minutos',acao:()=>sessaoMenorPasso(d)},
+    {rot:'Editar o texto do desejo',acao:()=>sessaoEditarDesejo(d)},
+    {rot:'Soltar este desejo',sub:'Arquivar e dizer o que ficou no lugar',acao:()=>sessaoSoltarDesejo(d)},
+    {rot:'Apagar de vez',acao:()=>sessaoConfirmar('Apagar de vez?','Isso some pra sempre. Se só não faz mais sentido agora, use Soltar desejo: ele arquiva e pergunta o que ficou no lugar.','Apagar de vez',()=>{S.leiAtracao.desejos=S.leiAtracao.desejos.filter(x=>x.id!==d.id);salva();mostrarToast('Desejo apagado');desejosAtivos().length?sessaoMeusDesejos():sessaoFecharTudo();},()=>sessaoDesejoHub(d))}];
+  sessaoAbrir([{kicker:'Desejo',titulo:'O que você quer fazer agora?',desejo:()=>trTexto(d),
+    html:sessaoOpcoes(ac),bind:r=>sessaoLigarOpcoes(r,ac),
+    botoes:[{rot:'Voltar à lista',acao:sessaoMeusDesejos}]}]);
+}
+function sessaoEditarDesejo(d){
+  sessaoAbrir([{texto:'Editar o desejo',corpo:['Ajuste as palavras até soar como você.'],campo:{key:'novo',ph:'Comece por um verbo, no positivo'},
+    botoes:[{rot:'Cancelar',acao:()=>sessaoDesejoHub(d)},{rot:'Salvar',prim:true,acao:()=>{
+      const v=trSemQuero(_sessao.dados.novo);if(!v){mostrarToast('Escreva o desejo');return;}
+      d.texto=limparTextoDesejo(v)||v;salva();mostrarToast('Desejo atualizado ✓');sessaoDesejoHub(d);}}]}],{novo:trTexto(d)});
+}
+function sessaoSoltarDesejo(d){
+  sessaoAbrir([{img:'calma',texto:'Soltar este desejo',desejo:()=>trTexto(d),
+    corpo:['Às vezes um desejo deixa de fazer sentido, e tudo bem. Soltar não é desistir: é abrir espaço.','Ele fica arquivado. Se quiser, me conte o que ficou no lugar.'],
+    campo:{key:'lugar',ph:'O que ficou no lugar? (opcional)'},
+    botoes:[{rot:'Cancelar',acao:()=>sessaoDesejoHub(d)},{rot:'Soltar',prim:true,acao:()=>{
+      const noLugar=(_sessao.dados.lugar||'').trim();
+      d.arquivado=true;d.arquivadoEm=hoje();d.soltoNoLugar=noLugar;salva();mostrarToast('Desejo arquivado 🍃');
+      if(noLugar){const novo=novoDesejo(d.area||'vontades',paraInfinitivoSugestao(noLugar)||noLugar);novo.veioDeSoltar=d.id;S.leiAtracao.desejos.push(novo);salva();sessaoDesejoHub(novo);}
+      else if(desejosAtivos().length)sessaoMeusDesejos();else sessaoFecharTudo();
+    }}]}]);
+}
+
+/* ---------- Dúvida rápida (anotar sem precisar de nada antes) ---------- */
+function sessaoDuvidaRapida(){
+  const ds=desejosAtivos();
+  sessaoAbrir([{img:'porta',kicker:'Permissão',titulo:'Anotar uma dúvida',
+    corpo:['Anote o que te trava. Quando aparecer um “porque”, ali mora uma crença que limita.','Não precisa resolver agora: só de anotar, ela perde força.'],
+    campo:{key:'duv',ph:'Eu não posso porque…'},
+    html:()=>`<p class="sessao-dica">A que desejo essa dúvida pertence?</p><div class="sessao-areas"><button type="button" class="chip ${!_sessao.dados.dd?'on':''}" data-dd="">Dúvida solta</button>${ds.map(d=>`<button type="button" class="chip ${_sessao.dados.dd===d.id?'on':''}" data-dd="${esc(d.id)}">${esc(trTexto(d))}</button>`).join('')}</div>`,
+    bind:r=>r.querySelectorAll('[data-dd]').forEach(b=>b.onclick=()=>{_sessao.dados.dd=b.dataset.dd;r.querySelectorAll('[data-dd]').forEach(x=>x.classList.toggle('on',x===b));}),
+    botoes:[{rot:'Só anotar',acao:()=>duvidaGuardar(false)},{rot:'Anotar e trabalhar agora',prim:true,acao:()=>duvidaGuardar(true)}]}],{duv:'',dd:''});
+}
+function duvidaGuardar(trabalhar){
+  const dd=_sessao.dados,txt=(dd.duv||'').trim();if(!txt){mostrarToast('Escreva a dúvida');return;}
+  let d=dd.dd?S.leiAtracao.desejos.find(x=>x.id===dd.dd):null;
+  if(!d){d=novoDesejo('vontades','Dúvida solta');d.texto='Dúvida solta';S.leiAtracao.desejos.push(d);}
+  if(!Array.isArray(d.gravetos))d.gravetos=[];
+  const g={id:'g'+Date.now().toString(36),duvida:txt,alivio:'',solto:false,criadoEm:hoje()};d.gravetos.push(g);salva();
+  if(trabalhar){sessaoPermissao(d,g);return;}
+  mostrarToast('Dúvida anotada ✓');sessaoFecharTudo();
 }
 
 /* ============ PRÁTICAS EDITÁVEIS ============ */
