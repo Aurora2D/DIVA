@@ -138,4 +138,12 @@ O `index.html` ficou só com a estrutura da tela e o CSS. O JavaScript do app es
 Regra: o que roda na hora em que o app abre fica em `iniciar.js`. Se uma parte nova usar uma função de outra no carregamento, a outra precisa vir antes na lista dos `<script>` do `index.html`.
 
 ## Abas que abrem aos poucos
-`app/abas.js`. Quem chega novo vê só Hoje. Check-in abre depois de 3 dias com um hábito, Mapa depois de 7, Celebrar e Atração depois do primeiro mapa. Cada uma chega com uma telinha de boas-vindas (`#abaBoasVindasModal`). Quem já usava o app antes continua vendo tudo, e em Configurações existe "Mostrar todas as abas". Para mudar as regras ou os textos, é só editar `ABAS_REGRAS` no começo do arquivo.
+`app/abas.js`. Quem chega novo vê só Hoje. Check-in abre depois de 3 dias com um hábito, Mapa depois de 7, Celebrar depois do primeiro mapa, e a Atração na abertura seguinte do app (para não chegarem duas telinhas juntas; o horário de cada desbloqueio fica em `S.abasLiberadasEm`). Cada uma chega com uma telinha "Você desbloqueou..." com a gatinha dando um pulinho (`#abaBoasVindasModal`). Quem já usava o app antes continua vendo tudo, e em Configurações existe "Mostrar todas as abas". Para mudar as regras ou os textos, é só editar `ABAS_REGRAS` no começo do arquivo.
+
+## Boas-vindas da Diva
+
+`app/boas-vindas.js` e `estilo/boas-vindas.css`. Seis telas com a gatinha antes do cadastro, para quem chega novo (`S.boasVindasVistas`). Dá para rever em Configurações > Conhecer a Diva. Os textos ficam em `BV_TELAS`, no começo do arquivo.
+
+## Sugestões de hábitos para o público geral
+
+Em `app/base.js`: a categoria de cuidado (`FILA_CATEGORIAS`, `cuidado:true`) tem hábitos por tipo de relação (`rel`: criança, idoso, par, outro, todos) e concorda no gênero (`trocaCuidado`, tokens `{nome}`, `{dela}`, `{ela}`). A categoria Arte e prazer é para todo mundo; Música (`musica:true`) só aparece para quem respondeu "Você canta ou toca?" no começo ou ligou em Configurações (`musicaAtiva()`). `filaBase()` monta a fila já filtrada.
