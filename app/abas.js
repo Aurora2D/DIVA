@@ -6,19 +6,19 @@ const ABAS_SESSAO=Date.now();
 const ABAS_REGRAS=[
   {tab:'diario',  ok:()=>(S.habitos||[]).some(h=>Object.keys(h.feitos||{}).length>=3),
    emoji:'📝',titulo:'Você desbloqueou o Check-in!',
-   texto:'3 dias de hábito, diva! Agora você tem um cantinho pra contar como dormiu, comeu e se sentiu, e marcar as práticas do dia. Leva um minutinho e é só seu.',
+   texto:'3 dias de hábito, diva! Você está indo tão bem que abriu uma parte nova pra você: um cantinho pra contar como dormiu, comeu e se sentiu, e marcar as práticas do dia. Leva um minutinho e é só seu.',
    botao:'Conferir agora'},
   {tab:'mapa',    ok:()=>(S.habitos||[]).some(h=>Object.keys(h.feitos||{}).length>=7),
    emoji:'🗺️',titulo:'Você desbloqueou o Mapa emocional!',
-   texto:'Uma semana com você! Agora dá pra fazer o seu primeiro mapa: algumas perguntas que, a cada 21 dias, viram uma carta com o retrato de como você está. Sem nota, sem certo e errado.',
+   texto:'Uma semana com você! Quem chega até aqui merece se olhar mais de perto: agora dá pra fazer o seu primeiro mapa, algumas perguntas que, a cada 21 dias, viram uma carta com o retrato de como você está. Sem nota, sem certo e errado.',
    botao:'Fazer meu mapa'},
   {tab:'celebrar',ok:()=>((S.ciclo&&S.ciclo.historico)||[]).length>=1,
    emoji:'🎁',titulo:'Você desbloqueou o Celebrar!',
-   texto:'Seu primeiro retrato está pronto, e isso merece festa. Aqui ficam os seus prêmios, os que você mesma criar e o seu Livro de Conquistas.',
+   texto:'Seu primeiro retrato está pronto, e foi a sua constância que te trouxe até aqui. Agora você tem um lugar só pras suas vitórias: seus prêmios, os que você mesma criar e o seu Livro de Conquistas.',
    botao:'Conferir agora'},
   {tab:'atracao', ok:()=>{const em=S.abasLiberadasEm&&S.abasLiberadasEm.celebrar;return !!(S.abasLiberadas&&S.abasLiberadas.celebrar)&&(!em||em<ABAS_SESSAO);},
    emoji:'✨',titulo:'Você desbloqueou a Atração!',
-   texto:'Agora que você se conhece um pouco mais, é hora de olhar pro que você quer. São sete sessões pra transformar desejo em primeiro passo, no seu ritmo.',
+   texto:'Você seguiu, e o app seguiu se abrindo junto. Agora que você se conhece um pouco mais, é hora de olhar pro que você quer. São sete sessões pra transformar desejo em primeiro passo, no seu ritmo.',
    botao:'Começar a primeira'}
 ];
 function abasProgressivo(){return S.tabsLiberadas==='progressivo';}
