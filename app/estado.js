@@ -307,7 +307,7 @@ $('onbNome').addEventListener('keydown',e=>{if(e.key==='Enter')$('onbBtn1').clic
 /* "Vamos começar": o primeiro hábito é beber água ao acordar */
 $('onbBtn9').onclick=()=>{
   S.musica=$('onbMusica').checked;
-  if(!S.habitos.some(h=>h.id==='agua'))S.habitos.push({id:'agua',emoji:'💧',emojis:['💧','🥤','✨'],nome:'Beber água ao acordar',paraQue:'Cuidar do meu bem-estar',unidade:'1 copo ao acordar',feitos:{},cor:'c4',grupo:'corpo',dims:['corpo','energia']});
+  if(!S.habitos.some(h=>h.id==='agua'))S.habitos.push({id:'agua',emoji:'💧',emojis:['💧','🥤','✨'],nome:'Beber um copo de água ao acordar',paraQue:'Cuidar do meu bem-estar',unidade:'todo dia',feitos:{},cor:'c4',grupo:'corpo',dims:['corpo','energia']});
   S.proximoHabitoEm=Date.now()+3*86400000;S.habitoTravaId='agua';
   S.onboarding.feito=true;salva();finalizarOnboarding();
   setTimeout(()=>mostrarToast('Seu primeiro hábito já está aqui: beber um copo de água ao acordar 💧'),900);

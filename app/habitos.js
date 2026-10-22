@@ -142,7 +142,7 @@ function renderHabitos(){
   document.querySelectorAll('#progressoBox [data-editar]').forEach(b=>{b.onclick=()=>{const hb=S.habitos.find(x=>x.id===b.dataset.editar);if(hb)abrirHabMenu(hb);};});
 
     const ocultas=new Set(S.habitosFilaOcultas||[]);
-  const GCAT={rituais:'🕯️ Rituais',musica:'🎵 Música',arte:'🎨 Arte e prazer',mente:'🧘 Mente',corpo:'🏃 Corpo',lar:'🏡 Lar doce lar',aurora:'🌙 Ritmo de '+(nomeCuidado()||'{nome}')};
+  const GCAT={rituais:'🕯️ Cuidar de mim',musica:'🎵 Música',arte:'🎨 Arte e prazer',mente:'🧘 Mente',corpo:'🏃 Corpo',lar:'🏡 Lar doce lar',aurora:'🌙 Ritmo de '+(nomeCuidado()||'{nome}')};
   const filaCats=filaCompleta();
   const nomesCats=new Set(filaCats.map(c=>c.nome));
   const sugPorCat={},sugExtras={};
@@ -152,7 +152,7 @@ function renderHabitos(){
     else{const g=todosGrupos().find(x=>x.id===sg.grupo)||{emoji:'🌱',nome:'Outros'};const t=g.emoji+' '+g.nome;(sugExtras[t]=sugExtras[t]||[]).push(sg);}
   });
   const sugRow=sg=>{const g=sg.grupo?todosGrupos().find(x=>x.id===sg.grupo):null;const cat=g?(g.emoji+' '+g.nome):'';return`<div class="cat-sugestao" data-hab-sug="${esc(sg.id)}"><div class="txt"><b>🌱 ${esc(sg.texto)}</b><br><span class="mut">${cat?esc(cat)+' · ':''}veio do seu desejo · na fila</span></div><div class="add">+</div></div>`;};
-  const itemRow=item=>{const jaTem=S.habitos.some(h=>h.nome===item.nome);const instr=[item.paraQue,item.unidade,item.texto].filter(Boolean).filter((v,i,a)=>a.indexOf(v)===i);const sub=instr.length?instr.map(t=>esc(t)).join(' · '):'';return`<div class="cat-sugestao ${jaTem?'ja-tem':''}" data-fila="${esc(item.nome)}"><div class="txt"><b>${item.emoji} ${esc(item.nome)}</b>${sub?`<br><span class="mut">${sub}</span>`:''}</div><div class="add">${jaTem?'✓':'+'}</div></div>`;};
+  const itemRow=item=>{const jaTem=S.habitos.some(h=>h.nome===item.nome||(item.id&&h.id===item.id));const instr=[item.paraQue,item.unidade,item.texto].filter(Boolean).filter((v,i,a)=>a.indexOf(v)===i);const sub=instr.length?instr.map(t=>esc(t)).join(' · '):'';return`<div class="cat-sugestao ${jaTem?'ja-tem':''}" data-fila="${esc(item.nome)}"><div class="txt"><b>${item.emoji} ${esc(item.nome)}</b>${sub?`<br><span class="mut">${sub}</span>`:''}</div><div class="add">${jaTem?'✓':'+'}</div></div>`;};
   const blocoCat=(nome,sugs,itens)=>`<div class="cat-bloco"><div class="cat-titulo">${nome}</div>${sugs.map(sugRow).join('')}${itens.map(itemRow).join('')}</div>`;
   $('sugestoesFilaBox').innerHTML=filaCats.map(cat=>{
     const itens=cat.itens.filter(item=>!ocultas.has(item.nome));
