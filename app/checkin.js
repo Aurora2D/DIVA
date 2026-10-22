@@ -164,7 +164,7 @@ function gerarRelatorio(ci){
   else p3.push('Hoje foi pesado. Tudo bem.');
   const sug=temEscalas?sugerirPraticas(notas,praticas):[];
   let p4='';
-  if(sug.length){const bt=sug.slice(0,4).map(s=>'<button class="sug" data-prat="'+esc(s.key)+'"><span class="g">'+esc(s.grupo)+'</span><span class="n">'+esc(s.label)+'</span></button>').join('');p4='<p><b>Pra somar ao dia:</b><br>'+bt+'</p>';}
+  if(sug.length){const bt=sug.slice(0,4).map(s=>'<button class="sug" data-prat="'+esc(s.key)+'"><span class="g">'+esc(s.grupo)+'</span><span class="n">'+esc(s.label)+'</span></button>').join('');const mom=sug.slice(0,4).map(s=>s.momento).filter(Boolean).filter((v,i,a)=>a.indexOf(v)===i);p4='<p><b>Pra somar ao dia:</b><br>'+bt+'</p>'+(mom.length?'<p class="mut" style="font-size:12px;line-height:1.55">🪞 Do seu quiz: o que você disse que te ajuda quando está '+mom.map(esc).join(', ').replace(/, ([^,]*)$/,' ou $1')+'.</p>':'');}
   let html='<div class="relatorio"><div class="titulo">💭 Leitura do dia</div>';
   if(p1.length)html+='<p>'+p1.join(' ')+'</p>';
   const ch=paragrafoCorpo(ci,notas||{});if(ch)html+=ch;

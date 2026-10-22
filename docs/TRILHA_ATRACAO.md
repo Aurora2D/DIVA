@@ -171,3 +171,12 @@ A pergunta "Você canta ou toca?" saiu do começo: virou um cartão nas sugestõ
 Hábitos (tela Hoje e sugestões), práticas do check-in e o teste usam os mesmos nomes: 💌 Palavras de afirmação, ⏳ Tempo de qualidade, 🎁 Presentes, 🛠️ Atos de serviço e 🤍 Toque físico. Ids dos grupos de hábito: `palavras`, `tempo`, `presentes`, `servico`, `toque` (`GRUPOS` em `app/base.js`). Ficam à parte só Primeiros passos (porta de entrada, nas sugestões), Música (opcional) e Ritmo de quem você cuida.
 
 `app/linguagens.js` converte uma vez o que estava guardado com nomes antigos (grupos de práticas, chaves `grupo|item` dos check-ins, categorias dos hábitos; marca `S.linguagensMigradas`). Os ids antigos (`corpo`, `rituais`, `mente`, `arte`, `lar`) continuam aceitos via `GRUPO_ALIAS`, para partes do código que ainda criem hábitos com eles.
+
+## O quiz vira práticas
+
+`app/quiz-praticas.js` (depois de `premio-pratica.js`). O quiz agora guarda cada resposta (`S.estiloAutocuidado.respostas`, letras A-E na ordem das perguntas). As respostas que são gestos possíveis viram práticas no grupo "🪞 Escolhidas por você no quiz" (textos em `QUIZ_PRATICAS`, por pergunta e alternativa), que fica no topo do check-in. Também são usadas:
+- nota baixa no "Como estou hoje" → sugere a resposta do momento certo (`QUIZ_NOTA`: disposição física → pergunta 11, mental → 1, autoconfiança → 4, casa → 20; humor → 12 e calma → 14 já estão prontos para quando essas notas existirem);
+- marcos de 3, 7 e 21 dias → o mimo sai dessa lista, com peso 4 para as respostas sobre comemorar (perguntas 2, 6, 8, 15 e 21);
+- dicas dos hábitos de água, leitura e movimento (perguntas 16 a 18, `QUIZ_DICAS`);
+- pergunta do campo Observações (24) e frase-guia no resultado (25).
+Quem fez o quiz antes disso (sem respostas guardadas) vê no check-in o convite "Refazer o quiz". Ainda não usadas: 9 e 29 (tom dos lembretes), 10, 23 e 30 (mensagens).
