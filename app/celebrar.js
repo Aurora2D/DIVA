@@ -120,7 +120,7 @@ function renderConfig(){
   $('cfgRowAbas').onclick=()=>$('cfgAbas').click();
   $('cfgRowConhecer').onclick=()=>fecharOverlay($('configModal'),()=>boasVindasDiva());
   $('cfgRowMusica').onclick=()=>$('cfgMusica').click();
-  $('cfgMusica').onchange=()=>{S.musica=$('cfgMusica').checked;salva();renderHabitos();};
+  $('cfgMusica').onchange=()=>{S.musica=$('cfgMusica').checked;salva();renderHabitos();ciRemontar();};
   $('cfgAbas').onchange=()=>{S.tabsLiberadas=$('cfgAbas').checked?'todas':'progressivo';salva();abasAtualizar(false);};
   $('cfgRowSons').onclick=()=>$('cfgSons').click();
   $('cfgSons').onchange=()=>{S.sons={ligado:$('cfgSons').checked};salva();if(S.sons.ligado)som('plim');};

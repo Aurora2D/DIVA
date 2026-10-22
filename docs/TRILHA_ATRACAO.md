@@ -179,4 +179,8 @@ Hábitos (tela Hoje e sugestões), práticas do check-in e o teste usam os mesmo
 - marcos de 3, 7 e 21 dias → o mimo sai dessa lista, com peso 4 para as respostas sobre comemorar (perguntas 2, 6, 8, 15 e 21);
 - dicas dos hábitos de água, leitura e movimento (perguntas 16 a 18, `QUIZ_DICAS`);
 - pergunta do campo Observações (24) e frase-guia no resultado (25).
-No resultado, "Rever quais entram" reabre essa escolha. Quem fez o quiz antes disso (sem respostas guardadas) vê no check-in o convite "Refazer o quiz". Ainda não usadas: 9 e 29 (tom dos lembretes), 10, 23 e 30 (mensagens).
+No resultado, "Rever quais entram" reabre essa escolha. Quem fez o quiz antes disso (sem respostas guardadas) vê no check-in o convite "Refazer o quiz". O tom do quiz também entra nas mensagens: 9 (o lembrete escolhido aparece às vezes na frase do topo da tela Hoje), 29 (num dia sem nota baixa, o check-in faz um convite do tipo que ela pediu), 10 e 30 (mensagens dos marcos de 7 e 21 dias) e 23 (tela de volta depois de um tempo longe).
+
+## Como estou hoje
+
+Notas do check-in: seis pra todo mundo (Disposição física, Disposição mental, Humor, Calma, Casa em ordem, Autoconfiança) e, pra quem canta ou toca, dança, belting e canto lírico (`escalasHoje()` em `app/base.js`). `ESCALAS` guarda também as antigas (organização e limpeza do lar) pra mostrar o histórico. Ligar ou desligar a música refaz o check-in (`ciRemontar` em `app/checkin.js`).

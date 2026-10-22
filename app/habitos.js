@@ -161,7 +161,7 @@ function renderHabitos(){
     if(!itens.length&&!sugs.length)return '';
     return blocoCat(cat.nome,sugs,itens)+(cat.nome==='⏳ Tempo de qualidade'&&!musicaAtiva()&&S.musica!==false?cartaoMusica:'');
   }).join('')+Object.entries(sugExtras).map(([n2,l2])=>blocoCat(n2,l2,[])).join('');
-  const bm=$('btnMostrarMusica');if(bm)bm.onclick=()=>{S.musica=true;salva();renderHabitos();mostrarToast('Sugestões de música à vista 🎵');};
+  const bm=$('btnMostrarMusica');if(bm)bm.onclick=()=>{S.musica=true;salva();renderHabitos();ciRemontar();mostrarToast('Sugestões de música à vista 🎵');};
   document.querySelectorAll('#sugestoesFilaBox [data-fila]').forEach(el=>{
     const ativar=()=>{
       const nome2=el.dataset.fila;

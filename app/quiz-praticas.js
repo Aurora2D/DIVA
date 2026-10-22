@@ -162,3 +162,42 @@ window.quizCardAtualizar=function(){
   }
 };
 quizCardAtualizar();quizAplicarObs();
+
+/* ============ O TOM DO QUIZ NAS MENSAGENS ============ */
+function quizLetra(n){const r=quizRespostas();const c=r&&r[n-1];return c?'ABCDE'.indexOf(c):-1;}
+/* 9: o lembrete que ela escolheu aparece de vez em quando na frase do topo da tela Hoje */
+const QUIZ_LEMBRETE=['Você não precisa fazer tudo perfeitamente.','Pare por cinco minutos e volte para si.','Você também pode incluir algo prazeroso no seu dia.','Uma coisa de cada vez. Dá para simplificar.','Solte os ombros, respire e perceba como o corpo está.'];
+window.frase=(function(orig){return function(){
+  const i=quizLetra(9);
+  if(i<0||Math.random()>0.3)return orig();
+  const el=$('frase');el.style.opacity=0;setTimeout(()=>{el.textContent=QUIZ_LEMBRETE[i];el.style.opacity=1;},250);
+};})(window.frase);
+/* 29: num dia sem nota baixa, o check-in faz um convite do tipo que ela pediu */
+window.sugerirPraticas=(function(orig){return function(notas,praticas){
+  const s=orig(notas,praticas)||[];
+  const i=quizLetra(29);if(i<0||s.some(x=>x.momento))return s;
+  const r=quizRespostas();const cat='ABCDE'[i];
+  const cand=Object.keys(QUIZ_PRATICAS).map(Number).filter(n=>r[n-1]===cat).map(quizPraticaDe).filter(t=>t&&(S.praticas[QUIZ_GRUPO]||[]).includes(t)&&!(praticas||{})[QUIZ_GRUPO+'|'+t]);
+  if(!cand.length)return s;
+  const t=cand[new Date().getDate()%cand.length];const key=QUIZ_GRUPO+'|'+t;
+  return [{key,label:t,grupo:QUIZ_GRUPO,convite:true}].concat(s.filter(x=>x.key!==key));
+};})(window.sugerirPraticas);
+/* 10 e 30: nos marcos de 7 e 21 dias, a mensagem lembra o que ela disse que importa */
+const QUIZ_ROTINA=['sentir que reconhece os seus esforços pelo caminho','ter espaço real para o que te dá sentido','incluir pequenos prazeres nos dias','sentir a vida mais leve e administrável','se sentir bem e confortável no corpo'];
+const QUIZ_UM_MES=['aprendido a reconhecer o seu valor e o seu esforço','protegido tempo para o que te faz bem','incluído mais prazer e beleza nos dias comuns','tornado a vida mais fácil','desenvolvido mais cuidado com as sensações do corpo'];
+window.extraMarco=(function(orig){return function(hb){
+  let h=orig(hb)||'';
+  const n=Object.keys((hb&&hb.feitos)||{}).length;
+  if(n===7){const i=quizLetra(10);if(i>=0)h+=`<div class="msg-convite" style="margin-top:8px">🪞 Lá no quiz você disse que, numa rotina, o que mais importa é ${esc(QUIZ_ROTINA[i])}. Sete dias disso já é um começo de verdade.</div>`;}
+  if(n>=21){const i=quizLetra(30);if(i>=0)h+=`<div class="msg-convite" style="margin-top:8px">🪞 Lá no quiz você disse que um hábito valeria a pena se você tivesse ${esc(QUIZ_UM_MES[i])}. Olha você chegando lá.</div>`;}
+  return h;
+};})(window.extraMarco);
+/* 23: na volta depois de um tempo longe, lembra o que a mantém no caminho */
+const QUIZ_CAMINHO=['registrar o progresso e lembrar que aprender leva tempo','apreciar o processo, não só o resultado','deixar a prática mais gostosa','dividir tudo em etapas pequenas e claras','fazer pausas e respeitar o ritmo do corpo'];
+if(typeof DV_TEXTOS!=='undefined'){
+  window.deVolta=(function(orig){return function(depois){
+    const i=quizLetra(23);const base=DV_TEXTOS.abertura;
+    if(i>=0)DV_TEXTOS.abertura=base+' E você disse no quiz que, quando a evolução parece lenta, o que te mantém no caminho é '+QUIZ_CAMINHO[i]+'.';
+    try{return orig(depois);}finally{DV_TEXTOS.abertura=base;}
+  };})(window.deVolta);
+}
