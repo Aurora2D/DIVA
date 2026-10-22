@@ -280,7 +280,7 @@ function iniciarOnboarding(){
   mostrarOnbPasso(1);
 }
 function mostrarOnbPasso(p){
-  [1,2,3,4,5,6].forEach(i=>$('onbP'+i).hidden=i!==p);
+  [1,2,3,4,5,6,7].forEach(i=>$('onbP'+i).hidden=i!==p);
   if(p===6){$('onbTit6').textContent=(S.onboarding.nome?S.onboarding.nome+', você':'Você')+' cuida de alguém no dia a dia?';$('onbCuidaRel').innerHTML=RELACOES.map(r=>`<option value="${r}">${r}</option>`).join('');}
   if(p===1)setTimeout(()=>$('onbNome').focus(),200);
   if(p===2)$('onbTit2').textContent=(S.onboarding.nome||'Ei')+', vamos começar pequeno';
@@ -299,9 +299,11 @@ $('onbCuidaSim').onclick=()=>{
   const box=$('onbCuidaCampos');
   if(box.hidden){box.hidden=false;$('onbCuidaSim').textContent='Continuar';setTimeout(()=>$('onbCuidaNome').focus(),150);return;}
   const n=$('onbCuidaNome').value.trim();if(!n){$('onbCuidaNome').focus();return;}
-  definirCuidado(true,n,$('onbCuidaRel').value);mostrarOnbPasso(2);
+  definirCuidado(true,n,$('onbCuidaRel').value);mostrarOnbPasso(7);
 };
-$('onbCuidaNao').onclick=()=>{definirCuidado(false);mostrarOnbPasso(2);};
+$('onbCuidaNao').onclick=()=>{definirCuidado(false);mostrarOnbPasso(7);};
+$('onbMusicaSim').onclick=()=>{S.musica=true;salva();mostrarOnbPasso(2);};
+$('onbMusicaNao').onclick=()=>{S.musica=false;salva();mostrarOnbPasso(2);};
 $('onbNome').addEventListener('keydown',e=>{if(e.key==='Enter')$('onbBtn1').click();});
 $('onbBtn2').onclick=()=>{
   if(!S.habitos.some(h=>h.id==='agua'))S.habitos.push({id:'agua',emoji:'💧',emojis:['💧','🥤','✨'],nome:'Beber água ao acordar',paraQue:'Cuidar do meu bem-estar',unidade:'1 copo ao acordar',feitos:{},cor:'c4',grupo:'corpo',dims:['corpo','energia']});

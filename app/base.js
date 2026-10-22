@@ -150,7 +150,7 @@ const FRASES_HABITO={batom:["Eu passei batom hoje, e a psiquiatra que se foda.",
 let fraseTimeout;
 function mostrarFraseHabito(id){let arr=FRASES_HABITO[id];if(id==='pijama'){if(!cuida()||!['filha','filho'].includes(S.cuidado.relacao)){frase();return;}arr=arr.map(t=>t.replace(/Aurora/g,nomeCuidado()));}if(!arr||!arr.length){frase();return;}const el=$('frase');el.style.opacity=0;clearTimeout(fraseTimeout);setTimeout(()=>{el.textContent=arr[Math.floor(Math.random()*arr.length)];el.style.opacity=1;fraseTimeout=setTimeout(frase,6000);},250);}
 function todosGrupos(){return GRUPOS.map(g=>g.id==='aurora'?{...g,nome:cuida()?'Ritmo de '+nomeCuidado():'Ritmo de quem eu cuido'}:g).concat(Array.isArray(S.gruposCustom)?S.gruposCustom:[]);}
-const GRUPOS=[{id:'essencial',emoji:'🎯',nome:'Essenciais'},{id:'musica',emoji:'🎵',nome:'Música'},{id:'mente',emoji:'🧘',nome:'Mente'},{id:'corpo',emoji:'🏃',nome:'Corpo'},{id:'rituais',emoji:'🕯️',nome:'Rituais'},{id:'lar',emoji:'🏡',nome:'Lar'},{id:'aurora',emoji:'🌙',nome:'Ritmo da Aurora'},{id:'outros',emoji:'✨',nome:'Outros'}];
+const GRUPOS=[{id:'essencial',emoji:'🎯',nome:'Essenciais'},{id:'musica',emoji:'🎵',nome:'Música'},{id:'arte',emoji:'🎨',nome:'Arte e prazer'},{id:'mente',emoji:'🧘',nome:'Mente'},{id:'corpo',emoji:'🏃',nome:'Corpo'},{id:'rituais',emoji:'🕯️',nome:'Rituais'},{id:'lar',emoji:'🏡',nome:'Lar'},{id:'aurora',emoji:'🌙',nome:'Ritmo da Aurora'},{id:'outros',emoji:'✨',nome:'Outros'}];
 const grupoDe=h=>h.grupo||'essencial';
 let PRATICAS={'🎤 Treino vocal':['Respiração','Aquecimento vocal','Canto'],'🤍 Contato físico':['Auto-cafuné','Auto-massagem','Creme no corpo','Carinho no Pituca','Carinho na Nica','Banho relaxante','Música enquanto se arruma','Bebida especial','Roupa de cama limpa','Perfume favorito','Batom','Hidratação nos cabelos','Peça de roupa favorita','Joia ou acessório especial'],'🎡 Tempo de qualidade':['Vídeos no YouTube','Música','Dança','Meditação','Jardim do prédio','Culinária','Filme com pipoca','Livro divertido','Caminhada no quarteirão','Viagem','Apreciação da beleza de dentro de casa','Canva por hobby','Direção','Videogame','Duolingo / curso de inteligência emocional','Caminhada no parque','Louça / arrumação da casa','Canto'],'💌 Palavras de incentivo':['Questionário','Conversa com amigos','Terapia','Canto das minhas músicas','Escrita no caderno','Leitura do caderno','Curso online','Livro revigorante','Vídeos da Ana Beatriz']};
 /* Catálogo por estilo: as 2 primeiras aparecem sem teste; depois do teste o estilo principal abre 8 e o secundário 5 */
@@ -177,7 +177,16 @@ const FILA_CATEGORIAS=[{nome:'🌱 Primeiros passos',itens:[
   {nome:'Passar creme no rosto e protetor solar',emoji:'🧴',unidade:'1 vez ao dia',paraQue:'Cuidar de mim',grupo:'rituais',texto:'Um gesto pequeno de cuidado com a pele. Antes de dormir, ou depois do banho.',dims:['corpo','autopercepcao']},
   {nome:'Fazer skincare à noite',emoji:'✨',unidade:'1 vez ao dia',paraQue:'Fechar o dia com carinho',grupo:'rituais',texto:'Poucos minutos só pra você, sem pressa.',dims:['corpo','prazer']},
   {nome:'Hidratar os cabelos',emoji:'💆',unidade:'1×/semana',paraQue:'Cuidar do meu corpo',grupo:'rituais',texto:'Um ritual que também é pausa.',dims:['corpo','prazer']}
-]},{nome:'🎵 Música',itens:[
+]},{nome:'🎨 Arte e prazer',itens:[
+  {nome:'Ouvir uma música que eu amo',emoji:'🎧',unidade:'5 min/dia',paraQue:'Me dar um presente pequeno',grupo:'arte',texto:'Uma música inteira, prestando atenção só nela.',dims:['prazer','regulacao']},
+  {nome:'Dançar uma música',emoji:'💃',unidade:'3×/semana',paraQue:'Soltar o corpo',grupo:'arte',texto:'Na sala, no quarto, do jeito que sair. Ninguém está olhando.',dims:['corpo','prazer','energia']},
+  {nome:'Desenhar ou pintar',emoji:'🎨',unidade:'2×/semana',paraQue:'Brincar com cor e forma',grupo:'arte',texto:'Sem compromisso de ficar bonito. O que vale é a mão em movimento.',dims:['prazer','regulacao']},
+  {nome:'Escrever uma página',emoji:'✍️',unidade:'3×/semana',paraQue:'Botar a cabeça no papel',grupo:'arte',texto:'Sobre qualquer coisa: o dia, uma lembrança, uma ideia solta.',dims:['autopercepcao','regulacao']},
+  {nome:'Ler 10 páginas',emoji:'📚',unidade:'1 vez ao dia',paraQue:'Viajar um pouco',grupo:'arte',texto:'De algo que você gosta, não do que acha que deveria ler.',dims:['prazer','direcao']},
+  {nome:'Fotografar uma coisa bonita',emoji:'📷',unidade:'1 vez ao dia',paraQue:'Treinar o olhar',grupo:'arte',texto:'No caminho, em casa, na janela. Procurar o bonito muda o dia.',dims:['prazer','autopercepcao']},
+  {nome:'Fazer algo com as mãos',emoji:'🧶',unidade:'1×/semana',paraQue:'Criar alguma coisa',grupo:'arte',texto:'Crochê, bordado, argila, montar, consertar. A cabeça descansa quando a mão trabalha.',dims:['prazer','regulacao']},
+  {nome:'Cozinhar uma receita nova',emoji:'🍳',unidade:'1×/semana',paraQue:'Cozinhar por prazer',grupo:'arte',texto:'Não é obrigação do almoço. É curiosidade, cheiro e sabor novo.',dims:['prazer','corpo']}
+]},{nome:'🎵 Música',musica:true,itens:[
   {nome:'Cantar',emoji:'🎤',unidade:'20 min/dia',paraQue:'Deixar a voz viva',grupo:'musica',texto:'Vinte minutos por dia.',dims:['prazer','autopercepcao','regulacao']},
   {nome:'Fazer vocalize',emoji:'🎵',unidade:'15 min, 4×/semana',paraQue:'Cuidar do instrumento',grupo:'musica',texto:'Quinze minutos, quatro vezes por semana.',dims:['corpo','regulacao']},
   {nome:'Estudar repertório',emoji:'📖',unidade:'30 min, 3×/semana',paraQue:'Construir meu canto',grupo:'musica',texto:'Escolher uma música, quebrar em pedaços.',dims:['direcao','autopercepcao']}
@@ -196,9 +205,37 @@ const FILA_CATEGORIAS=[{nome:'🌱 Primeiros passos',itens:[
   {nome:'Falar com uma amiga',emoji:'💬',unidade:'1×/semana',paraQue:'Cultivar conexão',grupo:'outros',texto:'Uma conversa de verdade, sem pressa.',dims:['conexao','prazer']},
   {nome:'Receber alguém em casa',emoji:'🏠',unidade:'1×/mês',paraQue:'Abrir minha casa e minha vida',grupo:'outros',texto:'Um café, um vinho, uma conversa.',dims:['conexao','prazer']}
 ]},{nome:'🌙 Ritmo de {nome}',cuidado:true,itens:[
-  {nome:'Vestir {nome} de pijama pra dormir',emoji:'🌙',unidade:'1 vez',paraQue:'Cuidar da rotina dela',grupo:'aurora',texto:'Um gesto pequeno que muda a noite dela e a sua.',dims:['regulacao','corpo']},
-  {nome:'Fazer {nome} dormir no horário combinado',emoji:'🌙',unidade:'só depois de 21 dias do pijama',paraQue:'Cuidar do sono dela',grupo:'aurora',texto:'Rotina boa se constrói degrau por degrau.',dims:['regulacao','corpo']}
+  {nome:'Vestir {nome} de pijama pra dormir',rel:'crianca',emoji:'🌙',unidade:'1 vez',paraQue:'Cuidar da rotina {dela}',grupo:'aurora',texto:'Um gesto pequeno que muda a noite {dela} e a sua.',dims:['regulacao','corpo']},
+  {nome:'Fazer {nome} dormir no horário combinado',rel:'crianca',emoji:'🌙',unidade:'só depois de 21 dias do pijama',paraQue:'Cuidar do sono {dela}',grupo:'aurora',texto:'Rotina boa se constrói degrau por degrau.',dims:['regulacao','corpo']},
+  {nome:'Ler uma história pra {nome} antes de dormir',rel:'crianca',emoji:'📖',unidade:'3×/semana',paraQue:'Criar um momento nosso',grupo:'aurora',texto:'Poucos minutos de história e a noite fica mais mansa pra vocês.',dims:['conexao','regulacao']},
+  {nome:'Brincar com {nome} sem celular',rel:'crianca',emoji:'🧸',unidade:'15 min, 1 vez ao dia',paraQue:'Estar presente de verdade',grupo:'aurora',texto:'Quinze minutos inteiros valem mais que uma tarde distraída.',dims:['conexao','prazer']},
+  {nome:'Separar os remédios da semana de {nome}',rel:'idoso',emoji:'💊',unidade:'1×/semana',paraQue:'Cuidar da saúde {dela}',grupo:'aurora',texto:'Uma caixinha organizada tira um peso da cabeça de vocês.',dims:['sobrecarga','direcao']},
+  {nome:'Tomar um café com {nome}, sem pressa',rel:'idoso',emoji:'☕',unidade:'2×/semana',paraQue:'Estar junto de verdade',grupo:'aurora',texto:'Sentar, conversar e não resolver nada. Só companhia.',dims:['conexao','prazer']},
+  {nome:'Caminhar um pouquinho com {nome}',rel:'idoso',emoji:'🚶',unidade:'quando der',paraQue:'Mover o corpo junto',grupo:'aurora',texto:'Um passeio curto faz bem pro corpo de vocês.',dims:['corpo','conexao']},
+  {nome:'Perguntar como {nome} dormiu',rel:'idoso',emoji:'🌤️',unidade:'1 vez ao dia',paraQue:'Acompanhar como {ela} está',grupo:'aurora',texto:'Uma pergunta simples que diz: eu estou vendo você.',dims:['conexao']},
+  {nome:'Jantar com {nome} sem celular',rel:'par',emoji:'🍷',unidade:'2×/semana',paraQue:'Cuidar da nossa relação',grupo:'aurora',texto:'Uma refeição inteira olhando pra quem está na sua frente.',dims:['conexao','prazer']},
+  {nome:'Perguntar como foi o dia de {nome} e ouvir até o fim',rel:'par',emoji:'💬',unidade:'1 vez ao dia',paraQue:'Escutar de verdade',grupo:'aurora',texto:'Ouvir sem já ir preparando a resposta.',dims:['conexao']},
+  {nome:'Ter um momento só meu e de {nome}',rel:'outro',emoji:'🤍',unidade:'1×/semana',paraQue:'Estar junto de verdade',grupo:'aurora',texto:'Sem tarefa, sem pressa, só companhia.',dims:['conexao','prazer']},
+  {nome:'Organizar a semana de {nome}',rel:'outro',emoji:'🗓️',unidade:'1×/semana',paraQue:'Dar conta com menos aperto',grupo:'aurora',texto:'Ver a semana inteira de uma vez evita a correria do dia.',dims:['sobrecarga','direcao']},
+  {nome:'Combinar um revezamento ou pedir ajuda',rel:'todos',emoji:'🤝',unidade:'1×/semana',paraQue:'Não cuidar sozinha',grupo:'aurora',texto:'Dividir o cuidado também é cuidar.',dims:['sobrecarga','conexao']},
+  {nome:'Ter um tempo só meu enquanto {nome} descansa',rel:'todos',emoji:'🫖',unidade:'15 min, quando der',paraQue:'Cuidar de quem cuida',grupo:'aurora',texto:'Você também precisa de um intervalo.',dims:['sobrecarga','prazer']}
 ]}];
+/* a categoria de cuidado muda conforme a relação com quem a pessoa cuida */
+const REL_TIPO={filha:'crianca',filho:'crianca','mãe':'idoso',pai:'idoso','avó':'idoso','avô':'idoso','irmã':'outro','irmão':'outro',companheira:'par',companheiro:'par','outra pessoa':'outro'};
+const REL_FEM=['filha','mãe','avó','irmã','companheira'],REL_MASC=['filho','pai','avô','irmão','companheiro'];
+function musicaAtiva(){if(typeof S.musica==='boolean')return S.musica;return !!(S.perfilOriginal||(S.habitos||[]).some(h=>h.grupo==='musica'));}
+function trocaCuidado(t){
+  const n=nomeCuidado(),r=(S.cuidado&&S.cuidado.relacao)||'';
+  const f=REL_FEM.includes(r),m=REL_MASC.includes(r);
+  return String(t||'').replace(/\{nome\}/g,n).replace(/\{dela\}/g,f?'dela':m?'dele':'de '+n).replace(/\{ela\}/g,f?'ela':m?'ele':n);
+}
+/* fila sem os "que já foram seus": só o que faz sentido pra esta pessoa, com nomes já trocados */
+function filaBase(){
+  const tipo=cuida()?(REL_TIPO[S.cuidado.relacao]||'outro'):null;
+  return FILA_CATEGORIAS
+    .filter(c=>(!c.cuidado||tipo)&&(!c.musica||musicaAtiva()))
+    .map(c=>c.cuidado?{...c,nome:trocaCuidado(c.nome),itens:c.itens.filter(i=>i.rel==='todos'||i.rel===tipo).map(i=>({...i,nome:trocaCuidado(i.nome),paraQue:trocaCuidado(i.paraQue),texto:trocaCuidado(i.texto)}))}:c);
+}
 function AREAS_INICIAIS(){
   return[
     {id:'patrimonio',nome:'🏠 Patrimônio',contraste:[],clareza:[]},

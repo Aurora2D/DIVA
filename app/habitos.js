@@ -45,9 +45,7 @@ function adicionarHabitoFila(item){
   salva();confete([item.emoji,'✨','🌸']);renderHoje();renderHabitos();
 }
 function filaCompleta(){
-  const n=nomeCuidado();
-  const troca=t=>String(t||'').replace(/\{nome\}/g,n);
-  const base=FILA_CATEGORIAS.filter(c=>!c.cuidado||(cuida()&&['filha','filho'].includes(S.cuidado.relacao))).map(c=>c.cuidado?{...c,nome:troca(c.nome),itens:c.itens.map(i=>({...i,nome:troca(i.nome)}))}:c);
+  const base=filaBase();
   const nomes=new Set(base.flatMap(c=>c.itens.map(i=>i.nome)));
   const extras=Object.entries(S.historicoRemovidos||{})
     .filter(([n,v])=>v&&v.meta&&!nomes.has(n)&&!S.habitos.some(h=>h.nome===n))
@@ -144,7 +142,7 @@ function renderHabitos(){
   document.querySelectorAll('#progressoBox [data-editar]').forEach(b=>{b.onclick=()=>{const hb=S.habitos.find(x=>x.id===b.dataset.editar);if(hb)abrirHabMenu(hb);};});
 
     const ocultas=new Set(S.habitosFilaOcultas||[]);
-  const GCAT={rituais:'🕯️ Rituais',musica:'🎵 Música',mente:'🧘 Mente',corpo:'🏃 Corpo',lar:'🏡 Lar doce lar',aurora:'🌙 Ritmo de '+(nomeCuidado()||'{nome}')};
+  const GCAT={rituais:'🕯️ Rituais',musica:'🎵 Música',arte:'🎨 Arte e prazer',mente:'🧘 Mente',corpo:'🏃 Corpo',lar:'🏡 Lar doce lar',aurora:'🌙 Ritmo de '+(nomeCuidado()||'{nome}')};
   const filaCats=filaCompleta();
   const nomesCats=new Set(filaCats.map(c=>c.nome));
   const sugPorCat={},sugExtras={};

@@ -7,7 +7,7 @@ function sugerirHabitosDoMapa(resumo){
   if(!baixas.length)return [];
   const top3=baixas.slice(0,3).map(([k])=>k);
   const itens=[];
-  FILA_CATEGORIAS.forEach(cat=>cat.itens.forEach(it=>{
+  filaBase().forEach(cat=>cat.itens.forEach(it=>{
     const dims=it.dims||[];
     const bate=dims.some(d=>top3.includes(d));
     if(bate){
@@ -129,7 +129,7 @@ function renderCiclo(){
   document.querySelectorAll('#cicloBox [data-mapa-habito]').forEach(el=>{el.onclick=()=>{
     const nome2=el.dataset.mapaHabito;
     if(S.habitos.some(h=>h.nome===nome2)){avisar('Você já tem esse hábito. 💛');return;}
-    const item=FILA_CATEGORIAS.flatMap(c=>c.itens).find(i=>i.nome===nome2);
+    const item=filaBase().flatMap(c=>c.itens).find(i=>i.nome===nome2);
     if(!item)return;
     if(S.habitos.some(h=>!h.pausado) && !habitoLiberado()){
       const dias=diasAteLiberar();

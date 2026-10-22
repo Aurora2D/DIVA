@@ -55,7 +55,7 @@ function renderMenorPassoHoje(){
 
 /* ============ ÍCONES DOS HÁBITOS ============ */
 const ICONES_HAB=['batom','risada','agua','lua','frasco','atracao','nota','micro','livro','lotus','vento','haltere','pegadas','vassoura','prato','pote','casa','relato','coracao','vela','broto','alvo','comemora','lapis'];
-const EMOJI_ICONE={'💄':'batom','💋':'batom','😄':'risada','😂':'risada','🤣':'risada','😊':'risada','💧':'agua','🥤':'agua','🌙':'lua','🧴':'frasco','💆':'frasco','✨':'atracao','⭐':'atracao','💫':'atracao','🎵':'nota','🎶':'nota','🎤':'micro','📖':'livro','📚':'livro','🧘':'lotus','🌬️':'vento','💪':'haltere','🚶':'pegadas','🏃':'pegadas','🧹':'vassoura','🍽️':'prato','🍱':'pote','💬':'relato','🏠':'casa','🏡':'casa','💛':'coracao','💜':'coracao','❤️':'coracao','🕯️':'vela','🌱':'broto','🎯':'alvo','🎉':'comemora','✍️':'lapis','📝':'lapis'};
+const EMOJI_ICONE={'💄':'batom','💋':'batom','😄':'risada','😂':'risada','🤣':'risada','😊':'risada','💧':'agua','🥤':'agua','🌙':'lua','🧴':'frasco','💆':'frasco','✨':'atracao','⭐':'atracao','💫':'atracao','🎵':'nota','🎶':'nota','🎤':'micro','📖':'livro','📚':'livro','🧘':'lotus','🌬️':'vento','💪':'haltere','🚶':'pegadas','🏃':'pegadas','🧹':'vassoura','🍽️':'prato','🍱':'pote','💬':'relato','🏠':'casa','🏡':'casa','💛':'coracao','💜':'coracao','❤️':'coracao','🕯️':'vela','🌱':'broto','🎯':'alvo','🎉':'comemora','✍️':'lapis','📝':'lapis','🎨':'paleta','🎧':'nota','💃':'pegadas','📷':'olho','🧶':'paleta','🍳':'prato','🧸':'coracao','💊':'frasco','☕':'xicara','🌤️':'hoje','🍷':'prato','🤝':'pessoas','🗓️':'calendario','🫖':'xicara','🤍':'coracao'};
 const svgIc=n=>`<svg class="ic"><use href="#i-${n}"/></svg>`;
 function iconePorEmoji(e){const n=EMOJI_ICONE[(e||'').trim()];return n?svgIc(n):esc(e||'⭐');}
 function iconeHab(hb){
@@ -386,7 +386,7 @@ function montarDeclaracaoHabito(hb){
   linhas.push(esc(FECHAMENTO_FIXO));
   return linhas;
 }
-const GRUPO_PARA_AREA={corpo:'bemestar',mente:'bemestar',rituais:'bemestar',musica:'carreira',lar:'patrimonio',aurora:'relMeu',essencial:'bemestar',outros:'bemestar'};
+const GRUPO_PARA_AREA={corpo:'bemestar',mente:'bemestar',rituais:'bemestar',musica:'carreira',arte:'bemestar',lar:'patrimonio',aurora:'relMeu',essencial:'bemestar',outros:'bemestar'};
 function relatoLevarAtracao(hb){
   const fr=relatoFrasesUnicas(hb);if(!fr.length){avisar('Ainda não há frases suas sobre esse hábito.');return;}
   const acao=acaoDoHabito(hb);

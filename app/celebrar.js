@@ -94,6 +94,7 @@ function renderConfig(){
     +`</div>`;
   h+=`<div class="cfg-grupo-tit">Experiência</div><div class="cfg-grupo">`
     +row('cfgRowAbas','mapa','Mostrar todas as abas<small>Por padrão elas abrem aos poucos</small>','',sw('cfgAbas',S.tabsLiberadas!=='progressivo'))
+    +row('cfgRowMusica','nota','Sugestões de música<small>Pra quem canta ou toca</small>','',sw('cfgMusica',musicaAtiva()))
     +row('cfgRowSons','sino','Sons<small>Ao marcar hábitos e comemorar</small>','',`<span class="cfg-mini" id="btnOuvirSons">Ouvir</span>`+sw('cfgSons',somLigado()))
     +`</div>`;
   h+=`<div class="cfg-grupo-tit">Seu histórico</div><div class="cfg-grupo">`
@@ -116,6 +117,8 @@ function renderConfig(){
   $('cfgRowLemb').onclick=()=>{renderLembretes();abrirOverlayTopo($('lembretesModal'));};
   $('cfgRowSaude').onclick=abrirCuidados;
   $('cfgRowAbas').onclick=()=>$('cfgAbas').click();
+  $('cfgRowMusica').onclick=()=>$('cfgMusica').click();
+  $('cfgMusica').onchange=()=>{S.musica=$('cfgMusica').checked;salva();renderHabitos();};
   $('cfgAbas').onchange=()=>{S.tabsLiberadas=$('cfgAbas').checked?'todas':'progressivo';salva();abasAtualizar(false);};
   $('cfgRowSons').onclick=()=>$('cfgSons').click();
   $('cfgSons').onchange=()=>{S.sons={ligado:$('cfgSons').checked};salva();if(S.sons.ligado)som('plim');};
