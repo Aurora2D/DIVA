@@ -4,7 +4,7 @@ function atualizaStatusCheckin(){
   const nSono=(ci.dormiu?1:0)+(ci.acordou?1:0);
   const elS=$('stSono');if(elS){elS.textContent=nSono===2?'✓':nSono+'/2';elS.className='ci-status '+(nSono===2?'completo':nSono>0?'parcial':'');}
     const nRef=(ci.refeicoes||[]).length;const elR=$('stRef');if(elR){elR.textContent=nRef>0?'✓ '+nRef:'0';elR.className='ci-status '+(nRef>0?'completo':'');}
-  const nEsc=ci.escalas?Object.values(ci.escalas).filter(v=>v!==undefined&&v!==null).length:0;const elSc=$('stEsc');if(elSc){elSc.textContent=nEsc===8?'✓':nEsc+'/8';elSc.className='ci-status '+(nEsc===8?'completo':nEsc>0?'parcial':'');}
+  const nEsc=ci.escalas?Object.values(ci.escalas).filter(v=>v!==undefined&&v!==null).length:0;const elSc=$('stEsc');if(elSc){const nTot=escalasHoje().length;elSc.textContent=nEsc>=nTot?'✓':nEsc+'/'+nTot;elSc.className='ci-status '+(nEsc>=nTot?'completo':nEsc>0?'parcial':'');}
   const nPrat=ci.praticas?Object.keys(ci.praticas).length:0;const elP=$('stPrat');if(elP){elP.textContent=nPrat>0?'✓ '+nPrat:'0';elP.className='ci-status '+(nPrat>0?'completo':'');}
   const temObs=(ci.observacoes||'').trim().length>0;const elO=$('stObs');if(elO){elO.textContent=temObs?'✓':'0';elO.className='ci-status '+(temObs?'completo':'');}
 }
@@ -75,7 +75,7 @@ function montaCheckin(){
   upHoras();
   $('ciRefeicoes').innerHTML=REFEICOES.map(r=>{const on=(ci.refeicoes||[]).includes(r);return`<button type="button" class="chip ${on?'on':''}" data-ref="${esc(r)}">${esc(r)}</button>`;}).join('');
   $('ciRefeicoes').onclick=e=>{const b=e.target.closest('[data-ref]');if(!b)return;const r=b.dataset.ref;ci.refeicoes=ci.refeicoes||[];const i=ci.refeicoes.indexOf(r);if(i>=0)ci.refeicoes.splice(i,1);else ci.refeicoes.push(r);b.classList.toggle('on');salva();atualizaStatusCheckin();atualizaRelatorio();renderCheckinResumos();renderDiario();};
-  $('ciEscalas').innerHTML=ESCALAS.map(([k,rot])=>{const v=ci.escalas?.[k]||0;return`<div class="escala" data-esc="${k}"><div class="rot">${esc(rot)}</div><div class="nums">${[1,2,3,4,5,6,7,8,9,10].map(n=>`<button type="button" class="num ${v===n?'on':''}" data-n="${n}">${n}</button>`).join('')}</div></div>`;}).join('');
+  $('ciEscalas').innerHTML=escalasHoje().map(([k,rot])=>{const v=ci.escalas?.[k]||0;return`<div class="escala" data-esc="${k}"><div class="rot">${esc(rot)}</div><div class="nums">${[1,2,3,4,5,6,7,8,9,10].map(n=>`<button type="button" class="num ${v===n?'on':''}" data-n="${n}">${n}</button>`).join('')}</div></div>`;}).join('');
   $('ciEscalas').onclick=e=>{const b=e.target.closest('[data-n]');if(!b)return;const escEl=b.closest('[data-esc]');if(!escEl)return;const k=escEl.dataset.esc,n=+b.dataset.n;ci.escalas=ci.escalas||{};ci.escalas[k]=(ci.escalas[k]===n)?undefined:n;salva();escEl.querySelectorAll('.num').forEach(x=>x.classList.toggle('on',+x.dataset.n===ci.escalas[k]));b.classList.add('salvo-flash');setTimeout(()=>b.classList.remove('salvo-flash'),500);atualizaStatusCheckin();atualizaRelatorio();renderCheckinResumos();renderDiario();};
   renderPraticasCheckin();
   const obs=$('ciObs');obs.value=ci.observacoes||'';obs.oninput=()=>{$('obsFeedback').textContent='Toque em ✓ Salvar pra guardar.';};
@@ -140,10 +140,10 @@ function gerarRelatorio(ci){
   if(!temEscalas&&!temCorpo)return'';
   const entradas=temEscalas?Object.entries(notas).filter(([k,n])=>typeof n==='number'&&n>=1):[];
   const banda_=n=>n>=7?'alta':n>=4?'media':'baixa';
-  const NOMES={danca:'dança',fisica:'disposição física',mental:'disposição mental',organizacao:'organização do lar',limpeza:'limpeza do lar',belting:'Belting',lirico:'canto lírico',autoconf:'autoconfiança'};
+  const NOMES={humor:'humor',calma:'calma',casa:'casa em ordem',linguagem:'cuidado do seu jeito',danca:'dança',fisica:'disposição física',mental:'disposição mental',organizacao:'organização do lar',limpeza:'limpeza do lar',belting:'Belting',lirico:'canto lírico',autoconf:'autoconfiança'};
   const nTotal=entradas.length;const altas=entradas.filter(([,n])=>banda_(n)==='alta');
   const p1=[];
-  if(nTotal===8)p1.push('Hoje você parou e se olhou por inteiro. Isso, por si só, é um ato de coragem.');
+  if(nTotal>=escalasHoje().length)p1.push('Hoje você parou e se olhou por inteiro. Isso, por si só, é um ato de coragem.');
   else if(nTotal>=6)p1.push('Hoje você se olhou com cuidado.');
   else if(nTotal>=3)p1.push('Você começou a se olhar hoje. Sem pressa.');
   else if(nTotal>=1)p1.push('Cada nota que você marcou é um jeito de se enxergar.');
@@ -151,8 +151,8 @@ function gerarRelatorio(ci){
   if((ci.emocao||'').trim())p1.push('Hoje você se sentiu <b>'+esc(ci.emocao.trim())+'</b>.');
   if(altas.length>=1&&altas.length<=2)p1.push('E hoje brilhou em <b>'+altas.map(([k])=>NOMES[k]).join(' e ')+'</b>.');
   else if(altas.length>=3)p1.push('Vários cantos vieram altos — <b>'+altas.slice(0,4).map(([k])=>NOMES[k]).join(', ')+'</b>.');
-  const FF={fisica:{alta:'seu corpo veio com energia',media:'seu corpo está respondendo',baixa:'seu corpo pediu pausa'},danca:{alta:'a dança está viva em você',media:'a dança vem aparecendo',baixa:'a dança te espera'},mental:{alta:'sua mente veio clara',media:'sua mente está processando',baixa:'sua mente está pesada'},autoconf:{alta:'sua autoconfiança está alta',media:'sua autoconfiança está se firmando',baixa:'a autoconfiança baixa de hoje não apaga nada'},organizacao:{alta:'a casa respira organizada',media:'a organização está encontrando ritmo',baixa:'a casa pode esperar'},limpeza:{alta:'a limpeza reflete carinho',media:'a limpeza vai chegando',baixa:'a limpeza não mede o seu valor'},belting:{alta:'seu belting está firme',media:'seu belting está encontrando espaço',baixa:'seu belting está sendo reconstruído'},lirico:{alta:'o canto lírico floresce',media:'o canto lírico está aparecendo',baixa:'o canto lírico está guardado pra você'}};
-  const fam=[{nome:'Pelo corpo em movimento',itens:['fisica','danca']},{nome:'Pela mente',itens:['mental','autoconf']},{nome:'No lar',itens:['organizacao','limpeza']},{nome:'Na voz',itens:['belting','lirico']}];
+  const FF={humor:{alta:'o astral veio bom',media:'o humor está no meio do caminho',baixa:'o humor veio baixo, e tudo bem'},calma:{alta:'por dentro está tranquilo',media:'tem um pouco de aperto por dentro',baixa:'por dentro está apertado'},casa:{alta:'a casa está em ordem',media:'a casa está mais ou menos',baixa:'a casa pode esperar'},linguagem:{alta:'você recebeu o cuidado que mais fala com você',media:'o seu jeito de se cuidar apareceu um pouco',baixa:'faltou o cuidado do seu jeito hoje'},fisica:{alta:'seu corpo veio com energia',media:'seu corpo está respondendo',baixa:'seu corpo pediu pausa'},danca:{alta:'a dança está viva em você',media:'a dança vem aparecendo',baixa:'a dança te espera'},mental:{alta:'sua mente veio clara',media:'sua mente está processando',baixa:'sua mente está pesada'},autoconf:{alta:'sua autoconfiança está alta',media:'sua autoconfiança está se firmando',baixa:'a autoconfiança baixa de hoje não apaga nada'},organizacao:{alta:'a casa respira organizada',media:'a organização está encontrando ritmo',baixa:'a casa pode esperar'},limpeza:{alta:'a limpeza reflete carinho',media:'a limpeza vai chegando',baixa:'a limpeza não mede o seu valor'},belting:{alta:'seu belting está firme',media:'seu belting está encontrando espaço',baixa:'seu belting está sendo reconstruído'},lirico:{alta:'o canto lírico floresce',media:'o canto lírico está aparecendo',baixa:'o canto lírico está guardado pra você'}};
+  const fam=[{nome:'Pelo corpo em movimento',itens:['fisica','danca']},{nome:'Pela mente',itens:['mental','calma']},{nome:'Por dentro',itens:['humor','autoconf']},{nome:'No lar',itens:['casa','organizacao','limpeza']},{nome:'Na voz',itens:['belting','lirico']},{nome:'No seu jeito de se cuidar',itens:['linguagem']}];
   const p2=[];
   fam.forEach(f=>{const pres=f.itens.filter(k=>notas&&typeof notas[k]==='number'&&notas[k]>=1);const partes=pres.map(k=>FF[k][banda_(notas[k])]);if(partes.length===1)p2.push(f.nome+': '+partes[0]+'.');else if(partes.length===2)p2.push(f.nome+': '+partes[0]+', e '+partes[1]+'.');});
   const p3=[];
@@ -164,7 +164,7 @@ function gerarRelatorio(ci){
   else p3.push('Hoje foi pesado. Tudo bem.');
   const sug=temEscalas?sugerirPraticas(notas,praticas):[];
   let p4='';
-  if(sug.length){const bt=sug.slice(0,4).map(s=>'<button class="sug" data-prat="'+esc(s.key)+'"><span class="g">'+esc(s.grupo)+'</span><span class="n">'+esc(s.label)+'</span></button>').join('');p4='<p><b>Pra somar ao dia:</b><br>'+bt+'</p>';}
+  if(sug.length){const bt=sug.slice(0,4).map(s=>'<button class="sug" data-prat="'+esc(s.key)+'"><span class="g">'+esc(s.grupo)+'</span><span class="n">'+esc(s.label)+'</span></button>').join('');const mot=sug.slice(0,4).map(s=>s.motivo).filter(Boolean).filter((v,i,a)=>a.indexOf(v)===i);p4='<p><b>Pra somar ao dia:</b><br>'+bt+'</p>'+(mot.length?'<p class="mut" style="font-size:12px;line-height:1.55">🪞 Do seu quiz: '+mot.map(esc).join(' · ')+'</p>':'');}
   let html='<div class="relatorio"><div class="titulo">💭 Leitura do dia</div>';
   if(p1.length)html+='<p>'+p1.join(' ')+'</p>';
   const ch=paragrafoCorpo(ci,notas||{});if(ch)html+=ch;
