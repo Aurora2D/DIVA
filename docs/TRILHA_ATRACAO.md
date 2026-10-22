@@ -147,3 +147,7 @@ Regra: o que roda na hora em que o app abre fica em `iniciar.js`. Se uma parte n
 ## Sugestões de hábitos para o público geral
 
 Em `app/base.js`: a categoria de cuidado (`FILA_CATEGORIAS`, `cuidado:true`) tem hábitos por tipo de relação (`rel`: criança, idoso, par, outro, todos) e concorda no gênero (`trocaCuidado`, tokens `{nome}`, `{dela}`, `{ela}`). A categoria Arte e prazer é para todo mundo; Música (`musica:true`) só aparece para quem respondeu "Você canta ou toca?" no começo ou ligou em Configurações (`musicaAtiva()`). `filaBase()` monta a fila já filtrada.
+
+## Que bom você de volta
+
+`app/de-volta.js` (estilos no fim de `estilo/boas-vindas.css`). Substitui o diálogo antigo de quem fica 14 dias ou mais sem abrir o app (chamado em `avisosIniciais`, `app/resumos.js`). Nunca cobra hábito: a gatinha acena, reconhece que a vida ocupou a pessoa e convida pra algo leve conforme o que já está aberto (check-in, mapa, ou só os hábitos, com a frase de que uma parte nova espera por ela). No rodapé, discreto: "Pausar meus hábitos por enquanto" (pausa todos, marca `h.pausaGeral` e `S.pausaGeralEm`) e "Revisar hábitos". Textos em `DV_TEXTOS`.

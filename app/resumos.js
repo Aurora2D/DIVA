@@ -192,14 +192,7 @@ function avisosIniciais(){
   if(ultimo){
     const diasAusente=Math.round((new Date(hojeStr)-new Date(fmtD(new Date(ultimo))))/86400000);
     if(diasAusente>=14){
-      setTimeout(()=>{
-        dialogo({
-          emoji:'🌿',
-          titulo:'Que bom você de volta',
-          texto:'Faz tempo que você não aparece. Não precisa recuperar nada do que passou, nem revisar nada. É só começar de onde você está agora.\n\nSe algum hábito ficou pelo caminho, o app não cobra. A gente vai no seu ritmo.',
-          botoes:[{rotulo:'Vamos lá',prim:true,fn:()=>setTimeout(verificarResumoSemanal,200)},{rotulo:'Só olhar hoje',fn:()=>{}}]
-        });
-      },600);
+      setTimeout(()=>deVolta(()=>setTimeout(verificarResumoSemanal,200)),600);
       return;
     }
   }
