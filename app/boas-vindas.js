@@ -4,8 +4,8 @@
    Para mudar os textos, mexa só em BV_TELAS. A gatinha vem de mascote/ (ver mascote/LEIA-ME.md). */
 const BV_TELAS=[
   {acao:'tchau',
-   titulo:'Oi! Eu sou a Diva',
-   html:`<p class="onb-texto">Você fez uma ótima escolha: abrir este app é escolher cuidar de si. E é assim que a gente vira uma diva, um cuidado de cada vez.</p>
+   titulo:'Oi! Eu sou a Diva. E você também é',
+   html:`<p class="onb-texto">Você fez uma ótima escolha: abrir este app é escolher cuidar de si. E cuidar de si é coisa de diva, um cuidado de cada vez.</p>
          <p class="onb-texto">Eu vou ser sua companheira nesse caminho, sem cobrança e sem pressa.</p>`},
   {acao:'curiosa',
    titulo:'O que tem por aqui',
