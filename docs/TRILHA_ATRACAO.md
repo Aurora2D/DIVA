@@ -174,9 +174,9 @@ Hábitos (tela Hoje e sugestões), práticas do check-in e o teste usam os mesmo
 
 ## O quiz vira práticas
 
-`app/quiz-praticas.js` (depois de `premio-pratica.js`). O quiz agora guarda cada resposta (`S.estiloAutocuidado.respostas`, letras A-E na ordem das perguntas). As respostas que são gestos possíveis viram práticas no grupo "🪞 Escolhidas por você no quiz" (textos em `QUIZ_PRATICAS`, por pergunta e alternativa), que fica no topo do check-in. Também são usadas:
+`app/quiz-praticas.js` (depois de `premio-pratica.js`). O quiz agora guarda cada resposta (`S.estiloAutocuidado.respostas`, letras A-E na ordem das perguntas). Ao terminar, antes do resultado, ela vê as respostas que são gestos possíveis (`quizAbrirRevisao`) e desmarca o que não combina; as marcadas viram práticas no grupo "🪞 Escolhidas por você no quiz" (textos em `QUIZ_PRATICAS`, por pergunta e alternativa), que fica no topo do check-in. Também são usadas:
 - nota baixa no "Como estou hoje" → sugere a resposta do momento certo (`QUIZ_NOTA`: disposição física → pergunta 11, mental → 1, autoconfiança → 4, casa → 20; humor → 12 e calma → 14 já estão prontos para quando essas notas existirem);
 - marcos de 3, 7 e 21 dias → o mimo sai dessa lista, com peso 4 para as respostas sobre comemorar (perguntas 2, 6, 8, 15 e 21);
 - dicas dos hábitos de água, leitura e movimento (perguntas 16 a 18, `QUIZ_DICAS`);
 - pergunta do campo Observações (24) e frase-guia no resultado (25).
-Quem fez o quiz antes disso (sem respostas guardadas) vê no check-in o convite "Refazer o quiz". Ainda não usadas: 9 e 29 (tom dos lembretes), 10, 23 e 30 (mensagens).
+No resultado, "Rever quais entram" reabre essa escolha. Quem fez o quiz antes disso (sem respostas guardadas) vê no check-in o convite "Refazer o quiz". Ainda não usadas: 9 e 29 (tom dos lembretes), 10, 23 e 30 (mensagens).

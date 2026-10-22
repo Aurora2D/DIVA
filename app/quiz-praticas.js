@@ -46,12 +46,15 @@ const QUIZ_COMEMORAR=[2,6,8,15,21];
 
 function quizRespostas(){const e=S.estiloAutocuidado;return e&&e.feito&&Array.isArray(e.respostas)?e.respostas:null;}
 function quizPraticaDe(n){const r=quizRespostas();if(!r)return null;const c=r[n-1];const l=QUIZ_PRATICAS[n];if(!c||!l)return null;return l['ABCDE'.indexOf(c)]||null;}
-function quizMontarPraticas(){
-  const r=quizRespostas();if(!r)return;
+function quizCandidatas(){
   const lista=[];
   Object.keys(QUIZ_PRATICAS).map(Number).sort((a,b)=>a-b).forEach(n=>{const t=quizPraticaDe(n);if(t&&!lista.includes(t))lista.push(t);});
-  const removidas=new Set(S.praticasRemovidas||[]);
-  const novo={};novo[QUIZ_GRUPO]=lista.filter(t=>!removidas.has(t));
+  return lista;
+}
+function quizMontarPraticas(escolhidas){
+  const r=quizRespostas();if(!r)return;
+  const lista=Array.isArray(escolhidas)?escolhidas:quizCandidatas();
+  const novo={};novo[QUIZ_GRUPO]=lista;
   Object.entries(S.praticas||{}).forEach(([g,l])=>{if(g!==QUIZ_GRUPO)novo[g]=l;});
   S.praticas=novo;PRATICAS=S.praticas;salva();
   try{renderPraticasCheckin();}catch(e){}
@@ -61,7 +64,7 @@ function quizMontarPraticas(){
 window.estiloFinalizar=(function(orig){return function(){
   const resp=(typeof estiloRespostas!=='undefined'&&estiloRespostas||[]).slice();
   const r=orig.apply(this,arguments);
-  try{S.estiloAutocuidado.respostas=resp;quizMontarPraticas();quizAplicarObs();if(typeof quizCardAtualizar==='function')quizCardAtualizar();}catch(e){console.warn('quiz práticas',e);}
+  try{S.estiloAutocuidado.respostas=resp;S.estiloAutocuidado.revisarPraticas=true;salva();quizAplicarObs();if(typeof quizCardAtualizar==='function')quizCardAtualizar();}catch(e){console.warn('quiz práticas',e);}
   return r;
 };})(window.estiloFinalizar);
 
@@ -114,12 +117,34 @@ window.filaBase=(function(orig){return function(){
 const QUIZ_OBS=['Hoje, eu gostaria de ouvir que…','Se eu tivesse 15 minutos só meus, como gostaria de usá-los?','Que pequeno prazer faria diferença no meu dia?','Que coisa prática está me sobrecarregando e pode ser simplificada?','O que meu corpo está pedindo neste momento?'];
 const QUIZ_FRASE=['Quero aprender a falar comigo com mais gentileza.','Quero reservar espaço na minha vida para mim.','Quero permitir que os pequenos prazeres façam parte da rotina.','Quero facilitar minha vida em vez de dificultá-la.','Quero tratar meu corpo com atenção e respeito.'];
 function quizAplicarObs(){const r=quizRespostas();const el=$('ciObs');if(!r||!el)return;const c=r[23];if(c)el.placeholder=QUIZ_OBS['ABCDE'.indexOf(c)];}
+/* ---- antes de inserir: ela escolhe quais têm a ver com ela ---- */
+function quizAbrirRevisao(depois){
+  let o=$('quizRevisaoModal');
+  if(!o){
+    o=document.createElement('div');o.className='modal-overlay';o.id='quizRevisaoModal';o.hidden=true;
+    o.innerHTML='<div class="modal-caixa alta" style="text-align:left;max-width:460px"><div class="modal-emoji">🪞</div><div class="modal-pergunta" style="text-align:center">Quais têm a ver com você?</div><p class="mut" style="font-size:13px;line-height:1.55;text-align:center;margin:0 0 14px">Essas são as suas respostas no quiz. As que você deixar marcadas viram práticas no seu check-in. Toque pra desmarcar o que não combina.</p><div id="quizRevisaoLista" class="quiz-rev-lista"></div><div class="modal-botoes" style="margin-top:14px"><button type="button" class="modal-btn prim" id="quizRevisaoOk" style="flex:1">Guardar no meu check-in</button></div></div>';
+    document.body.appendChild(o);
+  }
+  const atuais=(S.praticas||{})[QUIZ_GRUPO];
+  const cand=quizCandidatas();
+  const marcadas=new Set(Array.isArray(atuais)&&!S.estiloAutocuidado.revisarPraticas?atuais:cand);
+  $('quizRevisaoLista').innerHTML=cand.map(t=>`<button type="button" class="quiz-rev ${marcadas.has(t)?'on':''}" data-t="${esc(t)}"><span class="quiz-rev-check"></span>${esc(t)}</button>`).join('');
+  $('quizRevisaoLista').onclick=e=>{const b=e.target.closest('.quiz-rev');if(b)b.classList.toggle('on');};
+  $('quizRevisaoOk').onclick=()=>{
+    const esc2=[...$('quizRevisaoLista').querySelectorAll('.quiz-rev.on')].map(b=>b.dataset.t);
+    S.estiloAutocuidado.revisarPraticas=false;quizMontarPraticas(esc2);
+    fecharOverlay(o,()=>{mostrarToast(esc2.length?esc2.length+' práticas no seu check-in ✓':'Tudo bem, nenhuma entrou agora');if(depois)depois();});
+  };
+  abrirOverlay(o);
+}
 window.estiloMostrarResultado=(function(orig){return function(){
+  if(S.estiloAutocuidado&&S.estiloAutocuidado.revisarPraticas&&quizRespostas()){quizAbrirRevisao(()=>window.estiloMostrarResultado());return;}
   const r=orig.apply(this,arguments);
   try{const resp=quizRespostas();const c=resp&&resp[24];const box=$('estiloResultadoCorpo');
     if(c&&box){const f=document.createElement('div');f.className='quiz-frase';f.innerHTML='<span>A sua frase</span>“'+esc(QUIZ_FRASE['ABCDE'.indexOf(c)])+'”';const ref=box.querySelector('.card2');box.insertBefore(f,ref||box.firstChild.nextSibling);}
     const n=((S.praticas||{})[QUIZ_GRUPO]||[]).length;
-    if(n&&box){const a=document.createElement('div');a.className='aviso';a.style.marginBottom='12px';a.innerHTML='🪞 <b>'+n+' respostas suas viraram práticas</b> no check-in, no grupo “Escolhidas por você no quiz”.';const ref2=box.querySelector('.card2');box.insertBefore(a,ref2||null);}
+    if(n&&box){const a=document.createElement('div');a.className='aviso';a.style.marginBottom='12px';a.innerHTML='🪞 <b>'+n+' respostas suas viraram práticas</b> no check-in, no grupo “Escolhidas por você no quiz”. <button type="button" class="dv-link" id="quizRever">Rever quais entram</button>';const ref2=box.querySelector('.card2');box.insertBefore(a,ref2||null);
+      $('quizRever').onclick=()=>fecharOverlay($('estiloResultadoModal'),()=>quizAbrirRevisao(()=>window.estiloMostrarResultado()));}
   }catch(e){}
   return r;
 };})(window.estiloMostrarResultado);
