@@ -40,3 +40,7 @@
 .caminho-emo{width:24px;text-align:center;flex-shrink:0}
 .caminho-txt{flex:1;color:var(--txt)}
 .caminho-data{font-size:12px;color:var(--mut);white-space:nowrap}
+
+/* convite da música nas sugestões (app/habitos.js) */
+.musica-convite{padding:14px 16px}
+.musica-convite .txt{font-size:13.5px;line-height:1.5}

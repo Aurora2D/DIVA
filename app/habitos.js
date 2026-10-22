@@ -154,12 +154,14 @@ function renderHabitos(){
   const sugRow=sg=>{const g=sg.grupo?todosGrupos().find(x=>x.id===sg.grupo):null;const cat=g?(g.emoji+' '+g.nome):'';return`<div class="cat-sugestao" data-hab-sug="${esc(sg.id)}"><div class="txt"><b>🌱 ${esc(sg.texto)}</b><br><span class="mut">${cat?esc(cat)+' · ':''}veio do seu desejo · na fila</span></div><div class="add">+</div></div>`;};
   const itemRow=item=>{const jaTem=S.habitos.some(h=>h.nome===item.nome||(item.id&&h.id===item.id));const instr=[item.paraQue,item.unidade,item.texto].filter(Boolean).filter((v,i,a)=>a.indexOf(v)===i);const sub=instr.length?instr.map(t=>esc(t)).join(' · '):'';return`<div class="cat-sugestao ${jaTem?'ja-tem':''}" data-fila="${esc(item.nome)}"><div class="txt"><b>${item.emoji} ${esc(item.nome)}</b>${sub?`<br><span class="mut">${sub}</span>`:''}</div><div class="add">${jaTem?'✓':'+'}</div></div>`;};
   const blocoCat=(nome,sugs,itens)=>`<div class="cat-bloco"><div class="cat-titulo">${nome}</div>${sugs.map(sugRow).join('')}${itens.map(itemRow).join('')}</div>`;
+  const cartaoMusica=`<div class="cat-bloco musica-convite"><div class="txt"><b>🎵 Você canta ou toca algum instrumento?</b><br><span class="mut">Tem sugestões pra cuidar da voz e do instrumento.</span></div><button type="button" class="btn btn-full" id="btnMostrarMusica" style="margin-top:10px">Mostrar sugestões de música</button></div>`;
   $('sugestoesFilaBox').innerHTML=filaCats.map(cat=>{
     const itens=cat.itens.filter(item=>!ocultas.has(item.nome));
     const sugs=sugPorCat[cat.nome]||[];
     if(!itens.length&&!sugs.length)return '';
-    return blocoCat(cat.nome,sugs,itens);
+    return blocoCat(cat.nome,sugs,itens)+(cat.nome==='🎨 Arte e prazer'&&!musicaAtiva()&&S.musica!==false?cartaoMusica:'');
   }).join('')+Object.entries(sugExtras).map(([n2,l2])=>blocoCat(n2,l2,[])).join('');
+  const bm=$('btnMostrarMusica');if(bm)bm.onclick=()=>{S.musica=true;salva();renderHabitos();mostrarToast('Sugestões de música à vista 🎵');};
   document.querySelectorAll('#sugestoesFilaBox [data-fila]').forEach(el=>{
     const ativar=()=>{
       const nome2=el.dataset.fila;

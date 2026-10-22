@@ -13,12 +13,20 @@ function praticasComoPremio(){
   return out;
 }
 let ultimaPraticaPremio=null;
-function pesoPratica(p){
-  const cat=(typeof PRATICAS_CATALOGO!=='undefined'?PRATICAS_CATALOGO:[]).find(c=>c.grupo===p.grupo||c.itens.includes(p.nome));
-  try{return cat?pesoEstilo(cat.id):1;}catch(e){return 1;}
+/* a que estilo do teste cada grupo de práticas pertence (vale para as listas novas e as antigas) */
+function estiloDoGrupo(g){
+  const t=String(g||'').toLowerCase();
+  if(/palavra/.test(t))return 'palavras';
+  if(/tempo/.test(t))return 'tempo';
+  if(/presente/.test(t))return 'presentes';
+  if(/servi/.test(t))return 'servico';
+  if(/toque|contato|f[ií]sico/.test(t))return 'toque';
+  return null; // ex.: treino vocal, que é prática mas não é mimo
 }
+function pesoPratica(p){const est=estiloDoGrupo(p.grupo);try{return est?pesoEstilo(est):1;}catch(e){return 1;}}
 function sortearPratica(excluirId){
-  const todas=praticasComoPremio();
+  let todas=praticasComoPremio();
+  const deMimo=todas.filter(p=>estiloDoGrupo(p.grupo));if(deMimo.length)todas=deMimo;
   const feitas=((S.checkins||{})[hoje()]||{}).praticas||{};
   let l=todas.filter(p=>!feitas[p.key]&&p.id!==excluirId&&p.id!==ultimaPraticaPremio);
   if(!l.length)l=todas.filter(p=>p.id!==excluirId);
@@ -72,7 +80,7 @@ window.mostrarPremioModal=(function(orig){return function(premio,info){
   if(pre)pre.textContent=PREMIO_PRATICA_FRASE;
   $('premioModalNome').textContent=premio.nome;
   $('premioModalTags').innerHTML=`<span class="premio-tag">${esc(premio.grupo)}</span>`;
-  const temOutra=praticasComoPremio().length>1;
+  const temOutra=praticasComoPremio().filter(p=>estiloDoGrupo(p.grupo)).length>1;
   $('premioModalBotoes').innerHTML=(temOutra?`<button class="premio-btn sec" id="premioOutro">🎲 Outra</button>`:'')+`<button class="premio-btn sec" id="premioHojeNao">Hoje não</button><button class="premio-btn" id="premioOk">Vou fazer agora 💛</button>`;
   if(temOutra)$('premioOutro').onclick=()=>{const p2=sortearPratica(premio.id);if(p2){mostrarPremioModal(p2,info);confete(['✨','💫']);}};
   $('premioHojeNao').onclick=()=>fecharPremioModal();

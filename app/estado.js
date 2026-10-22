@@ -283,7 +283,6 @@ function mostrarOnbPasso(p){
   [1,6,8,9].forEach(i=>$('onbP'+i).hidden=i!==p);
   if(p===6){$('onbTit6').textContent=(S.onboarding.nome?S.onboarding.nome+', você':'Você')+' cuida de alguém no dia a dia?';$('onbCuidaRel').innerHTML=RELACOES.map(r=>`<option value="${r}">${r}</option>`).join('');}
   if(p===1){setTimeout(()=>$('onbNome').focus(),200);onbGata('tchau',700);}
-  if(p===9)$('onbMusica').checked=!!S.musica;
 }
 /* a gatinha acena na primeira tela (se o motor dela carregou) */
 function onbGata(acao,atraso){setTimeout(()=>{const g=document.querySelector('#onbP1 gatinha-fantoche');if(!g)return;const f=()=>{try{if(typeof g.play==='function')g.play(acao);}catch(e){}};if(g.classList.contains('pronta'))f();else g.addEventListener('ready',f,{once:true});},atraso||150);}
@@ -306,14 +305,13 @@ $('onbBtn8').onclick=()=>mostrarOnbPasso(9);
 $('onbNome').addEventListener('keydown',e=>{if(e.key==='Enter')$('onbBtn1').click();});
 /* "Vamos começar": o primeiro hábito é beber água ao acordar */
 $('onbBtn9').onclick=()=>{
-  S.musica=$('onbMusica').checked;
   if(!S.habitos.some(h=>h.id==='agua'))S.habitos.push({id:'agua',emoji:'💧',emojis:['💧','🥤','✨'],nome:'Beber um copo de água ao acordar',paraQue:'Cuidar do meu bem-estar',unidade:'todo dia',feitos:{},cor:'c4',grupo:'corpo',dims:['corpo','energia']});
   S.proximoHabitoEm=Date.now()+3*86400000;S.habitoTravaId='agua';
   S.onboarding.feito=true;salva();finalizarOnboarding();
   setTimeout(()=>mostrarToast('Seu primeiro hábito já está aqui: beber um copo de água ao acordar 💧'),900);
 };
 $('onbPular').onclick=()=>{
-  S.musica=$('onbMusica').checked;S.onboarding.feito=true;salva();finalizarOnboarding();
+  S.onboarding.feito=true;salva();finalizarOnboarding();
   setTimeout(()=>mostrarToast('Quando quiser, abra Gerenciar hábitos e escolha o primeiro. Sem pressa.'),900);
 };
 

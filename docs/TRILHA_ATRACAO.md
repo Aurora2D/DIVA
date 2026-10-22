@@ -159,3 +159,9 @@ Em `app/base.js`: a categoria de cuidado (`FILA_CATEGORIAS`, `cuidado:true`) tem
 - Comemoração: aparece a cada hábito marcado (`celebraToastTexto`). Escolhe-se em Configurações > Minha comemoração.
 - Marcos de 3, 7 e 21 dias: sem pergunta de contexto e sem cardápio. O app diz "Hoje você merece uma das suas práticas" e sorteia uma das práticas do check-in (`S.praticas`, peso pelo estilo de autocuidado). "Vou fazer agora" marca a prática no check-in do dia; "Hoje não" fecha sem guardar nada. A festa dos 21 dias segue a mesma regra.
 - Aba Celebrar: "Meu caminho" (marcos de cada hábito e mapas feitos, montado automaticamente) e o Livro de Conquistas. Prêmios guardados só aparecem se ainda houver algum antigo. Cardápio, "quando der" e o card da comemoração ficam escondidos em `#celebrarAntigo` para o código antigo não quebrar.
+
+## Teste de estilo de autocuidado (as 5 linguagens)
+
+`app/estilo-autocuidado.js`. 30 perguntas, cada uma com uma alternativa de cada estilo (A palavras, B tempo, C presentes, D serviço, E toque); os ids batem com `PRATICAS_CATALOGO`, `ESTILO_PRATICAS` e `ESTILO_PALAVRAS_CHAVE`. Ao terminar, o check-in ganha práticas do estilo principal (até 8) e do secundário (até 5), que sobem para o topo, e o sorteio da prática nos marcos pesa 3 (principal), 2 (secundário) e 1 (demais). Em listas de práticas antigas, o estilo de cada grupo sai do nome (`estiloDoGrupo` em `app/premio-pratica.js`); grupos que não são de autocuidado, como Treino vocal, ficam fora do sorteio.
+
+A pergunta "Você canta ou toca?" saiu do começo: virou um cartão nas sugestões, logo depois de Arte e prazer (`btnMostrarMusica` em `app/habitos.js`).
