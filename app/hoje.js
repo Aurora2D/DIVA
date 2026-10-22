@@ -487,7 +487,7 @@ function abrirCelebraConvite(){
   const b=$('celebraBotoes');b.innerHTML='';
   const linha=document.createElement('div');linha.className='modal-botoes';
   const bn=document.createElement('button');bn.className='modal-btn sec';bn.textContent='Agora não';
-  bn.onclick=()=>{S.celebracao.conviteVisto=true;salva();fecharOverlay($('celebraModal'),()=>{mostrarToast('Fica guardado na aba Celebrar 💛');renderCelebracaoCard();setTimeout(checarTresDias,500);});};
+  bn.onclick=()=>{S.celebracao.conviteVisto=true;salva();fecharOverlay($('celebraModal'),()=>{mostrarToast('Dá pra criar depois em Configurações 💛');renderCelebracaoCard();setTimeout(checarTresDias,500);});};
   const bt=document.createElement('button');bt.className='modal-btn prim';bt.textContent='Testar agora';bt.onclick=celebraTestar;
   linha.appendChild(bn);linha.appendChild(bt);b.appendChild(linha);
   abrirOverlayTopo($('celebraModal'));

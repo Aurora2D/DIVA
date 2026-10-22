@@ -877,9 +877,9 @@ h1.diva-logo{display:flex;flex-direction:column;align-items:center;margin:0 0 6p
 .diva-sorriso{width:70px;height:15px;fill:#D96B83;margin-top:3px;overflow:visible}
 @media print{.diva-coroa{stroke:#D9A441}.diva-nome{color:#493657}}
 </style>
-<link rel="stylesheet" href="estilo/app.css?v=20261022h">
-<link rel="stylesheet" href="atracao/atracao.css?v=20261022h">
-<link rel="stylesheet" href="estilo/boas-vindas.css?v=20261022h">
+<link rel="stylesheet" href="estilo/app.css?v=20261022j">
+<link rel="stylesheet" href="atracao/atracao.css?v=20261022j">
+<link rel="stylesheet" href="estilo/boas-vindas.css?v=20261022j">
 </head>
 <body>
 <!-- ===== ABERTURA DIVA (logo animado) — fonte em logo/splash.html ===== -->
@@ -1477,16 +1477,23 @@ addEventListener('pointerdown',avisa);addEventListener('keydown',avisa);
   </section>
 
   <section id="tab-celebrar" hidden>
-    <p class="mut" style="font-size:13px;line-height:1.55;margin:4px 0 14px">Um canto pra reconhecer o que já aconteceu — sem cobrança.</p>
+    <p class="mut" style="font-size:13px;line-height:1.55;margin:4px 0 14px">Aqui fica o caminho que você já fez. Volta aqui sempre que bater a dúvida: tudo isso foi você.</p>
 
     <details class="grupo-card" open>
-      <summary><span class="grupo-emoji"><svg class="ic"><use href="#i-comemora"/></svg></span><span class="grupo-nome">Minha comemoração</span></summary>
-      <div class="grupo-conteudo"><div id="celebracaoBox"></div></div>
+      <summary><span class="grupo-emoji"><svg class="ic"><use href="#i-pegadas"/></svg></span><span class="grupo-nome">Meu caminho</span></summary>
+      <div class="grupo-conteudo"><div id="caminhoBox"></div></div>
     </details>
 
-    <details class="grupo-card" open>
+    <details class="grupo-card" open id="cardGuardados" hidden>
       <summary><span class="grupo-emoji"><svg class="ic"><use href="#i-celebrar"/></svg></span><span class="grupo-nome">Prêmios guardados</span></summary>
       <div class="grupo-conteudo"><div id="premiosGuardadosBox"></div></div>
+    </details>
+
+    <!-- antigo: comemoração (agora em Configurações), cardápio de prêmios e "quando der" (o prêmio virou prática). Fica escondido para o código antigo continuar funcionando. -->
+    <div id="celebrarAntigo" hidden>
+    <details class="grupo-card">
+      <summary><span class="grupo-nome">Minha comemoração</span></summary>
+      <div class="grupo-conteudo"><div id="celebracaoBox"></div></div>
     </details>
 
     <details class="grupo-card">
@@ -1506,6 +1513,7 @@ addEventListener('pointerdown',avisa);addEventListener('keydown',avisa);
       <summary><span class="grupo-emoji"><svg class="ic"><use href="#i-calendario"/></svg></span><span class="grupo-nome">Quando der</span></summary>
       <div class="grupo-conteudo"><div id="quandoDerBox"></div></div>
     </details>
+    </div>
 
     <details class="grupo-card" open>
       <summary><span class="grupo-emoji"><svg class="ic"><use href="#i-livro"/></svg></span><span class="grupo-nome">Livro de Conquistas</span></summary>
@@ -1609,7 +1617,7 @@ addEventListener('pointerdown',avisa);addEventListener('keydown',avisa);
   <div class="onb-caixa" id="onbP9" hidden>
     <div class="onb-emoji">🌱</div>
     <div class="onb-titulo">Como funciona</div>
-    <p class="onb-texto">Aqui você começa pequeno: um hábito de cada vez, um gesto simples por dia. Cada vez que você marca, coleciona uma prova de que consegue, e com 3, 7 e 21 dias de hábito ganha um prêmio pra comemorar.</p>
+    <p class="onb-texto">Aqui você começa pequeno: um hábito de cada vez, um gesto simples por dia. Cada vez que você marca, coleciona uma prova de que consegue, e com 3, 7 e 21 dias de hábito ganha de presente um momento de autocuidado.</p>
     <p class="onb-texto">Conforme você segue, o app vai se abrindo e te surpreendendo: check-in, mapa emocional, um espaço pras suas conquistas e outro pra ir atrás do que você quer. Cada parte nova chega no momento certo, e eu venho te apresentar.</p>
     <label class="onb-check"><input type="checkbox" id="onbMusica"> Eu canto ou toco, quero sugestões de música</label>
     <button class="onb-btn" id="onbBtn9">Vamos começar</button>
@@ -2246,29 +2254,30 @@ addEventListener('pointerdown',avisa);addEventListener('keydown',avisa);
   </div>
 </div>
 
-<script src="app/base.js?v=20261022h"></script>
-<script src="app/atracao-dados.js?v=20261022h"></script>
-<script src="app/cuidado-premios.js?v=20261022h"></script>
-<script src="app/estado.js?v=20261022h"></script>
-<script src="app/hoje.js?v=20261022h"></script>
-<script src="app/checkin.js?v=20261022h"></script>
-<script src="app/habitos.js?v=20261022h"></script>
-<script src="app/atracao-app.js?v=20261022h"></script>
-<script src="app/resumos.js?v=20261022h"></script>
-<script src="app/mapa.js?v=20261022h"></script>
-<script src="app/celebrar.js?v=20261022h"></script>
-<script src="app/abas.js?v=20261022h"></script>
-<script src="app/atracao-extras.js?v=20261022h"></script>
-<script src="app/estilo-autocuidado.js?v=20261022h"></script>
-<script src="app/final.js?v=20261022h"></script>
-<script src="app/boas-vindas.js?v=20261022h"></script>
-<script src="app/de-volta.js?v=20261022h"></script>
-<script src="app/iniciar.js?v=20261022h"></script>
-<script src="mascote/fantoche.js?v=20261022h"></script>
-<script src="estilo/gatinha-relatorio.js?v=20261022h"></script>
-<script src="relatorio/carta.js?v=20261022h"></script>
-<script src="relatorio/guarda-chuva.js?v=20261022h"></script>
-<script src="relatorio/carta-app.js?v=20261022h"></script>
-<script src="atracao/atracao.js?v=20261022h"></script>
+<script src="app/base.js?v=20261022j"></script>
+<script src="app/atracao-dados.js?v=20261022j"></script>
+<script src="app/cuidado-premios.js?v=20261022j"></script>
+<script src="app/estado.js?v=20261022j"></script>
+<script src="app/hoje.js?v=20261022j"></script>
+<script src="app/checkin.js?v=20261022j"></script>
+<script src="app/habitos.js?v=20261022j"></script>
+<script src="app/atracao-app.js?v=20261022j"></script>
+<script src="app/resumos.js?v=20261022j"></script>
+<script src="app/mapa.js?v=20261022j"></script>
+<script src="app/celebrar.js?v=20261022j"></script>
+<script src="app/abas.js?v=20261022j"></script>
+<script src="app/atracao-extras.js?v=20261022j"></script>
+<script src="app/estilo-autocuidado.js?v=20261022j"></script>
+<script src="app/premio-pratica.js?v=20261022j"></script>
+<script src="app/final.js?v=20261022j"></script>
+<script src="app/boas-vindas.js?v=20261022j"></script>
+<script src="app/de-volta.js?v=20261022j"></script>
+<script src="app/iniciar.js?v=20261022j"></script>
+<script src="mascote/fantoche.js?v=20261022j"></script>
+<script src="estilo/gatinha-relatorio.js?v=20261022j"></script>
+<script src="relatorio/carta.js?v=20261022j"></script>
+<script src="relatorio/guarda-chuva.js?v=20261022j"></script>
+<script src="relatorio/carta-app.js?v=20261022j"></script>
+<script src="atracao/atracao.js?v=20261022j"></script>
 </body>
 </html>

@@ -32,3 +32,11 @@
 .onb-destaque{font-size:18px;text-align:center;line-height:1.6}
 .onb-check{display:flex;gap:10px;align-items:center;font-size:13.5px;color:var(--mut);margin:4px 0 16px;cursor:pointer}
 .onb-check input{width:18px;height:18px;accent-color:var(--b);flex-shrink:0}
+
+/* Celebrar: meu caminho (app/premio-pratica.js) */
+.caminho{display:flex;flex-direction:column;gap:2px}
+.caminho-item{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--borda);font-size:13.5px;line-height:1.4}
+.caminho-item:last-child{border-bottom:none}
+.caminho-emo{width:24px;text-align:center;flex-shrink:0}
+.caminho-txt{flex:1;color:var(--txt)}
+.caminho-data{font-size:12px;color:var(--mut);white-space:nowrap}

@@ -151,3 +151,11 @@ Em `app/base.js`: a categoria de cuidado (`FILA_CATEGORIAS`, `cuidado:true`) tem
 ## Que bom você de volta
 
 `app/de-volta.js` (estilos no fim de `estilo/boas-vindas.css`). Substitui o diálogo antigo de quem fica 14 dias ou mais sem abrir o app (chamado em `avisosIniciais`, `app/resumos.js`). Nunca cobra hábito: a gatinha acena, reconhece que a vida ocupou a pessoa e convida pra algo leve conforme o que já está aberto (check-in, mapa, ou só os hábitos, com a frase de que uma parte nova espera por ela). No rodapé, discreto: "Pausar meus hábitos por enquanto" (pausa todos, marca `h.pausaGeral` e `S.pausaGeralEm`) e "Revisar hábitos". Textos em `DV_TEXTOS`.
+
+## O prêmio virou prática, e o Celebrar virou o caminho
+
+`app/premio-pratica.js` (carregado depois de `habitos.js`, `celebrar.js` e `hoje.js`; só substitui funções deles). Base: a celebração funciona colada na ação (BJ Fogg, Tiny Habits), e prêmio acumulado vira peso.
+
+- Comemoração: aparece a cada hábito marcado (`celebraToastTexto`). Escolhe-se em Configurações > Minha comemoração.
+- Marcos de 3, 7 e 21 dias: sem pergunta de contexto e sem cardápio. O app diz "Hoje você merece uma das suas práticas" e sorteia uma das práticas do check-in (`S.praticas`, peso pelo estilo de autocuidado). "Vou fazer agora" marca a prática no check-in do dia; "Hoje não" fecha sem guardar nada. A festa dos 21 dias segue a mesma regra.
+- Aba Celebrar: "Meu caminho" (marcos de cada hábito e mapas feitos, montado automaticamente) e o Livro de Conquistas. Prêmios guardados só aparecem se ainda houver algum antigo. Cardápio, "quando der" e o card da comemoração ficam escondidos em `#celebrarAntigo` para o código antigo não quebrar.

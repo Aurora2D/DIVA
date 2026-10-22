@@ -14,7 +14,7 @@ const ABAS_REGRAS=[
    botao:'Fazer meu mapa'},
   {tab:'celebrar',ok:()=>((S.ciclo&&S.ciclo.historico)||[]).length>=1,
    emoji:'🎁',titulo:'Você desbloqueou o Celebrar!',
-   texto:'Seu primeiro retrato está pronto, e foi a sua constância que te trouxe até aqui. Agora você tem um lugar só pras suas vitórias: seus prêmios, os que você mesma criar e o seu Livro de Conquistas.',
+   texto:'Seu primeiro retrato está pronto, e foi a sua constância que te trouxe até aqui. Agora você tem um lugar pra olhar pro caminho que já fez: cada conquista fica guardada aqui, junto com o seu Livro de Conquistas.',
    botao:'Conferir agora'},
   {tab:'atracao', ok:()=>{const em=S.abasLiberadasEm&&S.abasLiberadasEm.celebrar;return !!(S.abasLiberadas&&S.abasLiberadas.celebrar)&&(!em||em<ABAS_SESSAO);},
    emoji:'✨',titulo:'Você desbloqueou a Atração!',

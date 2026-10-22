@@ -13,7 +13,7 @@ const BV_TELAS=[
          <p class="onb-texto">De vez em quando eu vou te perguntar como aquele hábito está deixando o seu dia melhor. Você vai se surpreender com as respostas.</p>`},
   {acao:'pular',
    titulo:'Cada conquista merece um mimo',
-   html:`<p class="onb-texto">Aqui ninguém espera a meta final pra comemorar. Com 3, 7 e 21 dias de hábito, você ganha um prêmio, do tamanho do tempo que você tem naquele dia. Pode criar os seus também, e cada vitória fica guardada no seu Livro de Conquistas.</p>
+   html:`<p class="onb-texto">Aqui ninguém espera a meta final pra comemorar. Com 3, 7 e 21 dias de hábito, você ganha de presente uma das suas práticas de autocuidado, pra fazer na hora. E cada vitória fica guardada no seu caminho, junto com o Livro de Conquistas.</p>
          <p class="onb-texto">Se cuidar também é saber se recompensar, e eu vou te ajudar a lembrar disso.</p>`},
   {acao:'curiosa',
    titulo:'Um espelho pra você',
