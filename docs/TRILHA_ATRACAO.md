@@ -142,7 +142,7 @@ Regra: o que roda na hora em que o app abre fica em `iniciar.js`. Se uma parte n
 
 ## Boas-vindas da Diva
 
-`app/boas-vindas.js` e `estilo/boas-vindas.css`. Seis telas com a gatinha antes do cadastro, para quem chega novo (`S.boasVindasVistas`). Dá para rever em Configurações > Conhecer a Diva. Os textos ficam em `BV_TELAS`, no começo do arquivo.
+O começo do app é curto (markup em `index.html`, lógica em `mostrarOnbPasso`, `app/estado.js`): nome com a gatinha acenando, se cuida de alguém, uma frase só para quem cuida, "Como funciona" (com a opção de música) e "Vamos começar", que já adiciona o primeiro hábito (beber água). As seis telas de apresentação da gatinha ficam em `app/boas-vindas.js` e `estilo/boas-vindas.css` e hoje só aparecem em Configurações > Conhecer a Diva. Os textos ficam em `BV_TELAS`, no começo do arquivo.
 
 ## Sugestões de hábitos para o público geral
 

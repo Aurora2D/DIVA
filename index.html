@@ -877,9 +877,9 @@ h1.diva-logo{display:flex;flex-direction:column;align-items:center;margin:0 0 6p
 .diva-sorriso{width:70px;height:15px;fill:#D96B83;margin-top:3px;overflow:visible}
 @media print{.diva-coroa{stroke:#D9A441}.diva-nome{color:#493657}}
 </style>
-<link rel="stylesheet" href="estilo/app.css?v=20261022g">
-<link rel="stylesheet" href="atracao/atracao.css?v=20261022g">
-<link rel="stylesheet" href="estilo/boas-vindas.css?v=20261022g">
+<link rel="stylesheet" href="estilo/app.css?v=20261022h">
+<link rel="stylesheet" href="atracao/atracao.css?v=20261022h">
+<link rel="stylesheet" href="estilo/boas-vindas.css?v=20261022h">
 </head>
 <body>
 <!-- ===== ABERTURA DIVA (logo animado) — fonte em logo/splash.html ===== -->
@@ -1583,16 +1583,16 @@ addEventListener('pointerdown',avisa);addEventListener('keydown',avisa);
 
 <div class="onb-overlay" id="onbOverlay" hidden>
   <div class="onb-caixa" id="onbP1">
-    <div class="onb-emoji">💄</div>
-    <div class="onb-titulo">Oi! Que bom você estar aqui</div>
-    <p class="onb-texto">Antes de começar, como você gosta de ser chamada?</p>
+    <div class="onb-gata"><gatinha-fantoche pose="sentada" src-base="mascote/assets/pecas/" aria-hidden="true"></gatinha-fantoche></div>
+    <div class="onb-titulo">Seja bem-vinda, DIVA!</div>
+    <p class="onb-texto" style="text-align:center">Conte aqui, qual é o seu nome?</p>
     <input class="onb-campo" id="onbNome" placeholder="Seu primeiro nome" autocomplete="off">
     <button class="onb-btn" id="onbBtn1">Continuar</button>
   </div>
   <div class="onb-caixa" id="onbP6" hidden>
     <div class="onb-emoji">🤍</div>
     <div class="onb-titulo" id="onbTit6">Você cuida de alguém no dia a dia?</div>
-    <p class="onb-texto">Filha, filho, mãe, avó, alguém que depende de você. Quem cuida de alguém tem pouco tempo só seu, e o app vai respeitar isso: os prêmios passam a caber nos momentos em que essa pessoa está junto, descansando ou com outra pessoa.</p>
+    <p class="onb-texto" style="text-align:center">Filha, filho, mãe, avó, alguém que depende de você.</p>
     <div id="onbCuidaCampos" hidden>
       <input class="onb-campo" id="onbCuidaNome" placeholder="Nome de quem você cuida" autocomplete="off">
       <select class="onb-campo" id="onbCuidaRel"></select>
@@ -1600,40 +1600,20 @@ addEventListener('pointerdown',avisa);addEventListener('keydown',avisa);
     <button class="onb-btn" id="onbCuidaSim">Sim, cuido</button>
     <button class="onb-btn sec" id="onbCuidaNao">Não, só de mim</button>
   </div>
-  <div class="onb-caixa" id="onbP7" hidden>
-    <div class="onb-emoji">🎵</div>
-    <div class="onb-titulo">Você canta ou toca?</div>
-    <p class="onb-texto">Se a música faz parte da sua vida, o app mostra também sugestões pra cuidar da voz e do instrumento. Dá pra mudar isso depois, nas configurações.</p>
-    <button class="onb-btn" id="onbMusicaSim">Sim, canto ou toco</button>
-    <button class="onb-btn sec" id="onbMusicaNao">Não, pode pular</button>
+  <div class="onb-caixa" id="onbP8" hidden>
+    <div class="onb-emoji">🫖</div>
+    <p class="onb-texto onb-destaque">A vida cuidando de alguém é feita de entrega, e quase nunca sobra um minuto que seja só seu.</p>
+    <p class="onb-texto onb-destaque">Esse app foi feito para que você tenha tempo também pra você.</p>
+    <button class="onb-btn" id="onbBtn8">Continuar</button>
   </div>
-  <div class="onb-caixa" id="onbP2" hidden>
-    <div class="onb-titulo" id="onbTit2">Vamos começar pequeno</div>
-    <p class="onb-texto">Na terapia cognitivo-comportamental existe uma ideia muito simples e muito poderosa: a gente não precisa esperar a vontade chegar para agir. Muitas vezes é a ação que traz a vontade de volta. Um gesto pequeno, repetido, vai mostrando ao seu cérebro que você está cuidando de si, e isso muda o humor aos poucos.</p>
-    <p class="onb-texto">Por isso o app começa com hábitos tão pequenos que parecem fáceis demais. É de propósito. Um hábito pequeno que você cumpre vale mais do que um grande plano que pesa. Cada vez que você toca numa bolinha, você coleciona uma prova de que consegue.</p>
-    <p class="onb-texto">Então que tal começar pelo mais básico de todos? Que a primeira coisa que você toma de manhã seja um copo de água, antes do café, antes do celular, antes de tudo. Seu corpo acorda hidratado, sua cabeça agradece, e você já começa o dia com uma vitória. 💧</p>
-    <button class="onb-btn" id="onbBtn2">Adicionar hábito: Beber água ao acordar</button>
-    <button class="onb-link" id="onbPular">Prefiro escolher outro depois</button>
-  </div>
-  <div class="onb-caixa" id="onbP3" hidden>
-    <div class="onb-titulo">Um passo de cada vez 🌱</div>
-    <p class="onb-texto" id="onbT3p1">Antes de seguir, um pedido: não atropela.</p>
-    <p class="onb-texto">É normal bater aquela vontade de mudar tudo de uma vez, acordar cedo, beber água, meditar, se exercitar, arrumar a casa. Mas quando a gente tenta carregar tudo junto, o cansaço chega antes do hábito. E aí o que era cuidado vira cobrança.</p>
-    <p class="onb-texto">Por isso, a cada 3 dias o app libera um hábito novo. Não é para você correr atrás deles. É para você ter tempo de deixar cada um assentar no corpo antes de somar o próximo. Se um hábito ainda estiver difícil, tudo bem ficar mais tempo nele. Ninguém está contando pontos aqui além de você.</p>
-    <button class="onb-btn" id="onbBtn3">Entendi, vou no meu ritmo</button>
-  </div>
-  <div class="onb-caixa" id="onbP5" hidden>
-    <div class="onb-emoji">🌿</div>
-    <div class="onb-titulo" id="onbTit5">Tudo bem, no seu tempo</div>
-    <p class="onb-texto">Nada aqui tem hora marcada. Você não precisa começar pelo copo de água, nem começar hoje.</p>
-    <p class="onb-texto">Quando sentir vontade, abra <b>Gerenciar hábitos</b> na tela Hoje e escolha o primeiro, do jeito que fizer sentido para você. Depois dele, o app libera um novo a cada 3 dias, só para você não atropelar.</p>
-    <button class="onb-btn" id="onbBtn5">Combinado</button>
-  </div>
-  <div class="onb-caixa" id="onbP4" hidden>
-    <div class="onb-emoji" id="onbEmojiFim">💧</div>
-    <div class="onb-titulo" id="onbTitFim">Pronto!</div>
-    <p class="onb-texto" id="onbTextoFim"></p>
-    <button class="onb-btn" id="onbBtnFim">Vamos lá</button>
+  <div class="onb-caixa" id="onbP9" hidden>
+    <div class="onb-emoji">🌱</div>
+    <div class="onb-titulo">Como funciona</div>
+    <p class="onb-texto">Aqui você começa pequeno: um hábito de cada vez, um gesto simples por dia. Cada vez que você marca, coleciona uma prova de que consegue, e com 3, 7 e 21 dias de hábito ganha um prêmio pra comemorar.</p>
+    <p class="onb-texto">Conforme você segue, o app vai se abrindo e te surpreendendo: check-in, mapa emocional, um espaço pras suas conquistas e outro pra ir atrás do que você quer. Cada parte nova chega no momento certo, e eu venho te apresentar.</p>
+    <label class="onb-check"><input type="checkbox" id="onbMusica"> Eu canto ou toco, quero sugestões de música</label>
+    <button class="onb-btn" id="onbBtn9">Vamos começar</button>
+    <button class="onb-link" id="onbPular">Prefiro escolher meu primeiro hábito</button>
   </div>
 </div>
 
@@ -2266,29 +2246,29 @@ addEventListener('pointerdown',avisa);addEventListener('keydown',avisa);
   </div>
 </div>
 
-<script src="app/base.js?v=20261022g"></script>
-<script src="app/atracao-dados.js?v=20261022g"></script>
-<script src="app/cuidado-premios.js?v=20261022g"></script>
-<script src="app/estado.js?v=20261022g"></script>
-<script src="app/hoje.js?v=20261022g"></script>
-<script src="app/checkin.js?v=20261022g"></script>
-<script src="app/habitos.js?v=20261022g"></script>
-<script src="app/atracao-app.js?v=20261022g"></script>
-<script src="app/resumos.js?v=20261022g"></script>
-<script src="app/mapa.js?v=20261022g"></script>
-<script src="app/celebrar.js?v=20261022g"></script>
-<script src="app/abas.js?v=20261022g"></script>
-<script src="app/atracao-extras.js?v=20261022g"></script>
-<script src="app/estilo-autocuidado.js?v=20261022g"></script>
-<script src="app/final.js?v=20261022g"></script>
-<script src="app/boas-vindas.js?v=20261022g"></script>
-<script src="app/de-volta.js?v=20261022g"></script>
-<script src="app/iniciar.js?v=20261022g"></script>
-<script src="mascote/fantoche.js?v=20261022g"></script>
-<script src="estilo/gatinha-relatorio.js?v=20261022g"></script>
-<script src="relatorio/carta.js?v=20261022g"></script>
-<script src="relatorio/guarda-chuva.js?v=20261022g"></script>
-<script src="relatorio/carta-app.js?v=20261022g"></script>
-<script src="atracao/atracao.js?v=20261022g"></script>
+<script src="app/base.js?v=20261022h"></script>
+<script src="app/atracao-dados.js?v=20261022h"></script>
+<script src="app/cuidado-premios.js?v=20261022h"></script>
+<script src="app/estado.js?v=20261022h"></script>
+<script src="app/hoje.js?v=20261022h"></script>
+<script src="app/checkin.js?v=20261022h"></script>
+<script src="app/habitos.js?v=20261022h"></script>
+<script src="app/atracao-app.js?v=20261022h"></script>
+<script src="app/resumos.js?v=20261022h"></script>
+<script src="app/mapa.js?v=20261022h"></script>
+<script src="app/celebrar.js?v=20261022h"></script>
+<script src="app/abas.js?v=20261022h"></script>
+<script src="app/atracao-extras.js?v=20261022h"></script>
+<script src="app/estilo-autocuidado.js?v=20261022h"></script>
+<script src="app/final.js?v=20261022h"></script>
+<script src="app/boas-vindas.js?v=20261022h"></script>
+<script src="app/de-volta.js?v=20261022h"></script>
+<script src="app/iniciar.js?v=20261022h"></script>
+<script src="mascote/fantoche.js?v=20261022h"></script>
+<script src="estilo/gatinha-relatorio.js?v=20261022h"></script>
+<script src="relatorio/carta.js?v=20261022h"></script>
+<script src="relatorio/guarda-chuva.js?v=20261022h"></script>
+<script src="relatorio/carta-app.js?v=20261022h"></script>
+<script src="atracao/atracao.js?v=20261022h"></script>
 </body>
 </html>

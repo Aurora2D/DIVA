@@ -24,3 +24,11 @@
 .dv-rodape p{font-size:12px;line-height:1.55;color:var(--mut);margin:0 0 6px}
 .dv-rodape div{display:flex;flex-direction:column;align-items:center;gap:2px}
 .dv-link{background:none;border:none;padding:4px 0;margin:0!important;width:auto!important;font:inherit;font-size:12.5px;color:var(--b);text-decoration:underline;text-underline-offset:3px;cursor:pointer}
+
+/* Começo do app (onboarding em index.html, lógica em app/estado.js) */
+.onb-gata{display:flex;justify-content:center;margin-bottom:6px;min-height:150px}
+.onb-gata gatinha-fantoche{width:150px;display:block}
+.onb-overlay .onb-titulo{font-family:'Cormorant Garamond',Georgia,serif;font-weight:600;font-size:32px;letter-spacing:0}
+.onb-destaque{font-size:18px;text-align:center;line-height:1.6}
+.onb-check{display:flex;gap:10px;align-items:center;font-size:13.5px;color:var(--mut);margin:4px 0 16px;cursor:pointer}
+.onb-check input{width:18px;height:18px;accent-color:var(--b);flex-shrink:0}

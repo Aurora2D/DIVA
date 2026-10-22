@@ -280,13 +280,13 @@ function iniciarOnboarding(){
   mostrarOnbPasso(1);
 }
 function mostrarOnbPasso(p){
-  [1,2,3,4,5,6,7].forEach(i=>$('onbP'+i).hidden=i!==p);
+  [1,6,8,9].forEach(i=>$('onbP'+i).hidden=i!==p);
   if(p===6){$('onbTit6').textContent=(S.onboarding.nome?S.onboarding.nome+', você':'Você')+' cuida de alguém no dia a dia?';$('onbCuidaRel').innerHTML=RELACOES.map(r=>`<option value="${r}">${r}</option>`).join('');}
-  if(p===1)setTimeout(()=>$('onbNome').focus(),200);
-  if(p===2)$('onbTit2').textContent=(S.onboarding.nome||'Ei')+', vamos começar pequeno';
-  if(p===5){const n=S.onboarding.nome;$('onbTit5').textContent=n?('Tudo bem, '+n+'. No seu tempo.'):'Tudo bem. No seu tempo.';}
-  if(p===3)$('onbT3p1').textContent=(S.onboarding.nome||'Ei')+', antes de seguir, um pedido: não atropela.';
+  if(p===1){setTimeout(()=>$('onbNome').focus(),200);onbGata('tchau',700);}
+  if(p===9)$('onbMusica').checked=!!S.musica;
 }
+/* a gatinha acena na primeira tela (se o motor dela carregou) */
+function onbGata(acao,atraso){setTimeout(()=>{const g=document.querySelector('#onbP1 gatinha-fantoche');if(!g)return;const f=()=>{try{if(typeof g.play==='function')g.play(acao);}catch(e){}};if(g.classList.contains('pronta'))f();else g.addEventListener('ready',f,{once:true});},atraso||150);}
 function finalizarOnboarding(){
   $('onbOverlay').classList.remove('ativo');
   setTimeout(()=>{$('onbOverlay').hidden=true;document.body.style.overflow='';},500);
@@ -299,25 +299,21 @@ $('onbCuidaSim').onclick=()=>{
   const box=$('onbCuidaCampos');
   if(box.hidden){box.hidden=false;$('onbCuidaSim').textContent='Continuar';setTimeout(()=>$('onbCuidaNome').focus(),150);return;}
   const n=$('onbCuidaNome').value.trim();if(!n){$('onbCuidaNome').focus();return;}
-  definirCuidado(true,n,$('onbCuidaRel').value);mostrarOnbPasso(7);
+  definirCuidado(true,n,$('onbCuidaRel').value);mostrarOnbPasso(8);
 };
-$('onbCuidaNao').onclick=()=>{definirCuidado(false);mostrarOnbPasso(7);};
-$('onbMusicaSim').onclick=()=>{S.musica=true;salva();mostrarOnbPasso(2);};
-$('onbMusicaNao').onclick=()=>{S.musica=false;salva();mostrarOnbPasso(2);};
+$('onbCuidaNao').onclick=()=>{definirCuidado(false);mostrarOnbPasso(9);};
+$('onbBtn8').onclick=()=>mostrarOnbPasso(9);
 $('onbNome').addEventListener('keydown',e=>{if(e.key==='Enter')$('onbBtn1').click();});
-$('onbBtn2').onclick=()=>{
+/* "Vamos começar": o primeiro hábito é beber água ao acordar */
+$('onbBtn9').onclick=()=>{
+  S.musica=$('onbMusica').checked;
   if(!S.habitos.some(h=>h.id==='agua'))S.habitos.push({id:'agua',emoji:'💧',emojis:['💧','🥤','✨'],nome:'Beber água ao acordar',paraQue:'Cuidar do meu bem-estar',unidade:'1 copo ao acordar',feitos:{},cor:'c4',grupo:'corpo',dims:['corpo','energia']});
-  S.proximoHabitoEm=Date.now()+3*86400000;S.habitoTravaId='agua';salva();mostrarOnbPasso(3);
+  S.proximoHabitoEm=Date.now()+3*86400000;S.habitoTravaId='agua';
+  S.onboarding.feito=true;salva();finalizarOnboarding();
+  setTimeout(()=>mostrarToast('Seu primeiro hábito já está aqui: beber um copo de água ao acordar 💧'),900);
 };
-$('onbPular').onclick=()=>{salva();mostrarOnbPasso(5);};
-$('onbBtn5').onclick=()=>{S.onboarding.feito=true;salva();finalizarOnboarding();};
-$('onbBtn3').onclick=()=>{
-  S.onboarding.feito=true;salva();
-  const nome=S.onboarding.nome||'';
-  $('onbEmojiFim').textContent=S.habitos.some(h=>h.id==='agua')?'💧':'🌱';
-  $('onbTitFim').textContent='Pronto'+(nome?', '+nome:'')+'!';
-  $('onbTextoFim').textContent=S.habitos.some(h=>h.id==='agua')?'Sua primeira bolinha está na tela Hoje. Amanhã de manhã, antes de qualquer outra coisa, toque nela depois do primeiro copo de água. Daqui a 3 dias, seu próximo hábito chega. Até lá, a água é a única missão. 💧':'Quando quiser, abra Gerenciar hábitos e escolha o primeiro. Sem pressa.';
-  mostrarOnbPasso(4);
+$('onbPular').onclick=()=>{
+  S.musica=$('onbMusica').checked;S.onboarding.feito=true;salva();finalizarOnboarding();
+  setTimeout(()=>mostrarToast('Quando quiser, abra Gerenciar hábitos e escolha o primeiro. Sem pressa.'),900);
 };
-$('onbBtnFim').onclick=()=>{finalizarOnboarding();};
 
