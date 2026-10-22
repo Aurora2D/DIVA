@@ -130,13 +130,13 @@ function iniciarPraticas(){
       const usou=Object.values(S.checkins||{}).some(ci=>ci&&ci.praticas&&Object.keys(ci.praticas).length);
       if(usou){
         base=clonarPraticas(PRATICAS);
-        base['🤍 Contato físico']=base['🤍 Contato físico'].filter(x=>x!=='Carinho na Nica').map(x=>x==='Carinho no Pituca'?'Carinho num bichinho':x);
-        base['💌 Palavras de incentivo']=base['💌 Palavras de incentivo'].map(x=>x==='Vídeos da Ana Beatriz'?'Vídeos que me inspiram':x);
+        base['🤍 Toque físico']=base['🤍 Toque físico'].filter(x=>x!=='Carinho na Nica').map(x=>x==='Carinho no Pituca'?'Carinho num bichinho':x);
+        base['💌 Palavras de afirmação']=base['💌 Palavras de afirmação'].map(x=>x==='Vídeos da Ana Beatriz'?'Vídeos que me inspiram':x);
       }else{base=clonarPraticas(PRATICAS_GENERICAS);S.praticasModo='generica';}
     }
     S.praticas=base;salva();
   }
-  if(!S.praticasModo&&!S.perfilOriginal&&S.praticas['⏳ Tempo']){S.praticasModo='generica';salva();}
+  if(!S.praticasModo&&!S.perfilOriginal&&S.praticas['🛠️ Atos de serviço']){S.praticasModo='generica';salva();}
   PRATICAS=S.praticas;
 }
 /* Depois do teste: abre mais práticas nos estilos em que ela pontuou alto. Devolve quantas entraram. */

@@ -59,7 +59,7 @@ function estiloPraticaParaItem(pr,catId){
     unidade:pr.unidade||'no seu ritmo',
     paraQue:'Do meu estilo de autocuidado',
     texto:pr.texto||pr.nome,
-    grupo:pr.grupo||'outros',
+    grupo:catId||pr.grupo||'outros',
     dims:(pr.dims||[]).slice()
   };
 }

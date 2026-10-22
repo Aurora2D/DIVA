@@ -92,22 +92,22 @@ function sugerirPraticas(notas,praticas){
   const s=[];const jm=k=>!!(praticas&&praticas[k]);const fg=p=>Object.keys(praticas||{}).some(k=>k.startsWith(p+'|'));
   const add=(g,i)=>{const k=g+'|'+i;if(!PRATICAS[g]||!PRATICAS[g].includes(i))return;if(!jm(k)&&!s.some(x=>x.key===k))s.push({key:k,label:i,grupo:g});};
   const vals=Object.values(notas).filter(v=>typeof v==='number');const alt=vals.filter(v=>v>=7).length,baix=vals.filter(v=>v<=3).length;
-  if(notas.fisica&&notas.fisica<=4){add('🎡 Tempo de qualidade','Caminhada no quarteirão');add('🎤 Treino vocal','Canto');}
-  if((notas.fisica&&notas.fisica<=4)||(notas.danca&&notas.danca<=4)){add('🎡 Tempo de qualidade','Dança');}
-  if(!fg('🤍 Contato físico')){add('🤍 Contato físico','Auto-cafuné');}
+  if(notas.fisica&&notas.fisica<=4){add('⏳ Tempo de qualidade','Caminhada no quarteirão');add('🎤 Treino vocal','Canto');}
+  if((notas.fisica&&notas.fisica<=4)||(notas.danca&&notas.danca<=4)){add('⏳ Tempo de qualidade','Dança');}
+  if(!fg('🤍 Toque físico')){add('🤍 Toque físico','Auto-cafuné');}
   if((notas.belting&&notas.belting<=4)||(notas.lirico&&notas.lirico<=4)){add('🎤 Treino vocal','Aquecimento vocal');}
-  if(notas.mental&&notas.mental<=4){add('🎡 Tempo de qualidade','Meditação');add('💌 Palavras de incentivo','Conversa com amigos');}
-  if((notas.organizacao&&notas.organizacao<=4)||(notas.limpeza&&notas.limpeza<=4)){add('🎡 Tempo de qualidade','Louça / arrumação da casa');}
-  if(notas.autoconf&&notas.autoconf<=5){add('💌 Palavras de incentivo','Escrita no caderno');add('🤍 Contato físico','Peça de roupa favorita');}
-  if(baix>=4){add('💌 Palavras de incentivo','Terapia');}
-  if(alt>=5){add('💌 Palavras de incentivo','Conversa com amigos');add('🤍 Contato físico','Batom');}
+  if(notas.mental&&notas.mental<=4){add('⏳ Tempo de qualidade','Meditação');add('💌 Palavras de afirmação','Conversa com amigos');}
+  if((notas.organizacao&&notas.organizacao<=4)||(notas.limpeza&&notas.limpeza<=4)){add('⏳ Tempo de qualidade','Louça / arrumação da casa');}
+  if(notas.autoconf&&notas.autoconf<=5){add('💌 Palavras de afirmação','Escrita no caderno');add('🤍 Toque físico','Peça de roupa favorita');}
+  if(baix>=4){add('💌 Palavras de afirmação','Terapia');}
+  if(alt>=5){add('💌 Palavras de afirmação','Conversa com amigos');add('🤍 Toque físico','Batom');}
   // lista genérica (quem começou do zero)
-  if(notas.fisica&&notas.fisica<=4){add('⏳ Tempo','Caminhar 10 minutos');add('🤍 Toque','Alongar por 5 minutos');}
-  if(notas.danca&&notas.danca<=4){add('🤍 Toque','Dançar uma música');}
-  if(!fg('🤍 Toque')){add('🤍 Toque','Passar creme no corpo');}
-  if(notas.mental&&notas.mental<=4){add('⏳ Tempo','Meditar por 3 minutos');add('💌 Palavras','Mandar mensagem pra uma amiga');}
-  if((notas.organizacao&&notas.organizacao<=4)||(notas.limpeza&&notas.limpeza<=4)){add('🛠️ Serviço','Arrumar a cama');}
-  if(notas.autoconf&&notas.autoconf<=5){add('💌 Palavras','Escrever um bilhete gentil pra mim');add('🎁 Presentes','Vestir minha peça de roupa favorita');}
+  if(notas.fisica&&notas.fisica<=4){add('⏳ Tempo de qualidade','Caminhar 10 minutos');add('🤍 Toque físico','Alongar por 5 minutos');}
+  if(notas.danca&&notas.danca<=4){add('🤍 Toque físico','Dançar uma música');}
+  if(!fg('🤍 Toque físico')){add('🤍 Toque físico','Passar creme no corpo');}
+  if(notas.mental&&notas.mental<=4){add('⏳ Tempo de qualidade','Meditar por 3 minutos');add('💌 Palavras de afirmação','Mandar mensagem pra uma amiga');}
+  if((notas.organizacao&&notas.organizacao<=4)||(notas.limpeza&&notas.limpeza<=4)){add('🛠️ Atos de serviço','Arrumar a cama');}
+  if(notas.autoconf&&notas.autoconf<=5){add('💌 Palavras de afirmação','Escrever um bilhete gentil pra mim');add('🎁 Presentes','Vestir minha peça de roupa favorita');}
   if(alt>=5){add('🎁 Presentes','Passar batom');}
   return s;
 }

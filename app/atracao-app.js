@@ -313,7 +313,7 @@ function abrirHabitoSugestao(d,textoBruto){
   if(boxNova)boxNova.style.display='none';
   if($('habNovaCatNome'))$('habNovaCatNome').value='';
   if($('habNovaCatEmoji'))$('habNovaCatEmoji').value='✨';
-  let escolhido=(d&&d.area==='bemestar')?'corpo':((d&&d.area==='patrimonio')?'lar':((d&&d.area==='carreira')?'essencial':'outros'));
+  let escolhido=(d&&d.area==='bemestar')?'toque':((d&&d.area==='patrimonio')?'servico':((d&&d.area==='carreira')?'essencial':'outros'));
   const renderCats=()=>{
     const cats=$('habSugCats');if(!cats)return;
     const lista=todosGrupos();

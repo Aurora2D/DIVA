@@ -142,7 +142,7 @@ function renderHabitos(){
   document.querySelectorAll('#progressoBox [data-editar]').forEach(b=>{b.onclick=()=>{const hb=S.habitos.find(x=>x.id===b.dataset.editar);if(hb)abrirHabMenu(hb);};});
 
     const ocultas=new Set(S.habitosFilaOcultas||[]);
-  const GCAT={rituais:'🕯️ Cuidar de mim',musica:'🎵 Música',arte:'🎨 Arte e prazer',mente:'🧘 Mente',corpo:'🏃 Corpo',lar:'🏡 Lar doce lar',aurora:'🌙 Ritmo de '+(nomeCuidado()||'{nome}')};
+  const GCAT={palavras:'💌 Palavras de afirmação',tempo:'⏳ Tempo de qualidade',presentes:'🎁 Presentes',servico:'🛠️ Atos de serviço',toque:'🤍 Toque físico',musica:'🎵 Música',aurora:'🌙 Ritmo de '+(nomeCuidado()||'{nome}')};Object.entries(GRUPO_ALIAS).forEach(([a,b])=>{GCAT[a]=GCAT[b];});
   const filaCats=filaCompleta();
   const nomesCats=new Set(filaCats.map(c=>c.nome));
   const sugPorCat={},sugExtras={};
@@ -159,7 +159,7 @@ function renderHabitos(){
     const itens=cat.itens.filter(item=>!ocultas.has(item.nome));
     const sugs=sugPorCat[cat.nome]||[];
     if(!itens.length&&!sugs.length)return '';
-    return blocoCat(cat.nome,sugs,itens)+(cat.nome==='🎨 Arte e prazer'&&!musicaAtiva()&&S.musica!==false?cartaoMusica:'');
+    return blocoCat(cat.nome,sugs,itens)+(cat.nome==='⏳ Tempo de qualidade'&&!musicaAtiva()&&S.musica!==false?cartaoMusica:'');
   }).join('')+Object.entries(sugExtras).map(([n2,l2])=>blocoCat(n2,l2,[])).join('');
   const bm=$('btnMostrarMusica');if(bm)bm.onclick=()=>{S.musica=true;salva();renderHabitos();mostrarToast('Sugestões de música à vista 🎵');};
   document.querySelectorAll('#sugestoesFilaBox [data-fila]').forEach(el=>{

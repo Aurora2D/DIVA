@@ -164,4 +164,10 @@ Em `app/base.js`: a categoria de cuidado (`FILA_CATEGORIAS`, `cuidado:true`) tem
 
 `app/estilo-autocuidado.js`. 30 perguntas, cada uma com uma alternativa de cada estilo (A palavras, B tempo, C presentes, D serviço, E toque); os ids batem com `PRATICAS_CATALOGO`, `ESTILO_PRATICAS` e `ESTILO_PALAVRAS_CHAVE`. Ao terminar, o check-in ganha práticas do estilo principal (até 8) e do secundário (até 5), que sobem para o topo, e o sorteio da prática nos marcos pesa 3 (principal), 2 (secundário) e 1 (demais). Em listas de práticas antigas, o estilo de cada grupo sai do nome (`estiloDoGrupo` em `app/premio-pratica.js`); grupos que não são de autocuidado, como Treino vocal, ficam fora do sorteio.
 
-A pergunta "Você canta ou toca?" saiu do começo: virou um cartão nas sugestões, logo depois de Arte e prazer (`btnMostrarMusica` em `app/habitos.js`).
+A pergunta "Você canta ou toca?" saiu do começo: virou um cartão nas sugestões, logo depois de Tempo de qualidade (`btnMostrarMusica` em `app/habitos.js`).
+
+## As cinco linguagens em todo o app
+
+Hábitos (tela Hoje e sugestões), práticas do check-in e o teste usam os mesmos nomes: 💌 Palavras de afirmação, ⏳ Tempo de qualidade, 🎁 Presentes, 🛠️ Atos de serviço e 🤍 Toque físico. Ids dos grupos de hábito: `palavras`, `tempo`, `presentes`, `servico`, `toque` (`GRUPOS` em `app/base.js`). Ficam à parte só Primeiros passos (porta de entrada, nas sugestões), Música (opcional) e Ritmo de quem você cuida.
+
+`app/linguagens.js` converte uma vez o que estava guardado com nomes antigos (grupos de práticas, chaves `grupo|item` dos check-ins, categorias dos hábitos; marca `S.linguagensMigradas`). Os ids antigos (`corpo`, `rituais`, `mente`, `arte`, `lar`) continuam aceitos via `GRUPO_ALIAS`, para partes do código que ainda criem hábitos com eles.

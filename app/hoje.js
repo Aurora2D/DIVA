@@ -386,7 +386,7 @@ function montarDeclaracaoHabito(hb){
   linhas.push(esc(FECHAMENTO_FIXO));
   return linhas;
 }
-const GRUPO_PARA_AREA={corpo:'bemestar',mente:'bemestar',rituais:'bemestar',musica:'carreira',arte:'bemestar',lar:'patrimonio',aurora:'relMeu',essencial:'bemestar',outros:'bemestar'};
+const GRUPO_PARA_AREA={corpo:'bemestar',mente:'bemestar',rituais:'bemestar',musica:'carreira',arte:'bemestar',palavras:'bemestar',tempo:'bemestar',presentes:'bemestar',servico:'patrimonio',toque:'bemestar',lar:'patrimonio',aurora:'relMeu',essencial:'bemestar',outros:'bemestar'};
 function relatoLevarAtracao(hb){
   const fr=relatoFrasesUnicas(hb);if(!fr.length){avisar('Ainda não há frases suas sobre esse hábito.');return;}
   const acao=acaoDoHabito(hb);
