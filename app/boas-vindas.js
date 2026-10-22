@@ -4,29 +4,35 @@
    Para mudar os textos, mexa só em BV_TELAS. A gatinha vem de mascote/ (ver mascote/LEIA-ME.md). */
 const BV_TELAS=[
   {acao:'tchau',
-   titulo:'Oi! Eu sou a Diva. E você também é',
-   html:`<p class="onb-texto">Você fez uma ótima escolha: abrir este app é escolher cuidar de si. E cuidar de si é coisa de diva, um cuidado de cada vez.</p>
-         <p class="onb-texto">Eu vou ser sua companheira nesse caminho, sem cobrança e sem pressa.</p>`},
-  {acao:'curiosa',
-   titulo:'O que tem por aqui',
-   html:`<div class="bv-lista">
-     <div class="bv-item"><svg class="ic"><use href="#i-hoje"/></svg><div><b>Hoje</b><span>Seus hábitos pequenos, uma bolinha pra tocar quando fizer.</span></div></div>
-     <div class="bv-item"><svg class="ic"><use href="#i-checkin"/></svg><div><b>Check-in</b><span>Um espaço rápido pra registrar como foi o seu dia.</span></div></div>
-     <div class="bv-item"><svg class="ic"><use href="#i-mapa"/></svg><div><b>Mapa</b><span>A cada 21 dias, um retrato de como você está, em forma de carta.</span></div></div>
-     <div class="bv-item"><svg class="ic"><use href="#i-celebrar"/></svg><div><b>Celebrar</b><span>Seus prêmios e conquistas, pra lembrar do que você já fez.</span></div></div>
-     <div class="bv-item"><svg class="ic"><use href="#i-atracao"/></svg><div><b>Atração</b><span>Sete sessões pra olhar pro que você quer e dar o primeiro passo.</span></div></div>
-   </div>`},
+   titulo:'Bem-vinda, diva!',
+   html:`<p class="onb-texto">Você fez uma boa escolha: cuidar de si. Aqui você tem um espaço de autocuidado diário, pra lembrar todo dia que você é a pessoa mais importante da sua vida.</p>
+         <p class="onb-texto">E cada vez que você volta aqui, está fazendo essa escolha de novo.</p>`},
   {acao:'feliz',
-   titulo:'Pequeno e constante',
-   html:`<p class="onb-texto">Tudo começa pelos seus hábitos. Eles são a base que organiza o seu dia e o seu autocuidado. Porque quando a gente não se cuida, não consegue cuidar de ninguém, nem de nada.</p>
-         <p class="onb-texto">Por isso, no começo você vê só a tela Hoje, com um hábito. Pequeno e constante: é assim que a gente chega lá. O resto vai abrindo conforme você caminha:</p>
+   titulo:'Com pequenos passos a gente chega longe',
+   html:`<p class="onb-texto">E o primeiro passo é olhar pros seus hábitos. Um gesto pequeno, repetido todo dia, vai somando até te levar longe. Você começa com um só, e quando ele assentar, chega o próximo.</p>
+         <p class="onb-texto">De vez em quando eu vou te perguntar como aquele hábito está deixando o seu dia melhor. Você vai se surpreender com as respostas.</p>`},
+  {acao:'pular',
+   titulo:'Cada conquista merece um mimo',
+   html:`<p class="onb-texto">Aqui ninguém espera a meta final pra comemorar. Com 3, 7 e 21 dias de hábito, você ganha um prêmio, do tamanho do tempo que você tem naquele dia. Pode criar os seus também, e cada vitória fica guardada no seu Livro de Conquistas.</p>
+         <p class="onb-texto">Se cuidar também é saber se recompensar, e eu vou te ajudar a lembrar disso.</p>`},
+  {acao:'curiosa',
+   titulo:'Um espelho pra você',
+   html:`<p class="onb-texto">No check-in você conta como dormiu, comeu e se sentiu, e marca as práticas do dia: aqueles gestinhos de carinho consigo. Tem até um teste pra descobrir o seu jeito de se cuidar, e aí as sugestões ficam com a sua cara.</p>
+         <p class="onb-texto">Toda semana e todo mês eu te mostro um resumo, e a cada 21 dias o mapa emocional vira uma carta com o retrato de como você está e do quanto mudou. Dá pra ver, e dá pra medir!</p>`},
+  {acao:'brilho',
+   titulo:'Do que você quer ao primeiro passo',
+   html:`<p class="onb-texto">A Lei da Atração ensina que a gente atrai aquilo em que coloca atenção. Na Atração, você transforma o que te incomoda em clareza sobre o que quer, escreve a sua declaração e vai soltando as dúvidas no Livro de Permissões.</p>
+         <p class="onb-texto">No fim, o desejo vira um pequeno passo, que volta pra cá como hábito novo. É assim que tudo se conecta: você se olha, escolhe e caminha.</p>`},
+  {acao:'feliz',
+   titulo:'Tudo vai se abrindo aos poucos',
+   html:`<p class="onb-texto">No começo você vê só a tela Hoje. O resto chega conforme você caminha, e eu venho te apresentar cada parte:</p>
          <div class="bv-trilha">
            <div><span>3 dias</span>com um hábito, chega o check-in</div>
-           <div><span>7 dias</span>chega o mapa</div>
+           <div><span>7 dias</span>chega o mapa emocional</div>
            <div><span>1º retrato</span>chegam o Celebrar e a Atração</div>
          </div>
-         <p class="onb-texto">Cada vez que uma parte nova abrir, eu venho te contar. E se um dia você quiser ver tudo de uma vez, é só mudar nas configurações.</p>`,
-   botao:'Vamos começar'}
+         <p class="onb-texto">Quanto mais você aparece, mais o app se abre pra você.</p>`,
+   botao:'Vamos, diva!'}
 ];
 function boasVindasDiva(depois){
   let o=$('bvOverlay');
