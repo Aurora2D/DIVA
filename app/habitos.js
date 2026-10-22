@@ -75,7 +75,7 @@ function renderHabitos(){
   }
   if(estBox){
     const feito=S.estiloAutocuidado&&S.estiloAutocuidado.feito;
-    estBox.innerHTML=`<button type="button" class="btn btn-full" id="btnEstiloGerenciar" style="margin:8px 0 10px">${feito?'🪞 Ver meu estilo de autocuidado':'🪞 Personalizar sugestões (estilo de autocuidado)'}</button>`;
+    estBox.innerHTML=`<button type="button" class="btn btn-full" id="btnEstiloGerenciar" style="margin:8px 0 10px">${feito?'🪞 Ver meu jeito de me cuidar':'🪞 Quiz! Qual é o seu jeito de se cuidar?'}</button>`;
     const b=$('btnEstiloGerenciar');if(b)b.onclick=()=>{fecharOverlay($('gerenciarModal'),()=>{if(feito)estiloMostrarResultado();else estiloIniciar();});};
   }
 
