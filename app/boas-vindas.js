@@ -5,8 +5,8 @@
 const BV_TELAS=[
   {acao:'tchau',
    titulo:'Oi! Eu sou a Diva',
-   html:`<p class="onb-texto">Vou ser sua companheira nesse caminho de se cuidar um pouquinho por dia.</p>
-         <p class="onb-texto">Sem cobrança e sem pressa. A ideia aqui não é virar outra pessoa, é cuidar de quem você já é, no seu ritmo.</p>`},
+   html:`<p class="onb-texto">Você fez uma ótima escolha: abrir este app é escolher cuidar de si. E é assim que a gente vira uma diva, um cuidado de cada vez.</p>
+         <p class="onb-texto">Eu vou ser sua companheira nesse caminho, sem cobrança e sem pressa.</p>`},
   {acao:'curiosa',
    titulo:'O que tem por aqui',
    html:`<div class="bv-lista">
@@ -17,8 +17,9 @@ const BV_TELAS=[
      <div class="bv-item"><svg class="ic"><use href="#i-atracao"/></svg><div><b>Atração</b><span>Sete sessões pra olhar pro que você quer e dar o primeiro passo.</span></div></div>
    </div>`},
   {acao:'feliz',
-   titulo:'Tudo vai abrindo aos poucos',
-   html:`<p class="onb-texto">No começo você vai ver só a tela Hoje, com um hábito. Parece pouco, e é de propósito: quem tenta tudo de uma vez cansa antes de criar o hábito.</p>
+   titulo:'Pequeno e constante',
+   html:`<p class="onb-texto">Tudo começa pelos seus hábitos. Eles são a base que organiza o seu dia e o seu autocuidado. Porque quando a gente não se cuida, não consegue cuidar de ninguém, nem de nada.</p>
+         <p class="onb-texto">Por isso, no começo você vê só a tela Hoje, com um hábito. Pequeno e constante: é assim que a gente chega lá. O resto vai abrindo conforme você caminha:</p>
          <div class="bv-trilha">
            <div><span>3 dias</span>com um hábito, chega o check-in</div>
            <div><span>7 dias</span>chega o mapa</div>
