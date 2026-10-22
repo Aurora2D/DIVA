@@ -1,0 +1,17 @@
+/* Boas-vindas da Diva (app/boas-vindas.js) */
+.bv-overlay{z-index:310}
+.bv-gata{display:flex;justify-content:center;margin:-8px 0 6px;min-height:150px}
+.bv-gata gatinha-fantoche{width:150px;display:block;cursor:pointer}
+.bv-caixa .onb-titulo{font-family:'Cormorant Garamond',Georgia,serif;font-weight:600;font-size:32px;letter-spacing:0}
+.bv-lista{display:flex;flex-direction:column;gap:10px;margin:4px 0 18px}
+.bv-item{display:flex;gap:12px;align-items:flex-start;background:rgba(255,255,255,.55);border:1px solid var(--borda);border-radius:14px;padding:11px 13px}
+.bv-item .ic{width:24px;height:24px;flex-shrink:0;margin-top:2px}
+.bv-item b{display:block;font-size:14.5px;color:var(--txt)}
+.bv-item span{display:block;font-size:13px;line-height:1.5;color:var(--mut)}
+.bv-trilha{display:flex;flex-direction:column;gap:8px;margin:0 0 16px;padding-left:14px;border-left:2px solid var(--b)}
+.bv-trilha div{font-size:14px;line-height:1.5;color:var(--txt)}
+.bv-trilha span{display:inline-block;min-width:78px;font-weight:800;color:var(--b)}
+.bv-pontos{display:flex;justify-content:center;gap:7px;margin:6px 0 16px}
+.bv-pontos span{width:7px;height:7px;border-radius:50%;background:var(--borda);transition:all .25s}
+.bv-pontos span.on{width:20px;border-radius:4px;background:var(--b)}
+@media (prefers-color-scheme: dark){.bv-item{background:rgba(255,255,255,.06)}}

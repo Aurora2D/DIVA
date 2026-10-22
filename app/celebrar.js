@@ -93,6 +93,7 @@ function renderConfig(){
     +row('cfgRowSaude','folha','Cuidados fora do app',(()=>{const n=cuidadosPendentes().length;return n?n+(n===1?' pendente':' pendentes'):'nada pendente';})())
     +`</div>`;
   h+=`<div class="cfg-grupo-tit">Experiência</div><div class="cfg-grupo">`
+    +row('cfgRowConhecer','atracao','Conhecer a Diva<small>A gatinha mostra o que tem no app</small>','')
     +row('cfgRowAbas','mapa','Mostrar todas as abas<small>Por padrão elas abrem aos poucos</small>','',sw('cfgAbas',S.tabsLiberadas!=='progressivo'))
     +row('cfgRowMusica','nota','Sugestões de música<small>Pra quem canta ou toca</small>','',sw('cfgMusica',musicaAtiva()))
     +row('cfgRowSons','sino','Sons<small>Ao marcar hábitos e comemorar</small>','',`<span class="cfg-mini" id="btnOuvirSons">Ouvir</span>`+sw('cfgSons',somLigado()))
@@ -117,6 +118,7 @@ function renderConfig(){
   $('cfgRowLemb').onclick=()=>{renderLembretes();abrirOverlayTopo($('lembretesModal'));};
   $('cfgRowSaude').onclick=abrirCuidados;
   $('cfgRowAbas').onclick=()=>$('cfgAbas').click();
+  $('cfgRowConhecer').onclick=()=>fecharOverlay($('configModal'),()=>boasVindasDiva());
   $('cfgRowMusica').onclick=()=>$('cfgMusica').click();
   $('cfgMusica').onchange=()=>{S.musica=$('cfgMusica').checked;salva();renderHabitos();};
   $('cfgAbas').onchange=()=>{S.tabsLiberadas=$('cfgAbas').checked?'todas':'progressivo';salva();abasAtualizar(false);};

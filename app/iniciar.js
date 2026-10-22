@@ -8,7 +8,7 @@ iniciarPraticas();
 montaCheckin();
 renderHoje();
 frase();
-if(!S.onboarding.feito){setTimeout(iniciarOnboarding,300);}
+if(!S.onboarding.feito){setTimeout(()=>S.boasVindasVistas?iniciarOnboarding():boasVindasDiva(iniciarOnboarding),300);}
 else {
   abasAtualizar(false);setTimeout(()=>abasAtualizar(true),2600);
   setTimeout(avisosIniciais,900);
