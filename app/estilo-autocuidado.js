@@ -463,3 +463,9 @@ $('estiloResultadoHabitos')&&($('estiloResultadoHabitos').onclick=()=>{
 });
 
 
+
+/* cartão fixo do quiz no check-in, logo acima das práticas: fica até a pessoa fazer o quiz */
+function quizCardAtualizar(){const c=$('quizCard');if(c)c.hidden=!!(S.estiloAutocuidado&&S.estiloAutocuidado.feito);}
+$('btnQuizCard')&&($('btnQuizCard').onclick=()=>estiloIniciar());
+window.estiloFinalizar=(function(orig){return function(){const r=orig.apply(this,arguments);quizCardAtualizar();return r;};})(window.estiloFinalizar);
+quizCardAtualizar();

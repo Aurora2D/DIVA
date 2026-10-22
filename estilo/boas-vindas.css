@@ -44,3 +44,10 @@
 /* convite da música nas sugestões (app/habitos.js) */
 .musica-convite{padding:14px 16px}
 .musica-convite .txt{font-size:13.5px;line-height:1.5}
+
+/* cartão do quiz no check-in (app/estilo-autocuidado.js) */
+.quiz-card{display:flex;flex-wrap:wrap;gap:10px 12px;align-items:center;background:linear-gradient(135deg,rgba(189,128,209,.14),rgba(217,107,131,.12));border:1px solid var(--borda);border-radius:16px;padding:14px 16px;margin:0 0 10px}
+.quiz-emo{font-size:30px;line-height:1}
+.quiz-txt{flex:1;min-width:0}
+.quiz-txt b{display:block;font-size:14.5px;line-height:1.35;color:var(--txt);margin-bottom:3px}
+.quiz-txt span{display:block;font-size:12.5px;line-height:1.5;color:var(--mut)}
