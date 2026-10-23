@@ -102,6 +102,7 @@ function renderConfig(){
     +row('cfgRowResumos','grafico','Resumos semanais e mensais',hs.length?'último em '+cfgDataBr(hs[hs.length-1]):'ainda não tem')
     +`</div>`;
   h+=`<div class="cfg-grupo-tit">Seus dados</div><div class="cfg-grupo">`
+    +row('cfgRowNuvem','ciclo','Guardar na nuvem<small>Entrar com o Google e usar em mais de um aparelho</small>',window.DIVAnuvem?window.DIVAnuvem.status():'carregando…')
     +row('btnExportar','enviar','Fazer backup<small>Salva tudo num arquivo no celular</small>','')
     +row('btnImportar','baixar','Restaurar backup<small>Substitui os dados atuais</small>','')
     +(cfgTemNotas()?row('btnExportarNotas','lapis','Baixar notas antigas (.txt)',''):'')
@@ -126,12 +127,15 @@ function renderConfig(){
   $('cfgSons').onchange=()=>{S.sons={ligado:$('cfgSons').checked};salva();if(S.sons.ligado)som('plim');};
   $('btnOuvirSons').onclick=ev=>{ev.stopPropagation();const era=somLigado();if(!era)S.sons={ligado:true};som('plim');setTimeout(()=>som('guardado'),900);setTimeout(()=>som('caixinha'),1700);setTimeout(()=>{som('brilho');if(!era)S.sons={ligado:false};},2900);};
   $('cfgRowResumos').onclick=()=>fecharOverlay($('configModal'),abrirHistoricoResumos);
+  $('cfgRowNuvem').onclick=()=>{if(window.DIVAnuvem)window.DIVAnuvem.abrir();else mostrarToast('Ainda carregando, tente em instantes');};
   $('btnExportar').onclick=()=>exportarBackup();
   $('btnImportar').onclick=()=>$('fileBackup').click();
   if($('btnExportarNotas'))$('btnExportarNotas').onclick=exportarNotasAntigas;
 }
 $('btnConfig').onclick=()=>{renderConfig();abrirOverlay($('configModal'));};
 $('configFechar').onclick=()=>fecharOverlay($('configModal'));
+/* o estado da sincronização muda sozinho (app/nuvem.js): atualiza a linha se as Configurações estiverem abertas */
+window.addEventListener('diva-nuvem',()=>{try{if(!$('configModal').hidden)renderConfig();}catch(e){}});
 $('nomeCancelar').onclick=()=>fecharOverlay($('nomeModal'));
 $('nomeSalvar').onclick=()=>{const n=$('cfgNome').value.trim();if(!n){mostrarToast('Escreva seu nome');return;}S.onboarding.nome=n;salva();fecharOverlay($('nomeModal'));renderConfig();renderHoje();mostrarToast('Nome atualizado ✓');};
 $('cfgNome').onkeydown=ev=>{if(ev.key==='Enter')$('nomeSalvar').click();};
@@ -165,13 +169,19 @@ function exportarNotasAntigas(){
 function renderLembretes(){$('lemLista').innerHTML=S.lembretes.map((l,i)=>`<div class="lista-item"><div class="txt">${esc(l.frase)} <span class="mut">· ${esc(l.hora)}</span></div><button class="btn fant" data-lem="${i}">×</button></div>`).join('');document.querySelectorAll('#lemLista [data-lem]').forEach(b=>{b.onclick=()=>{S.lembretes.splice(+b.dataset.lem,1);salva();renderLembretes();renderHoje();};});}
 $('btnAddLemb').onclick=()=>{const f=$('lemFrase').value.trim(),h=$('lemHora').value;if(!f||!h)return avisar('Preencha frase e hora.');S.lembretes.push({id:'l'+Date.now(),frase:f,hora:h});$('lemFrase').value='';$('lemHora').value='';salva();renderLembretes();renderHoje();};
 async function exportarBackup(){
-  const data=JSON.stringify(S,null,2);const nome='diva-backup-'+hoje()+'.json';
+  let data=JSON.stringify(S,null,2);const nome='diva-backup-'+hoje()+'.json';
+  /* com login ativo, o backup sai embaralhado com a mesma frase-senha da nuvem */
+  if(window.DIVAcripto&&window.DIVAcripto.ativo()){try{data=await window.DIVAcripto.cifrarBackup(data);}catch(e){avisar('Não consegui proteger o backup.');return;}}
   const blob=new Blob([data],{type:'application/json'});const file=new File([blob],nome,{type:'application/json'});
   if(navigator.canShare&&navigator.canShare({files:[file]})){try{await navigator.share({files:[file],title:'Backup DIVA'});return;}catch(err){if(err&&err.name==='AbortError')return;}}
   try{const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download=nome;document.body.appendChild(a);a.click();document.body.removeChild(a);setTimeout(()=>URL.revokeObjectURL(url),1500);}
   catch(e){avisar('Não consegui baixar aqui.');}
 }
-$('fileBackup').onchange=e=>{const file=e.target.files[0];if(!file)return;const r=new FileReader();r.onload=ev=>{try{const d=JSON.parse(ev.target.result);confirmar('Substituir seus dados atuais pelo backup?',()=>{S=garanteNovosCampos(d);salva();avisar('Backup restaurado 💛',()=>location.reload());},'Substituir');}catch(err){avisar('Arquivo inválido.');}};r.readAsText(file);};
+$('fileBackup').onchange=e=>{const file=e.target.files[0];if(!file)return;e.target.value='';const r=new FileReader();r.onload=async ev=>{try{let d=JSON.parse(ev.target.result);
+  /* backup protegido: pede a frase-senha */
+  if(d&&d.cifrado){const f=prompt('Este backup é protegido. Digite sua frase-senha:');if(!f)return;if(!window.DIVAcripto){avisar('Não consegui carregar a parte de segurança. Tente de novo.');return;}try{d=JSON.parse(await window.DIVAcripto.abrirBackup(d,f));}catch(err2){avisar('Frase-senha incorreta.');return;}}
+  if(!d||typeof d!=='object'||Array.isArray(d)||!Array.isArray(d.habitos))throw new Error('Backup inválido');
+  confirmar('Substituir seus dados atuais pelo backup?',()=>{S=garanteNovosCampos(d);salva();avisar('Backup restaurado 💛',()=>location.reload());},'Substituir');}catch(err){avisar('Arquivo inválido.');}};r.readAsText(file);};
 function trocaAba(t){
   document.querySelectorAll('section[id^="tab-"]').forEach(s=>s.hidden=(s.id!=='tab-'+t));
   
