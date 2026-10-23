@@ -79,16 +79,53 @@ function montaCheckin(){
   upHoras();
   $('ciRefeicoes').innerHTML=REFEICOES.map(r=>{const on=(ci.refeicoes||[]).includes(r);return`<button type="button" class="chip ${on?'on':''}" data-ref="${esc(r)}">${esc(r)}</button>`;}).join('');
   $('ciRefeicoes').onclick=e=>{const b=e.target.closest('[data-ref]');if(!b)return;const r=b.dataset.ref;ci.refeicoes=ci.refeicoes||[];const i=ci.refeicoes.indexOf(r);if(i>=0)ci.refeicoes.splice(i,1);else ci.refeicoes.push(r);b.classList.toggle('on');salva();atualizaStatusCheckin();atualizaRelatorio();renderCheckinResumos();renderDiario();};
-  const linhaEsc=([k,rot])=>{const v=ci.escalas?.[k];return`<div class="escala" data-esc="${k}"><div class="rot">${esc(rot)}</div><div class="nums">${[0,1,2,3,4].map(n=>`<button type="button" class="num ${v===n?'on':''}" data-n="${n}">${n}</button>`).join('')}</div></div>`;};
-  const todasEsc=escalasHoje();const rapidas=todasEsc.filter(([k])=>ESCALAS_RAPIDAS.includes(k)),opcionais=todasEsc.filter(([k])=>!ESCALAS_RAPIDAS.includes(k));
-  /* "+ mais notas" já vem aberto se alguma opcional foi preenchida hoje */
-  const abertas=opcionais.some(([k])=>typeof ci.escalas?.[k]==='number');
-  $('ciEscalas').innerHTML=rapidas.map(linhaEsc).join('')+(opcionais.length?`<details class="ci-mais-notas"${abertas?' open':''}><summary class="mut" style="cursor:pointer;font-size:12.5px;font-weight:700;padding:6px 0 10px">+ mais notas (opcionais)</summary>${opcionais.map(linhaEsc).join('')}</details>`:'');
+  renderEscalasCheckin(ci);
   $('ciEscalas').onclick=e=>{const b=e.target.closest('[data-n]');if(!b)return;const escEl=b.closest('[data-esc]');if(!escEl)return;const k=escEl.dataset.esc,n=+b.dataset.n;ci.escalas=ci.escalas||{};ci.escalas[k]=(ci.escalas[k]===n)?undefined:n;salva();escEl.querySelectorAll('.num').forEach(x=>x.classList.toggle('on',+x.dataset.n===ci.escalas[k]));b.classList.add('salvo-flash');setTimeout(()=>b.classList.remove('salvo-flash'),500);atualizaStatusCheckin();atualizaRelatorio();renderCheckinResumos();renderDiario();};
+  {const notasClick=$('ciEscalas').onclick;$('ciEscalas').onclick=e=>{if(hobbyClique(e,ci))return;notasClick(e);};}
   renderPraticasCheckin();
   const obs=$('ciObs');obs.value=ci.observacoes||'';obs.oninput=()=>{$('obsFeedback').textContent='Toque em ✓ Salvar pra guardar.';};
   $('btnOkObs').onclick=()=>{ci.observacoes=obs.value;salva();$('obsFeedback').textContent='✓ Salvo';setTimeout(()=>{$('obsFeedback').textContent='';},1500);atualizaStatusCheckin();renderCheckinResumos();renderDiario();};
   atualizaRelatorio();
+}
+/* ===== Notas: à vista, "+ mais notas" e hobbies ===== */
+let ciMaisNotasAberto=null;/* lembra se ela abriu ou fechou o "+ mais notas" enquanto o app está aberto */
+function renderEscalasCheckin(ci){
+  const linhaEsc=([k,rot])=>{const v=ci.escalas?.[k];const h=hobbyDe(k);
+    const sub=h&&!h.dominio?`<div class="mut" style="font-size:11.5px;margin:-3px 0 6px">quanto isso me fez bem hoje</div>`:'';
+    return`<div class="escala" data-esc="${k}"><div class="rot">${esc(rot)}</div>${sub}<div class="nums">${[0,1,2,3,4].map(n=>`<button type="button" class="num ${v===n?'on':''}" data-n="${n}">${n}</button>`).join('')}</div></div>`;};
+  const todasEsc=escalasHoje();const rapidas=todasEsc.filter(([k])=>ESCALAS_RAPIDAS.includes(k)),opcionais=todasEsc.filter(([k])=>!ESCALAS_RAPIDAS.includes(k));
+  /* "+ mais notas" já vem aberto se alguma opcional foi preenchida hoje */
+  const aberto=ciMaisNotasAberto!==null?ciMaisNotasAberto:opcionais.some(([k])=>typeof ci.escalas?.[k]==='number');
+  const ativos=new Set(hobbiesAtivos().map(h=>h.k));
+  const chips=[...(S.hobbies||[]).map(h=>[h.k,h.nome]),...HOBBIES_SUGERIDOS.filter(([k])=>!hobbyDe(k))]
+    .map(([k,n])=>`<button type="button" class="chip ${ativos.has(k)?'on alt':''}" data-hobby="${esc(k)}" data-hobby-nome="${esc(n)}">${esc(n)}</button>`).join('');
+  const hobbiesBox=`<div class="ci-hobbies" style="margin:4px 0 12px"><div class="rot" style="font-size:12.5px;font-weight:600;margin-bottom:3px">Seus hobbies</div><p class="mut" style="font-size:11.5px;line-height:1.45;margin:0 0 8px">Toque pra adicionar os seus. Cada um vira uma nota.</p><div class="chips">${chips}<button type="button" class="chip" data-hobby-outro="1">+ outro</button></div><div id="ciHobbyOutro" hidden style="display:flex;gap:8px;margin-top:8px"><input id="ciHobbyNome" placeholder="ex: patinação" style="flex:1" maxlength="40"><button type="button" class="btn prim" data-hobby-add="1" style="flex-shrink:0">Adicionar</button></div></div>`;
+  $('ciEscalas').innerHTML=rapidas.map(linhaEsc).join('')+`<details class="ci-mais-notas"${aberto?' open':''}><summary class="mut" style="cursor:pointer;font-size:12.5px;font-weight:700;padding:6px 0 10px">+ mais notas (opcionais)</summary>${opcionais.map(linhaEsc).join('')}${hobbiesBox}</details>`;
+  const det=$('ciEscalas').querySelector('details.ci-mais-notas');if(det)det.addEventListener('toggle',()=>{ciMaisNotasAberto=det.open;});
+  const inp=$('ciHobbyNome');if(inp){const box=$('ciHobbyOutro');box.hidden=true;box.style.display='none';inp.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();hobbyAdicionarOutro(ci);}});}
+}
+function hobbySlug(t){return 'h_'+String(t).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]+/g,'_').replace(/^_|_$/g,'').slice(0,24);}
+function hobbyAlternar(k,nome){
+  const h=hobbyDe(k);
+  if(h)h.ativo=!h.ativo;else S.hobbies.push({k,nome,ativo:true});
+  registrarHobbiesEscalas(S);salva();
+}
+function hobbyAdicionarOutro(ci){
+  const inp=$('ciHobbyNome');const nome=(inp&&inp.value||'').trim();if(!nome){if(inp)inp.focus();return;}
+  const igual=(S.hobbies||[]).concat(HOBBIES_SUGERIDOS.map(([k,n])=>({k,nome:n}))).find(h=>h.nome.toLowerCase()===nome.toLowerCase());
+  let k=igual?igual.k:hobbySlug(nome);
+  if(!igual){let base=k,i=2;while(hobbyDe(k)||ESCALAS.some(([x])=>x===k))k=base+'_'+(i++);}
+  const h=hobbyDe(k);if(h)h.ativo=true;else S.hobbies.push({k,nome:igual?igual.nome:nome,ativo:true});
+  registrarHobbiesEscalas(S);salva();ciMaisNotasAberto=true;renderEscalasCheckin(ci);atualizaStatusCheckin();
+  mostrarToast('“'+nomeNota(k)+'” virou uma nota');
+}
+/* devolve true quando o toque foi num botão de hobby */
+function hobbyClique(e,ci){
+  const b=e.target.closest('[data-hobby],[data-hobby-outro],[data-hobby-add]');if(!b)return false;
+  if(b.dataset.hobbyOutro){const box=$('ciHobbyOutro');const abre=box.hidden;box.hidden=!abre;box.style.display=abre?'flex':'none';if(abre)setTimeout(()=>$('ciHobbyNome').focus(),50);return true;}
+  if(b.dataset.hobbyAdd){hobbyAdicionarOutro(ci);return true;}
+  hobbyAlternar(b.dataset.hobby,b.dataset.hobbyNome);ciMaisNotasAberto=true;renderEscalasCheckin(ci);atualizaStatusCheckin();renderCheckinResumos();
+  return true;
 }
 function renderPraticasCheckin(){
   const ci=S.checkins[hoje()]||(S.checkins[hoje()]={});
@@ -164,12 +201,14 @@ function gerarRelatorio(ci){
   else if(nTotal>=1)p1.push('Cada nota que você marcou é um jeito de se enxergar.');
   else if(temCorpo)p1.push('Você parou pra olhar seu dia.');
   if((ci.emocao||'').trim())p1.push('Hoje você se sentiu <b>'+esc(ci.emocao.trim())+'</b>.');
-  if(altas.length>=1&&altas.length<=2)p1.push('E hoje brilhou em <b>'+altas.map(([k])=>NOMES[k]).join(' e ')+'</b>.');
-  else if(altas.length>=3)p1.push('Vários cantos vieram altos — <b>'+altas.slice(0,4).map(([k])=>NOMES[k]).join(', ')+'</b>.');
+  if(altas.length>=1&&altas.length<=2)p1.push('E hoje brilhou em <b>'+altas.map(([k])=>NOMES[k]||nomeNota(k).toLowerCase()).join(' e ')+'</b>.');
+  else if(altas.length>=3)p1.push('Vários cantos vieram altos — <b>'+altas.slice(0,4).map(([k])=>NOMES[k]||nomeNota(k).toLowerCase()).join(', ')+'</b>.');
   const FF={humor:{alta:'o astral veio bom',media:'o humor está no meio do caminho',baixa:'o humor veio baixo, e tudo bem'},calma:{alta:'por dentro está tranquilo',media:'tem um pouco de aperto por dentro',baixa:'por dentro está apertado'},casa:{alta:'a casa está em ordem',media:'a casa está mais ou menos',baixa:'a casa pode esperar'},fisica:{alta:'seu corpo veio com energia',media:'seu corpo está respondendo',baixa:'seu corpo pediu pausa'},danca:{alta:'a dança está viva em você',media:'a dança vem aparecendo',baixa:'a dança te espera'},mental:{alta:'sua mente veio clara',media:'sua mente está processando',baixa:'sua mente está pesada'},autoconf:{alta:'sua autoconfiança está alta',media:'sua autoconfiança está se firmando',baixa:'a autoconfiança baixa de hoje não apaga nada'},organizacao:{alta:'a casa respira organizada',media:'a organização está encontrando ritmo',baixa:'a casa pode esperar'},limpeza:{alta:'a limpeza reflete carinho',media:'a limpeza vai chegando',baixa:'a limpeza não mede o seu valor'},belting:{alta:'seu belting está firme',media:'seu belting está encontrando espaço',baixa:'seu belting está sendo reconstruído'},lirico:{alta:'o canto lírico floresce',media:'o canto lírico está aparecendo',baixa:'o canto lírico está guardado pra você'}};
-  const fam=[{nome:'Pelo corpo em movimento',itens:['fisica','danca']},{nome:'Pela mente',itens:['mental','calma']},{nome:'Por dentro',itens:['humor','autoconf']},{nome:'No lar',itens:['casa','organizacao','limpeza']},{nome:'Na voz',itens:['belting','lirico']}];
+  const fam=[{nome:'Pelo corpo em movimento',itens:['fisica','danca']},{nome:'Pela mente',itens:['mental','calma']},{nome:'Por dentro',itens:['humor','autoconf']},{nome:'No lar',itens:['casa','organizacao','limpeza']},{nome:'Na voz',itens:['belting','lirico']},{nome:'Nos seus hobbies',itens:(S.hobbies||[]).map(h=>h.k).filter(k=>!HOBBIES_PROPRIOS.includes(k))}];
+  /* hobbies que a pessoa adicionou: frase pelo nome do hobby */
+  const ffDe=k=>FF[k]||(n=>({alta:n+' te fez muito bem',media:n+' fez bem',baixa:n+' hoje não rendeu tanto, e tudo bem'}))(nomeNota(k).toLowerCase());
   const p2=[];
-  fam.forEach(f=>{const pres=f.itens.filter(k=>notas&&typeof notas[k]==='number'&&notas[k]>=1);const partes=pres.map(k=>FF[k][banda_(notas[k])]);if(partes.length===1)p2.push(f.nome+': '+partes[0]+'.');else if(partes.length===2)p2.push(f.nome+': '+partes[0]+', e '+partes[1]+'.');});
+  fam.forEach(f=>{const pres=f.itens.filter(k=>notas&&typeof notas[k]==='number'&&notas[k]>=1);const partes=pres.map(k=>ffDe(k)[banda_(notas[k])]);if(partes.length===1)p2.push(f.nome+': '+partes[0]+'.');else if(partes.length>=2)p2.push(f.nome+': '+partes.slice(0,-1).join(', ')+', e '+partes[partes.length-1]+'.');});
   const p3=[];
   const media=nTotal>0?entradas.reduce((a,[,n])=>a+n,0)/nTotal:null;
   if(nTotal===0)p3.push('Hoje você olhou pra fora — corpo, comida, rotina.');

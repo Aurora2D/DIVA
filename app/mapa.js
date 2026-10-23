@@ -322,7 +322,8 @@ function renderCheckinNoMapa(){
     {nome:'🌱 Pelo corpo em movimento',itens:['fisica','danca']},
     {nome:'🧠 Pela mente',itens:['mental','autoconf']},
     {nome:'🏡 No lar',itens:['organizacao','limpeza']},
-    {nome:'🎤 Na voz',itens:['belting','lirico']}
+    {nome:'🎤 Na voz',itens:['belting','lirico']},
+    {nome:'🎨 Nos seus hobbies',itens:(S.hobbies||[]).map(h=>h.k).filter(k=>!HOBBIES_PROPRIOS.includes(k))}
   ];
   let linhas='';
   familias.forEach(f=>{
@@ -372,6 +373,8 @@ const CI_PARES=[
    t:{bom:'A dança está viva nos seus dias e o prazer aparece no mapa. É aí que você se reabastece.',baixo:'Dança e prazer em baixa juntos. Uma música de três minutos, só pra mexer o corpo, pode reacender os dois.',melhor:'Você dançou mais do que o prazer do mapa indica. Vale reparar se está fazendo por gosto ou por obrigação.',pior:'O mapa mostra prazer, mas a dança ficou em segundo plano. O gosto está lá, só falta abrir espaço pra ele.'}},
   {ci:'voz',lbl:'Voz (belting e canto lírico)',dim:'direcao',mlbl:'Direção',
    t:{bom:'Voz firme e rumo claro andam juntos: cantar parece ser uma das formas de você sentir que está indo a algum lugar.',baixo:'Voz e direção estão baixas ao mesmo tempo. Retomar o canto em escala pequena pode devolver sensação de caminho.',melhor:'Na voz você está mais firme do que o mapa de direção sugere. O canto pode ser a parte do rumo que já está clara.',pior:'O mapa mostra rumo, mas a voz dos dias ficou frágil. Cuidar do instrumento pode ser o próximo passo concreto desse rumo.'}},
+  {ci:'hobbies',lbl:'Seus hobbies',dim:'prazer',mlbl:'Prazer',
+   t:{bom:'Seus hobbies fizeram bem e o prazer aparece no mapa. É aí que você se reabastece.',baixo:'Hobbies e prazer em baixa juntos. Dez minutos de algo que você gosta, sem meta nenhuma, podem reacender os dois.',melhor:'Seus hobbies fizeram mais bem do que o prazer do mapa indica. Pode ter sido o que segurou o resto.',pior:'O mapa mostra prazer, mas os hobbies ficaram de lado. O gosto está lá, só falta abrir espaço pra ele.'}},
   {ci:'sono',lbl:'Sono',dim:'corpo',mlbl:'Corpo',
    t:{bom:'Você dormiu bem e o corpo diz o mesmo no mapa.',baixo:'Sono curto e corpo pedindo atenção aparecem juntos. Dormir um pouco mais cedo é o ajuste mais barato que existe.',melhor:'Você dormiu melhor do que o mapa do corpo sugere. O cansaço pode ter outra origem além das horas de sono.',pior:'O mapa mostra um corpo bem, mas as noites foram curtas. Vale proteger o sono antes que ele cobre a conta.'}},
   {ci:'sono',lbl:'Sono',dim:'energia',mlbl:'Energia',
@@ -445,6 +448,7 @@ function ciValor(D,key){
     case 'casa':return e10(m(['organizacao','limpeza']));
     case 'voz':return e10(m(['belting','lirico']));
     case 'danca':return e10(m(['danca']));
+    case 'hobbies':return e10(m((S.hobbies||[]).map(h=>h.k).filter(k=>!HOBBIES_PROPRIOS.includes(k))));
     case 'sono':{if(D.sono.length<3)return null;const mm=Math.round(ciMedia(D.sono));return{pct:Math.max(0,Math.min(100,(mm/60-5)/3*100)),txt:Math.floor(mm/60)+'h'+String(mm%60).padStart(2,'0')};}
     case 'ref':{if(D.ref.length<3)return null;const n=ciMedia(D.ref);return{pct:Math.min(100,n/4*100),txt:ciFmt(n,1)+' refeições/dia'};}
     case 'leves':{if(D.classes.length<3)return null;const l=D.classes.filter(c=>c==='leve').length;const p=l/D.classes.length*100;return{pct:p,txt:Math.round(p)+'% leves'};}

@@ -197,10 +197,24 @@ function migrarNotas04(s){
   Object.values(s.checkins||{}).forEach(ci=>{if(!ci||!ci.escalas)return;Object.keys(ci.escalas).forEach(k=>{const v=ci.escalas[k];if(typeof v==='number')ci.escalas[k]=notaDe10(v);});});
   s.notasEscala=4;
 }
-/* parte rápida do check-in: estas ficam à vista; as outras vão para "+ mais notas" (opcionais) */
-const ESCALAS_RAPIDAS=['fisica','humor','calma'];
-const ESCALAS_BASE=['fisica','mental','humor','calma','casa','autoconf'],ESCALAS_MUSICA=['danca','belting','lirico'];
-function escalasHoje(){const rot=Object.fromEntries(ESCALAS);const l=ESCALAS_BASE.map(k=>[k,rot[k]]);if(typeof musicaAtiva==='function'&&musicaAtiva())ESCALAS_MUSICA.forEach(k=>l.push([k,rot[k]]));return l;}
+/* notas do check-in (out/2026): as oito de antes; Humor, Calma e Casa em ordem saíram (ficam em ESCALAS só pro histórico).
+   À vista: física, mental e autoconfiança. Em "+ mais notas": as do lar e os hobbies que a pessoa escolhe. */
+const ESCALAS_RAPIDAS=['fisica','mental','autoconf'];
+const ESCALAS_BASE=['fisica','mental','autoconf','organizacao','limpeza'];
+/* hobbies: cada um vira uma nota de 0 a 4. Os do perfil original medem domínio (Belting, Lírico) ou prática (dança);
+   os que a pessoa adiciona medem "quanto isso me fez bem hoje". */
+const HOBBIES_SUGERIDOS=[['h_cantar','Cantar'],['h_instrumento','Tocar um instrumento'],['danca','Dançar'],['h_desenho','Desenhar ou pintar'],['h_escrita','Escrever'],['h_leitura','Ler'],['h_foto','Fotografar'],['h_manual','Crochê, tricô ou bordado'],['h_cozinha','Cozinhar por prazer'],['h_jardim','Jardinagem'],['h_esporte','Correr, pedalar ou nadar'],['h_ioga','Ioga'],['h_jogos','Jogos']];
+const HOBBIES_PROPRIOS=['danca','belting','lirico'];/* têm cruzamento próprio no relatório dos 21 dias */
+function hobbiesIniciais(s){
+  if(s.perfilOriginal||s.musica===true)return[{k:'danca',nome:'Prática de dança',ativo:true,dominio:true},{k:'belting',nome:'Domínio do Belting',ativo:true,dominio:true},{k:'lirico',nome:'Domínio do Canto Lírico',ativo:true,dominio:true}];
+  return[];
+}
+function hobbiesAtivos(){return (S.hobbies||[]).filter(h=>h.ativo);}
+function hobbyDe(k){return (S.hobbies||[]).find(h=>h.k===k)||null;}
+/* hobbies entram em ESCALAS pra aparecer no diário e no relatório, mesmo depois de tirados */
+function registrarHobbiesEscalas(s){(s.hobbies||[]).forEach(h=>{const e=ESCALAS.find(([k])=>k===h.k);if(e)e[1]=h.nome;else ESCALAS.push([h.k,h.nome]);});}
+function nomeNota(k){const h=hobbyDe(k);if(h)return h.nome;const e=ESCALAS.find(([x])=>x===k);return e?e[1]:k;}
+function escalasHoje(){const rot=Object.fromEntries(ESCALAS);return ESCALAS_BASE.map(k=>[k,rot[k]]).concat(hobbiesAtivos().map(h=>[h.k,h.nome]));}
 const CICLO_DIMS=[{key:'sobrecarga',emoji:'🌊',nome:'Sobrecarga',sobeBom:false,grupo:'peso',perguntas:['Me senti emocionalmente sobrecarregada','Senti que estava apenas sobrevivendo à semana','Tive a sensação de que nada do que faço é suficiente','Me senti atrasada em relação a tudo','Acordei já cansada de pensar']},{key:'ansiedade',emoji:'🌀',nome:'Ansiedade',sobeBom:false,grupo:'peso',perguntas:['Minha mente ficou presa em preocupações','Tive dificuldade pra desligar os pensamentos','Antecipei problemas que ainda não aconteceram','Revivi situações já passadas na cabeça','Senti o corpo em alerta sem motivo claro']},{key:'energia',emoji:'🔋',nome:'Energia',sobeBom:true,grupo:'sustenta',perguntas:['Tive energia pra fazer o que precisava','Consegui manter minha rotina básica','Tive vontade de fazer coisas que gosto','Consegui terminar o que comecei','Acordei com disposição pra começar o dia']},{key:'corpo',emoji:'🫀',nome:'Corpo',sobeBom:true,grupo:'sustenta',perguntas:['Meu sono foi reparador','Comi com regularidade e sem pressa','Meu corpo teve espaço pra descansar','Percebi e cuidei do meu corpo','Me movimentei de algum jeito que gostei']},{key:'prazer',emoji:'🎨',nome:'Prazer',sobeBom:true,grupo:'sustenta',perguntas:['Senti prazer em coisas pequenas','Ri de verdade','Parei pra apreciar algo bonito','Tive um momento de paz real, sem culpa','Senti que a vida também cabe em coisas boas']},{key:'conexao',emoji:'💛',nome:'Conexão',sobeBom:true,grupo:'relaciona',perguntas:['Me senti compreendida pelas pessoas próximas','Tive espaço pra conversar com alguém de verdade','Senti que tenho pessoas com quem contar','Consegui estabelecer limites quando precisei','Me senti à vontade pra ser eu mesma com os outros']},{key:'autopercepcao',emoji:'🪞',nome:'Autopercepção',sobeBom:true,grupo:'relaciona',perguntas:['Me senti satisfeita com quem eu sou','Me tratei com o mesmo carinho que trato os outros','Senti que estou vivendo de acordo com o que quero','Reconheci coisas boas em mim','Senti orgulho de algo que fiz']},{key:'regulacao',emoji:'🌱',nome:'Regulação',sobeBom:true,grupo:'relaciona',perguntas:['Quando algo ruim aconteceu, voltei ao normal rápido','Percebi o que estava sentindo antes de reagir','Consegui mudar de perspectiva quando fiquei presa','Senti que estava no controle das minhas reações','Consegui deixar um pensamento passar sem precisar resolvê-lo']},{key:'direcao',emoji:'🧭',nome:'Direção',sobeBom:true,grupo:'relaciona',perguntas:['Senti que minha vida caminha pra algum lugar que faz sentido','Consegui fazer coisas que considero importantes','Senti curiosidade ou vontade de experimentar coisas novas','Tive espaço mental pra pensar em coisas que não eram obrigação','Senti que estava escolhendo, e não só reagindo']}];
 const GRUPOS_MAPA=[{id:'peso',titulo:'🌊 O que pesa'},{id:'sustenta',titulo:'🔋 O que sustenta'},{id:'relaciona',titulo:'💛 Como você se relaciona'}];
 const FILA_CATEGORIAS=[{nome:'🌱 Primeiros passos',itens:[

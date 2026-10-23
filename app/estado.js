@@ -203,6 +203,8 @@ function garanteNovosCampos(s){
   if(!Array.isArray(s.celebracao.historico))s.celebracao.historico=[];
   if(!s.sons||typeof s.sons!=='object')s.sons={ligado:true};
   if(typeof s.perfilOriginal==='undefined')s.perfilOriginal=!!(s.onboarding&&s.onboarding.feito);
+  if(!Array.isArray(s.hobbies))s.hobbies=hobbiesIniciais(s);
+  registrarHobbiesEscalas(s);
   if(typeof s.cuidado==='undefined')s.cuidado=s.perfilOriginal?{cuida:true,nome:'Aurora',relacao:'filha'}:null;
   if(!Array.isArray(s.situacoes)||!s.situacoes.length)s.situacoes=situacoesPadrao(!!(s.cuidado&&s.cuidado.cuida));
   if(!Array.isArray(s.quandoDer))s.quandoDer=[];
