@@ -23,6 +23,23 @@ const ABAS_REGRAS=[
 ];
 function abasProgressivo(){return S.tabsLiberadas==='progressivo';}
 function abaLiberada(t){return t==='hoje'||!abasProgressivo()||!!(S.abasLiberadas&&S.abasLiberadas[t]);}
+/* pista do que falta pra abrir cada aba (convite, nunca cobrança) */
+function abaPista(t){
+  const dias=Math.max(0,...(S.habitos||[]).map(h=>Object.keys(h.feitos||{}).length));
+  const falta=n=>{const f=n-dias;return f===1?'Falta só 1 dia de hábito':'Faltam '+f+' dias de hábito';};
+  if(t==='diario')return dias?falta(3)+' pra abrir o Check-in. Sem pressa 💜':'O Check-in abre quando você marcar um hábito em 3 dias. Sem pressa 💜';
+  if(t==='mapa')return dias?falta(7)+' pra abrir o Mapa emocional. No seu ritmo 💜':'O Mapa emocional abre com 7 dias de hábito. No seu ritmo 💜';
+  if(t==='celebrar')return abaLiberada('mapa')?'O Celebrar abre quando o seu primeiro Mapa emocional ficar pronto 🎁':'O Celebrar abre depois do Mapa emocional. Ainda tem caminho bonito antes 🎁';
+  if(t==='atracao')return abaLiberada('celebrar')?'Quase! A Atração abre na próxima vez que você entrar no app ✨':'A Atração é a última a abrir, depois do Celebrar ✨';
+  return 'Essa parte ainda está guardada pra você 💜';
+}
+/* toque numa aba travada: balancinho no cadeado e a pista, sem trocar de tela */
+function abaTravadaToque(t){
+  const b=document.querySelector('.tabs-bar button[data-tab="'+t+'"]');
+  if(b){b.classList.remove('balanca');void b.offsetWidth;b.classList.add('balanca');setTimeout(()=>b.classList.remove('balanca'),500);}
+  if(navigator.vibrate)try{navigator.vibrate(15);}catch(e){}
+  mostrarToast('🔒 '+abaPista(t));
+}
 /* confere quem já merece abrir; mostrar=true também mostra a telinha de boas-vindas, se não houver outra coisa aberta */
 function abasAtualizar(mostrar){
   try{
@@ -34,7 +51,12 @@ function abasAtualizar(mostrar){
       ABAS_REGRAS.forEach(r=>{if(!S.abasLiberadas[r.tab]&&r.ok()){S.abasLiberadas[r.tab]=true;S.abasLiberadasEm[r.tab]=Date.now();S.abasPendentes.push(r.tab);mudou=true;}});
       if(mudou)salva();
     }
-    document.querySelectorAll('.tabs-bar button').forEach(b=>{b.hidden=!abaLiberada(b.dataset.tab);});
+    /* as abas que ainda não abriram ficam à vista, esmaecidas e com cadeado: dá pra tocar, mas não entra */
+    document.querySelectorAll('.tabs-bar button').forEach(b=>{
+      const trav=!abaLiberada(b.dataset.tab),era=b.classList.contains('travada');
+      b.hidden=false;b.classList.toggle('travada',trav);b.setAttribute('aria-disabled',trav?'true':'false');
+      if(era&&!trav){b.classList.remove('abriu');void b.offsetWidth;b.classList.add('abriu');setTimeout(()=>b.classList.remove('abriu'),1400);}
+    });
     if(mostrar&&!abasMostrouNestaAbertura&&abasProgressivo()&&S.abasPendentes&&S.abasPendentes.length&&!document.querySelector('.modal-overlay.ativo,.onb-overlay.ativo'))abasBoasVindas();
   }catch(e){console.warn('abas',e);}
 }

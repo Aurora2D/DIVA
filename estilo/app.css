@@ -78,3 +78,18 @@ h2 .ic{width:20px;height:20px;color:var(--b)}
 .gesto-btn.feito{background:#6ea87a;cursor:default}
 @media print{.gesto-btn{display:none}}
 .tabs-bar button[hidden]{display:none}
+
+/* abas que ainda não abriram: aparecem esmaecidas, com cadeado; tocar mostra a pista e não entra */
+.tabs-bar button .ti{position:relative}
+.tabs-bar button.travada{opacity:.42;filter:grayscale(.85)}
+.tabs-bar button.travada .ti::after{content:'';position:absolute;right:-6px;bottom:-2px;width:14px;height:14px;border-radius:50%;
+  background:var(--tabs-bg,#fff) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%237a6b85' stroke-width='2.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='5' y='11' width='14' height='10' rx='2'/%3E%3Cpath d='M8 11V8a4 4 0 0 1 8 0v3'/%3E%3C/svg%3E") center/10px no-repeat;
+  box-shadow:0 0 0 1px var(--borda)}
+.tabs-bar button.travada:active{transform:none}
+.tabs-bar button.balanca .ti{animation:abaBalanca .45s ease}
+@keyframes abaBalanca{0%,100%{transform:rotate(0)}20%{transform:rotate(-12deg)}40%{transform:rotate(10deg)}60%{transform:rotate(-7deg)}80%{transform:rotate(4deg)}}
+/* quando abre: perde o cinza e dá um brilho */
+.tabs-bar button.abriu .ic{animation:abaAbriu 1.3s ease}
+@keyframes abaAbriu{0%{transform:scale(.8);filter:drop-shadow(0 0 0 transparent)}35%{transform:scale(1.3);filter:drop-shadow(0 0 8px #BD80D1)}100%{transform:scale(1);filter:drop-shadow(0 0 0 transparent)}}
+@media (prefers-color-scheme:dark){.tabs-bar button.travada .ti::after{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23c4b5d3' stroke-width='2.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='5' y='11' width='14' height='10' rx='2'/%3E%3Cpath d='M8 11V8a4 4 0 0 1 8 0v3'/%3E%3C/svg%3E")}}
+@media (prefers-reduced-motion:reduce){.tabs-bar button.balanca .ti,.tabs-bar button.abriu .ic{animation:none}}
