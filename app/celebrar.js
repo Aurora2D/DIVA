@@ -183,7 +183,6 @@ $('fileBackup').onchange=e=>{const file=e.target.files[0];if(!file)return;e.targ
   if(!d||typeof d!=='object'||Array.isArray(d)||!Array.isArray(d.habitos))throw new Error('Backup inválido');
   confirmar('Substituir seus dados atuais pelo backup?',()=>{S=garanteNovosCampos(d);salva();avisar('Backup restaurado 💛',()=>location.reload());},'Substituir');}catch(err){avisar('Arquivo inválido.');}};r.readAsText(file);};
 function trocaAba(t){
-  if(typeof abaLiberada==='function'&&!abaLiberada(t)){if(typeof abaTravadaToque==='function')abaTravadaToque(t);return;}
   document.querySelectorAll('section[id^="tab-"]').forEach(s=>s.hidden=(s.id!=='tab-'+t));
   
 document.querySelectorAll('[data-atr-sec]').forEach(b=>{
@@ -200,7 +199,8 @@ document.querySelectorAll('.tabs-bar button').forEach(b=>b.classList.toggle('on'
   window.scrollTo({top:0,behavior:'instant'});
   if(typeof abasAtualizar==='function')abasAtualizar(t==='hoje');
 }
-document.querySelectorAll('.tabs-bar button').forEach(b=>{b.onclick=()=>trocaAba(b.dataset.tab);});
+/* toque na barra: aba ainda fechada só mostra a pista (os atalhos de dentro do app levam até a tela mesmo assim) */
+document.querySelectorAll('.tabs-bar button').forEach(b=>{b.onclick=()=>{const t=b.dataset.tab;if(typeof abaLiberada==='function'&&!abaLiberada(t)&&!b.classList.contains('on')){if(typeof abaTravadaToque==='function')abaTravadaToque(t);return;}trocaAba(t);};});
 $('btnGerenciar').onclick=()=>{
   renderHabitos();
   abrirOverlay($('gerenciarModal'));

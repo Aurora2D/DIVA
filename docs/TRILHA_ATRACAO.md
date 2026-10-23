@@ -112,7 +112,7 @@ Não testado: WebView real do Android, teclado do celular sobre os campos, sons.
 
 ## Decisões em aberto da Érica
 
-1. Todas as sessões ficam liberadas (a pessoa pode abrir qualquer uma). O protótipo bloqueava as seguintes até terminar a anterior. Deixei liberado porque quem já tem desejos, ou volta para um segundo desejo, ficaria travada. O card da próxima sessão aparece destacado.
+1. **Decidido (23/out/2026):** as sessões abrem uma de cada vez. As seguintes ficam à vista, bem apagadas e com cadeado; tocar balança o card e diz qual vem antes. Sessão já concluída fica aberta para sempre, então quem volta para um segundo desejo não fica travada. (Antes: todas as sessões ficavam liberadas.) O protótipo bloqueava as seguintes até terminar a anterior. Deixei liberado porque quem já tem desejos, ou volta para um segundo desejo, ficaria travada. O card da próxima sessão aparece destacado.
 2. A tela "Em que parte da sua vida mora esse desejo?" (escolha da área) não está no protótipo, foi acrescentada porque o app precisa da área.
 3. Os mantras são os completos do documento. Nos cards da trilha aparecem cortados em 2 linhas (CSS); na sessão aparecem inteiros.
 4. A retirada do "quero" no começo do desejo (`trSemQuero`) hoje está só na trilha. Pode fazer sentido mover para `limparTextoDesejo`.

@@ -209,8 +209,10 @@ function renderSessoesAtracao(){
   let h=`<header class="sv-capa">${svMascote('sv-gata')}<div class="sv-txtc"><h1>Atração</h1><p>Vamos por partes.</p><p class="sv-prog">${feitas} de ${TRILHA.length} sessões</p></div></header><ol class="sv-lista">`;
   TRILHA.forEach((s,i)=>{
     const ok=e.feitas[s.id],cur=i===primeira,emAnd=!ok&&e.tela[s.id]>0;
-    h+=cardTrilha(cur?'atual':'',ok?SV_IC.check:'',esc(s.kicker),esc(s.titulo),esc(s.afirma),s.id,
-      ok?'':`<span class="sv-fim">${cur||emAnd?'Continuar ':''}${SV_IC.seta}</span>`);
+    /* as que vêm depois da atual ficam à vista, bem apagadas e com cadeado: uma de cada vez */
+    const trav=!ok&&!cur&&!emAnd&&primeira>=0&&i>primeira;
+    h+=cardTrilha(cur?'atual':trav?'travada':'',ok?SV_IC.check:'',esc(s.kicker),esc(s.titulo),esc(s.afirma),s.id,
+      ok?'':trav?`<span class="sv-fim sv-cadeado" aria-label="Ainda fechada">${SV_CADEADO}</span>`:`<span class="sv-fim">${cur||emAnd?'Continuar ':''}${SV_IC.seta}</span>`);
   });
   h+='</ol>';
   const ativos=desejosAtivos(),pend=contrastesPendentes();
@@ -221,8 +223,18 @@ function renderSessoesAtracao(){
   h+=cardTrilha('','','Permissão','Anotar uma dúvida','Sem precisar de nada antes. Só de anotar, ela perde força.','duvida',`<span class="sv-fim">${SV_IC.seta}</span>`);
   h+='</ol>';
   el.innerHTML=h;
-  el.querySelectorAll('[data-sessao]').forEach(b=>b.onclick=()=>abrirSessaoPorId(b.dataset.sessao));
+  el.querySelectorAll('[data-sessao]').forEach(b=>b.onclick=()=>{
+    if(b.classList.contains('travada')){svSessaoTravada(b,TRILHA[primeira]);return;}
+    abrirSessaoPorId(b.dataset.sessao);
+  });
   const gc=el.querySelector('gatinha-fantoche');if(gc)gc.onclick=()=>{try{gc.play(['feliz','tchau','curiosa'][Math.floor(Math.random()*3)]);}catch(e){}};
+}
+const SV_CADEADO='<svg class="sv-ic" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>';
+/* toque numa sessão que ainda não abriu: balança e diz qual vem antes */
+function svSessaoTravada(b,atual){
+  b.classList.remove('balanca');void b.offsetWidth;b.classList.add('balanca');setTimeout(()=>b.classList.remove('balanca'),500);
+  if(navigator.vibrate)try{navigator.vibrate(15);}catch(e){}
+  mostrarToast('🔒 Essa abre depois de '+(atual?'“'+atual.titulo+'”':'a sessão atual')+'. Uma de cada vez, no seu ritmo 💜');
 }
 function abrirSessaoPorId(id){
   if(SV_ABRIR[id]){SV_ABRIR[id]();return;}
