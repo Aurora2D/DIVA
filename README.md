@@ -40,3 +40,14 @@ Os sons de marcar hábito (`plim`), guardar (`guardado`), prêmio (`caixinha`) e
 ## Trilha guiada da aba Atração
 
 A aba Atração é uma trilha de 7 sessões em tela cheia (Abertura, Deixar sair, Olhar com outros olhos, Clareza, Declaração, Permissão e Menor passo), com aquarela e a gatinha. O código fica em `atracao/atracao.js` e `atracao/atracao.css`, ligados ao `index.html` por link, e a gatinha (que reage ao que a pessoa faz) em `mascote/`. As duas pastas precisam ir junto com o `index.html`. Detalhes em `docs/TRILHA_ATRACAO.md`.
+
+## Nuvem e cofre (`app/nuvem.js`)
+
+Login com Google e dados no Firebase, sempre embaralhados no aparelho com uma chave interna aleatória. O Firebase nunca vê essa chave. Quando o aparelho esquece a chave (celular novo, navegador limpo), ela é destravada por:
+
+1. **Digital ou rosto** (passkey com a extensão PRF), que sincroniza pelo gerenciador de senhas do Google ou do iCloud.
+2. **Google Drive**: um segredo de recuperação fica na pasta oculta do app no Drive (`appDataFolder`).
+
+Não existe frase-senha. Cofres antigos (com frase) são atualizados uma vez, na primeira abertura.
+
+Configuração no Google Cloud do projeto `diva-b3ce4`: ativar a **Google Drive API** e, na tela de consentimento OAuth, incluir o escopo `drive.appdata` e cadastrar o e-mail da usuária como testadora (modo de teste).

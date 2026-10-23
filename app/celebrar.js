@@ -170,7 +170,7 @@ function renderLembretes(){$('lemLista').innerHTML=S.lembretes.map((l,i)=>`<div 
 $('btnAddLemb').onclick=()=>{const f=$('lemFrase').value.trim(),h=$('lemHora').value;if(!f||!h)return avisar('Preencha frase e hora.');S.lembretes.push({id:'l'+Date.now(),frase:f,hora:h});$('lemFrase').value='';$('lemHora').value='';salva();renderLembretes();renderHoje();};
 async function exportarBackup(){
   let data=JSON.stringify(S,null,2);const nome='diva-backup-'+hoje()+'.json';
-  /* com login ativo, o backup sai embaralhado com a mesma frase-senha da nuvem */
+  /* com login ativo, o backup sai embaralhado com a mesma chave do cofre da nuvem */
   if(window.DIVAcripto&&window.DIVAcripto.ativo()){try{data=await window.DIVAcripto.cifrarBackup(data);}catch(e){avisar('Não consegui proteger o backup.');return;}}
   const blob=new Blob([data],{type:'application/json'});const file=new File([blob],nome,{type:'application/json'});
   if(navigator.canShare&&navigator.canShare({files:[file]})){try{await navigator.share({files:[file],title:'Backup DIVA'});return;}catch(err){if(err&&err.name==='AbortError')return;}}
@@ -178,8 +178,10 @@ async function exportarBackup(){
   catch(e){avisar('Não consegui baixar aqui.');}
 }
 $('fileBackup').onchange=e=>{const file=e.target.files[0];if(!file)return;e.target.value='';const r=new FileReader();r.onload=async ev=>{try{let d=JSON.parse(ev.target.result);
-  /* backup protegido: pede a frase-senha */
-  if(d&&d.cifrado){const f=prompt('Este backup é protegido. Digite sua frase-senha:');if(!f)return;if(!window.DIVAcripto){avisar('Não consegui carregar a parte de segurança. Tente de novo.');return;}try{d=JSON.parse(await window.DIVAcripto.abrirBackup(d,f));}catch(err2){avisar('Frase-senha incorreta.');return;}}
+  /* backup protegido: o novo abre com o cofre destravado; o antigo pede a frase-senha */
+  if(d&&d.cifrado){if(!window.DIVAcripto){avisar('Não consegui carregar a parte de segurança. Tente de novo.');return;}
+    if(!window.DIVAcripto.precisaFrase(d)){if(!window.DIVAcripto.ativo()){avisar('Este backup é protegido. Entre na sua conta Google em Configurações → Guardar na nuvem e tente de novo.');return;}try{d=JSON.parse(await window.DIVAcripto.abrirBackup(d));}catch(err2){avisar('Este backup é de outra conta ou de outro cofre.');return;}}
+    else{const f=prompt('Este backup é protegido. Digite sua frase-senha:');if(!f)return;try{d=JSON.parse(await window.DIVAcripto.abrirBackup(d,f));}catch(err2){avisar('Frase-senha incorreta.');return;}}}
   if(!d||typeof d!=='object'||Array.isArray(d)||!Array.isArray(d.habitos))throw new Error('Backup inválido');
   confirmar('Substituir seus dados atuais pelo backup?',()=>{S=garanteNovosCampos(d);salva();avisar('Backup restaurado 💛',()=>location.reload());},'Substituir');}catch(err){avisar('Arquivo inválido.');}};r.readAsText(file);};
 function trocaAba(t){
