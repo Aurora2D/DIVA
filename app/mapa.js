@@ -334,7 +334,7 @@ function renderCheckinNoMapa(){
       const v4=medias[k];
       const val=Math.round((v4/NOTA_MAX)*100);
       const cor=val>=60?'var(--ok)':val>=35?'var(--b)':'var(--aviso)';
-      linhas+=`<div class="mapa-dim"><span class="nome">${esc(nomes[k])}</span><span class="barra-mini"><span class="fill" style="width:${val}%;background:${cor}"></span></span><span class="val" style="color:${cor}">${v4.toFixed(1)}</span></div>`;
+      linhas+=`<div class="mapa-dim"><span class="nome">${esc(nomes[k])}</span><span class="barra-mini"><span class="fill" style="width:${val}%;background:${cor}"></span></span><span class="val" style="color:${cor}">${val}</span></div>`;
     });
   });
   return`<details class="generic" id="ciMapaDetails" style="background:linear-gradient(135deg, rgba(128,187,209,.14), rgba(143,128,209,.10));border-color:rgba(128,187,209,.30)"><summary style="color:var(--ceu);font-size:12px;letter-spacing:1.2px;text-transform:uppercase;font-weight:800">📊 Do seu check-in diário · últimos 21 dias</summary><div class="conteudo">${linhas}<div class="mut" style="font-size:11px;margin-top:10px;line-height:1.5">Média das suas escalas do check-in. É paralela ao mapa de 21 dias — cada um conta a sua história. Aqui, quanto mais alto, melhor.</div></div></details>`;
@@ -392,6 +392,8 @@ const CI_PARES=[
   {ci:'pal',lbl:'Palavras e apoio (conversa, escrita, terapia)',dim:'conexao',mlbl:'Conexão',
    t:{bom:'Conversas, escrita e terapia estão presentes e a conexão no mapa também. Você tem onde colocar o que sente.',baixo:'Poucas práticas de palavra e pouca conexão. Uma mensagem honesta para uma pessoa só já muda o quadro.',melhor:'Você buscou palavras e apoio mais do que o mapa de conexão indica. Pode estar construindo laços que ainda não chegaram no sentimento.',pior:'O mapa mostra gente por perto, mas poucas práticas de palavra. A companhia pode estar sem espaço para conversa de verdade.'}}
 ];
+/* notas do check-in (0 a 4) aparecem de 0 a 100 no relatório, igual ao mapa */
+function ci100(n){return Math.round(n/NOTA_MAX*100);}
 function ciFmt(n,d){return (Math.round(n*Math.pow(10,d))/Math.pow(10,d)).toFixed(d).replace('.',',');}
 function ciMedia(arr){return arr.length?arr.reduce((a,b)=>a+b,0)/arr.length:null;}
 function ciColetar(ciclo){
@@ -440,7 +442,7 @@ function ciBarra(rot,pct,txt,tend,cor){
 /* valor do check-in (0-100, quanto mais alto melhor) para cada chave de par */
 function ciValor(D,key){
   const m=ks=>{const l=ks.filter(k=>D.esc[k]&&D.esc[k].length);return l.length?ciMedia(l.map(k=>ciMedia(D.esc[k]))):null;};
-  const e10=v=>v===null?null:{pct:v/NOTA_MAX*100,txt:ciFmt(v,1)+' /'+NOTA_MAX};
+  const e10=v=>v===null?null:{pct:v/NOTA_MAX*100,txt:ci100(v)+' /100'};
   switch(key){
     case 'fisica':return e10(m(['fisica']));
     case 'mental':return e10(m(['mental']));
@@ -567,13 +569,13 @@ function montarCheckinRelatorio(ciclo){
   const dPes=D.diaInfo.filter(i=>i.cls==='pesada'&&disp(i)!==null).map(disp);
   if(dLeve.length>=2&&dPes.length>=2){
     const a=ciMedia(dLeve),b=ciMedia(dPes);
-    ins.push(`Nos dias em que você nomeou emoções leves, sua disposição média foi <b>${ciFmt(a,1)}</b>; nos dias de emoções pesadas, <b>${ciFmt(b,1)}</b>. ${a-b>=0.45?'O que você sente e como o seu corpo e a sua mente respondem andam bem coladinhos.':'A emoção do dia e a disposição nem sempre andam juntas, e isso também é um dado a seu favor: você segue funcionando mesmo nos dias pesados.'}`);
+    ins.push(`Nos dias em que você nomeou emoções leves, sua disposição média foi <b>${ci100(a)}</b>; nos dias de emoções pesadas, <b>${ci100(b)}</b>. ${a-b>=0.45?'O que você sente e como o seu corpo e a sua mente respondem andam bem coladinhos.':'A emoção do dia e a disposição nem sempre andam juntas, e isso também é um dado a seu favor: você segue funcionando mesmo nos dias pesados.'}`);
   }
   const comPrat=D.diaInfo.filter(i=>i.prat>0&&disp(i)!==null).map(disp);
   const semPrat=D.diaInfo.filter(i=>i.prat===0&&disp(i)!==null).map(disp);
   if(comPrat.length>=3&&semPrat.length>=3){
     const a=ciMedia(comPrat),b=ciMedia(semPrat);
-    ins.push(Math.abs(a-b)>=0.3?`Nos dias em que você marcou alguma prática, a sua disposição média foi <b>${ciFmt(a,1)}</b>; nos dias sem prática, <b>${ciFmt(b,1)}</b>. ${a>b?'Os pequenos cuidados parecem fazer diferença real no seu dia, e vale protegê-los mesmo nos dias corridos.':'Nos dias de prática a disposição não foi maior, o que pode indicar que você se cuida justamente quando está pior. É um bom reflexo.'}`:`Com ou sem práticas marcadas, a sua disposição média ficou parecida (<b>${ciFmt(a,1)}</b> e <b>${ciFmt(b,1)}</b>).`);
+    ins.push(Math.abs(a-b)>=0.3?`Nos dias em que você marcou alguma prática, a sua disposição média foi <b>${ci100(a)}</b>; nos dias sem prática, <b>${ci100(b)}</b>. ${a>b?'Os pequenos cuidados parecem fazer diferença real no seu dia, e vale protegê-los mesmo nos dias corridos.':'Nos dias de prática a disposição não foi maior, o que pode indicar que você se cuida justamente quando está pior. É um bom reflexo.'}`:`Com ou sem práticas marcadas, a sua disposição média ficou parecida (<b>${ci100(a)}</b> e <b>${ci100(b)}</b>).`);
   }
   if(ins.length){corr+=`<div class="ci-card-rel"><div class="ci-tt">🔍 O que se repete nos seus dias</div>${ins.map(x=>`<div class="ci-insight">${x}</div>`).join('')}</div>`;}
 
@@ -596,8 +598,8 @@ function montarCheckinRelatorio(ciclo){
       dimsComScore.slice(0,2).forEach((d,pos)=>{
         const tpl=pistaEscolher(lista,chaveCiclo+'sono'+d.key,pos);
         pistas.push(pistaPreencher(tpl,{
-          dispLonga:ciFmt(a,1),
-          dispCurta:ciFmt(b,1),
+          dispLonga:ci100(a),
+          dispCurta:ci100(b),
           mapaVal:String(r[d.key]),
           mapaNome:d.nome
         }));
@@ -613,8 +615,8 @@ function montarCheckinRelatorio(ciclo){
       dimsRef.slice(0,2).forEach((d,pos)=>{
         const tpl=pistaEscolher(lista,chaveCiclo+'ref'+d.key,pos);
         pistas.push(pistaPreencher(tpl,{
-          refMais:ciFmt(a,1),
-          refMenos:ciFmt(b,1),
+          refMais:ci100(a),
+          refMenos:ci100(b),
           mapaVal:String(r[d.key]),
           mapaNome:d.nome
         }));
@@ -632,7 +634,7 @@ function montarCheckinRelatorio(ciclo){
   const linhas=ESCALAS.filter(([k])=>D.esc[k]&&D.esc[k].length).map(([k,rot])=>{
     const m=ciMedia(D.esc[k]);const a=D.escMeio.a[k],b=D.escMeio.b[k];
     let tend='';if(a&&b&&a.length>=2&&b.length>=2){const dif=ciMedia(b)-ciMedia(a);tend=dif>=0.35?'↑':dif<=-0.35?'↓':'→';}
-    return ciBarra(rot,m/NOTA_MAX*100,ciFmt(m,1)+' /'+NOTA_MAX,tend,ciCorBarra(m/NOTA_MAX*100));
+    return ciBarra(rot,m/NOTA_MAX*100,ci100(m)+' /100',tend,ciCorBarra(m/NOTA_MAX*100));
   }).join('');
   const indLinhas=linhas?`${linhas}<div class="ci-nota">As setas comparam a primeira e a segunda metade do período. Aqui, quanto mais alto, melhor.</div>`:'';
   if(linhas){ind+=`<div class="ci-card-rel"><div class="ci-tt">📊 Índices do check-in · média de 21 dias</div>${linhas}<div class="ci-nota">As setas comparam a primeira e a segunda metade do período. Aqui, quanto mais alto, melhor.</div></div>`;}
