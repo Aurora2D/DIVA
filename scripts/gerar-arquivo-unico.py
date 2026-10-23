@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Gera DIVA-index-com-trilha.html: o app inteiro num arquivo só (CSS, JS, fontes e gatinha embutidos).
+"""Gera DIVA-index-com-trilha.html: o app inteiro num arquivo só (CSS, JS, fontes, gatinha e sons embutidos).
 Uso: python3 scripts/gerar-arquivo-unico.py [saida.html]"""
 import re, base64, glob, os, sys
 raiz = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -36,6 +36,12 @@ def modulo(m):
     return '<script type="module">\n' + txt + '\n</script>'
 html = re.sub(r'<script type="module" src="(app/[^"?]+)(?:\?[^"]*)?"></script>', modulo, html)
 
+# sons (abertura e os do app) entram embutidos, pra tocar mesmo com o arquivo sozinho
+def som(m):
+    return "'data:audio/mpeg;base64," + b64(m.group(1)) + "'"
+html = re.sub(r"'(audio/[^'?]+\.mp3)(?:\?[^']*)?'", som, html)
+
 assert not re.search(r'(?:href|src)="(?:estilo|atracao|mascote|relatorio|app)/', html), 'sobrou arquivo externo'
+assert not re.search(r"'audio/[^']+\.mp3", html), 'sobrou som externo'
 open(saida, 'w', encoding='utf-8').write(html)
 print(saida, round(len(html) / 1024), 'KB')
