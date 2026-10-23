@@ -98,7 +98,7 @@ body.sv-aberta .toast{bottom:calc(96px + env(safe-area-inset-bottom,0px))}
 /* gatinha (Aurora2D/Mascote): aparece suave quando as peças carregam */
 gatinha-fantoche{opacity:0;transition:opacity .35s}
 gatinha-fantoche.pronta{opacity:1}
-.sv-faixa .sv-espia{position:absolute;right:10px;top:2px;width:84px;pointer-events:none}
+.sv-faixa .sv-espia{position:absolute;right:10px;top:2px;width:84px}
 .sv-faixa span{max-width:calc(100% - 100px)}
 @media (prefers-reduced-motion: reduce){gatinha-fantoche{transition:none}}
 

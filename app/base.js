@@ -146,7 +146,9 @@ function gataToque(g){
   setTimeout(fim,2600);/* garantia: nunca fica presa sem responder */
   try{Promise.resolve(g.play('tchau')).then(fim,fim);}catch(e){fim();}
 }
-function gataTocavel(g){if(!g||g._tocavel)return;g._tocavel=true;g.style.userSelect='none';g.style.webkitUserSelect='none';g.style.touchAction='manipulation';g.addEventListener('click',()=>gataToque(g));}
+/* qualquer gatinha do app, em qualquer tela (nome, boas-vindas, desbloqueios, Atração, relatórios, de volta), acena quando tocada */
+document.addEventListener('click',e=>{const g=e.target&&e.target.closest&&e.target.closest('gatinha-fantoche');if(g)gataToque(g);});
+function gataTocavel(g){/* mantida por compatibilidade: o toque já vale pra todas as gatinhas */}
 let toastTimer;
 function mostrarToast(txt,rotulo,fn){
   const t=$('toast');$('toastTxt').textContent=txt;
