@@ -4,7 +4,9 @@ function atualizaStatusCheckin(){
   const nSono=(ci.dormiu?1:0)+(ci.acordou?1:0);
   const elS=$('stSono');if(elS){elS.textContent=nSono===2?'✓':nSono+'/2';elS.className='ci-status '+(nSono===2?'completo':nSono>0?'parcial':'');}
     const nRef=(ci.refeicoes||[]).length;const elR=$('stRef');if(elR){elR.textContent=nRef>0?'✓ '+nRef:'0';elR.className='ci-status '+(nRef>0?'completo':'');}
-  const nEsc=ci.escalas?Object.values(ci.escalas).filter(v=>v!==undefined&&v!==null).length:0;const elSc=$('stEsc');if(elSc){const nTot=escalasHoje().length;elSc.textContent=nEsc>=nTot?'✓':nEsc+'/'+nTot;elSc.className='ci-status '+(nEsc>=nTot?'completo':nEsc>0?'parcial':'');}
+  /* o ✓ vem com as notas da parte rápida; as opcionais não contam como pendência */
+  const rap=escalasHoje().filter(([k])=>ESCALAS_RAPIDAS.includes(k));
+  const nEsc=rap.filter(([k])=>typeof ci.escalas?.[k]==='number').length;const elSc=$('stEsc');if(elSc){const nTot=rap.length;elSc.textContent=nEsc>=nTot?'✓':nEsc+'/'+nTot;elSc.className='ci-status '+(nEsc>=nTot?'completo':nEsc>0?'parcial':'');}
   const nPrat=ci.praticas?Object.keys(ci.praticas).length:0;const elP=$('stPrat');if(elP){elP.textContent=nPrat>0?'✓ '+nPrat:'0';elP.className='ci-status '+(nPrat>0?'completo':'');}
   const temObs=(ci.observacoes||'').trim().length>0;const elO=$('stObs');if(elO){elO.textContent=temObs?'✓':'0';elO.className='ci-status '+(temObs?'completo':'');}
 }
@@ -77,7 +79,11 @@ function montaCheckin(){
   upHoras();
   $('ciRefeicoes').innerHTML=REFEICOES.map(r=>{const on=(ci.refeicoes||[]).includes(r);return`<button type="button" class="chip ${on?'on':''}" data-ref="${esc(r)}">${esc(r)}</button>`;}).join('');
   $('ciRefeicoes').onclick=e=>{const b=e.target.closest('[data-ref]');if(!b)return;const r=b.dataset.ref;ci.refeicoes=ci.refeicoes||[];const i=ci.refeicoes.indexOf(r);if(i>=0)ci.refeicoes.splice(i,1);else ci.refeicoes.push(r);b.classList.toggle('on');salva();atualizaStatusCheckin();atualizaRelatorio();renderCheckinResumos();renderDiario();};
-  $('ciEscalas').innerHTML=escalasHoje().map(([k,rot])=>{const v=ci.escalas?.[k];return`<div class="escala" data-esc="${k}"><div class="rot">${esc(rot)}</div><div class="nums">${[0,1,2,3,4].map(n=>`<button type="button" class="num ${v===n?'on':''}" data-n="${n}">${n}</button>`).join('')}</div></div>`;}).join('');
+  const linhaEsc=([k,rot])=>{const v=ci.escalas?.[k];return`<div class="escala" data-esc="${k}"><div class="rot">${esc(rot)}</div><div class="nums">${[0,1,2,3,4].map(n=>`<button type="button" class="num ${v===n?'on':''}" data-n="${n}">${n}</button>`).join('')}</div></div>`;};
+  const todasEsc=escalasHoje();const rapidas=todasEsc.filter(([k])=>ESCALAS_RAPIDAS.includes(k)),opcionais=todasEsc.filter(([k])=>!ESCALAS_RAPIDAS.includes(k));
+  /* "+ mais notas" já vem aberto se alguma opcional foi preenchida hoje */
+  const abertas=opcionais.some(([k])=>typeof ci.escalas?.[k]==='number');
+  $('ciEscalas').innerHTML=rapidas.map(linhaEsc).join('')+(opcionais.length?`<details class="ci-mais-notas"${abertas?' open':''}><summary class="mut" style="cursor:pointer;font-size:12.5px;font-weight:700;padding:6px 0 10px">+ mais notas (opcionais)</summary>${opcionais.map(linhaEsc).join('')}</details>`:'');
   $('ciEscalas').onclick=e=>{const b=e.target.closest('[data-n]');if(!b)return;const escEl=b.closest('[data-esc]');if(!escEl)return;const k=escEl.dataset.esc,n=+b.dataset.n;ci.escalas=ci.escalas||{};ci.escalas[k]=(ci.escalas[k]===n)?undefined:n;salva();escEl.querySelectorAll('.num').forEach(x=>x.classList.toggle('on',+x.dataset.n===ci.escalas[k]));b.classList.add('salvo-flash');setTimeout(()=>b.classList.remove('salvo-flash'),500);atualizaStatusCheckin();atualizaRelatorio();renderCheckinResumos();renderDiario();};
   renderPraticasCheckin();
   const obs=$('ciObs');obs.value=ci.observacoes||'';obs.oninput=()=>{$('obsFeedback').textContent='Toque em ✓ Salvar pra guardar.';};
