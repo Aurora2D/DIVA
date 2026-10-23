@@ -227,7 +227,7 @@ function renderSessoesAtracao(){
     if(b.classList.contains('travada')){svSessaoTravada(b,TRILHA[primeira]);return;}
     abrirSessaoPorId(b.dataset.sessao);
   });
-  const gc=el.querySelector('gatinha-fantoche');if(gc)gc.onclick=()=>{try{gc.play(['feliz','tchau','curiosa'][Math.floor(Math.random()*3)]);}catch(e){}};
+  const gc=el.querySelector('gatinha-fantoche');if(gc)gataTocavel(gc);
 }
 const SV_CADEADO='<svg class="sv-ic" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>';
 /* toque numa sessão que ainda não abriu: balança e diz qual vem antes */

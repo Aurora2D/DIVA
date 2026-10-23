@@ -137,6 +137,16 @@ function fechaDialogo(){
 }
 const avisar=(texto,fn,titulo)=>dialogo({titulo:titulo||'',texto,botoes:[{rotulo:'Ok',prim:true,fn}]});
 const confirmar=(texto,fnSim,rotuloSim)=>dialogo({texto,botoes:[{rotulo:'Cancelar'},{rotulo:rotuloSim||'Sim',prim:true,fn:fnSim}]});
+/* toque na gatinha: sempre acena com a patinha; tocar de novo durante o aceno guarda UMA reação pra depois (sem empilhar animações) */
+function gataToque(g){
+  if(!g||typeof g.play!=='function')return;
+  if(g._acenando){g._depois=g._depois||['feliz','pular','curiosa'][Math.floor(Math.random()*3)];return;}
+  g._acenando=true;
+  let feito=false;const fim=()=>{if(feito)return;feito=true;g._acenando=false;const d=g._depois;g._depois=null;if(d){try{g.play(d);}catch(e){}}};
+  setTimeout(fim,2600);/* garantia: nunca fica presa sem responder */
+  try{Promise.resolve(g.play('tchau')).then(fim,fim);}catch(e){fim();}
+}
+function gataTocavel(g){if(!g||g._tocavel)return;g._tocavel=true;g.style.userSelect='none';g.style.webkitUserSelect='none';g.style.touchAction='manipulation';g.addEventListener('click',()=>gataToque(g));}
 let toastTimer;
 function mostrarToast(txt,rotulo,fn){
   const t=$('toast');$('toastTxt').textContent=txt;

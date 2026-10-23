@@ -67,7 +67,7 @@ function abasBoasVindas(){
   const r=ABAS_REGRAS.find(x=>x.tab===t);const o=$('abaBoasVindasModal');if(!r||!o)return;
   const gataOk=window.customElements&&customElements.get('gatinha-fantoche');
   if(gataOk){$('abaBvEmoji').innerHTML='<gatinha-fantoche pose="sentada" src-base="mascote/assets/pecas/" aria-hidden="true" style="width:120px;display:block;margin:0 auto"></gatinha-fantoche>';
-    const g=$('abaBvEmoji').querySelector('gatinha-fantoche');const f=()=>{try{g.play('pular');}catch(e){}};g.addEventListener('ready',()=>setTimeout(f,350),{once:true});g.onclick=()=>{try{g.play(['feliz','tchau','curiosa'][Math.floor(Math.random()*3)]);}catch(e){}};}
+    const g=$('abaBvEmoji').querySelector('gatinha-fantoche');const f=()=>{try{g.play('pular');}catch(e){}};g.addEventListener('ready',()=>setTimeout(f,350),{once:true});gataTocavel(g);}
   else $('abaBvEmoji').textContent=r.emoji;$('abaBvTitulo').textContent=r.titulo;$('abaBvTexto').textContent=r.texto;
   $('abaBvSim').textContent=r.botao;
   $('abaBvSim').onclick=()=>fecharOverlay(o,()=>trocaAba(t));

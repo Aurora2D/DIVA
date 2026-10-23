@@ -48,7 +48,7 @@ function boasVindasDiva(depois){
     </div>`;
     document.body.appendChild(o);
     const g=o.querySelector('gatinha-fantoche');
-    if(g){g.addEventListener('ready',()=>g.classList.add('pronta'),{once:true});g.onclick=()=>bvGata(['feliz','tchau','curiosa','pular'][Math.floor(Math.random()*4)]);}
+    if(g){g.addEventListener('ready',()=>g.classList.add('pronta'),{once:true});gataTocavel(g);}
   }
   let i=0;
   const mostra=()=>{
