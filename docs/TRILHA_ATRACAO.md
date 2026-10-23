@@ -67,7 +67,8 @@ Princípio: função nova entra como arquivo à parte e o `index.html` só a lig
 
 No `atracao.js` o app só usa a API dela: `svMascote()` cria o `<gatinha-fantoche>` e `svReage('acao')` toca uma ação (`cat.play`). As reações ficam em um lugar só, para trocar fácil:
 
-- `MASCOTE_ENTRADA`: o que ela faz quando a sessão abre (abertura: tchau; sair: suspirar; clareza e permissão: curiosa; menor passo: feliz).
+- `MASCOTE_ENTRADA`: o que ela faz quando a sessão abre (abertura: tchau; sair: suspirar; clareza: curiosa; permissão e menor passo: feliz).
+- Pose: o campo `mascote` de cada sessão vira a pose da gatinha. A Permissão já tem pose própria (patinhas no peito); as outras ainda não existem e por isso aparecem com a pose sentada, sem quebrar.
 - `reage:'acao'` em uma tela: o que ela faz ao chegar nela (Deixar sair guardado: suspirar; desejo criado e frase de permissão: brilho; menor passo guardado: feliz). Sem `reage`, ela balança a cabeça dizendo sim ao avançar.
 - "Sim, faz bem" na declaração: feliz. "Transformar em hábito": brilho. Enquanto a pessoa escreve, as orelhas mexem de tempos em tempos. Tocar na gatinha da capa faz ela reagir.
 - Nas telas de dentro ela espia no canto da faixa de cima; na primeira tela da sessão aparece inteira.

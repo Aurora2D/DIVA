@@ -17,7 +17,7 @@
 const MASCOTE_BASE='mascote/assets/pecas/';
 const svMascote=(cls,pose)=>window.customElements&&customElements.get('gatinha-fantoche')?`<gatinha-fantoche class="${cls}" pose="${pose||'sentada'}" src-base="${MASCOTE_BASE}" aria-hidden="true"></gatinha-fantoche>`:'';
 /* reações: o que a gatinha faz em cada interação. Para mudar, troque os nomes das ações aqui. */
-const MASCOTE_ENTRADA={abertura:'tchau',sair:'suspirar',clareza:'curiosa',permissao:'curiosa',passo:'feliz'};
+const MASCOTE_ENTRADA={abertura:'tchau',sair:'suspirar',clareza:'curiosa',permissao:'feliz',passo:'feliz'};
 function svReage(acao,atraso){
   const go=()=>{const c=document.querySelector('#sessaoTela gatinha-fantoche');if(!c)return;
     const f=()=>{try{if(typeof c.play==='function')c.play(acao);}catch(e){}};
@@ -100,8 +100,8 @@ function sessaoMostrar(manter){
   const st=_sessao,def=st.def,t=svNorm(st.telas[st.i]);
   st.acoes=[];const binds=[];let h='';
   if(st.i===0&&!def.compacto){
-    h+=`<div class="sv-hero${def.mascote?' com-img':''}">${def.mascote?svMascote('sv-mascote'):svAquarela(def.id||'x',420,320,5)}</div><div class="sv-cab"><p class="sv-kick">${esc(def.kicker)}</p><h1 class="sv-tit">${esc(def.titulo)}</h1>${def.afirma?`<p class="sv-afirma">${esc(def.afirma)}</p>`:''}</div>`;
-  }else h+=`<div class="sv-faixa">${def.compacto?svAquarela(def.id||'x',420,80,3,9):''}<span>${esc(def.kicker)} · ${esc(def.titulo)}</span>${def.compacto?'':svMascote('sv-espia')}</div>`;
+    h+=`<div class="sv-hero${def.mascote?' com-img':''}">${def.mascote?svMascote('sv-mascote',def.mascote):svAquarela(def.id||'x',420,320,5)}</div><div class="sv-cab"><p class="sv-kick">${esc(def.kicker)}</p><h1 class="sv-tit">${esc(def.titulo)}</h1>${def.afirma?`<p class="sv-afirma">${esc(def.afirma)}</p>`:''}</div>`;
+  }else h+=`<div class="sv-faixa">${def.compacto?svAquarela(def.id||'x',420,80,3,9):''}<span>${esc(def.kicker)} · ${esc(def.titulo)}</span>${def.compacto?'':svMascote('sv-espia',def.mascote)}</div>`;
   const ult=st.i===st.telas.length-1;
   h+='<div class="sv-corpo">'+(t.b||[]).map(b=>svBloco(b,st,binds)).join('');
   if(ult&&def.pular)h+=`<button type="button" class="sv-pular" id="svPular">${esc(def.pular.rot)}</button>`;

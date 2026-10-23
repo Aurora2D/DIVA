@@ -287,6 +287,13 @@ function abrirFesta(hb){
     }
   });
   o.hidden=false;requestAnimationFrame(()=>o.classList.add('ativo'));document.body.style.overflow='hidden';
+  const fe=o.querySelector('.festa-emoji');   /* 21 dias: a gatinha comemora no lugar do 🎉 */
+  if(fe&&window.customElements&&customElements.get('gatinha-fantoche')){
+    fe.classList.add('com-gata');
+    fe.innerHTML='<gatinha-fantoche pose="comemoracao" src-base="mascote/assets/pecas/" aria-hidden="true" style="width:130px;display:block;margin:0 auto"></gatinha-fantoche>';
+    const g=fe.querySelector('gatinha-fantoche');const f=()=>{try{g.play('comemorar');}catch(e){}};
+    g.addEventListener('ready',()=>setTimeout(f,500),{once:true});
+  }
   if(festaAnim)festaAnim.parar();festaAnim=iniciarFogos(canvas);confete(['🎉','✨','💛','💜','🎊']);
   $('festaBtn').onclick=()=>{premioAprender(festaBonusAtual,true);fecharFesta();};
   $('festaGuardar').onclick=()=>{if(festaBonusAtual){premioAprender(festaBonusAtual,true);abrirGuardar(festaBonusAtual,festaCtxInfo,fecharFesta);}};
