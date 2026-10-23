@@ -137,14 +137,19 @@ function fechaDialogo(){
 }
 const avisar=(texto,fn,titulo)=>dialogo({titulo:titulo||'',texto,botoes:[{rotulo:'Ok',prim:true,fn}]});
 const confirmar=(texto,fnSim,rotuloSim)=>dialogo({texto,botoes:[{rotulo:'Cancelar'},{rotulo:rotuloSim||'Sim',prim:true,fn:fnSim}]});
-/* toque na gatinha: sempre acena com a patinha; tocar de novo durante o aceno guarda UMA reação pra depois (sem empilhar animações) */
+/* toque na gatinha: cada toque faz o próximo movimento dela, passando por todos (tchau, pulo, piscar...).
+   Ela responde a todo toque; só não repete um movimento que ainda está acontecendo (pula pro seguinte). */
+const GATA_MOVIMENTOS=['tchau','pular','piscar','feliz','abanar','curiosa','vergonha','orelhas','sim','brilho','suspirar'];
 function gataToque(g){
   if(!g||typeof g.play!=='function')return;
-  if(g._acenando){g._depois=g._depois||['feliz','pular','curiosa'][Math.floor(Math.random()*3)];return;}
-  g._acenando=true;
-  let feito=false;const fim=()=>{if(feito)return;feito=true;g._acenando=false;const d=g._depois;g._depois=null;if(d){try{g.play(d);}catch(e){}}};
-  setTimeout(fim,2600);/* garantia: nunca fica presa sem responder */
-  try{Promise.resolve(g.play('tchau')).then(fim,fim);}catch(e){fim();}
+  if(!g._emCurso)g._emCurso=new Set();
+  let n=GATA_MOVIMENTOS.length,acao;
+  do{g._vez=((g._vez==null?-1:g._vez)+1)%GATA_MOVIMENTOS.length;acao=GATA_MOVIMENTOS[g._vez];}while(g._emCurso.has(acao)&&--n>0);
+  if(g._emCurso.has(acao))return;
+  g._emCurso.add(acao);
+  let feito=false;const fim=()=>{if(feito)return;feito=true;g._emCurso.delete(acao);};
+  setTimeout(fim,3000);/* garantia: nunca fica presa */
+  try{Promise.resolve(g.play(acao)).then(fim,fim);}catch(e){fim();}
 }
 /* qualquer gatinha do app, em qualquer tela (nome, boas-vindas, desbloqueios, Atração, relatórios, de volta), acena quando tocada */
 document.addEventListener('click',e=>{const g=e.target&&e.target.closest&&e.target.closest('gatinha-fantoche');if(g)gataToque(g);});
