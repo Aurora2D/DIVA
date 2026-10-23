@@ -199,7 +199,8 @@ document.querySelectorAll('.tabs-bar button').forEach(b=>b.classList.toggle('on'
   window.scrollTo({top:0,behavior:'instant'});
   if(typeof abasAtualizar==='function')abasAtualizar(t==='hoje');
 }
-document.querySelectorAll('.tabs-bar button').forEach(b=>{b.onclick=()=>trocaAba(b.dataset.tab);});
+/* toque na barra: aba ainda fechada só mostra a pista (os atalhos de dentro do app levam até a tela mesmo assim) */
+document.querySelectorAll('.tabs-bar button').forEach(b=>{b.onclick=()=>{const t=b.dataset.tab;if(typeof abaLiberada==='function'&&!abaLiberada(t)&&!b.classList.contains('on')){if(typeof abaTravadaToque==='function')abaTravadaToque(t);return;}trocaAba(t);};});
 $('btnGerenciar').onclick=()=>{
   renderHabitos();
   abrirOverlay($('gerenciarModal'));

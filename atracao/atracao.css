@@ -109,3 +109,11 @@ gatinha-fantoche.pronta{opacity:1}
 .sv-sessao .sv-n{font-size:19px;line-height:1.2}
 .sv-pergunta{font-size:22px}
 .sv-sub{font-size:22px;text-transform:none}
+
+/* sessões que ainda não abriram: bem apagadas, com cadeado; tocar só balança e mostra a pista */
+.sv-sessao.travada{opacity:.4;filter:grayscale(.9);box-shadow:none;cursor:default}
+.sv-sessao.travada .sv-thumb{opacity:.6}
+.sv-sessao.travada .sv-cadeado{color:var(--mut)}
+.sv-sessao.balanca{animation:svBalanca .45s ease}
+@keyframes svBalanca{0%,100%{transform:translateX(0)}20%{transform:translateX(-6px)}40%{transform:translateX(5px)}60%{transform:translateX(-3px)}80%{transform:translateX(2px)}}
+@media (prefers-reduced-motion:reduce){.sv-sessao.balanca{animation:none}}

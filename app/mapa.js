@@ -196,7 +196,7 @@ function mapaIntervaloHTML(){
 function irParaDeclaracao(){
   const fechar=document.querySelectorAll('.modal-overlay.ativo');fechar.forEach(o=>fecharOverlay(o));
   setTimeout(()=>{
-    const t=document.querySelector('[data-tab="atracao"]');if(t)t.click();
+    trocaAba('atracao');
     setTimeout(()=>{try{sessaoComDesejo(sessaoDeclaracao);}catch(e){}},250);
   },fechar.length?340:0);
 }
