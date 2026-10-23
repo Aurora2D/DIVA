@@ -1333,7 +1333,7 @@ addEventListener('pointerdown',avisa);addEventListener('keydown',avisa);
   if(s>1){fr.style.width=(100/s)+'%';fr.style.height=(100/s)+'%';fr.style.transform='scale('+s+')';fr.style.transformOrigin='0 0'}
   var pronto=false,carregou=document.readyState!=='loading',foi=false;
   /* som da abertura (toca junto com a animação; o final do som continua suave já dentro do app) */
-  var som=null;try{som=new Audio('audio/abertura.mp3');som.preload='auto';som.volume=.85}catch(e){}
+  var som=null;try{som=new Audio('audio/abertura.mp3?v=20261023');som.preload='auto';som.volume=.85}catch(e){}
   function vai(){if(foi||!pronto||!carregou)return;foi=true;fr.contentWindow.postMessage('diva-go','*');
     if(som){var p=som.play();if(p&&p.catch)p.catch(function(){/* navegador bloqueou som automático: segue em silêncio */})}
     setTimeout(fim,3400)}
