@@ -324,7 +324,7 @@ async function usaChave(k) {
 
 /* Cria o cofre novo. Se houver um cofre antigo (frase-senha), traz os dados dele.
    Tudo vai para o Firebase numa gravação só, para nunca ficar pela metade. */
-async function criaCofre(obterChaveVelha) {
+async function criaCofre(obterChaveVelha, descartarNuvem) {
   const tok = await tokenDrive(); // primeiro, enquanto o toque ainda vale para abrir a janela do Google
   const chaveVelha = obterChaveVelha ? await obterChaveVelha() : null;
   let estadoNovo = null;
@@ -344,6 +344,9 @@ async function criaCofre(obterChaveVelha) {
   if (estadoNovo) {
     const c = await cifra(k, estadoNovo.texto);
     mudancas.estado = { v: 2, iv: c.iv, ct: c.ct, t: estadoNovo.t };
+  } else if (descartarNuvem) {
+    // esqueceu a frase: os dados antigos da nuvem não abrem mais; apaga e sobe o que está neste aparelho
+    mudancas.estado = null;
   }
   await update(ref(db, `usuarios/${user.uid}`), mudancas);
   try { localStorage.removeItem('divaDigital'); } catch (e) {}
@@ -516,7 +519,7 @@ async function mostraNuvem() {
         // a janela do Google abre antes da conta da frase, para o navegador não bloquear
         await criaCofre(() => chaveDaFraseAntiga(f, meta));
         await depoisDeAbrir();
-      })), sair);
+      })), botao('Esqueci a frase', 'sec', () => esqueciFrase(mostraNuvem)), sair);
     } else {
       prepara('Proteger seus dados', 'O DIVA embaralha seus dados antes de irem para a nuvem. A chave fica numa pasta escondida do seu Google Drive, que só o DIVA enxerga: se trocar de celular, é só entrar com o Google. O Google vai pedir uma permissão a mais para isso.');
       botoes.append(botao('Criar meu cofre', 'prim', acao(async () => { await criaCofre(null); await depoisDeAbrir(); })), sair);
@@ -534,6 +537,20 @@ async function mostraNuvem() {
   botoes.append(botao('Fechar', 'prim', fecha));
   if (!comDigital && await digitalDisponivel()) { const meta = await leMeta(); botoes.append(botao('Usar a digital neste aparelho', 'sec', acao(async () => { await cadastraDigital(meta); mostraNuvem(); }))); }
   botoes.append(botao('Sair desta conta', 'sec', async () => { await sair_(); }));
+  abre();
+}
+
+/* Esqueceu a frase-senha antiga: sem ela, os dados guardados na nuvem não abrem nunca mais.
+   Começa um cofre novo com o que está neste aparelho; os dados antigos da nuvem são apagados. */
+function esqueciFrase(voltar) {
+  const temLocal = onboardingFeito();
+  prepara('Começar um cofre novo?', temLocal
+    ? 'Sem a frase, ninguém consegue abrir os dados antigos que estão na nuvem, nem o DIVA. Dá pra começar um cofre novo com tudo o que está neste aparelho. Os dados antigos da nuvem serão apagados, e isso não tem volta.'
+    : 'Sem a frase, ninguém consegue abrir os dados antigos que estão na nuvem, nem o DIVA. Este aparelho está sem dados, então o cofre novo começa vazio. Se outro aparelho seu tem os dados, faça isso por ele. Os dados antigos da nuvem serão apagados, e isso não tem volta.');
+  $('nvBotoes').append(
+    botao('Começar o cofre novo', 'prim', acao(async () => { await criaCofre(null, true); await depoisDeAbrir(); })),
+    botao('Voltar', 'sec', voltar)
+  );
   abre();
 }
 
