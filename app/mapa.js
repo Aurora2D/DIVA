@@ -304,7 +304,7 @@ function calcularCheckin21(){
     if(d<inicio||d>hojeStr)return;
     if(!ci.escalas)return;
     Object.entries(ci.escalas).forEach(([k,v])=>{
-      if(typeof v!=='number'||v<1)return;
+      if(typeof v!=='number')return;
       somas[k]=(somas[k]||0)+v;
       contagens[k]=(contagens[k]||0)+1;
     });
@@ -330,10 +330,10 @@ function renderCheckinNoMapa(){
     if(!dentro.length)return;
     linhas+=`<div style="font-size:10.5px;font-weight:800;letter-spacing:1.4px;text-transform:uppercase;color:var(--ceu);margin:10px 0 6px">${f.nome}</div>`;
     dentro.forEach(k=>{
-      const v10=medias[k];
-      const val=Math.round((v10/10)*100);
+      const v4=medias[k];
+      const val=Math.round((v4/NOTA_MAX)*100);
       const cor=val>=60?'var(--ok)':val>=35?'var(--b)':'var(--aviso)';
-      linhas+=`<div class="mapa-dim"><span class="nome">${esc(nomes[k])}</span><span class="barra-mini"><span class="fill" style="width:${val}%;background:${cor}"></span></span><span class="val" style="color:${cor}">${v10.toFixed(1)}</span></div>`;
+      linhas+=`<div class="mapa-dim"><span class="nome">${esc(nomes[k])}</span><span class="barra-mini"><span class="fill" style="width:${val}%;background:${cor}"></span></span><span class="val" style="color:${cor}">${v4.toFixed(1)}</span></div>`;
     });
   });
   return`<details class="generic" id="ciMapaDetails" style="background:linear-gradient(135deg, rgba(128,187,209,.14), rgba(143,128,209,.10));border-color:rgba(128,187,209,.30)"><summary style="color:var(--ceu);font-size:12px;letter-spacing:1.2px;text-transform:uppercase;font-weight:800">📊 Do seu check-in diário · últimos 21 dias</summary><div class="conteudo">${linhas}<div class="mut" style="font-size:11px;margin-top:10px;line-height:1.5">Média das suas escalas do check-in. É paralela ao mapa de 21 dias — cada um conta a sua história. Aqui, quanto mais alto, melhor.</div></div></details>`;
@@ -403,7 +403,7 @@ function ciColetar(ciclo){
   dias.forEach(([d,ci])=>{
     const info={d,sono:null,mental:null,fisica:null,cls:null,prat:0};
     if(ci.escalas)Object.entries(ci.escalas).forEach(([k,v])=>{
-      if(typeof v!=='number'||v<1)return;
+      if(typeof v!=='number')return;
       (esc[k]=esc[k]||[]).push(v);
       const lado=d<meio?'a':'b';(escMeio[lado][k]=escMeio[lado][k]||[]).push(v);
       if(k==='mental')info.mental=v;if(k==='fisica')info.fisica=v;
@@ -437,7 +437,7 @@ function ciBarra(rot,pct,txt,tend,cor){
 /* valor do check-in (0-100, quanto mais alto melhor) para cada chave de par */
 function ciValor(D,key){
   const m=ks=>{const l=ks.filter(k=>D.esc[k]&&D.esc[k].length);return l.length?ciMedia(l.map(k=>ciMedia(D.esc[k]))):null;};
-  const e10=v=>v===null?null:{pct:v*10,txt:ciFmt(v,1)+' /10'};
+  const e10=v=>v===null?null:{pct:v/NOTA_MAX*100,txt:ciFmt(v,1)+' /'+NOTA_MAX};
   switch(key){
     case 'fisica':return e10(m(['fisica']));
     case 'mental':return e10(m(['mental']));
@@ -563,13 +563,13 @@ function montarCheckinRelatorio(ciclo){
   const dPes=D.diaInfo.filter(i=>i.cls==='pesada'&&disp(i)!==null).map(disp);
   if(dLeve.length>=2&&dPes.length>=2){
     const a=ciMedia(dLeve),b=ciMedia(dPes);
-    ins.push(`Nos dias em que você nomeou emoções leves, sua disposição média foi <b>${ciFmt(a,1)}</b>; nos dias de emoções pesadas, <b>${ciFmt(b,1)}</b>. ${a-b>=1?'O que você sente e como o seu corpo e a sua mente respondem andam bem coladinhos.':'A emoção do dia e a disposição nem sempre andam juntas, e isso também é um dado a seu favor: você segue funcionando mesmo nos dias pesados.'}`);
+    ins.push(`Nos dias em que você nomeou emoções leves, sua disposição média foi <b>${ciFmt(a,1)}</b>; nos dias de emoções pesadas, <b>${ciFmt(b,1)}</b>. ${a-b>=0.45?'O que você sente e como o seu corpo e a sua mente respondem andam bem coladinhos.':'A emoção do dia e a disposição nem sempre andam juntas, e isso também é um dado a seu favor: você segue funcionando mesmo nos dias pesados.'}`);
   }
   const comPrat=D.diaInfo.filter(i=>i.prat>0&&disp(i)!==null).map(disp);
   const semPrat=D.diaInfo.filter(i=>i.prat===0&&disp(i)!==null).map(disp);
   if(comPrat.length>=3&&semPrat.length>=3){
     const a=ciMedia(comPrat),b=ciMedia(semPrat);
-    ins.push(Math.abs(a-b)>=0.7?`Nos dias em que você marcou alguma prática, a sua disposição média foi <b>${ciFmt(a,1)}</b>; nos dias sem prática, <b>${ciFmt(b,1)}</b>. ${a>b?'Os pequenos cuidados parecem fazer diferença real no seu dia, e vale protegê-los mesmo nos dias corridos.':'Nos dias de prática a disposição não foi maior, o que pode indicar que você se cuida justamente quando está pior. É um bom reflexo.'}`:`Com ou sem práticas marcadas, a sua disposição média ficou parecida (<b>${ciFmt(a,1)}</b> e <b>${ciFmt(b,1)}</b>).`);
+    ins.push(Math.abs(a-b)>=0.3?`Nos dias em que você marcou alguma prática, a sua disposição média foi <b>${ciFmt(a,1)}</b>; nos dias sem prática, <b>${ciFmt(b,1)}</b>. ${a>b?'Os pequenos cuidados parecem fazer diferença real no seu dia, e vale protegê-los mesmo nos dias corridos.':'Nos dias de prática a disposição não foi maior, o que pode indicar que você se cuida justamente quando está pior. É um bom reflexo.'}`:`Com ou sem práticas marcadas, a sua disposição média ficou parecida (<b>${ciFmt(a,1)}</b> e <b>${ciFmt(b,1)}</b>).`);
   }
   if(ins.length){corr+=`<div class="ci-card-rel"><div class="ci-tt">🔍 O que se repete nos seus dias</div>${ins.map(x=>`<div class="ci-insight">${x}</div>`).join('')}</div>`;}
 
@@ -587,7 +587,7 @@ function montarCheckinRelatorio(ciclo){
     if(longas.length>=3&&curtas.length>=3){
       const a=ciMedia(longas),b=ciMedia(curtas);
       const difAbs=Math.abs(a-b);
-      const lista=difAbs>=0.7?BANCO_PISTAS.sono_disp_diferente:BANCO_PISTAS.sono_disp_parecida;
+      const lista=difAbs>=0.3?BANCO_PISTAS.sono_disp_diferente:BANCO_PISTAS.sono_disp_parecida;
       const dimsComScore=dimsPista.filter(d=>typeof r[d.key]==='number');
       dimsComScore.slice(0,2).forEach((d,pos)=>{
         const tpl=pistaEscolher(lista,chaveCiclo+'sono'+d.key,pos);
@@ -604,7 +604,7 @@ function montarCheckinRelatorio(ciclo){
     if(refMais.length>=3&&refMenos.length>=3){
       const a=ciMedia(refMais),b=ciMedia(refMenos);
       const difAbs=Math.abs(a-b);
-      const lista=difAbs>=0.7?BANCO_PISTAS.ref_disp_diferente:BANCO_PISTAS.ref_disp_parecida;
+      const lista=difAbs>=0.3?BANCO_PISTAS.ref_disp_diferente:BANCO_PISTAS.ref_disp_parecida;
       const dimsRef=[{key:'corpo',nome:'corpo'},{key:'energia',nome:'energia'}].filter(d=>typeof r[d.key]==='number');
       dimsRef.slice(0,2).forEach((d,pos)=>{
         const tpl=pistaEscolher(lista,chaveCiclo+'ref'+d.key,pos);
@@ -627,8 +627,8 @@ function montarCheckinRelatorio(ciclo){
   let ind=`<div class="ci-rel"><div class="rel-h2">Seus índices do check-in</div>`;
   const linhas=ESCALAS.filter(([k])=>D.esc[k]&&D.esc[k].length).map(([k,rot])=>{
     const m=ciMedia(D.esc[k]);const a=D.escMeio.a[k],b=D.escMeio.b[k];
-    let tend='';if(a&&b&&a.length>=2&&b.length>=2){const dif=ciMedia(b)-ciMedia(a);tend=dif>=0.8?'↑':dif<=-0.8?'↓':'→';}
-    return ciBarra(rot,m*10,ciFmt(m,1)+' /10',tend,ciCorBarra(m*10));
+    let tend='';if(a&&b&&a.length>=2&&b.length>=2){const dif=ciMedia(b)-ciMedia(a);tend=dif>=0.35?'↑':dif<=-0.35?'↓':'→';}
+    return ciBarra(rot,m/NOTA_MAX*100,ciFmt(m,1)+' /'+NOTA_MAX,tend,ciCorBarra(m/NOTA_MAX*100));
   }).join('');
   const indLinhas=linhas?`${linhas}<div class="ci-nota">As setas comparam a primeira e a segunda metade do período. Aqui, quanto mais alto, melhor.</div>`:'';
   if(linhas){ind+=`<div class="ci-card-rel"><div class="ci-tt">📊 Índices do check-in · média de 21 dias</div>${linhas}<div class="ci-nota">As setas comparam a primeira e a segunda metade do período. Aqui, quanto mais alto, melhor.</div></div>`;}

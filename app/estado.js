@@ -52,6 +52,7 @@ const CATALOGO_QUANDO_DER=['Uma viagem curta','Um show ou uma peça de teatro','
 function estadoInicial(){
   return{
     versao:25,
+    notasEscala:4,
     iniciadoEm:fmtD(new Date()),
     onboarding:{feito:false,nome:''},
     habitos:[],
@@ -193,6 +194,7 @@ function garanteNovosCampos(s){
   (s.conquistas.arquivadas||[]).forEach(c=>{if(!c.criadoEm)c.criadoEm='2020-01-01';if(!c.area){c.area=adivinharArea(c.txt);}});
   if(s.ciclo&&s.ciclo.proximoEm&&s.ciclo.atual&&(!s.ciclo.atual.respostas||Object.keys(s.ciclo.atual.respostas).length===0)){s.ciclo.atual=null;s.ciclo.proximoEm=null;}
   if(!s.checkins||typeof s.checkins!=='object')s.checkins={};
+  migrarNotas04(s);
   if(!s.habitos||!Array.isArray(s.habitos))s.habitos=[];
   if(!Array.isArray(s.premiosGuardados))s.premiosGuardados=[];
   if(!s.relatos||typeof s.relatos!=='object')s.relatos={log:[]};

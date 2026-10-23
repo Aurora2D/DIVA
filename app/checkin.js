@@ -10,14 +10,14 @@ function atualizaStatusCheckin(){
 }
 function renderCheckinResumos(){
   const ci=S.checkins[hoje()]||{};
-  const preenchidos=[(ci.dormiu||ci.acordou)?'sono':null,(ci.refeicoes||[]).length?'refeições':null,ci.escalas&&Object.values(ci.escalas).some(v=>typeof v==='number'&&v>=1)?'estado':null,ci.praticas&&Object.keys(ci.praticas).length?'práticas':null,(ci.observacoes||'').trim()?'observações':null].filter(Boolean);
+  const preenchidos=[(ci.dormiu||ci.acordou)?'sono':null,(ci.refeicoes||[]).length?'refeições':null,ci.escalas&&Object.values(ci.escalas).some(v=>typeof v==='number'&&v>=0)?'estado':null,ci.praticas&&Object.keys(ci.praticas).length?'práticas':null,(ci.observacoes||'').trim()?'observações':null].filter(Boolean);
   const resumoLinha=[];
   if(ci.dormiu&&ci.acordou)resumoLinha.push('🌙 '+horasDormidas(ci.dormiu,ci.acordou));
   else if(ci.dormiu)resumoLinha.push('🌙 dormi às '+ci.dormiu);
   else if(ci.acordou)resumoLinha.push('🌙 acordei às '+ci.acordou);
   if((ci.emocao||'').trim())resumoLinha.push('💗 '+ci.emocao.trim());
   if(ci.refeicoes?.length)resumoLinha.push('🍽️ '+ci.refeicoes.length+' refeições');
-  if(ci.escalas?.autoconf)resumoLinha.push('💛 autoconfiança '+ci.escalas.autoconf+'/10');
+  if(typeof ci.escalas?.autoconf==='number')resumoLinha.push('💛 autoconfiança '+ci.escalas.autoconf+'/'+NOTA_MAX);
   /* check-in só na aba Check-in (ex-Diário) */
   const elCi=$('checkinResumoTop');
   if(elCi){
@@ -77,7 +77,7 @@ function montaCheckin(){
   upHoras();
   $('ciRefeicoes').innerHTML=REFEICOES.map(r=>{const on=(ci.refeicoes||[]).includes(r);return`<button type="button" class="chip ${on?'on':''}" data-ref="${esc(r)}">${esc(r)}</button>`;}).join('');
   $('ciRefeicoes').onclick=e=>{const b=e.target.closest('[data-ref]');if(!b)return;const r=b.dataset.ref;ci.refeicoes=ci.refeicoes||[];const i=ci.refeicoes.indexOf(r);if(i>=0)ci.refeicoes.splice(i,1);else ci.refeicoes.push(r);b.classList.toggle('on');salva();atualizaStatusCheckin();atualizaRelatorio();renderCheckinResumos();renderDiario();};
-  $('ciEscalas').innerHTML=escalasHoje().map(([k,rot])=>{const v=ci.escalas?.[k]||0;return`<div class="escala" data-esc="${k}"><div class="rot">${esc(rot)}</div><div class="nums">${[1,2,3,4,5,6,7,8,9,10].map(n=>`<button type="button" class="num ${v===n?'on':''}" data-n="${n}">${n}</button>`).join('')}</div></div>`;}).join('');
+  $('ciEscalas').innerHTML=escalasHoje().map(([k,rot])=>{const v=ci.escalas?.[k];return`<div class="escala" data-esc="${k}"><div class="rot">${esc(rot)}</div><div class="nums">${[0,1,2,3,4].map(n=>`<button type="button" class="num ${v===n?'on':''}" data-n="${n}">${n}</button>`).join('')}</div></div>`;}).join('');
   $('ciEscalas').onclick=e=>{const b=e.target.closest('[data-n]');if(!b)return;const escEl=b.closest('[data-esc]');if(!escEl)return;const k=escEl.dataset.esc,n=+b.dataset.n;ci.escalas=ci.escalas||{};ci.escalas[k]=(ci.escalas[k]===n)?undefined:n;salva();escEl.querySelectorAll('.num').forEach(x=>x.classList.toggle('on',+x.dataset.n===ci.escalas[k]));b.classList.add('salvo-flash');setTimeout(()=>b.classList.remove('salvo-flash'),500);atualizaStatusCheckin();atualizaRelatorio();renderCheckinResumos();renderDiario();};
   renderPraticasCheckin();
   const obs=$('ciObs');obs.value=ci.observacoes||'';obs.oninput=()=>{$('obsFeedback').textContent='Toque em ✓ Salvar pra guardar.';};
@@ -143,7 +143,7 @@ function paragrafoCorpo(ci,notas){
 }
 function gerarRelatorio(ci){
   if(!ci)return'';
-  const notas=ci.escalas;const praticas=ci.praticas||{};
+  const notas=notasPara10(ci.escalas);const praticas=ci.praticas||{};/* notas guardadas de 0 a 4; as regras abaixo pensam em 1 a 10 */
   const temEscalas=notas&&Object.keys(notas).filter(k=>typeof notas[k]==='number'&&notas[k]>=1).length>0;
   const temCorpo=(ci.dormiu||ci.acordou||(ci.refeicoes&&ci.refeicoes.length>0)||(ci.emocao||'').trim());
   if(!temEscalas&&!temCorpo)return'';
