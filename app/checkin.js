@@ -207,9 +207,15 @@ function gerarRelatorio(ci){
   /* grupos como eram no começo (19/out): mente e autoconfiança juntas */
   const fam=[{nome:'Pelo corpo em movimento',itens:['fisica','danca']},{nome:'Pela mente',itens:['mental','autoconf']},{nome:'No lar',itens:['organizacao','limpeza']},{nome:'Na voz',itens:['belting','lirico']},{nome:'Nos seus hobbies',itens:(S.hobbies||[]).map(h=>h.k).filter(k=>!HOBBIES_PROPRIOS.includes(k))}];
   /* hobbies que a pessoa adicionou: frase pelo nome do hobby */
-  const ffDe=k=>FF[k]||(n=>({alta:n+' te fez muito bem',media:n+' fez bem',baixa:n+' hoje não rendeu tanto, e tudo bem'}))(nomeNota(k).toLowerCase());
+  /* três jeitos de dizer cada tom; cada hobby do dia pega um diferente, pra não repetir */
+  /* "o tempo de jogos" mantém a concordância com qualquer hobby; cada hobby do dia pega outro jeito de dizer, pra não repetir */
+  const SUJ_HOBBY=['o tempo de ','o seu momento de ','a hora de '];
+  const FF_HOBBY={alta:['te fez muito bem','encheu o seu dia','valeu a pena de verdade'],
+    media:['fez bem','deu uma ajuda','foi um respiro no meio do dia'],
+    baixa:['não rendeu tanto hoje, e tudo bem','pode render mais outro dia','não fez muita diferença hoje, e tudo bem']};
+  const ffDe=(k,i)=>FF[k]||(n=>{const v=(i||0)%3;return Object.fromEntries(Object.entries(FF_HOBBY).map(([t,l])=>[t,SUJ_HOBBY[v]+n+' '+l[v]]));})(nomeNota(k).toLowerCase());
   const p2=[];
-  fam.forEach(f=>{const pres=f.itens.filter(k=>notas&&typeof notas[k]==='number'&&notas[k]>=1);const partes=pres.map(k=>ffDe(k)[banda_(notas[k])]);if(partes.length===1)p2.push(f.nome+': '+partes[0]+'.');else if(partes.length>=2)p2.push(f.nome+': '+partes.slice(0,-1).join(', ')+', e '+partes[partes.length-1]+'.');});
+  fam.forEach(f=>{const pres=f.itens.filter(k=>notas&&typeof notas[k]==='number'&&notas[k]>=1);const partes=pres.map((k,i)=>ffDe(k,i)[banda_(notas[k])]);if(partes.length===1)p2.push(f.nome+': '+partes[0]+'.');else if(partes.length>=2)p2.push(f.nome+': '+partes.slice(0,-1).join(', ')+', e '+partes[partes.length-1]+'.');});
   const p3=[];
   const media=nTotal>0?entradas.reduce((a,[,n])=>a+n,0)/nTotal:null;
   if(nTotal===0)p3.push('Hoje você olhou pra fora — corpo, comida, rotina.');
