@@ -33,6 +33,19 @@ function abaPista(t){
   if(t==='atracao')return abaLiberada('celebrar')?'Quase! A Atração abre na próxima vez que você entrar no app ✨':'A Atração é a última a abrir, depois do Celebrar ✨';
   return 'Essa parte ainda está guardada pra você 💜';
 }
+/* tela ainda fechada: tudo esmaecido e inativo (inert), menos o aviso do topo */
+function abaTelaTrava(sec,t,trav){
+  let av=sec.querySelector(':scope > .aba-trava-aviso');
+  if(trav){
+    if(!av){av=document.createElement('div');av.className='aba-trava-aviso';sec.prepend(av);}
+    av.innerHTML='<span class="ata-cad" aria-hidden="true"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg></span><div><b>Essa parte ainda está guardada pra você</b><span>'+esc(abaPista(t))+'</span></div>';
+    sec.classList.add('aba-travada');
+    [...sec.children].forEach(c=>{if(c!==av)c.inert=true;});
+  }else{
+    if(av)av.remove();
+    if(sec.classList.contains('aba-travada')){sec.classList.remove('aba-travada');[...sec.children].forEach(c=>{c.inert=false;});}
+  }
+}
 /* toque numa aba travada: balancinho no cadeado e a pista, sem trocar de tela */
 function abaTravadaToque(t){
   const b=document.querySelector('.tabs-bar button[data-tab="'+t+'"]');
@@ -51,10 +64,11 @@ function abasAtualizar(mostrar){
       ABAS_REGRAS.forEach(r=>{if(!S.abasLiberadas[r.tab]&&r.ok()){S.abasLiberadas[r.tab]=true;S.abasLiberadasEm[r.tab]=Date.now();S.abasPendentes.push(r.tab);mudou=true;}});
       if(mudou)salva();
     }
-    /* as abas que ainda não abriram ficam à vista, esmaecidas e com cadeado: dá pra tocar, mas não entra */
+    /* a barra fica toda aberta; quem ainda não abriu é a TELA: o conteúdo aparece esmaecido, sem dar pra usar, com um aviso no topo */
     document.querySelectorAll('.tabs-bar button').forEach(b=>{
-      const trav=!abaLiberada(b.dataset.tab),era=b.classList.contains('travada');
-      b.hidden=false;b.classList.toggle('travada',trav);b.setAttribute('aria-disabled',trav?'true':'false');
+      const t=b.dataset.tab,trav=!abaLiberada(t),sec=$('tab-'+t),era=!!(sec&&sec.classList.contains('aba-travada'));
+      b.hidden=false;b.classList.remove('travada');b.removeAttribute('aria-disabled');
+      if(sec)abaTelaTrava(sec,t,trav);
       if(era&&!trav){b.classList.remove('abriu');void b.offsetWidth;b.classList.add('abriu');setTimeout(()=>b.classList.remove('abriu'),1400);}
     });
     if(mostrar&&!abasMostrouNestaAbertura&&abasProgressivo()&&S.abasPendentes&&S.abasPendentes.length&&!document.querySelector('.modal-overlay.ativo,.onb-overlay.ativo'))abasBoasVindas();

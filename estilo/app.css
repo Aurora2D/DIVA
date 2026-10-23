@@ -98,3 +98,10 @@ h2 .ic{width:20px;height:20px;color:var(--b)}
 
 /* gatinha: dá pra tocar em qualquer lugar (ela acena) */
 gatinha-fantoche{cursor:pointer;-webkit-user-select:none;user-select:none;-webkit-tap-highlight-color:transparent;touch-action:manipulation}
+
+/* telas que ainda não abriram: o conteúdo aparece esmaecido e sem uso; só o aviso do topo fica normal */
+section.aba-travada > :not(.aba-trava-aviso){opacity:.35;filter:grayscale(.85);pointer-events:none;-webkit-user-select:none;user-select:none}
+.aba-trava-aviso{display:flex;gap:12px;align-items:center;margin:14px 0 16px;padding:14px 16px;border-radius:16px;border:1px solid var(--borda);background:var(--card,#fff);box-shadow:var(--sombra,0 2px 10px rgba(73,54,87,.08))}
+.aba-trava-aviso .ata-cad{flex:none;width:38px;height:38px;border-radius:50%;display:grid;place-items:center;color:var(--b);background:rgba(143,128,209,.14)}
+.aba-trava-aviso b{display:block;font-family:var(--serif);font-weight:700;font-size:18px;line-height:1.2;color:var(--txt)}
+.aba-trava-aviso span{display:block;font-size:13px;line-height:1.45;color:var(--mut);margin-top:2px}
