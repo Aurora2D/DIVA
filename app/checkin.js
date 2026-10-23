@@ -86,7 +86,11 @@ function montaCheckin(){
 }
 function renderPraticasCheckin(){
   const ci=S.checkins[hoje()]||(S.checkins[hoje()]={});
-  $('ciPraticas').innerHTML=`<p class="mut explica-secao" style="font-size:12px;line-height:1.45;margin:0 0 12px">Marque o que você fez de bom pra você hoje. Sem meta, sem cobrança: é só um registro.</p>`+Object.entries(PRATICAS).map(([grupo,itens])=>`<div style="margin-bottom:12px"><div class="mut" style="font-size:11.5px;margin-bottom:5px;font-weight:700;letter-spacing:.3px;text-transform:uppercase">${esc(grupo)}</div><div class="chips">${itens.map(it=>{const on=(ci.praticas||{})[grupo+'|'+it];return`<button type="button" class="chip ${on?'on alt':''}" data-prat="${esc(grupo)}|${esc(it)}">${esc(it)}</button>`;}).join('')}</div></div>`).join('')+`<button type="button" class="btn btn-full" id="btnEditarPraticas" style="margin-top:4px">✏️ Editar minhas práticas</button>`;
+  const grupoHTML=(grupo,itens)=>`<div style="margin-bottom:12px"><div class="mut" style="font-size:11.5px;margin-bottom:5px;font-weight:700;letter-spacing:.3px;text-transform:uppercase">${esc(grupo)}</div><div class="chips">${itens.map(it=>{const on=(ci.praticas||{})[grupo+'|'+it];return`<button type="button" class="chip ${on?'on alt':''}" data-prat="${esc(grupo)}|${esc(it)}">${esc(it)}</button>`;}).join('')}</div></div>`;
+  /* perfil novo: explica prática x hábito e guarda as práticas gerais num "ver mais" depois do quiz (app/perfil-novo.js) */
+  const corpo=(typeof perfilNovo==='function'&&perfilNovo())?perfilNovoPraticasHTML(ci,grupoHTML)
+    :`<p class="mut explica-secao" style="font-size:12px;line-height:1.45;margin:0 0 12px">Marque o que você fez de bom pra você hoje. Sem meta, sem cobrança: é só um registro.</p>`+Object.entries(PRATICAS).map(([g,l])=>grupoHTML(g,l)).join('');
+  $('ciPraticas').innerHTML=corpo+`<button type="button" class="btn btn-full" id="btnEditarPraticas" style="margin-top:4px">✏️ Editar minhas práticas</button>`;
   $('btnEditarPraticas').onclick=abrirEditorPraticas;
   $('ciPraticas').onclick=e=>{const b=e.target.closest('[data-prat]');if(!b)return;const k=b.dataset.prat;ci.praticas=ci.praticas||{};if(ci.praticas[k])delete ci.praticas[k];else ci.praticas[k]=true;b.classList.toggle('on');b.classList.toggle('alt');salva();atualizaStatusCheckin();atualizaRelatorio();renderCheckinResumos();renderDiario();};
 }

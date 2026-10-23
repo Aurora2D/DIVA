@@ -66,7 +66,8 @@ function iconeHab(hb){
 function renderHoje(){
   try{renderRevisaoCard();}catch(e){}
   $('data').textContent=new Date().toLocaleDateString('pt-BR',{weekday:'long',day:'numeric',month:'long'});
-  if(S.onboarding.nome)$('subSaudacao').textContent=S.onboarding.nome+', você está em processo de ficar bem.';
+  if(typeof perfilNovo==='function'&&perfilNovo())$('subSaudacao').textContent=perfilNovoSaudacao();
+  else if(S.onboarding.nome)$('subSaudacao').textContent=S.onboarding.nome+', você está em processo de ficar bem.';
   const h=hoje();
   const ativos=S.habitos.filter(hb=>!hb.pausado);
   const mapaGrupos={};

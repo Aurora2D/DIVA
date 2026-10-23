@@ -205,9 +205,10 @@ function garanteNovosCampos(s){
   if(!Array.isArray(s.situacoes)||!s.situacoes.length)s.situacoes=situacoesPadrao(!!(s.cuidado&&s.cuidado.cuida));
   if(!Array.isArray(s.quandoDer))s.quandoDer=[];
   (s.premios||[]).forEach(migrarPremio);
-  if(!Array.isArray(s.cuidados))s.cuidados=[
+  /* os dois cuidados de exemplo são do perfil original; quem chega novo começa com a lista vazia */
+  if(!Array.isArray(s.cuidados))s.cuidados=s.perfilOriginal?[
     {id:'c_clinico',texto:'Ir ao clínico geral e checar a vitamina D',feitoEm:null},
-    {id:'c_terapia',texto:'Escolher um terapeuta pra chamar de meu',feitoEm:null}];
+    {id:'c_terapia',texto:'Escolher um terapeuta pra chamar de meu',feitoEm:null}]:[];
   (s.habitos||[]).forEach(h=>{
     if(!Array.isArray(h.relatos))h.relatos=[];
     if(!Array.isArray(h.relatoRotina))h.relatoRotina=[];

@@ -5,6 +5,7 @@ if(!S.perfilOriginal){
   FRASES_HABITO.batom=["Passei batom. Evidências de vida encontradas.","Lábios coloridos, dia com a minha cara.","Batom passado, autoestima avisada.","Hoje eu tenho batom e opinião.","Um gesto pequeno, um sorriso no espelho."];
 }
 iniciarPraticas();
+try{perfilNovoAreaArte();}catch(e){}
 montaCheckin();
 renderHoje();
 frase();
