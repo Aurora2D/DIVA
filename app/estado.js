@@ -231,7 +231,12 @@ function carrega(){
   return garanteNovosCampos(estadoInicial());
 }
 let S=carrega();
-function salva(){try{localStorage.setItem('batomRisadaV23',JSON.stringify(S));}catch(e){}}
+function salva(){try{localStorage.setItem('batomRisadaV23',JSON.stringify(S));}catch(e){}try{if(window.salvarNoFirebase)window.salvarNoFirebase();}catch(e){}}
+/* ponte entre o app e o login/sincronização (app/nuvem.js) */
+window.DIVA={
+  getEstado:()=>S,
+  setEstado:d=>{S=garanteNovosCampos(d);try{localStorage.setItem('batomRisadaV23',JSON.stringify(S));}catch(e){}}
+};
 
 function frase(){$('frase').style.opacity=0;setTimeout(()=>{$('frase').textContent=FRASES[Math.floor(Math.random()*FRASES.length)];$('frase').style.opacity=1;},250);}
 
@@ -303,6 +308,11 @@ $('onbCuidaSim').onclick=()=>{
 $('onbCuidaNao').onclick=()=>{definirCuidado(false);mostrarOnbPasso(9);};
 $('onbBtn8').onclick=()=>mostrarOnbPasso(9);
 $('onbNome').addEventListener('keydown',e=>{if(e.key==='Enter')$('onbBtn1').click();});
+$('onbJaUso').onclick=()=>{
+  if(window.DIVAnuvem){window.DIVAnuvem.abrir();return;}
+  const b=$('onbJaUso');b.textContent='Carregando… toque de novo em instantes';
+  setTimeout(()=>{b.textContent='Já uso em outro aparelho? Entrar com o Google';},3000);
+};
 /* "Vamos começar": o primeiro hábito é beber água ao acordar */
 $('onbBtn9').onclick=()=>{
   if(!S.habitos.some(h=>h.id==='agua'))S.habitos.push({id:'agua',emoji:'💧',emojis:['💧','🥤','✨'],nome:'Beber um copo de água ao acordar',paraQue:'Cuidar do meu bem-estar',unidade:'todo dia',feitos:{},cor:'c4',grupo:'toque',dims:['corpo','energia']});

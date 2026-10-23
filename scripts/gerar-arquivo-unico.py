@@ -31,6 +31,11 @@ def script(m):
     return pre + '<script>\n' + txt + '\n</script>'
 html = re.sub(r'<script src="((?:mascote|estilo|atracao|relatorio|app)/[^"?]+)(?:\?[^"]*)?"></script>', script, html)
 
+def modulo(m):
+    txt = ler(m.group(1)).replace('</script', '<\\/script')
+    return '<script type="module">\n' + txt + '\n</script>'
+html = re.sub(r'<script type="module" src="(app/[^"?]+)(?:\?[^"]*)?"></script>', modulo, html)
+
 assert not re.search(r'(?:href|src)="(?:estilo|atracao|mascote|relatorio|app)/', html), 'sobrou arquivo externo'
 open(saida, 'w', encoding='utf-8').write(html)
 print(saida, round(len(html) / 1024), 'KB')
