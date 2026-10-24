@@ -138,7 +138,9 @@ function toggleHabito(id){
   if(disparou){marcoEmAndamento=true;ocupado=true;setTimeout(()=>abrirMarco(hb,total),550);}
   else if(total===1&&celebraDeveConvidar()){ocupado=true;setTimeout(abrirCelebraConvite,800);}
   else ocupado=relatoAoMarcar(hb,lacunaRelato);
-  if(!disparou)mostrarToast(celebraToastTexto(),'Desfazer',()=>desmarcarHabito(hb,h));
+  /* comemoração escolhida: a gatinha aparece com ela; o toast (com Desfazer) vem depois */
+  if(!disparou&&!ocupado&&celebraAtual()&&window.celebraMomento)celebraMomento(()=>mostrarToast('Marcado ✓','Desfazer',()=>desmarcarHabito(hb,h)));
+  else if(!disparou)mostrarToast(celebraToastTexto(),'Desfazer',()=>desmarcarHabito(hb,h));
   if(!ocupado)checarTresDias();
 }
 
