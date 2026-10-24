@@ -112,7 +112,7 @@ function sessaoMostrar(manter){
   $('sessaoDots').innerHTML=st.telas.map((_,k)=>`<span class="${k===st.i?'on':k<st.i?'ja':''}"></span>`).join('');
   let bar='';
   if(st.i>0&&!t.semVoltar)bar+='<button type="button" id="svVoltar">Voltar</button>';
-  if(t.botoes)bar+=t.botoes.map((b,k)=>`<button type="button" class="${b.prim?'prim':''}" data-sb="${k}">${esc(b.rot)}</button>`).join('');
+  if(t.botoes)bar+=t.botoes.map((b,k)=>`<button type="button" class="${b.prim?'prim':''}${b.cls?' '+b.cls:''}" data-sb="${k}">${esc(b.rot)}</button>`).join('');
   else bar+=`<button type="button" class="prim" id="svSeguir">${esc(t.rotSeguir||(ult?'Concluir':'Continuar'))}</button>`;
   $('sessaoAcoes').innerHTML=bar;
   modal.scrollTop=topo;
@@ -363,27 +363,51 @@ function sessaoOlhar(){
     return;
   }
   trEst().foco.contrasteId=c.id;
+  if(!Array.isArray(c.trabalhados))c.trabalhados=[];
   const cam=c.camadas||{};
   const CH=['escolhido','frase','origem','diferente'];
-  const R=trSinc('olhar',c.id,CH,{escolhido:cam.escolhido||'',frase:cam.frase||'',origem:cam.origem||'',diferente:cam.pedido||''});
+  const R=trSinc('olhar',c.id,CH,{});
   const guarda=()=>{c.camadas={escolhido:(R.escolhido||'').trim(),frase:(R.frase||'').trim(),origem:(R.origem||'').trim(),pedido:(R.diferente||'').trim()};salva();};
   const itens=itensDaLista(c.naoQuero);
+  const jaOlhado=t=>c.trabalhados.some(x=>x.item===t);
+  const faltam=()=>itens.filter(t=>!jaOlhado(t)&&t!==(R.escolhido||'').trim()).length;
+  /* cada incômodo olhado fica guardado na lista (aparece marcado ao voltar) */
+  const registrar=()=>{const it=(R.escolhido||'').trim();if(!it)return;guarda();
+    c.trabalhados=c.trabalhados.filter(x=>x.item!==it);
+    c.trabalhados.push({item:it,frase:(R.frase||'').trim(),origem:(R.origem||'').trim(),pedido:(R.diferente||'').trim(),em:hoje()});salva();};
   const escolhido=['lembrete',{titulo:'O incômodo que você escolheu',texto:()=>R.escolhido}];
+  const P=t=>`<p class="sv-p">${esc(t)}</p>`;
+  const convite=()=>{
+    if(itens.length<2)return P('Veja o que mais pesa no que você escreveu. Escolha uma coisa só pra olhar com mais calma.');
+    const n=itens.filter(jaOlhado).length;
+    if(!n)return P('Veja se algum item se repete ou pesa mais que os outros. Escolha um só pra olhar com mais calma.')+P('Um de cada vez já é bastante. Os outros ficam guardados aqui, e você volta pra eles quando quiser.');
+    if(n<itens.length)return P('Que bom te ver de volta. Os que você já olhou estão marcados.')+P('Escolha outro pra olhar com calma, um de cada vez, no seu ritmo.');
+    return P('Você já olhou para todos os itens da sua lista. Se quiser, pode olhar de novo algum deles.');
+  };
   /* cartões com cada item da lista: um toque escolhe e preenche o campo; dá pra escrever outro */
-  const cartoes=()=>itens.length<2?'':'<div class="sv-itens" role="list">'+itens.map((t,k)=>`<button type="button" role="listitem" class="sv-opt${(R.escolhido||'').trim()===t?' on':''}" data-item="${k}"><b>${esc(t)}</b></button>`).join('')+'</div>';
+  const cartoes=()=>itens.length<2?'':'<div class="sv-itens" role="list">'+itens.map((t,k)=>{const ok=jaOlhado(t);
+    return `<button type="button" role="listitem" class="sv-opt${ok?' feito':''}${(R.escolhido||'').trim()===t?' on':''}" data-item="${k}"><b>${esc(t)}</b>${ok?'<span>✓ já olhado</span>':''}</button>`;}).join('')+'</div>';
   const ligarCartoes=r=>r.querySelectorAll('[data-item]').forEach(b=>b.onclick=()=>{
-    svPreencher('escolhido',itens[+b.dataset.item]);
+    const t=itens[+b.dataset.item];
+    if(t!==(R.escolhido||'').trim()){['frase','origem','diferente'].forEach(k=>R[k]='');
+      const ant=c.trabalhados.find(x=>x.item===t);if(ant){R.frase=ant.frase;R.origem=ant.origem;R.diferente=ant.pedido;}}
+    svPreencher('escolhido',t);
     r.querySelectorAll('[data-item]').forEach(x=>x.classList.toggle('on',x===b));
     const a=$('c_escolhido');if(a)a.blur();svReage('sim',0);});
   if(itens.length===1&&!(R.escolhido||'').trim())R.escolhido=itens[0];
-  sessaoAbrir({...trMeta('olhar'),limpar:CH,gaveta:{titulo:'O que você escreveu',texto:()=>c.naoQuero},pular:{rot:'Já sei o que quero: ir para a Clareza',ate:'clareza'},telas:[
+  const olharOutro=()=>{registrar();CH.forEach(k=>R[k]='');salva();_sessao.i=1;_sessao.reacao='feliz';sessaoMostrar();mostrarToast('Guardado ✓ Agora, outro com calma 💜');};
+  const ultima={b:[escolhido,['p','Talvez, por trás desse incômodo, já exista uma pista sobre o que você deseja viver.'],['campo',{key:'diferente',rot:'O que eu gostaria que fosse diferente?'}],['p','Não se preocupe em encontrar uma resposta perfeita. Às vezes, conseguimos reconhecer com facilidade o que não queremos, mas precisamos de um pouco mais de tempo para descobrir o que queremos no lugar.'],
+      ['html',()=>faltam()?'<p class="sv-p sv-gentil">Se quiser, dá pra olhar outro incômodo agora ou voltar outro dia. Um de cada vez, no seu ritmo.</p>':'']]};
+  Object.defineProperty(ultima,'botoes',{get:()=>faltam()?[{rot:'Olhar outro incômodo',cls:'linha',acao:olharOutro},{rot:'Concluir',prim:true,acao:()=>{registrar();sessaoConcluir();}}]:null});
+  ultima.seguir=registrar;
+  sessaoAbrir({...trMeta('olhar'),limpar:CH,pular:{rot:'Já sei o que quero: ir para a Clareza',ate:'clareza'},telas:[
     [['p','Vamos voltar ao que você escreveu. Leia devagar, sem pressa de resolver nada.'],['lembrete',{titulo:'O que você escreveu',texto:()=>c.naoQuero}]],
-    {semFoco:true,b:[['p',itens.length>1?'Veja se algum item se repete ou pesa mais que os outros. Escolha um só pra olhar com mais calma.':'Veja o que mais pesa no que você escreveu. Escolha uma coisa só pra olhar com mais calma.'],['html',cartoes,ligarCartoes],
+    {semFoco:true,b:[['html',convite],['html',cartoes,ligarCartoes],
       ['campo',{key:'escolhido',rot:itens.length>1?'Ou escreva com as suas palavras':'O incômodo que eu escolhi',ph:itens.length>1?'Toque num item acima ou escreva aqui':'Escreva aqui'}]],
       seguir:()=>{if(!(R.escolhido||'').trim()){mostrarToast(itens.length>1?'Toque num item ou escreva o seu':'Escreva o incômodo que você escolheu');return false;}guarda();}},
     {b:[escolhido,['p','Junto com um incômodo, quase sempre vem uma frase que a gente repete por dentro, como “comigo é sempre assim” ou “eu não dou conta”. Quando você pensa nesse incômodo, que frase aparece?'],['campo',{key:'frase',rot:'A frase que aparece',opcional:true}]],seguir:guarda},
     {b:[escolhido,['lembrete',{titulo:'A frase que aparece',texto:()=>R.frase}],['p','Essa frase é mesmo sua? Muitas vezes ela foi aprendida: ouvimos de alguém ou vimos alguém viver assim. E o que foi aprendido pode ser revisto.'],['campo',{key:'origem',rot:'De onde ela pode ter vindo',opcional:true}],['cuidado','Se isso trouxer algo muito pesado, você pode parar por aqui e conversar com alguém de confiança ou com quem te acompanha.']],seguir:guarda},
-    {b:[escolhido,['p','Talvez, por trás desse incômodo, já exista uma pista sobre o que você deseja viver.'],['campo',{key:'diferente',rot:'O que eu gostaria que fosse diferente?'}],['p','Não se preocupe em encontrar uma resposta perfeita. Às vezes, conseguimos reconhecer com facilidade o que não queremos, mas precisamos de um pouco mais de tempo para descobrir o que queremos no lugar.']],seguir:guarda}
+    ultima
   ]});
 }
 

@@ -137,3 +137,10 @@ gatinha-fantoche.pronta{opacity:1}
 #sessaoModal.com-lingueta .sv-acoes{margin-right:calc(-1 * max(40px,env(safe-area-inset-right,0px)))}
 .sv-itens{margin:4px 0 6px}
 .sv-itens .sv-opt b{font-weight:600;line-height:1.4}
+.sv-itens .sv-opt.feito{background:transparent;border-style:dashed;opacity:.62}
+.sv-itens .sv-opt.feito b{font-weight:500;text-decoration:line-through;text-decoration-color:color-mix(in srgb,var(--b) 55%,transparent)}
+.sv-itens .sv-opt.feito span{color:var(--b);font-weight:700}
+.sv-itens .sv-opt.feito.on{opacity:1;border-style:solid}
+.sv-gentil{color:var(--mut);font-style:italic}
+.sv-acoes{flex-wrap:wrap}
+.sv-acoes button.linha{flex:1 1 100%;order:-1;text-align:center;justify-content:center;color:var(--txt)}
