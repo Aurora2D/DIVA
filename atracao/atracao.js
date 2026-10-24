@@ -121,6 +121,7 @@ function sessaoMostrar(manter){
   const sg=$('svSeguir');if(sg)sg.onclick=sessaoSeguir;
   $('sessaoAcoes').querySelectorAll('[data-sb]').forEach(b=>b.onclick=()=>t.botoes[+b.dataset.sb].acao());
   const pb=$('svPular');if(pb)pb.onclick=()=>{
+    if(t.seguir)try{t.seguir();}catch(err){}  /* guarda o que estiver escrito antes de pular */
     const p=def.pular,e=trEst();const a=TRILHA.findIndex(x=>x.id===def.id),z=TRILHA.findIndex(x=>x.id===p.ate);
     for(let k=a;k<z;k++)if(!e.feitas[TRILHA[k].id])e.feitas[TRILHA[k].id]='skipped';
     delete e.tela[p.ate];salva();sessaoIr(p.ate);
@@ -153,6 +154,7 @@ function svGaveta(){
   const st=_sessao,gv=st&&st.def.gaveta,txt=gv?String((typeof gv.texto==='function'?gv.texto():gv.texto)||'').trim():'';
   const mostra=!!(txt&&st.i>0);
   $('svLingueta').hidden=!mostra;
+  $('sessaoModal').classList.toggle('com-lingueta',mostra);
   if(mostra){$('svGavetaTit').textContent=gv.titulo||'O que você escreveu';$('svGavetaTxt').textContent=txt;}
   else svGavetaAbre(false);
 }
@@ -321,10 +323,10 @@ function sessaoOlhar(){
   const guarda=()=>{c.camadas={pedido:(R.diferente||'').trim(),origem:(R.origem||'').trim()};salva();};
   sessaoAbrir({...trMeta('olhar'),limpar:['diferente','origem'],gaveta:{titulo:'O que você escreveu',texto:()=>c.naoQuero},pular:{rot:'Já sei o que quero: ir para a Clareza',ate:'clareza'},telas:[
     [["p", "Vamos voltar ao que você escreveu?"],["p", "Leia suas palavras devagar. Imagine que uma amiga querida está contando tudo isso a você. Você não precisa julgá-la, corrigir seus sentimentos ou encontrar uma solução imediatamente. Pode apenas escutá-la."],['lembrete',{titulo:'O que você escreveu',texto:()=>c.naoQuero}]],
-    [["p", "Agora, observe se algum incômodo aparece mais de uma vez. Há alguma situação que parece tocar sempre no mesmo ponto? Alguma coisa que você gostaria muito que fosse diferente?"],["p", "Escolha aquilo que mais chama sua atenção e fique um instante com essa pergunta:"],["pergunta", "Se isso pudesse ser diferente, o que eu gostaria que acontecesse?"]],
-    {b:[['campo',{key:'diferente',rot:'O que eu gostaria que fosse diferente?'}],["p", "Não se preocupe em encontrar uma resposta perfeita. Às vezes, conseguimos reconhecer com facilidade o que não queremos, mas precisamos de um pouco mais de tempo para descobrir o que queremos no lugar."]],seguir:guarda},
+    [["p", "Agora, observe se algum incômodo aparece mais de uma vez. Há alguma situação que parece tocar sempre no mesmo ponto? Alguma coisa que você gostaria muito que fosse diferente?"],["p", "Escolha aquilo que mais chama sua atenção e fique um instante com ele."]],
     {b:[["p", "Se sentir vontade de explorar mais, podemos olhar também para a origem desse incômodo."],["p", "Você se lembra de quando começou a pensar assim? Essa sensação acompanha você há muito tempo? Existe alguma voz familiar por trás desse pensamento, alguém que lhe ensinou a olhar para si ou para o mundo dessa maneira?"],['campo',{key:'origem',rot:'De onde pode vir esse incômodo?',opcional:true}],["cuidado", "Se isso trouxer algo muito pesado, você pode parar por aqui e conversar com alguém de confiança ou com quem te acompanha."]],seguir:guarda},
-    [["p", "Algumas ideias nos acompanham por tantos anos que acabamos confundindo aquilo que aprendemos com aquilo que realmente pensamos. Ao olhar para elas com calma, podemos descobrir que certas crenças já não combinam com quem somos hoje."],["p", "Você não precisa encontrar uma origem para tudo. E não precisa decidir nada agora. Apenas observe o que faz sentido para você."],["fecho", "Talvez, por trás daquilo que incomoda, já exista uma pista sobre o que você deseja viver."]]
+    [["p", "Algumas ideias nos acompanham por tantos anos que acabamos confundindo aquilo que aprendemos com aquilo que realmente pensamos. Ao olhar para elas com calma, podemos descobrir que certas crenças já não combinam com quem somos hoje."],["p", "Você não precisa encontrar uma origem para tudo. E não precisa decidir nada agora. Apenas observe o que faz sentido para você."],["fecho", "Talvez, por trás daquilo que incomoda, já exista uma pista sobre o que você deseja viver."]],
+    {b:[['campo',{key:'diferente',rot:'O que eu gostaria que fosse diferente?'}],["p", "Não se preocupe em encontrar uma resposta perfeita. Às vezes, conseguimos reconhecer com facilidade o que não queremos, mas precisamos de um pouco mais de tempo para descobrir o que queremos no lugar."]],seguir:guarda}
   ]});
 }
 

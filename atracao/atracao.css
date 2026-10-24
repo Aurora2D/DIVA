@@ -129,3 +129,4 @@ gatinha-fantoche.pronta{opacity:1}
 .sv-gl-cab span{font-size:11px;font-weight:800;letter-spacing:1.2px;text-transform:uppercase;color:var(--b)}
 .sv-gl-txt{flex:0 1 auto;min-height:0;overflow:auto;font-style:italic;font-weight:500;font-size:15.5px;line-height:1.6;white-space:pre-wrap;overflow-wrap:anywhere;color:var(--txt);padding:14px 16px;border-radius:12px;background:var(--sv-soft);border:1px solid var(--borda)}
 @media (prefers-reduced-motion:reduce){.sv-gl,.sv-gl-fundo{transition:none}}
+#sessaoModal.com-lingueta .sv-app{padding-right:max(40px,env(safe-area-inset-right,0px))}
