@@ -135,3 +135,5 @@ gatinha-fantoche.pronta{opacity:1}
 /* o texto para antes dos botões, sem ficar transparente por baixo deles */
 .sv-campo{scroll-margin-top:72px}
 #sessaoModal.com-lingueta .sv-acoes{margin-right:calc(-1 * max(40px,env(safe-area-inset-right,0px)))}
+.sv-itens{margin:4px 0 6px}
+.sv-itens .sv-opt b{font-weight:600;line-height:1.4}

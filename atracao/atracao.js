@@ -92,7 +92,7 @@ function svBloco(b,st,binds){
   if(t==='lembrete'){const txt=String((typeof v.texto==='function'?v.texto():v.texto)||'').trim();if(!txt)return '';
     return `<figure class="sv-lembrete"><figcaption>${esc(v.titulo)}</figcaption><blockquote>${esc(txt)}</blockquote></figure>`;}
   if(t==='campo'){const id='c_'+v.key;
-    return `<div class="sv-campo"><label class="sv-campo-rot" for="${id}">${esc(v.rot)}${v.opcional?'<span class="sv-opc">opcional</span>':''}</label>${v.dica?`<p class="sv-dica" id="${id}_d">${esc(v.dica)}</p>`:''}<textarea id="${id}" class="sv-area${v.grande?' grande':''}" data-campo="${v.key}"${v.dica?` aria-describedby="${id}_d"`:''} placeholder="${esc(v.ph||'Escreva aqui')}">${esc(st.dados[v.key]||'')}</textarea></div>`;}
+    return `<div class="sv-campo"><label class="sv-campo-rot" for="${id}">${esc(v.rot)}${v.opcional?'<span class="sv-opc">opcional</span>':''}</label>${v.dica?`<p class="sv-dica" id="${id}_d">${esc(v.dica)}</p>`:''}<textarea id="${id}" class="sv-area${v.grande?' grande':''}${v.lista?' sv-lista':''}" data-campo="${v.key}"${v.dica?` aria-describedby="${id}_d"`:''} placeholder="${esc(v.ph||'Escreva aqui')}">${esc(st.dados[v.key]||'')}</textarea></div>`;}
   if(t==='html'){if(b[2])binds.push(b[2]);return typeof v==='function'?v():v;}
   return '';
 }
@@ -135,6 +135,22 @@ function sessaoMostrar(manter){
   if(!manter&&!t.semFoco){const f=el.querySelector('textarea'),c0=el.querySelector('.sv-corpo>*');if(f&&c0&&c0.contains(f))setTimeout(()=>{try{f.focus({preventScroll:true});svCampoAVista(f);}catch(e){}},300);}
 }
 function sessaoAtualizar(){sessaoMostrar(true);}
+
+/* campo em lista: a linha nova já começa com “• ” (sem pedir nada à pessoa). Enter numa linha vazia não cria outra bolinha. */
+const SV_BOLA='• ';
+function svListaEnter(e){
+  const a=e.target;
+  const quebra=e.inputType==='insertLineBreak'||e.inputType==='insertParagraph'||(e.inputType==='insertText'&&e.data==null&&a.value.charAt(a.selectionStart-1)==='\n');
+  if(!quebra)return;
+  const pos=a.selectionStart,antes=a.value.slice(0,pos),depois=a.value.slice(pos);
+  const linhaAnt=antes.slice(0,-1).split('\n').pop();
+  if(linhaAnt.trim()==='•'){  /* linha vazia: tira a bolinha sobrando em vez de criar outra */
+    const ini=antes.length-1-linhaAnt.length;a.value=antes.slice(0,ini)+antes.slice(ini+linhaAnt.length)+depois;a.selectionStart=a.selectionEnd=ini+1;return;}
+  if(depois.startsWith(SV_BOLA))return;
+  a.value=antes+SV_BOLA+depois;a.selectionStart=a.selectionEnd=pos+SV_BOLA.length;
+}
+$('sessaoTela').addEventListener('focusin',e=>{const a=e.target;if(a.classList&&a.classList.contains('sv-lista')&&!a.value.trim()){a.value=SV_BOLA;a.selectionStart=a.selectionEnd=a.value.length;}});
+$('sessaoTela').addEventListener('focusout',e=>{const a=e.target;if(a.classList&&a.classList.contains('sv-lista')&&a.value.trim()==='•'){a.value='';if(_sessao&&a.dataset.campo){_sessao.dados[a.dataset.campo]='';if(svEhTrilha(_sessao.def))salva();}}});
 
 /* ao escrever, leva o campo (com a pergunta) pro topo da área visível, acima do teclado */
 function svCampoAVista(f){
@@ -210,6 +226,7 @@ function sessaoFecharTudo(depois,msg){
 $('sessaoFechar').onclick=()=>sessaoFecharTudo();
 $('sessaoTela').addEventListener('input',e=>{
   const k=e.target.dataset&&e.target.dataset.campo;if(!k||!_sessao)return;
+  if(e.target.classList.contains('sv-lista'))svListaEnter(e);
   _sessao.dados[k]=e.target.value;if(svEhTrilha(_sessao.def))salva();
   const agora=Date.now();if(!_sessao.ouveEm||agora-_sessao.ouveEm>5000){_sessao.ouveEm=agora;svReage('orelhas',0);}   /* a gatinha "escuta" enquanto você escreve */
 });
@@ -313,9 +330,9 @@ function sessaoDeixarSair(){
   sessaoAbrir({...trMeta('sair'),limpar:['incomodo'],pular:{rot:'Já sei o que quero: ir para a Clareza',ate:'clareza'},telas:[
     [['p','Antes de falarmos sobre o que você quer, acolha o que está sentindo agora.'],['p','Às vezes, passamos tanto tempo tentando dar conta de tudo que nem conseguimos parar para reconhecer o que nos incomoda. Na Lei da Atração, chamamos de contraste aquilo que nos mostra, pela experiência do que não queremos, o que gostaríamos de viver de outra maneira.']],
     [['p','Aqui, você não precisa organizar seus pensamentos, encontrar soluções ou buscar o lado bom das coisas. Vamos apenas colocar para fora.'],['p','Faça uma lista em tópicos: vá anotando o que está pesando, exatamente como vier à cabeça.']],
-    {reage:'suspirar',b:[['campo',{key:'incomodo',rot:'Minha lista de incômodos',dica:'Anote em tópicos curtos. Não precisa filtrar, pontuar ou justificar. Podem ser dois itens ou vinte. Não existe jeito certo.',grande:true}]],
+    {reage:'suspirar',b:[['campo',{key:'incomodo',lista:true,rot:'Minha lista de incômodos',dica:'Anote em tópicos curtos. Não precisa filtrar, pontuar ou justificar. Podem ser dois itens ou vinte. Não existe jeito certo.',grande:true}]],
       seguir:()=>{
-        const v=(R.incomodo||'').trim();if(!v){mostrarToast('Escreva o que quiser antes de continuar');return false;}
+        const v=(R.incomodo||'').split('\n').filter(l=>l.replace(/[•\s]/g,'')).join('\n').trim();R.incomodo=v;if(!v){mostrarToast('Escreva o que quiser antes de continuar');return false;}
         if(!Array.isArray(S.leiAtracao.contrastes))S.leiAtracao.contrastes=[];
         let c=S.leiAtracao.contrastes.find(x=>x.id===e.foco.contrasteId);
         if(c)c.naoQuero=v;else{c={id:trNovaId('c'),naoQuero:v,area:trAreaPadrao(),criadoEm:hoje()};S.leiAtracao.contrastes.push(c);}
@@ -326,6 +343,18 @@ function sessaoDeixarSair(){
 }
 
 /* ---------- 3. Olhar com outros olhos (sobre um desabafo guardado) ---------- */
+/* separa a lista de incômodos em itens: uma linha por item, sem bolinha, tracinho ou número no começo.
+   Parágrafo corrido e comprido: tenta por frase; se não der certo, fica um item só. */
+function itensDaLista(txt){
+  const limpa=x=>x.replace(/^\s*(?:[•·\-–—*>]+|\d{1,2}\s*[.)\-–]|[a-z]\))\s*/i,'').trim();
+  let itens=String(txt||'').split(/\r?\n/).map(limpa).filter(x=>x.replace(/[.\s]/g,'').length>0);
+  if(itens.length===1&&itens[0].length>60){
+    const fr=itens[0].split(/(?<=[.!?;])\s+/).map(x=>x.trim()).filter(x=>x.length>=6);
+    if(fr.length>=2&&fr.length<=10)itens=fr;
+  }
+  return itens;
+}
+
 function sessaoOlhar(){
   const c=trContraste();
   if(!c){
@@ -335,14 +364,26 @@ function sessaoOlhar(){
   }
   trEst().foco.contrasteId=c.id;
   const cam=c.camadas||{};
-  const R=trSinc('olhar',c.id,['diferente','origem'],{diferente:cam.pedido||'',origem:cam.origem||''});
-  const guarda=()=>{c.camadas={pedido:(R.diferente||'').trim(),origem:(R.origem||'').trim()};salva();};
-  sessaoAbrir({...trMeta('olhar'),limpar:['diferente','origem'],gaveta:{titulo:'O que você escreveu',texto:()=>c.naoQuero},pular:{rot:'Já sei o que quero: ir para a Clareza',ate:'clareza'},telas:[
-    [["p", "Vamos voltar ao que você escreveu?"],["p", "Leia suas palavras devagar. Imagine que uma amiga querida está contando tudo isso a você. Você não precisa julgá-la, corrigir seus sentimentos ou encontrar uma solução imediatamente. Pode apenas escutá-la."],['lembrete',{titulo:'O que você escreveu',texto:()=>c.naoQuero}]],
-    [["p", "Agora, observe se algum incômodo aparece mais de uma vez. Há alguma situação que parece tocar sempre no mesmo ponto? Alguma coisa que você gostaria muito que fosse diferente?"],["p", "Escolha aquilo que mais chama sua atenção e fique um instante com ele."]],
-    {b:[["p", "Se sentir vontade de explorar mais, podemos olhar também para a origem desse incômodo."],["p", "Você se lembra de quando começou a pensar assim? Essa sensação acompanha você há muito tempo? Existe alguma voz familiar por trás desse pensamento, alguém que lhe ensinou a olhar para si ou para o mundo dessa maneira?"],['campo',{key:'origem',rot:'De onde pode vir esse incômodo?',opcional:true}],["cuidado", "Se isso trouxer algo muito pesado, você pode parar por aqui e conversar com alguém de confiança ou com quem te acompanha."]],seguir:guarda},
-    [["p", "Algumas ideias nos acompanham por tantos anos que acabamos confundindo aquilo que aprendemos com aquilo que realmente pensamos. Ao olhar para elas com calma, podemos descobrir que certas crenças já não combinam com quem somos hoje."],["p", "Você não precisa encontrar uma origem para tudo. E não precisa decidir nada agora. Apenas observe o que faz sentido para você."],["fecho", "Talvez, por trás daquilo que incomoda, já exista uma pista sobre o que você deseja viver."]],
-    {b:[['campo',{key:'diferente',rot:'O que eu gostaria que fosse diferente?'}],["p", "Não se preocupe em encontrar uma resposta perfeita. Às vezes, conseguimos reconhecer com facilidade o que não queremos, mas precisamos de um pouco mais de tempo para descobrir o que queremos no lugar."]],seguir:guarda}
+  const CH=['escolhido','frase','origem','diferente'];
+  const R=trSinc('olhar',c.id,CH,{escolhido:cam.escolhido||'',frase:cam.frase||'',origem:cam.origem||'',diferente:cam.pedido||''});
+  const guarda=()=>{c.camadas={escolhido:(R.escolhido||'').trim(),frase:(R.frase||'').trim(),origem:(R.origem||'').trim(),pedido:(R.diferente||'').trim()};salva();};
+  const itens=itensDaLista(c.naoQuero);
+  const escolhido=['lembrete',{titulo:'O incômodo que você escolheu',texto:()=>R.escolhido}];
+  /* cartões com cada item da lista: um toque escolhe e preenche o campo; dá pra escrever outro */
+  const cartoes=()=>itens.length<2?'':'<div class="sv-itens" role="list">'+itens.map((t,k)=>`<button type="button" role="listitem" class="sv-opt${(R.escolhido||'').trim()===t?' on':''}" data-item="${k}"><b>${esc(t)}</b></button>`).join('')+'</div>';
+  const ligarCartoes=r=>r.querySelectorAll('[data-item]').forEach(b=>b.onclick=()=>{
+    svPreencher('escolhido',itens[+b.dataset.item]);
+    r.querySelectorAll('[data-item]').forEach(x=>x.classList.toggle('on',x===b));
+    const a=$('c_escolhido');if(a)a.blur();svReage('sim',0);});
+  if(itens.length===1&&!(R.escolhido||'').trim())R.escolhido=itens[0];
+  sessaoAbrir({...trMeta('olhar'),limpar:CH,gaveta:{titulo:'O que você escreveu',texto:()=>c.naoQuero},pular:{rot:'Já sei o que quero: ir para a Clareza',ate:'clareza'},telas:[
+    [['p','Vamos voltar ao que você escreveu. Leia devagar, sem pressa de resolver nada.'],['lembrete',{titulo:'O que você escreveu',texto:()=>c.naoQuero}]],
+    {semFoco:true,b:[['p',itens.length>1?'Veja se algum item se repete ou pesa mais que os outros. Escolha um só pra olhar com mais calma.':'Veja o que mais pesa no que você escreveu. Escolha uma coisa só pra olhar com mais calma.'],['html',cartoes,ligarCartoes],
+      ['campo',{key:'escolhido',rot:itens.length>1?'Ou escreva com as suas palavras':'O incômodo que eu escolhi',ph:itens.length>1?'Toque num item acima ou escreva aqui':'Escreva aqui'}]],
+      seguir:()=>{if(!(R.escolhido||'').trim()){mostrarToast(itens.length>1?'Toque num item ou escreva o seu':'Escreva o incômodo que você escolheu');return false;}guarda();}},
+    {b:[escolhido,['p','Junto com um incômodo, quase sempre vem uma frase que a gente repete por dentro, como “comigo é sempre assim” ou “eu não dou conta”. Quando você pensa nesse incômodo, que frase aparece?'],['campo',{key:'frase',rot:'A frase que aparece',opcional:true}]],seguir:guarda},
+    {b:[escolhido,['lembrete',{titulo:'A frase que aparece',texto:()=>R.frase}],['p','Essa frase é mesmo sua? Muitas vezes ela foi aprendida: ouvimos de alguém ou vimos alguém viver assim. E o que foi aprendido pode ser revisto.'],['campo',{key:'origem',rot:'De onde ela pode ter vindo',opcional:true}],['cuidado','Se isso trouxer algo muito pesado, você pode parar por aqui e conversar com alguém de confiança ou com quem te acompanha.']],seguir:guarda},
+    {b:[escolhido,['p','Talvez, por trás desse incômodo, já exista uma pista sobre o que você deseja viver.'],['campo',{key:'diferente',rot:'O que eu gostaria que fosse diferente?'}],['p','Não se preocupe em encontrar uma resposta perfeita. Às vezes, conseguimos reconhecer com facilidade o que não queremos, mas precisamos de um pouco mais de tempo para descobrir o que queremos no lugar.']],seguir:guarda}
   ]});
 }
 
@@ -369,7 +410,7 @@ function sessaoClareza(opc){
         if(d){d.texto=cl;d.area=R.area;}
         else{
           d=novoDesejo(R.area||trAreaPadrao(),cl);d.nucleo='';
-          if(c){d.contrasteOrigem=c.naoQuero;const cm=c.camadas||{};if(cm.pedido||cm.origem)d.camadas={pedido:cm.pedido||'',origem:cm.origem||''};
+          if(c){d.contrasteOrigem=c.naoQuero;const cm=c.camadas||{};if(cm.pedido||cm.origem||cm.frase||cm.escolhido)d.camadas={pedido:cm.pedido||'',origem:cm.origem||'',frase:cm.frase||'',escolhido:cm.escolhido||''};
             S.leiAtracao.contrastes=(S.leiAtracao.contrastes||[]).filter(x=>x.id!==c.id);}
           S.leiAtracao.desejos.push(d);R.desejoCriado=d.id;
         }
