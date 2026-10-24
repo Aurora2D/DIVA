@@ -95,7 +95,7 @@ function renderConfig(){
     +`</div>`;
   h+=`<div class="cfg-grupo-tit">Experiência</div><div class="cfg-grupo">`
     +row('cfgRowConhecer','atracao','Conhecer a Diva<small>A gatinha mostra o que tem no app</small>','')
-    +row('cfgRowAbas','mapa','Mostrar todas as abas<small>Por padrão elas abrem aos poucos</small>','',sw('cfgAbas',S.tabsLiberadas!=='progressivo'))
+    +(S.perfilOriginal?row('cfgRowAbas','mapa','Mostrar todas as abas<small>Por padrão elas abrem aos poucos</small>','',sw('cfgAbas',S.tabsLiberadas!=='progressivo')):'')  /* só no perfil da Érica: pra quem chega novo as abas sempre abrem aos poucos */
     +row('cfgRowMusica','nota','Sugestões de música<small>Pra quem canta ou toca</small>','',sw('cfgMusica',musicaAtiva()))
     +`<div class="cfg-row" id="cfgRowTema">${I('lua')}<span class="cfg-txt">Aparência<small>Auto segue o celular</small></span><span class="cfg-tema" role="group" aria-label="Aparência">${[['auto','Auto'],['claro','Claro'],['escuro','Escuro']].map(([v,t])=>`<button type="button" data-tema="${v}" aria-pressed="${temaAtual===v}">${t}</button>`).join('')}</span></div>`
     +row('cfgRowSons','sino','Sons<small>Ao marcar hábitos, comemorar e na abertura</small>','',`<span class="cfg-mini" id="btnOuvirSons">Ouvir</span>`+sw('cfgSons',somLigado()))
@@ -120,11 +120,11 @@ function renderConfig(){
   };
   $('cfgRowLemb').onclick=()=>{renderLembretes();abrirOverlayTopo($('lembretesModal'));};
   $('cfgRowSaude').onclick=abrirCuidados;
-  $('cfgRowAbas').onclick=()=>$('cfgAbas').click();
+  if($('cfgRowAbas')){$('cfgRowAbas').onclick=()=>$('cfgAbas').click();
   $('cfgRowConhecer').onclick=()=>fecharOverlay($('configModal'),()=>boasVindasDiva());
   $('cfgRowMusica').onclick=()=>$('cfgMusica').click();
   $('cfgMusica').onchange=()=>{S.musica=$('cfgMusica').checked;salva();renderHabitos();ciRemontar();try{perfilNovoAreaArte();}catch(e){}};
-  $('cfgAbas').onchange=()=>{S.tabsLiberadas=$('cfgAbas').checked?'todas':'progressivo';salva();abasAtualizar(false);};
+  $('cfgAbas').onchange=()=>{S.tabsLiberadas=$('cfgAbas').checked?'todas':'progressivo';salva();abasAtualizar(false);};}
   $('cfgRowTema').querySelectorAll('[data-tema]').forEach(b=>b.onclick=()=>{if(window.DIVAtema)window.DIVAtema.escolher(b.dataset.tema);$('cfgRowTema').querySelectorAll('[data-tema]').forEach(x=>x.setAttribute('aria-pressed',x===b?'true':'false'));});
   $('cfgRowSons').onclick=()=>$('cfgSons').click();
   $('cfgSons').onchange=()=>{S.sons={ligado:$('cfgSons').checked};salva();if(S.sons.ligado)som('plim');};
