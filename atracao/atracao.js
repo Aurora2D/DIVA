@@ -254,7 +254,13 @@ function sessaoAbertura(){
 /* ---------- 2. Contraste: Deixar sair ---------- */
 function sessaoDeixarSair(){
   const e=trEst(),R=e.rasc;
-  if(!(R.incomodo||'').trim())delete e.foco.contrasteId;
+  /* a lista já guardada volta pro campo, pra pessoa completar em vez de começar do zero */
+  const cFoco=e.foco.contrasteId&&contrastesPendentes().find(x=>x.id===e.foco.contrasteId);
+  if(e.foco.contrasteId&&!cFoco){delete e.foco.contrasteId;delete R.incomodo;delete e.tela.sair;salva();}  /* essa lista já foi trabalhada ou removida: começa uma nova */
+  else if(!(R.incomodo||'').trim()){
+    if(cFoco&&(cFoco.naoQuero||'').trim()){R.incomodo=cFoco.naoQuero;if(!(e.tela.sair>0))e.tela.sair=2;salva();}
+    else delete e.foco.contrasteId;
+  }
   sessaoAbrir({...trMeta('sair'),limpar:['incomodo'],pular:{rot:'Já sei o que quero: ir para a Clareza',ate:'clareza'},telas:[
     [['p','Antes de falarmos sobre o que você quer, acolha o que está sentindo agora.'],['p','Às vezes, passamos tanto tempo tentando dar conta de tudo que nem conseguimos parar para reconhecer o que nos incomoda. Na Lei da Atração, chamamos de contraste aquilo que nos mostra, pela experiência do que não queremos, o que gostaríamos de viver de outra maneira.']],
     [['p','Aqui, você não precisa organizar seus pensamentos, encontrar soluções ou buscar o lado bom das coisas. Vamos apenas colocar para fora.'],['p','Faça uma lista em tópicos: vá anotando o que está pesando, exatamente como vier à cabeça.']],
