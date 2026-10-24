@@ -131,9 +131,25 @@ function sessaoMostrar(manter){
   if(!manter){const r=st.reacao;st.reacao=null;
     if(st.i===0&&!def.compacto&&def.mascote)svReage(MASCOTE_ENTRADA[def.id]||'feliz',700);else if(r)svReage(r);}
   svGaveta();
-  if(!manter&&!t.semFoco){const f=el.querySelector('textarea');if(f)setTimeout(()=>{try{f.focus({preventScroll:true});}catch(e){}},300);}
+  /* teclado só abre sozinho quando o campo é a primeira coisa da tela; se tem texto antes, a pessoa lê primeiro e toca no campo quando quiser */
+  if(!manter&&!t.semFoco){const f=el.querySelector('textarea'),c0=el.querySelector('.sv-corpo>*');if(f&&c0&&c0.contains(f))setTimeout(()=>{try{f.focus({preventScroll:true});svCampoAVista(f);}catch(e){}},300);}
 }
 function sessaoAtualizar(){sessaoMostrar(true);}
+
+/* ao escrever, leva o campo (com a pergunta) pro topo da área visível, acima do teclado */
+function svCampoAVista(f){
+  const alvo=(f&&f.closest('.sv-campo'))||f;if(!alvo)return;
+  const modal=$('sessaoModal');
+  const vai=()=>{if(document.activeElement!==f)return;
+    const vv=window.visualViewport,altura=vv?vv.height:window.innerHeight,topo=(document.querySelector('.sv-topo')||{}).offsetHeight||64;
+    const r=alvo.getBoundingClientRect(),cabe=r.height<=altura-topo-12;
+    const destino=cabe?r.top-topo-8:(f.getBoundingClientRect().top-topo-8);
+    if(Math.abs(destino)>4)modal.scrollBy({top:destino,behavior:'smooth'});};
+  setTimeout(vai,120);setTimeout(vai,450);
+}
+$('sessaoTela').addEventListener('focusin',e=>{if(e.target.matches&&e.target.matches('textarea.sv-area'))svCampoAVista(e.target);});
+if(window.visualViewport)window.visualViewport.addEventListener('resize',()=>{const a=document.activeElement;
+  if(a&&a.matches&&a.matches('textarea.sv-area')&&$('sessaoModal').contains(a))svCampoAVista(a);});
 
 /* gaveta lateral: puxa da direita a lista que a pessoa escreveu, pra reler e comparar sem sair da tela.
    A sessão liga com gaveta:{titulo,texto:()=>...}; aparece a partir da 2ª tela (na 1ª o texto já está à vista). */
