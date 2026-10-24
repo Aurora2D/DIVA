@@ -81,6 +81,7 @@ function renderConfig(){
   const e=S.estiloAutocuidado;const ep=e&&e.feito?Object.values(ESTILO_CATS).find(x=>x.id===e.principal):null;
   const nl=(S.lembretes||[]).length;
   const hs=[...(S.resumo.historico||[]),...(S.resumoMensal.historico||[])].map(r=>r.mostradoEm).filter(Boolean).sort();
+  const temaAtual=window.DIVAtema?window.DIVAtema.modo():'auto';
   let h='';
   h+=`<div class="cfg-grupo-tit">Você</div><div class="cfg-grupo">`
     +row('cfgRowNome','coracao','Nome',primeiroNome()||'—')
@@ -96,7 +97,8 @@ function renderConfig(){
     +row('cfgRowConhecer','atracao','Conhecer a Diva<small>A gatinha mostra o que tem no app</small>','')
     +row('cfgRowAbas','mapa','Mostrar todas as abas<small>Por padrão elas abrem aos poucos</small>','',sw('cfgAbas',S.tabsLiberadas!=='progressivo'))
     +row('cfgRowMusica','nota','Sugestões de música<small>Pra quem canta ou toca</small>','',sw('cfgMusica',musicaAtiva()))
-    +row('cfgRowSons','sino','Sons<small>Ao marcar hábitos e comemorar</small>','',`<span class="cfg-mini" id="btnOuvirSons">Ouvir</span>`+sw('cfgSons',somLigado()))
+    +`<div class="cfg-row" id="cfgRowTema">${I('lua')}<span class="cfg-txt">Aparência<small>Auto segue o celular</small></span><span class="cfg-tema" role="group" aria-label="Aparência">${[['auto','Auto'],['claro','Claro'],['escuro','Escuro']].map(([v,t])=>`<button type="button" data-tema="${v}" aria-pressed="${temaAtual===v}">${t}</button>`).join('')}</span></div>`
+    +row('cfgRowSons','sino','Sons<small>Ao marcar hábitos, comemorar e na abertura</small>','',`<span class="cfg-mini" id="btnOuvirSons">Ouvir</span>`+sw('cfgSons',somLigado()))
     +`</div>`;
   h+=`<div class="cfg-grupo-tit">Seu histórico</div><div class="cfg-grupo">`
     +row('cfgRowResumos','grafico','Resumos semanais e mensais',hs.length?'último em '+cfgDataBr(hs[hs.length-1]):'ainda não tem')
@@ -123,6 +125,7 @@ function renderConfig(){
   $('cfgRowMusica').onclick=()=>$('cfgMusica').click();
   $('cfgMusica').onchange=()=>{S.musica=$('cfgMusica').checked;salva();renderHabitos();ciRemontar();try{perfilNovoAreaArte();}catch(e){}};
   $('cfgAbas').onchange=()=>{S.tabsLiberadas=$('cfgAbas').checked?'todas':'progressivo';salva();abasAtualizar(false);};
+  $('cfgRowTema').querySelectorAll('[data-tema]').forEach(b=>b.onclick=()=>{if(window.DIVAtema)window.DIVAtema.escolher(b.dataset.tema);$('cfgRowTema').querySelectorAll('[data-tema]').forEach(x=>x.setAttribute('aria-pressed',x===b?'true':'false'));});
   $('cfgRowSons').onclick=()=>$('cfgSons').click();
   $('cfgSons').onchange=()=>{S.sons={ligado:$('cfgSons').checked};salva();if(S.sons.ligado)som('plim');};
   $('btnOuvirSons').onclick=ev=>{ev.stopPropagation();const era=somLigado();if(!era)S.sons={ligado:true};som('plim');setTimeout(()=>som('guardado'),900);setTimeout(()=>som('caixinha'),1700);setTimeout(()=>{som('brilho');if(!era)S.sons={ligado:false};},2900);};

@@ -6,6 +6,7 @@
 <meta name="theme-color" media="(prefers-color-scheme: light)" content="#FFF1EB">
 <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#211326">
 <meta name="color-scheme" content="light dark">
+<script src="app/tema.js?v=20261024a"></script>
 <title>DIVA</title>
 <link rel="manifest" href="manifest.webmanifest?v=lotus">
 <link rel="icon" type="image/png" sizes="32x32" href="icones/favicon-32.png?v=lotus">
@@ -793,6 +794,9 @@ svg.ic.emo{width:1.15em;height:1.15em;vertical-align:-.2em;margin:0 .08em;color:
 .cfg-row .cfg-txt small{display:block;font-size:11.5px;font-weight:500;color:var(--mut);margin-top:1px}
 .cfg-row .cfg-val{color:var(--mut);font-size:13px;max-width:45%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .cfg-row .cfg-seta{color:var(--mut2);font-size:20px;line-height:1}
+.cfg-tema{display:flex;gap:4px;padding:3px;border-radius:999px;background:var(--surf-mid);border:1px solid var(--borda);flex:none}
+.cfg-tema button{border:0;background:none;color:var(--mut);font-family:inherit;font-size:12.5px;font-weight:700;padding:6px 10px;border-radius:999px;cursor:pointer}
+.cfg-tema button[aria-pressed="true"]{background:var(--b);color:var(--bg)}
 .cfg-mini{background:var(--surf-mid);border:1px solid var(--borda);color:var(--txt);border-radius:999px;padding:6px 12px;font-family:inherit;font-size:12.5px;font-weight:700;cursor:pointer}
 .cfg-sw{position:relative;width:46px;height:28px;flex-shrink:0}
 .cfg-sw input{opacity:0;width:0;height:0;position:absolute}
@@ -884,7 +888,7 @@ h1.diva-logo{display:flex;flex-direction:column;align-items:center;margin:0 0 6p
 @media print{.diva-coroa{stroke:#D9A441}.diva-nome{color:#493657}}
 </style>
 <link rel="stylesheet" href="estilo/app.css?v=20261023f">
-<link rel="stylesheet" href="atracao/atracao.css?v=20261023g">
+<link rel="stylesheet" href="atracao/atracao.css?v=20261024a">
 <link rel="stylesheet" href="estilo/boas-vindas.css?v=20261022s">
 </head>
 <body>
@@ -1304,7 +1308,7 @@ window.diva={render,play};
 /* ---------- Tema: claro (original) ou escuro (paleta ameixa/violeta) ----------
    Segue o modo do celular. Não cria outra animação: só troca as cores de cada forma. */
 const PALETA_ESCURA={'#fdf6f2':'#3d1b3a','#f9ece6':'#2f142e','#f3dfd8':'#221021','#fae8e1':'#2c1330','#fff8ef':'#58284f','#fff1e4':'#371935','#fff6f0':'#e6b8dc','#f0b6ac':'#7a3f78','#dca18e':'#b77aa8','#fdeee8':'#4a2246','#f8dcd3':'#3a1a38','#f1c9c0':'#2e132c','#80314f':'#3b2258','#b6627c':'#7b3b80','#954364':'#552a63','#d9849a':'#9b4f90','#eaa6b4':'#c47cab','#c96a88':'#8b3f7f','#a28ba7':'#3c5aa0','#cfb0d2':'#6f92c6','#b09ab2':'#4b6caa','#e48fa4':'#b8629d','#f0b3bc':'#8f5ca8','#f6d0cf':'#5b2f64','#f0c3cb':'#6b3b74','#d98fb0':'#a9518f','#c9a0cc':'#5f82ba','#b9506f':'#cf6c8e','#d77289':'#e48aa7','#e79aaa':'#f2abbf','#64243f':'#f6e6d2','#e7a2ad':'#c87aa8','#f1bcc3':'#9a6ab2','#e9a2b2':'#c27ab2','#dc8ea1':'#d88cb4','#c98aa0':'#b07ab8','#a46077':'#e2b46c','#efc0c6':'#8f6ab2'};
-const temaEscuroDoSistema=()=>{try{return matchMedia('(prefers-color-scheme: dark)').matches}catch(e){return false}};
+const temaEscuroDoSistema=()=>{try{const t=localStorage.getItem('divaTema');if(t==='escuro')return true;if(t==='claro')return false}catch(e){}try{return matchMedia('(prefers-color-scheme: dark)').matches}catch(e){return false}};
 function aplicaTema(escuro){
   document.querySelectorAll('[fill],[stroke],[stop-color]').forEach(e=>{for(const a of ['fill','stroke','stop-color']){
     const v=e.getAttribute(a);if(!v||v[0]!=='#')continue;const k='data-l-'+a;let base=e.getAttribute(k);
@@ -1326,14 +1330,15 @@ addEventListener('pointerdown',avisa);addEventListener('keydown',avisa);
 (function(){
   var box=document.getElementById('divaSplash'),tpl=document.getElementById('divaSplashDoc');if(!box||!tpl)return;
   var fr=box.querySelector('iframe'),feito=false;
-  try{if(matchMedia('(prefers-color-scheme: dark)').matches)box.style.background='#221021'}catch(e){}
+  try{if(window.DIVAtema?window.DIVAtema.escuro():matchMedia('(prefers-color-scheme: dark)').matches)box.style.background='#221021'}catch(e){}
   function fim(){if(feito)return;feito=true;box.style.opacity='0';box.style.pointerEvents='none';setTimeout(function(){box.remove();tpl.remove()},650)}
   /* telas muito densas: desenha a abertura com menos pixels (fica leve, quase igual) */
   var s=Math.max(1,(window.devicePixelRatio||1)/1.5);
   if(s>1){fr.style.width=(100/s)+'%';fr.style.height=(100/s)+'%';fr.style.transform='scale('+s+')';fr.style.transformOrigin='0 0'}
   var pronto=false,carregou=document.readyState!=='loading',foi=false;
   /* som da abertura (toca junto com a animação; o final do som continua suave já dentro do app) */
-  var som=null;try{som=new Audio('audio/abertura.mp3?v=20261023');som.preload='auto';som.volume=.85}catch(e){}
+  var som=null;var semSom=false;try{var st=JSON.parse(localStorage.getItem('batomRisadaV23')||'null');semSom=!!(st&&st.sons&&st.sons.ligado===false)}catch(e){}
+  try{if(!semSom)som=new Audio('audio/abertura.mp3?v=20261023');som.preload='auto';som.volume=.85}catch(e){}
   function vai(){if(foi||!pronto||!carregou)return;foi=true;fr.contentWindow.postMessage('diva-go','*');
     if(som){var p=som.play();if(p&&p.catch)p.catch(function(){/* navegador bloqueou som automático: segue em silêncio */})}
     setTimeout(fim,3400)}
@@ -2277,7 +2282,7 @@ addEventListener('pointerdown',avisa);addEventListener('keydown',avisa);
 <script src="app/atracao-app.js?v=20261022s"></script>
 <script src="app/resumos.js?v=20261022s"></script>
 <script src="app/mapa.js?v=20261023h"></script>
-<script src="app/celebrar.js?v=20261023a"></script>
+<script src="app/celebrar.js?v=20261024a"></script>
 <script src="app/abas.js?v=20261023h"></script>
 <script src="app/atracao-extras.js?v=20261022s"></script>
 <script src="app/estilo-autocuidado.js?v=20261022s"></script>
@@ -2294,6 +2299,6 @@ addEventListener('pointerdown',avisa);addEventListener('keydown',avisa);
 <script src="relatorio/carta.js?v=20261022s"></script>
 <script src="relatorio/guarda-chuva.js?v=20261022s"></script>
 <script src="relatorio/carta-app.js?v=20261022s"></script>
-<script src="atracao/atracao.js?v=20261023h"></script>
+<script src="atracao/atracao.js?v=20261024a"></script>
 </body>
 </html>

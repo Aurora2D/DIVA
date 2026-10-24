@@ -119,7 +119,7 @@ gatinha-fantoche.pronta{opacity:1}
 @media (prefers-reduced-motion:reduce){.sv-sessao.balanca{animation:none}}
 
 /* gaveta lateral com a lista que a pessoa escreveu (Olhar com outros olhos) */
-.sv-lingueta{position:fixed;right:0;top:46%;z-index:30;writing-mode:vertical-rl;transform:rotate(180deg);padding:14px 7px;border:1px solid var(--borda);border-right:0;border-radius:0 12px 12px 0;background:var(--b);color:#fff;font:inherit;font-size:11px;font-weight:800;letter-spacing:1.2px;text-transform:uppercase;cursor:pointer;box-shadow:0 4px 14px rgba(73,54,87,.25)}
+.sv-lingueta{position:fixed;right:0;top:46%;z-index:30;writing-mode:vertical-rl;transform:rotate(180deg);padding:14px 7px;border:1px solid var(--borda);border-right:0;border-radius:0 12px 12px 0;background:var(--b);color:var(--bg);font:inherit;font-size:11px;font-weight:800;letter-spacing:1.2px;text-transform:uppercase;cursor:pointer;box-shadow:0 4px 14px rgba(73,54,87,.25)}
 .sv-lingueta[hidden]{display:none}
 .sv-gl-fundo{position:fixed;inset:0;z-index:40;background:rgba(30,20,40,.35);opacity:0;pointer-events:none;transition:opacity .25s ease}
 .sv-gl-fundo.aberta{opacity:1;pointer-events:auto}
