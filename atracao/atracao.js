@@ -129,9 +129,39 @@ function sessaoMostrar(manter){
   if(t.bind)t.bind($('sessaoTela'));
   if(!manter){const r=st.reacao;st.reacao=null;
     if(st.i===0&&!def.compacto&&def.mascote)svReage(MASCOTE_ENTRADA[def.id]||'feliz',700);else if(r)svReage(r);}
+  svGaveta();
   if(!manter&&!t.semFoco){const f=el.querySelector('textarea');if(f)setTimeout(()=>{try{f.focus({preventScroll:true});}catch(e){}},300);}
 }
 function sessaoAtualizar(){sessaoMostrar(true);}
+
+/* gaveta lateral: puxa da direita a lista que a pessoa escreveu, pra reler e comparar sem sair da tela.
+   A sessão liga com gaveta:{titulo,texto:()=>...}; aparece a partir da 2ª tela (na 1ª o texto já está à vista). */
+function svGaveta(){
+  const m=$('sessaoModal');let g=$('svGaveta');
+  if(!g){
+    m.insertAdjacentHTML('beforeend',`<button type="button" class="sv-lingueta" id="svLingueta" aria-controls="svGaveta" aria-expanded="false"><span>Minha lista</span></button><div class="sv-gl-fundo" id="svGavetaFundo"></div><aside class="sv-gl" id="svGaveta" aria-hidden="true" aria-label="O que você escreveu"><div class="sv-gl-cab"><span id="svGavetaTit"></span><button type="button" class="sv-x" id="svGavetaX" aria-label="Fechar a lista"><svg class="sv-ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div><div class="sv-gl-txt" id="svGavetaTxt"></div></aside>`);
+    g=$('svGaveta');
+    $('svLingueta').onclick=()=>svGavetaAbre(true);
+    $('svGavetaX').onclick=$('svGavetaFundo').onclick=()=>svGavetaAbre(false);
+    /* arrastar: da borda direita pra esquerda abre; na gaveta, pra direita fecha */
+    let x0=null,y0=0,deBorda=false;
+    m.addEventListener('touchstart',e=>{const t=e.touches[0];x0=t.clientX;y0=t.clientY;deBorda=x0>window.innerWidth-28;},{passive:true});
+    m.addEventListener('touchend',e=>{if(x0===null)return;const t=e.changedTouches[0],dx=t.clientX-x0,dy=Math.abs(t.clientY-y0);x0=null;
+      if(dy>Math.abs(dx))return;const aberta=g.classList.contains('aberta');
+      if(!aberta&&deBorda&&dx<-40&&!$('svLingueta').hidden)svGavetaAbre(true);else if(aberta&&dx>50)svGavetaAbre(false);},{passive:true});
+  }
+  const st=_sessao,gv=st&&st.def.gaveta,txt=gv?String((typeof gv.texto==='function'?gv.texto():gv.texto)||'').trim():'';
+  const mostra=!!(txt&&st.i>0);
+  $('svLingueta').hidden=!mostra;
+  if(mostra){$('svGavetaTit').textContent=gv.titulo||'O que você escreveu';$('svGavetaTxt').textContent=txt;}
+  else svGavetaAbre(false);
+}
+function svGavetaAbre(sim){
+  const g=$('svGaveta');if(!g)return;
+  g.classList.toggle('aberta',sim);$('svGavetaFundo').classList.toggle('aberta',sim);
+  g.setAttribute('aria-hidden',sim?'false':'true');$('svLingueta').setAttribute('aria-expanded',sim?'true':'false');
+  if(sim){$('svGavetaTxt').scrollTop=0;svReage('orelhas',0);}
+}
 function sessaoAbrir(def,dados){
   const trilha=svEhTrilha(def);
   _sessao={def,telas:def.telas,i:0,dados:trilha?trEst().rasc:(dados||{}),acoes:[]};
@@ -156,6 +186,7 @@ function sessaoConcluir(msg){
   sessaoFecharTudo(null,m);
 }
 function sessaoFecharTudo(depois,msg){
+  svGavetaAbre(false);const lg=$('svLingueta');if(lg)lg.hidden=true;
   fecharOverlay($('sessaoModal'),()=>{_sessao=null;document.body.classList.remove('sv-aberta');renderAtracaoTudo();if(msg)mostrarToast(msg);if(depois)depois();});
 }
 $('sessaoFechar').onclick=()=>sessaoFecharTudo();
@@ -288,7 +319,7 @@ function sessaoOlhar(){
   const cam=c.camadas||{};
   const R=trSinc('olhar',c.id,['diferente','origem'],{diferente:cam.pedido||'',origem:cam.origem||''});
   const guarda=()=>{c.camadas={pedido:(R.diferente||'').trim(),origem:(R.origem||'').trim()};salva();};
-  sessaoAbrir({...trMeta('olhar'),limpar:['diferente','origem'],pular:{rot:'Já sei o que quero: ir para a Clareza',ate:'clareza'},telas:[
+  sessaoAbrir({...trMeta('olhar'),limpar:['diferente','origem'],gaveta:{titulo:'O que você escreveu',texto:()=>c.naoQuero},pular:{rot:'Já sei o que quero: ir para a Clareza',ate:'clareza'},telas:[
     [["p", "Vamos voltar ao que você escreveu?"],["p", "Leia suas palavras devagar. Imagine que uma amiga querida está contando tudo isso a você. Você não precisa julgá-la, corrigir seus sentimentos ou encontrar uma solução imediatamente. Pode apenas escutá-la."],['lembrete',{titulo:'O que você escreveu',texto:()=>c.naoQuero}]],
     [["p", "Agora, observe se algum incômodo aparece mais de uma vez. Há alguma situação que parece tocar sempre no mesmo ponto? Alguma coisa que você gostaria muito que fosse diferente?"],["p", "Escolha aquilo que mais chama sua atenção e fique um instante com essa pergunta:"],["pergunta", "Se isso pudesse ser diferente, o que eu gostaria que acontecesse?"]],
     {b:[['campo',{key:'diferente',rot:'O que eu gostaria que fosse diferente?'}],["p", "Não se preocupe em encontrar uma resposta perfeita. Às vezes, conseguimos reconhecer com facilidade o que não queremos, mas precisamos de um pouco mais de tempo para descobrir o que queremos no lugar."]],seguir:guarda},

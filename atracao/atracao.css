@@ -117,3 +117,15 @@ gatinha-fantoche.pronta{opacity:1}
 .sv-sessao.balanca{animation:svBalanca .45s ease}
 @keyframes svBalanca{0%,100%{transform:translateX(0)}20%{transform:translateX(-6px)}40%{transform:translateX(5px)}60%{transform:translateX(-3px)}80%{transform:translateX(2px)}}
 @media (prefers-reduced-motion:reduce){.sv-sessao.balanca{animation:none}}
+
+/* gaveta lateral com a lista que a pessoa escreveu (Olhar com outros olhos) */
+.sv-lingueta{position:fixed;right:0;top:46%;z-index:30;writing-mode:vertical-rl;transform:rotate(180deg);padding:14px 7px;border:1px solid var(--borda);border-right:0;border-radius:0 12px 12px 0;background:var(--b);color:#fff;font:inherit;font-size:11px;font-weight:800;letter-spacing:1.2px;text-transform:uppercase;cursor:pointer;box-shadow:0 4px 14px rgba(73,54,87,.25)}
+.sv-lingueta[hidden]{display:none}
+.sv-gl-fundo{position:fixed;inset:0;z-index:40;background:rgba(30,20,40,.35);opacity:0;pointer-events:none;transition:opacity .25s ease}
+.sv-gl-fundo.aberta{opacity:1;pointer-events:auto}
+.sv-gl{position:fixed;top:0;right:0;bottom:0;z-index:41;width:min(84vw,380px);display:flex;flex-direction:column;background:var(--bg);background-image:linear-gradient(160deg,var(--modal-1),var(--modal-2));border-left:1px solid var(--borda);box-shadow:-10px 0 30px rgba(30,20,40,.25);transform:translateX(105%);transition:transform .3s ease;padding:calc(12px + env(safe-area-inset-top,0px)) 16px calc(16px + env(safe-area-inset-bottom,0px))}
+.sv-gl.aberta{transform:none}
+.sv-gl-cab{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:12px}
+.sv-gl-cab span{font-size:11px;font-weight:800;letter-spacing:1.2px;text-transform:uppercase;color:var(--b)}
+.sv-gl-txt{flex:0 1 auto;min-height:0;overflow:auto;font-style:italic;font-weight:500;font-size:15.5px;line-height:1.6;white-space:pre-wrap;overflow-wrap:anywhere;color:var(--txt);padding:14px 16px;border-radius:12px;background:var(--sv-soft);border:1px solid var(--borda)}
+@media (prefers-reduced-motion:reduce){.sv-gl,.sv-gl-fundo{transition:none}}
