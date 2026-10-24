@@ -17,7 +17,7 @@
 const MASCOTE_BASE='mascote/assets/pecas/';
 const svMascote=(cls,pose)=>window.customElements&&customElements.get('gatinha-fantoche')?`<gatinha-fantoche class="${cls}" pose="${pose||'sentada'}" src-base="${MASCOTE_BASE}" aria-hidden="true"></gatinha-fantoche>`:'';
 /* reações: o que a gatinha faz em cada interação. Para mudar, troque os nomes das ações aqui. */
-const MASCOTE_ENTRADA={abertura:'tchau',sair:'suspirar',olhar:'piscar',clareza:'curiosa',permissao:'feliz',passo:'feliz'};
+const MASCOTE_ENTRADA={abertura:'tchau',sair:'suspirar',olhar:'piscar',declaracao:'brilho',clareza:'curiosa',permissao:'feliz',passo:'feliz'};
 function svReage(acao,atraso){
   const go=()=>{const c=document.querySelector('#sessaoTela gatinha-fantoche');if(!c)return;
     const f=()=>{try{if(typeof c.play==='function')c.play(acao);}catch(e){}};
@@ -52,7 +52,7 @@ const TRILHA=[
   {id:'sair',kicker:'Contraste',titulo:'Deixar sair',afirma:'Eu posso deixar sair o que pesa.',mascote:'deixar-sair'},
   {id:'olhar',kicker:'Olhar com calma',titulo:'Olhar com outros olhos',afirma:'Eu posso olhar para o que escrevi com calma.',mascote:'escrita'},
   {id:'clareza',kicker:'Passo 1',titulo:'Clareza',afirma:'Eu estou em processo de descobrir o que eu quero, em todas as áreas da minha vida, do meu jeito e no meu tempo.',mascote:'clareza'},
-  {id:'declaracao',kicker:'Passo 2',titulo:'Declaração de desejo',afirma:'Eu estou em processo de ter realizações em todas as áreas da minha vida, do meu jeito e no meu tempo.',mascote:null},
+  {id:'declaracao',kicker:'Passo 2',titulo:'Declaração de desejo',afirma:'Eu estou em processo de ter realizações em todas as áreas da minha vida, do meu jeito e no meu tempo.',mascote:'comemoracao'},
   {id:'permissao',kicker:'Passo 3',titulo:'Permissão',afirma:'Eu estou em processo de me permitir receber realizações em todas as áreas da minha vida, do meu jeito e no meu tempo.',mascote:'permissao'},
   {id:'passo',kicker:'Ação',titulo:'Menor passo',afirma:'Eu posso começar pequeno.',mascote:'menor-passo'}
 ];
