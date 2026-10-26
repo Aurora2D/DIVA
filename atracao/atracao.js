@@ -395,7 +395,7 @@ function sessaoOlhar(){
     r.querySelectorAll('[data-item]').forEach(x=>x.classList.toggle('on',x===b));
     const a=$('c_escolhido');if(a)a.blur();svReage('sim',0);});
   if(itens.length===1&&!(R.escolhido||'').trim())R.escolhido=itens[0];
-  const olharOutro=()=>{registrar();CH.forEach(k=>R[k]='');salva();_sessao.i=1;_sessao.reacao='feliz';sessaoMostrar();mostrarToast('Guardado ✓ Agora, outro com calma 💜');};
+  const olharOutro=()=>{registrar();CH.forEach(k=>R[k]='');salva();_sessao.i=2;_sessao.reacao='feliz';sessaoMostrar();mostrarToast('Guardado ✓ Agora, outro com calma 💜');};
   /* última tela: frase e origem juntas. Muitas vezes o próprio incômodo já é a frase, e o que importa é de onde ele veio.
      O que a pessoa quer no lugar fica para a Clareza. */
   const ultima={b:[escolhido,['p','Às vezes, junto com o incômodo, vem uma frase que a gente repete por dentro. Outras vezes, o próprio incômodo já é essa frase.'],['campo',{key:'frase',rot:'Tem alguma frase por trás?',opcional:true,ph:'Ex.: comigo é sempre assim'}],
@@ -404,6 +404,7 @@ function sessaoOlhar(){
   Object.defineProperty(ultima,'botoes',{get:()=>faltam()?[{rot:'Olhar outro incômodo',cls:'linha',acao:olharOutro},{rot:'Concluir',prim:true,acao:()=>{registrar();sessaoConcluir();}}]:null});
   ultima.seguir=registrar;
   sessaoAbrir({...trMeta('olhar'),limpar:CH,pular:{rot:'Já sei o que quero: ir para a Clareza',ate:'clareza'},telas:[
+    [['p','Na sessão Deixar sair, você colocou pra fora o que pesa. Agora é hora de voltar a essa lista com calma, como quem tira uma roupa do armário pra ver se ainda serve.'],['p','Muita coisa que a gente sente como verdade sobre si mesma só está ali há tanto tempo que parece que sempre foi assim. Olhar de novo ajuda a separar o que é seu do que veio junto.'],['p','Aqui a ideia é só enxergar melhor. O que você quer no lugar fica pra depois, na Clareza.']],
     [['p','Vamos voltar ao que você escreveu. Leia devagar, sem pressa de resolver nada.'],['lembrete',{titulo:'O que você escreveu',texto:()=>c.naoQuero}]],
     {semFoco:true,b:[['html',convite],['html',cartoes,ligarCartoes],
       ['campo',{key:'escolhido',rot:itens.length>1?'Ou escreva com as suas palavras':'O incômodo que eu escolhi',ph:itens.length>1?'Toque num item acima ou escreva aqui':'Escreva aqui'}]],
