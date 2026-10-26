@@ -405,8 +405,9 @@ function sessaoOlhar(){
     {semFoco:true,b:[['html',convite],['html',cartoes,ligarCartoes],
       ['campo',{key:'escolhido',rot:itens.length>1?'Ou escreva com as suas palavras':'O incômodo que eu escolhi',ph:itens.length>1?'Toque num item acima ou escreva aqui':'Escreva aqui'}]],
       seguir:()=>{if(!(R.escolhido||'').trim()){mostrarToast(itens.length>1?'Toque num item ou escreva o seu':'Escreva o incômodo que você escolheu');return false;}guarda();}},
-    {b:[escolhido,['p','Junto com um incômodo, quase sempre vem uma frase que a gente repete por dentro, como “comigo é sempre assim” ou “eu não dou conta”. Quando você pensa nesse incômodo, que frase aparece?'],['campo',{key:'frase',rot:'A frase que aparece',opcional:true}]],seguir:guarda},
-    {b:[escolhido,['lembrete',{titulo:'A frase que aparece',texto:()=>R.frase}],['p','Essa frase é mesmo sua? Muitas vezes ela foi aprendida: ouvimos de alguém ou vimos alguém viver assim. E o que foi aprendido pode ser revisto.'],['campo',{key:'origem',rot:'De onde ela pode ter vindo',opcional:true}],['cuidado','Se isso trouxer algo muito pesado, você pode parar por aqui e conversar com alguém de confiança ou com quem te acompanha.']],seguir:guarda},
+    /* frase e origem numa tela só: muitas vezes o próprio incômodo já é a frase, e o que importa é de onde ele veio */
+    {b:[escolhido,['p','Às vezes, junto com o incômodo, vem uma frase que a gente repete por dentro. Outras vezes, o próprio incômodo já é essa frase.'],['campo',{key:'frase',rot:'Tem alguma frase por trás?',opcional:true,ph:'Ex.: comigo é sempre assim'}],
+      ['p','Isso é mesmo seu? Muitas vezes foi aprendido: ouvimos de alguém ou vimos alguém viver assim. E o que foi aprendido pode ser revisto.'],['campo',{key:'origem',rot:'De onde pode ter vindo',opcional:true}],['cuidado','Se isso trouxer algo muito pesado, você pode parar por aqui e conversar com alguém de confiança ou com quem te acompanha.']],seguir:guarda},
     ultima
   ]});
 }
