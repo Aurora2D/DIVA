@@ -14,7 +14,7 @@ O visual usa as variáveis de cor que o app já tem (`--bg`, `--txt`, `--b`, `--
 |---|---|---|---|
 | 1 | abertura | `sessaoAbertura` | nada |
 | 2 | sair | `sessaoDeixarSair` | `S.leiAtracao.contrastes[]` (o desabafo) |
-| 3 | olhar | `sessaoOlhar` | `contraste.camadas = {pedido, origem}` |
+| 3 | olhar | `sessaoOlhar` (3 telas: reler, escolher um incômodo, frase e origem) | `contraste.camadas = {escolhido, frase, origem}`; o que a pessoa quer no lugar fica para a Clareza |
 | 4 | clareza | `sessaoClareza` | cria o desejo (`novoDesejo`), área, `desejo.camadas = {pedido, origem, importa}`, remove o contraste da fila |
 | 5 | declaracao | `sessaoDeclaracao(d)` | `desejo.corpo[]` (prefixos e textos editáveis), `desejo.sensacao`; botão que chama `habitoLerDeclaracao` |
 | 6 | permissao | `sessaoPermissao(d)` (4 etapas: escutar o receio, olhar com curiosidade, nova perspectiva, dar espaço) | `desejo.gravetos[]` com `duvida`, `origem`, `seFosse`; `graveto.alivio`, `solto`, `soltoEm` (vai para o Livro de Permissões); `desejo.evidencias[]`; atalho que abre o Livro |

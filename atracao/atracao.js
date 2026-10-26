@@ -396,7 +396,10 @@ function sessaoOlhar(){
     const a=$('c_escolhido');if(a)a.blur();svReage('sim',0);});
   if(itens.length===1&&!(R.escolhido||'').trim())R.escolhido=itens[0];
   const olharOutro=()=>{registrar();CH.forEach(k=>R[k]='');salva();_sessao.i=1;_sessao.reacao='feliz';sessaoMostrar();mostrarToast('Guardado ✓ Agora, outro com calma 💜');};
-  const ultima={b:[escolhido,['p','Talvez, por trás desse incômodo, já exista uma pista sobre o que você deseja viver.'],['campo',{key:'diferente',rot:'O que eu gostaria que fosse diferente?'}],['p','Não se preocupe em encontrar uma resposta perfeita. Às vezes, conseguimos reconhecer com facilidade o que não queremos, mas precisamos de um pouco mais de tempo para descobrir o que queremos no lugar.'],
+  /* última tela: frase e origem juntas. Muitas vezes o próprio incômodo já é a frase, e o que importa é de onde ele veio.
+     O que a pessoa quer no lugar fica para a Clareza. */
+  const ultima={b:[escolhido,['p','Às vezes, junto com o incômodo, vem uma frase que a gente repete por dentro. Outras vezes, o próprio incômodo já é essa frase.'],['campo',{key:'frase',rot:'Tem alguma frase por trás?',opcional:true,ph:'Ex.: comigo é sempre assim'}],
+      ['p','Isso é mesmo seu? Muitas vezes foi aprendido: ouvimos de alguém ou vimos alguém viver assim. E o que foi aprendido pode ser revisto.'],['campo',{key:'origem',rot:'De onde pode ter vindo',opcional:true}],['cuidado','Se isso trouxer algo muito pesado, você pode parar por aqui e conversar com alguém de confiança ou com quem te acompanha.'],
       ['html',()=>faltam()?'<p class="sv-p sv-gentil">Se quiser, dá pra olhar outro incômodo agora ou voltar outro dia. Um de cada vez, no seu ritmo.</p>':'']]};
   Object.defineProperty(ultima,'botoes',{get:()=>faltam()?[{rot:'Olhar outro incômodo',cls:'linha',acao:olharOutro},{rot:'Concluir',prim:true,acao:()=>{registrar();sessaoConcluir();}}]:null});
   ultima.seguir=registrar;
@@ -405,9 +408,6 @@ function sessaoOlhar(){
     {semFoco:true,b:[['html',convite],['html',cartoes,ligarCartoes],
       ['campo',{key:'escolhido',rot:itens.length>1?'Ou escreva com as suas palavras':'O incômodo que eu escolhi',ph:itens.length>1?'Toque num item acima ou escreva aqui':'Escreva aqui'}]],
       seguir:()=>{if(!(R.escolhido||'').trim()){mostrarToast(itens.length>1?'Toque num item ou escreva o seu':'Escreva o incômodo que você escolheu');return false;}guarda();}},
-    /* frase e origem numa tela só: muitas vezes o próprio incômodo já é a frase, e o que importa é de onde ele veio */
-    {b:[escolhido,['p','Às vezes, junto com o incômodo, vem uma frase que a gente repete por dentro. Outras vezes, o próprio incômodo já é essa frase.'],['campo',{key:'frase',rot:'Tem alguma frase por trás?',opcional:true,ph:'Ex.: comigo é sempre assim'}],
-      ['p','Isso é mesmo seu? Muitas vezes foi aprendido: ouvimos de alguém ou vimos alguém viver assim. E o que foi aprendido pode ser revisto.'],['campo',{key:'origem',rot:'De onde pode ter vindo',opcional:true}],['cuidado','Se isso trouxer algo muito pesado, você pode parar por aqui e conversar com alguém de confiança ou com quem te acompanha.']],seguir:guarda},
     ultima
   ]});
 }
@@ -424,9 +424,9 @@ function sessaoClareza(opc){
   const ligarAreas=r=>r.querySelectorAll('[data-area]').forEach(b=>b.onclick=()=>{R.area=b.dataset.area;salva();r.querySelectorAll('[data-area]').forEach(x=>x.classList.toggle('on',x===b));});
   const dica='<div class="sv-exemplo"><span>Dica simples</span><p>Tente escrever seu desejo no positivo, começando por um verbo.</p><p><b>Em vez de:</b> “Não quero mais viver exausta.”</p><p><b>Experimente:</b> “Quero cuidar da minha energia e ter mais disposição para viver.”</p></div>';
   sessaoAbrir({...trMeta('clareza'),limpar:['quero','muda','area','desejoCriado'],telas:[
-    [['p','Passe os olhos pela sua lista de incômodos com curiosidade, como se estivesse ouvindo uma amiga querida. Sem julgar, sem se cobrar uma solução rápida.'],['html',gaveta]],
+    [['p','Talvez, por trás do que te incomoda, já exista uma pista sobre o que você deseja viver.'],['p','Passe os olhos pela sua lista de incômodos com curiosidade, como se estivesse ouvindo uma amiga querida. Sem julgar, sem se cobrar uma solução rápida.'],['html',gaveta]],
     [['p','Agora, experimente dar um passo na direção oposta: em vez de permanecer no que deseja deixar para trás, imagine o que gostaria de encontrar no lugar.'],['html',dica],['p','Perceba a diferença: não estamos apagando o que você sente, mas abrindo espaço para imaginar o que você quer cultivar.']],
-    {b:[['html',gaveta],['campo',{key:'quero',rot:'O que eu quero no lugar?',dica:'Comece por um verbo, no positivo.'}]],
+    {b:[['html',gaveta],['campo',{key:'quero',rot:'O que eu quero no lugar?',dica:'Comece por um verbo, no positivo.'}],['p','Não se preocupe em encontrar uma resposta perfeita. Às vezes, conseguimos reconhecer com facilidade o que não queremos, mas precisamos de um pouco mais de tempo para descobrir o que queremos no lugar.']],
       seguir:()=>{if(!(R.quero||'').trim()){mostrarToast('Escreva o que você quer');return false;}}},
     {reage:'brilho',b:[['sub','Em que parte da sua vida mora esse desejo?'],['html',areas,ligarAreas]],
       seguir:()=>{
