@@ -88,7 +88,7 @@ const SUGESTOES_IMPEDIMENTO=[
    categoria:'pessoas em qualquer idade',
    frases:[
      'Todos os dias, milhares de pessoas conseguem o que querem em idades muito variadas.',
-     'Na semana passada, centenas de pessoas começaram algo novo depois dos cinquenta.',
+     'Na semana passada, centenas de pessoas começaram algo novo numa idade em que achavam que já era tarde.',
      'Neste momento, milhões de pessoas, em todas as idades, estão realizando algo importante.'
    ]},
   {palavras:['dinheiro','grana','caro','pagar','preco','sem condicoes','apertado'],
@@ -96,7 +96,7 @@ const SUGESTOES_IMPEDIMENTO=[
    frases:[
      'Todos os dias, milhões de pessoas, mesmo com pouco dinheiro, conseguem o que querem.',
      'Na semana passada, centenas de milhares de pessoas encontraram caminhos que cabiam na sua realidade.',
-     'Neste exato momento, alguém está virando milionário e alguém está pagando a última conta.'
+     'Neste exato momento, alguém está quitando a última parcela e alguém está guardando o primeiro dinheiro da reserva.'
    ]},
   {palavras:['nao sei','nao sei como','por onde comecar'],
    categoria:'pessoas que ainda não sabem o como',
