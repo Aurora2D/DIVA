@@ -197,3 +197,8 @@ Saiu do código o que nenhuma tela usava mais, sem mudar nada do que aparece no 
 Os dados guardados não mudaram (`S.premios`, `S.quandoDer` etc. continuam no estado, só não têm mais tela). Prêmios guardados antigos continuam aparecendo no Celebrar enquanto existirem.
 
 Conserto junto: a linha "Conhecer a Diva" em Configurações não fazia nada ao tocar; agora abre as telas de apresentação da gatinha (`boasVindasDiva`).
+
+## Permissão: gravetos e "quem já vive isso" (27/out/2026)
+
+- A etapa 2 da Permissão segue o Losier: "Quem já está vivendo isso?" (campo opcional `quem`, guardado em `graveto.quem`). Saíram as perguntas "de onde vem essa ideia" e "quem eu poderia ser", que repetiam o Olhar com outros olhos. Gravetos antigos com `origem` e `seFosse` continuam válidos.
+- Desenho dos gravetos (`svGravetos`, `svGravetosLigar`, `svGravetosSoltar` em `atracao/atracao.js`, estilos `.sv-gravetos` em `atracao/atracao.css`): na abertura da Permissão a pessoa toca nos gravetos e a bolinha cai; na etapa 4 o graveto da dúvida que ganhou frase sai com animação, e se não sobra nenhum a bolinha cai.

@@ -542,12 +542,44 @@ function sessaoDeclaracao(d){
   ]});
 }
 
+/* ---------- Gravetos (Losier, o jogo do Permitir) ----------
+   O desejo é uma bolinha apoiada em gravetos (as dúvidas) dentro de um tubo; ela só cai quando os gravetos saem.
+   svGravetos(n,{brinca}) desenha n gravetos. Com brinca:true, tocar num graveto tira ele; sem nenhum, a bolinha cai.
+   svGravetosSoltar(r) tira o primeiro graveto com animação (usado depois de guardar a frase de permissão). */
+const GR_Y=[78,100,122,144];
+function svGravetos(n,opc){
+  n=Math.max(0,Math.min(4,n|0));const o=opc||{};
+  const pauzinhos=GR_Y.slice(0,n).map((y,i)=>{const a=i%2?-11:11;
+    return `<g class="gr-pau" data-gr="${i}" style="transform-origin:60px ${y}px;transform:rotate(${a}deg)"><rect x="18" y="${y-3.5}" width="84" height="7" rx="3.5" fill="#B48A64"/><rect x="18" y="${y-3.5}" width="84" height="2.6" rx="1.3" fill="#D2AE88" opacity=".8"/><circle cx="21" cy="${y}" r="3.4" fill="#9A7350"/><circle cx="99" cy="${y}" r="3.4" fill="#9A7350"/><rect x="10" y="${y-14}" width="100" height="28" fill="transparent"/></g>`;}).join('');
+  const yBola=n?GR_Y[0]-17:196;
+  return `<div class="sv-gravetos${o.brinca?' brinca':''}"><svg viewBox="0 0 120 230" role="img" aria-label="Uma bolinha apoiada em ${n} graveto${n===1?'':'s'} dentro de um tubo">
+    <defs><radialGradient id="grBola" cx="38%" cy="32%" r="70%"><stop offset="0" stop-color="#FFE3EA"/><stop offset=".55" stop-color="#EFA9C0"/><stop offset="1" stop-color="#B48AD8"/></radialGradient>
+    <linearGradient id="grTubo" x1="0" x2="1"><stop offset="0" stop-color="#fff" stop-opacity=".55"/><stop offset=".5" stop-color="#fff" stop-opacity=".18"/><stop offset="1" stop-color="#fff" stop-opacity=".45"/></linearGradient></defs>
+    <rect x="34" y="8" width="52" height="214" rx="16" fill="url(#grTubo)" stroke="var(--borda)" stroke-width="2"/>
+    <ellipse cx="60" cy="213" rx="18" ry="3" fill="#000" opacity=".08"/>
+    <g class="gr-bola" style="transform:translateY(${yBola}px)"><circle cx="60" cy="0" r="14" fill="url(#grBola)"/><circle cx="55" cy="-5" r="3.5" fill="#fff" opacity=".7"/></g>
+    ${pauzinhos}
+    <rect x="36" y="14" width="6" height="200" rx="3" fill="#fff" opacity=".25"/></svg></div>`;
+}
+function grAtualizaBola(box){
+  const resta=[...box.querySelectorAll('.gr-pau:not(.sai)')];const bola=box.querySelector('.gr-bola');if(!bola)return;
+  const topo=resta.length?Math.min(...resta.map(p=>GR_Y[+p.dataset.gr])):null;
+  bola.classList.toggle('cai',!resta.length);
+  bola.style.transform=`translateY(${topo===null?196:topo-17}px)`;
+  if(!resta.length)svReage('brilho',350);
+}
+function grTira(box,pau){if(!pau||pau.classList.contains('sai'))return;pau.classList.add('sai');pau.style.transform+=' translateX(90px)';setTimeout(()=>grAtualizaBola(box),420);}
+function svGravetosLigar(r){r.querySelectorAll('.sv-gravetos.brinca').forEach(box=>box.querySelectorAll('.gr-pau').forEach(p=>p.onclick=()=>grTira(box,p)));}
+function svGravetosSoltar(r){const box=r.querySelector('.sv-gravetos');if(!box)return;setTimeout(()=>grTira(box,box.querySelector('.gr-pau:not(.sai)')),700);}
+
 /* ---------- 6. Passo 3 · Permissão (4 etapas numa sessão só) ---------- */
 function sessaoPermissao(d){
   if(!d)return;
   if(!Array.isArray(d.gravetos))d.gravetos=[];
   const F=trEst().foco;
-  const R=trSinc('perm',d.id,['voz','origemIdeia','seFosse','permissao','evid'],{});
+  const R=trSinc('perm',d.id,['voz','quem','permissao','evid'],{});
+  /* gravetos que ainda seguram este desejo (dúvidas sem frase de permissão) */
+  const abertos=()=>d.gravetos.filter(g=>!g.solto).length;
   if(!(R.voz||'').trim())delete F.gravetoId;
   const desejoLemb=['lembrete',{titulo:'Seu desejo',texto:()=>trTexto(d)}];
   const vozLemb=['lembrete',{titulo:'O que a voz disse',texto:()=>R.voz}];
@@ -566,8 +598,11 @@ function sessaoPermissao(d){
     if(!Array.isArray(d.evidencias))d.evidencias=[];
     d.evidencias.push({id:trNovaId('e'),texto:v,data:hoje()});R.evid='';salva();
   };
-  sessaoAbrir({...trMeta('permissao'),limpar:['voz','origemIdeia','seFosse','permissao','evid'],telas:[
-    [['p','Às vezes, reconhecer o que queremos é só o começo. É comum uma parte de nós desejar muito algo, enquanto outra sussurra que não vai dar certo.'],['p','Não precisamos brigar com essa voz. Vamos escutá-la e ressignificá-la em 4 etapas curtas.']],
+  sessaoAbrir({...trMeta('permissao'),limpar:['voz','quem','permissao','evid'],telas:[
+    [['p','Às vezes, reconhecer o que queremos é só o começo. É comum uma parte de nós desejar muito algo, enquanto outra sussurra que não vai dar certo.'],
+     ['p','Michael Losier compara o desejo a uma bolinha apoiada em gravetos dentro de um tubo. Cada graveto é uma dúvida. A bolinha só chega lá embaixo quando os gravetos saem.'],
+     ['html',()=>svGravetos(3,{brinca:true})+'<p class="sv-dica" style="text-align:center;margin-top:6px">Toque nos gravetos pra ver.</p>',svGravetosLigar],
+     ['p','Não precisamos brigar com essa voz. Vamos escutá-la e tirar um graveto de cada vez, em 4 etapas curtas.']],
     {b:[['sub','1. Escute o receio'],desejoLemb,['p','Pense no desejo que você escreveu. O que essa voz interna diz quando você imagina essa conquista? Qual é o medo que surge?'],['campo',{key:'voz',rot:'O que essa voz me diz?',grande:true}]],
       seguir:()=>{
         const v=(R.voz||'').trim();if(!v){mostrarToast('Escreva o que a voz diz');return false;}
@@ -576,11 +611,10 @@ function sessaoPermissao(d){
         F.gravetoId=g.id;salva();
         if(/porque/i.test(v))mostrarToast('Você disse “porque”: achou uma crença que pode ser trocada. 🪵');
       }},
-    {b:[['sub','2. Olhe para essa voz com curiosidade'],vozLemb,['p','Tente compreender a origem desse pensamento sem se julgar:'],
-        ['campo',{key:'origemIdeia',rot:'De onde vem essa ideia? Ela é uma verdade absoluta ou apenas um aprendizado do passado?',opcional:true}],
-        ['campo',{key:'seFosse',rot:'Quem eu poderia ser ou o que eu experimentaria se não acreditasse totalmente nesse pensamento?',opcional:true}],
-        ['p','O objetivo não é provar que a sua dúvida está errada, mas perceber que um medo antigo não precisa definir todas as suas possibilidades de futuro.']],
-      seguir:()=>{const g=trGraveto(d);if(g){g.origem=(R.origemIdeia||'').trim();g.seFosse=(R.seFosse||'').trim();salva();}}},
+    {b:[['sub','2. Quem já está vivendo isso?'],desejoLemb,['p','Pense no que você quer. Tem alguém, hoje, vivendo isso? Quantas pessoas você imagina que conseguiram hoje? E nesta semana? E neste ano?'],
+        ['campo',{key:'quem',rot:'Pense em alguém, conhecida ou não, que já vive isso',opcional:true,ph:'Ex.: minha colega que trabalha fora e cozinha marmitas no domingo'}],
+        ['p','Se tanta gente já vive isso, não é impossível. É possível pra outras pessoas, e pode ser pra você também.']],
+      seguir:()=>{const g=trGraveto(d);if(g){g.quem=(R.quem||'').trim();salva();}}},
     {reage:'brilho',b:[['sub','3. Experimente uma nova perspectiva'],vozLemb,['p','Imagine o que uma pessoa querida, que ama você e respeita seu tempo, diria sobre essa situação.'],['p','Escreva uma frase de permissão que ofereça esse mesmo olhar acolhedor. Não precisa prometer que tudo será perfeito, apenas lembrar que você pode aprender, pedir ajuda ou caminhar no seu tempo.'],['p','Se ajudar, comece com: “Eu estou em processo de...”'],['html',sugestoes,ligarSug],['campo',{key:'permissao',rot:'Minha frase de permissão'}]],
       seguir:()=>{
         const v=(R.permissao||'').trim();if(!v){mostrarToast('Escreva a sua frase ou toque numa sugestão');return false;}
@@ -589,7 +623,9 @@ function sessaoPermissao(d){
         try{renderLivroPermissoes();}catch(e){}
         mostrarToast('Frase guardada no livro ✓');
       }},
-    {b:[['sub','4. Dê espaço para a mudança'],['p','Nos próximos dias, mantenha essa nova frase por perto.'],['lembrete',{titulo:'Sua frase',texto:()=>R.permissao}],['p','Conforme for percebendo pequenas coincidências, novas ideias ou oportunidades no seu dia a dia, por menores que sejam, anote no seu Livro de Permissões. Grandes transformações costumam começar com pequenos sinais.'],
+    {b:[['sub','4. Dê espaço para a mudança'],
+        ['html',()=>svGravetos(abertos()+1)+'<p class="sv-dica" style="text-align:center;margin-top:6px">'+(abertos()?'Um graveto a menos. Quando outra dúvida aparecer, é só voltar aqui.':'Nenhum graveto segurando esse desejo agora.')+'</p>',svGravetosSoltar],
+        ['p','Nos próximos dias, mantenha essa nova frase por perto.'],['lembrete',{titulo:'Sua frase',texto:()=>R.permissao}],['p','Conforme for percebendo pequenas coincidências, novas ideias ou oportunidades no seu dia a dia, por menores que sejam, anote no seu Livro de Permissões. Grandes transformações costumam começar com pequenos sinais.'],
         ['campo',{key:'evid',rot:'Notou algo?',opcional:true,ph:'O que apareceu?'}],
         ['atalho',{rot:'Abrir o Livro de Permissões',acao:()=>{salvarEvid();sessaoFecharTudo(()=>{try{trocaAba('atracao');}catch(e){}setTimeout(()=>{const l=$('livroPermissoes');if(l)l.scrollIntoView({behavior:'smooth',block:'start'});},200);});}}]],
       seguir:salvarEvid}
@@ -599,8 +635,8 @@ function sessaoPermissao(d){
 function sessaoPermissaoNaFrase(d,g){
   if(!d||!g)return;
   const F=trEst().foco;F.desejoId=d.id;F.gravetoId=g.id;
-  const R=trSinc('perm',d.id,['voz','origemIdeia','seFosse','permissao','evid'],{});
-  R.voz=g.duvida||'';R.origemIdeia=g.origem||'';R.seFosse=g.seFosse||'';R.permissao=g.alivio||'';
+  const R=trSinc('perm',d.id,['voz','quem','permissao','evid'],{});
+  R.voz=g.duvida||'';R.quem=g.quem||'';R.permissao=g.alivio||'';
   trEst().tela.permissao=3;salva();
   sessaoPermissao(d);
 }
