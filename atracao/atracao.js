@@ -542,7 +542,7 @@ function sessaoDeclaracao(d){
   ]});
 }
 
-/* ---------- Gravetos (Losier, o jogo do Permitir) ----------
+/* ---------- Gravetos (a dúvida segurando o desejo) ----------
    O desejo é uma bolinha apoiada em gravetos (as dúvidas) dentro de um tubo; ela só cai quando os gravetos saem.
    svGravetos(n,{brinca}) desenha n gravetos. Com brinca:true, tocar num graveto tira ele; sem nenhum, a bolinha cai.
    svGravetosSoltar(r) tira o primeiro graveto com animação (usado depois de guardar a frase de permissão). */
@@ -600,7 +600,7 @@ function sessaoPermissao(d){
   };
   sessaoAbrir({...trMeta('permissao'),limpar:['voz','quem','permissao','evid'],telas:[
     [['p','Às vezes, reconhecer o que queremos é só o começo. É comum uma parte de nós desejar muito algo, enquanto outra sussurra que não vai dar certo.'],
-     ['p','Michael Losier compara o desejo a uma bolinha apoiada em gravetos dentro de um tubo. Cada graveto é uma dúvida. A bolinha só chega lá embaixo quando os gravetos saem.'],
+     ['p','Imagine que o seu desejo é uma bolinha apoiada em gravetos dentro de um tubo. Cada graveto é uma dúvida. A bolinha só chega lá embaixo quando os gravetos saem.'],
      ['html',()=>svGravetos(3,{brinca:true})+'<p class="sv-dica" style="text-align:center;margin-top:6px">Toque nos gravetos pra ver.</p>',svGravetosLigar],
      ['p','Não precisamos brigar com essa voz. Vamos escutá-la e tirar um graveto de cada vez, em 4 etapas curtas.']],
     {b:[['sub','1. Escute o receio'],desejoLemb,['p','Pense no desejo que você escreveu. O que essa voz interna diz quando você imagina essa conquista? Qual é o medo que surge?'],['campo',{key:'voz',rot:'O que essa voz me diz?',grande:true}]],
