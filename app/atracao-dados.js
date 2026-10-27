@@ -92,11 +92,11 @@ const SUGESTOES_IMPEDIMENTO=[
      'Neste momento, milhões de pessoas, em todas as idades, estão realizando algo importante.'
    ]},
   {palavras:['dinheiro','grana','caro','pagar','preco','sem condicoes','apertado'],
-   categoria:'pessoas com recursos limitados',
+   categoria:'pessoas prosperando',
    frases:[
-     'Todos os dias, milhões de pessoas, mesmo com pouco dinheiro, conseguem o que querem.',
-     'Na semana passada, centenas de milhares de pessoas encontraram caminhos que cabiam na sua realidade.',
-     'Neste exato momento, alguém está quitando a última parcela e alguém está guardando o primeiro dinheiro da reserva.'
+     'Todos os dias, milhões de pessoas recebem dinheiro pelo que sabem fazer.',
+     'Hoje, milhares de pessoas estão fechando um negócio, ganhando um aumento ou vendendo algo que criaram.',
+     'Neste exato momento, alguém está recebendo um pagamento que deixou o dia mais leve.'
    ]},
   {palavras:['nao sei','nao sei como','por onde comecar'],
    categoria:'pessoas que ainda não sabem o como',
