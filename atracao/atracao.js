@@ -442,10 +442,10 @@ function sessaoOlhar(){
       ['campo',{key:'excecao',rot:'Já teve alguma vez em que não foi assim?',opcional:true,ph:'Ex.: já pedi ajuda e ninguém me achou fraca'}],
       ['p','Se tem exceção, não é um fato. É um pensamento, e pensamento pode mudar.']],seguir:guarda},
     {b:[['lembrete',{titulo:'O seu deveria',texto:frCompleta}],
-      ['p','Tire dessa frase a voz dos outros e o medo do “senão”. O que sobra é o que você quer, não o que esperam que você queira.'],
       ['html',()=>v('excecao')?P('E lembre do que você mesma já viveu:'):''],
       ['lembrete',{titulo:'A exceção que você encontrou',texto:()=>v('excecao')}],
-      ['campo',{key:'quero',rot:'Sem essa cobrança, o que eu quero de verdade é...',ph:'Ex.: dar conta do que dá e pedir ajuda sem vergonha'}]],
+      ['p','Imagine essa frase sem ninguém olhando e sem nenhum “senão”.'],
+      ['campo',{key:'quero',rot:'Se ninguém fosse te julgar, o que restaria dessa frase?',ph:'Ex.: dar conta do que dá e pedir ajuda sem vergonha'}]],
       seguir:exige('quero','Escreva o que você quer de verdade')},
     ultima
   ]});
