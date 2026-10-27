@@ -439,37 +439,66 @@ function sessaoOlhar(){
 }
 
 /* ---------- 4. Passo 1 · Clareza (cria o desejo) ---------- */
+/* continuação do Olhar com outros olhos: pega o que restou das frases da pessoa e dá forma de desejo no positivo.
+   Sem o Olhar feito (pulou ou abriu solta), a tela do que restou some e o exemplo vira genérico. */
+const CLAREZA_COMECOS=['entusiasmada','amo_quando','ad_ideia','ad_saber','e_bom_saber','me_empolga','sinto_alegria','eu_decidi'];
 function sessaoClareza(opc){
   const livre=!!(opc&&opc.livre),c=livre?null:trContraste();
+  const CH=['desejo','comeco','muda','area','desejoCriado'];
   const R0=trEst().rasc,andamento=R0.desejoCriado&&S.leiAtracao.desejos.some(x=>x.id===R0.desejoCriado);
-  const R=andamento?R0:trSinc('clareza',c?c.id:'livre',['quero','muda','area','desejoCriado'],{});
+  const R=andamento?R0:trSinc('clareza',c?c.id:'livre',CH,{});
   if(!R.area)R.area=(c&&c.area)||trAreaPadrao();
-  const pedido=()=>c?((c.camadas&&c.camadas.pedido)||c.naoQuero):'';
-  const gaveta=()=>c?`<details class="sv-gaveta"><summary>Puxe para ver sua Lista de Incômodos</summary><blockquote>${esc(c.naoQuero)}</blockquote></details>`:'';
+  if(!R.comeco)R.comeco=CLAREZA_COMECOS[0];
+  const trab=c&&Array.isArray(c.trabalhados)?c.trabalhados:[];
+  /* o que restou: os tópicos do "se ninguém fosse te julgar", de todos os itens olhados */
+  const restou=trab.flatMap(t=>String(t.quero||'').split(/\r?\n/)).map(x=>x.replace(/^[\s•·\-*]+/,'').trim()).filter(Boolean);
+  const restouTxt=()=>restou.map(x=>'• '+x).join('\n');
+  const ultDev=[...trab].reverse().find(t=>(t.deveria||'').trim());
+  const deveriaTxt=ultDev?`Eu deveria ${ultDev.deveria}${ultDev.porque?', senão '+ultDev.porque:''}.`:'';
+  const modelo=k=>MODELOS_CORPO.find(m=>m.k===k);
+  const comeco=()=>(modelo(R.comeco)||modelo(CLAREZA_COMECOS[0])).pre;
+  const consulta=restou.length?['lembrete',{titulo:'O que restou das suas frases',texto:restouTxt}]
+    :['html',()=>c?`<details class="sv-gaveta"><summary>Puxe para ver sua Lista de Incômodos</summary><blockquote>${esc(c.naoQuero)}</blockquote></details>`:''];
+  const comecos=()=>'<p class="sv-p">Escolha um começo que combine com você:</p><div class="sv-chips">'+
+    CLAREZA_COMECOS.filter(modelo).map(k=>`<button type="button" class="sv-chip${k===R.comeco?' on':''}" data-comeco="${k}">${esc(modelo(k).pre)}…</button>`).join('')+'</div>';
+  const ligarComecos=r=>r.querySelectorAll('[data-comeco]').forEach(b=>b.onclick=()=>{R.comeco=b.dataset.comeco;salva();svReage('sim',0);sessaoAtualizar();});
   const areas=()=>'<div class="sv-chips">'+S.leiAtracao.areas.map(a=>`<button type="button" class="sv-chip${a.id===R.area?' on':''}" data-area="${esc(a.id)}">${esc(a.nome)}</button>`).join('')+'</div>';
   const ligarAreas=r=>r.querySelectorAll('[data-area]').forEach(b=>b.onclick=()=>{R.area=b.dataset.area;salva();r.querySelectorAll('[data-area]').forEach(x=>x.classList.toggle('on',x===b));});
-  const dica='<div class="sv-exemplo"><span>Dica simples</span><p>Tente escrever seu desejo no positivo, começando por um verbo.</p><p><b>Em vez de:</b> “Não quero mais viver exausta.”</p><p><b>Experimente:</b> “Quero cuidar da minha energia e ter mais disposição para viver.”</p></div>';
-  sessaoAbrir({...trMeta('clareza'),limpar:['quero','muda','area','desejoCriado'],telas:[
-    [['p','Talvez, por trás do que te incomoda, já exista uma pista sobre o que você deseja viver.'],['p','Passe os olhos pela sua lista de incômodos com curiosidade, como se estivesse ouvindo uma amiga querida. Sem julgar, sem se cobrar uma solução rápida.'],['html',gaveta]],
-    [['p','Agora, experimente dar um passo na direção oposta: em vez de permanecer no que deseja deixar para trás, imagine o que gostaria de encontrar no lugar.'],['html',dica],['p','Perceba a diferença: não estamos apagando o que você sente, mas abrindo espaço para imaginar o que você quer cultivar.']],
-    {b:[['html',gaveta],['campo',{key:'quero',rot:'O que eu quero no lugar?',dica:'Comece por um verbo, no positivo.'}],['p','Não se preocupe em encontrar uma resposta perfeita. Às vezes, conseguimos reconhecer com facilidade o que não queremos, mas precisamos de um pouco mais de tempo para descobrir o que queremos no lugar.']],
-      seguir:()=>{if(!(R.quero||'').trim()){mostrarToast('Escreva o que você quer');return false;}}},
-    {reage:'brilho',b:[['sub','Em que parte da sua vida mora esse desejo?'],['html',areas,ligarAreas]],
-      seguir:()=>{
-        const cl=limparTextoDesejo(trSemQuero(R.quero))||trSemQuero(R.quero);
-        let d=R.desejoCriado&&S.leiAtracao.desejos.find(x=>x.id===R.desejoCriado);
-        if(d){d.texto=cl;d.area=R.area;}
-        else{
-          d=novoDesejo(R.area||trAreaPadrao(),cl);d.nucleo='';
-          if(c){d.contrasteOrigem=c.naoQuero;const cm=c.camadas||{};if(cm.pedido||cm.origem||cm.frase||cm.escolhido)d.camadas={pedido:cm.pedido||'',origem:cm.origem||'',frase:cm.frase||'',escolhido:cm.escolhido||''};
-            S.leiAtracao.contrastes=(S.leiAtracao.contrastes||[]).filter(x=>x.id!==c.id);}
-          S.leiAtracao.desejos.push(d);R.desejoCriado=d.id;
-        }
-        const f=trEst().foco;f.desejoId=d.id;delete f.contrasteId;salva();
-      }},
-    {b:[['p','Se quiser aprofundar um pouco mais:'],['campo',{key:'muda',rot:'Por que isso é importante para mim? O que muda na minha vida se eu me aproximar disso?',opcional:true}],['fecho','Você não precisa ter um plano inteiro agora. Basta reconhecer para onde quer caminhar.']],
-      seguir:()=>{const d=S.leiAtracao.desejos.find(x=>x.id===R.desejoCriado),v=(R.muda||'').trim();if(d&&v){d.camadas=Object.assign({},d.camadas,{importa:v});salva();}}}
-  ]});
+  const telas=[];
+  if(restou.length)telas.push([['lembrete',{titulo:'O que restou das suas frases',texto:restouTxt}],
+    ['p','Quando você tirou a cobrança e o medo, sobrou isso aqui. Já não é o que esperam de você. É o que você quer.'],
+    ['p','Agora é dar a isso a forma de um desejo.']]);
+  telas.push(deveriaTxt?[
+      ['p','Releia, devagar, a frase de onde você partiu, e repare no seu ânimo:'],['lembrete',{titulo:'O seu deveria',texto:deveriaTxt}],
+      ['p','Agora leia uma frase que conta o que alguém quer viver:'],['lembrete',{titulo:'Um desejo',texto:'Me sinto entusiasmada ao pensar que posso dividir as tarefas e ter tempo pra mim.'}],
+      ['p','A primeira pesa, porque fala de cobrança e de medo. A segunda dá vontade, traz leveza, às vezes até um sorriso. É essa sensação que vai te acompanhar toda vez que você voltar ao seu desejo. E é assim que você vai escrever o seu.']]
+    :[
+      ['p','Leia estas duas frases, devagar, e repare no seu ânimo em cada uma:'],['lembrete',{titulo:'Uma',texto:'Não quero mais ficar sobrecarregada.'}],
+      ['lembrete',{titulo:'Outra',texto:'Me sinto entusiasmada ao pensar que posso dividir as tarefas e ter tempo pra mim.'}],
+      ['p','A primeira ainda te deixa olhando pra sobrecarga. A segunda dá vontade, traz leveza, às vezes até um sorriso. É essa sensação que vai te acompanhar toda vez que você voltar ao seu desejo. E é assim que você vai escrever o seu.']]);
+  telas.push({semFoco:true,b:[consulta,['html',comecos,ligarComecos],
+      ['p','Complete com o que você quer viver:'],
+      ['campo',{key:'desejo',get rot(){return comeco();},ph:'Ex.: pedir ajuda com tranquilidade'}],
+      ['p','Leia a frase inteira em voz alta. Se trouxer alegria ou alívio, é por aí. Se soar distante, troque o começo e leia de novo.']],
+    seguir:()=>{if(!(R.desejo||'').trim()){mostrarToast('Complete a frase com o que você quer');return false;}}});
+  telas.push({reage:'brilho',b:[['sub','Em que parte da sua vida mora esse desejo?'],['html',areas,ligarAreas]],
+    seguir:()=>{
+      const cl=limparTextoDesejo(trSemQuero(R.desejo))||trSemQuero(R.desejo);
+      let d=R.desejoCriado&&S.leiAtracao.desejos.find(x=>x.id===R.desejoCriado);
+      if(d){d.texto=cl;d.area=R.area;}
+      else{
+        d=novoDesejo(R.area||trAreaPadrao(),cl);d.nucleo='';
+        if(c){d.contrasteOrigem=c.naoQuero;const cm=c.camadas||{};if(cm.pedido||cm.origem||cm.frase||cm.escolhido)d.camadas={pedido:cm.pedido||'',origem:cm.origem||'',frase:cm.frase||'',escolhido:cm.escolhido||''};
+          S.leiAtracao.contrastes=(S.leiAtracao.contrastes||[]).filter(x=>x.id!==c.id);}
+        S.leiAtracao.desejos.push(d);R.desejoCriado=d.id;
+      }
+      /* o começo escolhido vira a primeira frase da Declaração (o desejo fica guardado sem ele, pra não sair dobrado) */
+      if(modelo(R.comeco))d.corpo=[{k:R.comeco,texto:trBase(d)}];
+      const f=trEst().foco;f.desejoId=d.id;delete f.contrasteId;salva();
+    }});
+  telas.push({b:[['p','Se quiser aprofundar um pouco mais:'],['campo',{key:'muda',rot:'Por que isso é importante para mim? O que muda na minha vida se eu me aproximar disso?',opcional:true}],['fecho','Você não precisa ter um plano inteiro agora. Basta reconhecer para onde quer caminhar.']],
+    seguir:()=>{const d=S.leiAtracao.desejos.find(x=>x.id===R.desejoCriado),v=(R.muda||'').trim();if(d&&v){d.camadas=Object.assign({},d.camadas,{importa:v});salva();}}});
+  sessaoAbrir({...trMeta('clareza'),limpar:CH,telas});
 }
 
 /* ---------- 5. Passo 2 · Declaração de desejo ---------- */

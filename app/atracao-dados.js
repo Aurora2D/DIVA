@@ -1,5 +1,7 @@
 /* ===== Losier: modelos do corpo da Declaração de Desejo ===== */
 const MODELOS_CORPO=[
+  {k:'entusiasmada',pre:'Me sinto entusiasmada ao pensar que posso',ph:'ex: dividir as tarefas e ter tempo pra mim'},
+  {k:'amo_quando',pre:'Amo quando eu posso',ph:'ex: ter tempo pra mim'},
   {k:'ad_ideia',pre:'Adoro a ideia de',ph:'ex: decidir o meu valor com autonomia'},
   {k:'ad_saber',pre:'Amo saber que posso',ph:'ex: sustentar o meu preço com leveza'},
   {k:'animado_ideia',pre:'Amo a ideia de',ph:'ex: honrar o preço das minhas aulas'},
