@@ -364,51 +364,88 @@ function sessaoOlhar(){
   }
   trEst().foco.contrasteId=c.id;
   if(!Array.isArray(c.trabalhados))c.trabalhados=[];
-  const cam=c.camadas||{};
-  const CH=['escolhido','frase','origem','diferente'];
+  /* o caminho do "deveria" (Louise Hay, Você Pode Curar Sua Vida): deveria → por quê (o "senão" é a crença) → de quem é a voz →
+     é verdade? (exceção) → o que eu quero de verdade → trocar deveria por poderia → sai ou fica no armário */
+  const CH=['escolhido','deveria','porque','voz','excecao','quero','armario'];
   const R=trSinc('olhar',c.id,CH,{});
-  const guarda=()=>{c.camadas={escolhido:(R.escolhido||'').trim(),frase:(R.frase||'').trim(),origem:(R.origem||'').trim(),pedido:(R.diferente||'').trim()};salva();};
+  const v=k=>(R[k]||'').trim();
+  /* o que a pessoa escreve volta montado nas telas seguintes, com as palavras dela */
+  const dev=()=>v('deveria').replace(/^eu\s+/i,'').replace(/^deveria\s+/i,'').replace(/[.!]+$/,'');
+  const sen=()=>v('porque').replace(/^porque\s+/i,'').replace(/^sen[aã]o[,:]?\s+/i,'').replace(/[.!]+$/,'');
+  const frDeveria=()=>dev()?'Eu deveria '+dev()+'.':'';
+  const frCompleta=()=>dev()&&sen()?`Eu deveria ${dev()}, senão ${sen()}.`:frDeveria();
+  const frPoderia=()=>dev()?`Se eu quisesse de verdade, poderia ${dev()}.`:'';
+  const guarda=()=>{c.camadas={escolhido:v('escolhido'),frase:frCompleta(),origem:v('voz'),pedido:v('quero')};salva();};
   const itens=itensDaLista(c.naoQuero);
   const jaOlhado=t=>c.trabalhados.some(x=>x.item===t);
-  const faltam=()=>itens.filter(t=>!jaOlhado(t)&&t!==(R.escolhido||'').trim()).length;
+  const faltam=()=>itens.filter(t=>!jaOlhado(t)&&t!==v('escolhido')).length;
   /* cada incômodo olhado fica guardado na lista (aparece marcado ao voltar) */
-  const registrar=()=>{const it=(R.escolhido||'').trim();if(!it)return;guarda();
+  const registrar=()=>{const it=v('escolhido');if(!it)return;guarda();
     c.trabalhados=c.trabalhados.filter(x=>x.item!==it);
-    c.trabalhados.push({item:it,frase:(R.frase||'').trim(),origem:(R.origem||'').trim(),pedido:(R.diferente||'').trim(),em:hoje()});salva();};
-  const escolhido=['lembrete',{titulo:'O incômodo que você escolheu',texto:()=>R.escolhido}];
+    c.trabalhados.push({item:it,deveria:dev(),porque:sen(),voz:v('voz'),excecao:v('excecao'),quero:v('quero'),armario:v('armario'),em:hoje()});salva();};
   const P=t=>`<p class="sv-p">${esc(t)}</p>`;
   const convite=()=>{
     if(itens.length<2)return P('Veja o que mais pesa no que você escreveu. Escolha uma coisa só pra olhar com mais calma.');
     const n=itens.filter(jaOlhado).length;
-    if(!n)return P('Veja se algum item se repete ou pesa mais que os outros. Escolha um só pra olhar com mais calma.')+P('Um de cada vez já é bastante. Os outros ficam guardados aqui, e você volta pra eles quando quiser.');
+    if(!n)return P('Revise com calma o que você escreveu, item a item. Toque em um por vez.');
     if(n<itens.length)return P('Que bom te ver de volta. Os que você já olhou estão marcados.')+P('Escolha outro pra olhar com calma, um de cada vez, no seu ritmo.');
     return P('Você já olhou para todos os itens da sua lista. Se quiser, pode olhar de novo algum deles.');
   };
   /* cartões com cada item da lista: um toque escolhe e preenche o campo; dá pra escrever outro */
   const cartoes=()=>itens.length<2?'':'<div class="sv-itens" role="list">'+itens.map((t,k)=>{const ok=jaOlhado(t);
-    return `<button type="button" role="listitem" class="sv-opt${ok?' feito':''}${(R.escolhido||'').trim()===t?' on':''}" data-item="${k}"><b>${esc(t)}</b>${ok?'<span>✓ já olhado</span>':''}</button>`;}).join('')+'</div>';
+    return `<button type="button" role="listitem" class="sv-opt${ok?' feito':''}${v('escolhido')===t?' on':''}" data-item="${k}"><b>${esc(t)}</b>${ok?'<span>✓ já olhado</span>':''}</button>`;}).join('')+'</div>';
   const ligarCartoes=r=>r.querySelectorAll('[data-item]').forEach(b=>b.onclick=()=>{
     const t=itens[+b.dataset.item];
-    if(t!==(R.escolhido||'').trim()){['frase','origem','diferente'].forEach(k=>R[k]='');
-      const ant=c.trabalhados.find(x=>x.item===t);if(ant){R.frase=ant.frase;R.origem=ant.origem;R.diferente=ant.pedido;}}
+    if(t!==v('escolhido')){CH.slice(1).forEach(k=>R[k]='');
+      const ant=c.trabalhados.find(x=>x.item===t);if(ant)CH.slice(1).forEach(k=>R[k]=ant[k]||'');}
     svPreencher('escolhido',t);
     r.querySelectorAll('[data-item]').forEach(x=>x.classList.toggle('on',x===b));
     const a=$('c_escolhido');if(a)a.blur();svReage('sim',0);});
-  if(itens.length===1&&!(R.escolhido||'').trim())R.escolhido=itens[0];
-  const olharOutro=()=>{registrar();CH.forEach(k=>R[k]='');salva();_sessao.i=2;_sessao.reacao='feliz';sessaoMostrar();mostrarToast('Guardado ✓ Agora, outro com calma 💜');};
-  /* última tela: frase e origem juntas. Muitas vezes o próprio incômodo já é a frase, e o que importa é de onde ele veio.
-     O que a pessoa quer no lugar fica para a Clareza. */
-  const ultima={b:[escolhido,['p','Às vezes, junto com o incômodo, vem uma frase que a gente repete por dentro. Outras vezes, o próprio incômodo já é essa frase.'],['campo',{key:'frase',rot:'Tem alguma frase por trás?',opcional:true,ph:'Ex.: comigo é sempre assim'}],
-      ['p','Isso é mesmo seu? Muitas vezes foi aprendido: ouvimos de alguém ou vimos alguém viver assim. E o que foi aprendido pode ser revisto.'],['campo',{key:'origem',rot:'De onde pode ter vindo',opcional:true}],['cuidado','Se isso trouxer algo muito pesado, você pode parar por aqui e conversar com alguém de confiança ou com quem te acompanha.'],
+  if(itens.length===1&&!v('escolhido'))R.escolhido=itens[0];
+  const olharOutro=()=>{registrar();CH.forEach(k=>R[k]='');salva();_sessao.i=1;_sessao.reacao='feliz';sessaoMostrar();mostrarToast('Guardado ✓ Agora, outro com calma 💜');};
+  const exige=(k,msg)=>()=>{if(!v(k)){mostrarToast(msg);return false;}guarda();};
+  /* sai ou fica no armário: um toque escolhe */
+  const OPC_ARM=['Pode sair, com alívio','Fica, mas do meu jeito','Ainda não sei'];
+  const armario=()=>'<p class="sv-p">E agora, como uma roupa que você experimentou de novo:</p><p class="sv-pergunta">Esse deveria pode sair do seu armário?</p><div class="sv-chips">'+
+    OPC_ARM.map((o,k)=>`<button type="button" class="sv-chip${v('armario')===o?' on':''}" data-arm="${k}">${esc(o)}</button>`).join('')+'</div>';
+  const ligarArmario=r=>r.querySelectorAll('[data-arm]').forEach(b=>b.onclick=()=>{R.armario=OPC_ARM[+b.dataset.arm];salva();
+    r.querySelectorAll('[data-arm]').forEach(x=>x.classList.toggle('on',x===b));svReage('sim',0);});
+  const ultima={b:[
+      ['p','Todo “deveria” traz escondido um “você está errada”. Errada porque ainda não fez, porque não é como esperavam, porque não chegou lá.'],
+      ['p','Olhe a mesma frase com uma palavra trocada:'],
+      ['lembrete',{titulo:'Antes',texto:frDeveria}],['lembrete',{titulo:'Agora',texto:frPoderia}],
+      ['p','O “deveria” cobra. O “poderia” devolve a escolha pra você.'],
+      ['html',armario,ligarArmario],
+      ['cuidado','Se isso trouxer algo muito pesado, você pode parar por aqui e conversar com alguém de confiança ou com quem te acompanha.'],
       ['html',()=>faltam()?'<p class="sv-p sv-gentil">Se quiser, dá pra olhar outro incômodo agora ou voltar outro dia. Um de cada vez, no seu ritmo.</p>':'']]};
   Object.defineProperty(ultima,'botoes',{get:()=>faltam()?[{rot:'Olhar outro incômodo',cls:'linha',acao:olharOutro},{rot:'Concluir',prim:true,acao:()=>{registrar();sessaoConcluir();}}]:null});
   ultima.seguir=registrar;
-  sessaoAbrir({...trMeta('olhar'),limpar:CH,pular:{rot:'Já sei o que quero: ir para a Clareza',ate:'clareza'},telas:[
-    [['p','Na sessão Deixar sair, você colocou pra fora o que pesa. Agora é hora de voltar a essa lista com calma, como quem tira uma roupa do armário pra ver se ainda serve.'],['p','Muita coisa que a gente sente como verdade sobre si mesma só está ali há tanto tempo que parece que sempre foi assim. Olhar de novo ajuda a separar o que é seu do que veio junto.'],['p','Aqui a ideia é só enxergar melhor. O que você quer no lugar fica pra depois, na Clareza.']],
-    [['p','Vamos voltar ao que você escreveu. Leia devagar, sem pressa de resolver nada.'],['lembrete',{titulo:'O que você escreveu',texto:()=>c.naoQuero}]],
+  sessaoAbrir({...trMeta('olhar'),limpar:CH,gaveta:{titulo:'O que você escreveu',texto:()=>c.naoQuero},pular:{rot:'Já sei o que quero: ir para a Clareza',ate:'clareza'},telas:[
+    [['p','Agora é hora de voltar para a lista que você fez, como quem abre o armário e experimenta cada roupa de novo. Algumas você continua escolhendo porque gosta. Outras, só continua usando porque se acostumou.'],
+     ['p','Muita coisa que a gente sente como verdade sobre si mesma está ali há tanto tempo que parece que foi sempre assim. Talvez algumas dessas ideias tenham feito sentido em outra época, e até ajudado. Mas será que ainda fazem sentido hoje?']],
     {semFoco:true,b:[['html',convite],['html',cartoes,ligarCartoes],
       ['campo',{key:'escolhido',rot:itens.length>1?'Ou escreva com as suas palavras':'O incômodo que eu escolhi',ph:itens.length>1?'Toque num item acima ou escreva aqui':'Escreva aqui'}]],
-      seguir:()=>{if(!(R.escolhido||'').trim()){mostrarToast(itens.length>1?'Toque num item ou escreva o seu':'Escreva o incômodo que você escolheu');return false;}guarda();}},
+      seguir:exige('escolhido',itens.length>1?'Toque num item ou escreva o seu':'Escreva o incômodo que você escolheu')},
+    {b:[['lembrete',{titulo:'O que você escolheu',texto:()=>v('escolhido')}],
+      ['p','Por trás de quase todo incômodo tem um “eu deveria”. Uma cobrança que a gente repete por dentro, tantas vezes que nem percebe mais.'],
+      ['campo',{key:'deveria',rot:'Pensando nisso, complete: Eu deveria...',ph:'Ex.: dar conta de tudo sozinha'}]],
+      seguir:exige('deveria','Complete o seu “eu deveria”')},
+    {b:[['lembrete',{titulo:'O seu deveria',texto:frDeveria}],
+      ['p','Por quê? Responda o que vier primeiro, sem caprichar.'],
+      ['campo',{key:'porque',rot:'Porque senão...',ph:'Ex.: vão achar que eu sou fraca'}],
+      ['p','Leia sua resposta de novo. Ela fala de uma vontade sua ou de uma cobrança que veio de alguém? Muitas vezes, quando a gente vai fundo no porquê, chega numa voz que não é a nossa: alguém da família, a escola, um ex, o que “todo mundo” diz.'],
+      ['campo',{key:'voz',rot:'De quem é essa voz?',opcional:true,ph:'Ex.: da minha mãe, ou de uma época da escola'}]],
+      seguir:exige('porque','Complete o seu “porque senão”')},
+    {b:[['lembrete',{titulo:'O seu deveria',texto:frCompleta}],
+      ['html',()=>P(sen()?`Repare no “senão ${sen()}”. É ali que mora a crença: o que você acha que vai acontecer se não cumprir o deveria.`:'Repare no que você acha que vai acontecer se não cumprir o deveria. É ali que mora a crença.')],
+      ['p','Uma crença repetida muitas vezes começa a soar como regra: sempre, nunca, todo mundo, ninguém. Mas quase nenhuma regra assim resiste a um olhar de perto. Então, é verdade?'],
+      ['campo',{key:'excecao',rot:'Já teve alguma vez em que não foi assim?',opcional:true,ph:'Ex.: já pedi ajuda e ninguém me achou fraca'}],
+      ['p','Se tem exceção, não é um fato. É um pensamento, e pensamento pode mudar.']],seguir:guarda},
+    {b:[['lembrete',{titulo:'O seu deveria',texto:frCompleta}],
+      ['p','Agora tire dessa frase a voz dos outros e o medo do “senão”. O que sobra é o que importa: o que você quer, não o que esperam que você queira.'],
+      ['p','Pode ser parecido com o deveria, pode ser bem diferente. Pode ser até o contrário.'],
+      ['campo',{key:'quero',rot:'Sem essa cobrança, o que eu quero de verdade é...',ph:'Ex.: dar conta do que dá e pedir ajuda sem vergonha'}]],
+      seguir:exige('quero','Escreva o que você quer de verdade')},
     ultima
   ]});
 }
