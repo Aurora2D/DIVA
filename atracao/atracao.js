@@ -509,16 +509,22 @@ function sessaoDeclaracao(d){
   if(!d)return;
   if(!Array.isArray(d.corpo))d.corpo=[];
   if(!d.corpo.length){d.corpo.push({k:'ad_ideia',texto:trBase(d)});salva();}
+  /* um começo só por desejo: se ficou mais de um de antes, vale o primeiro */
+  if(d.corpo.length>1){d.corpo=d.corpo.slice(0,1);salva();}
+  /* o começo escolhido na Clareza pode não estar na lista: entra no topo pra aparecer marcado */
+  const prefixos=()=>{const k0=d.corpo[0]&&d.corpo[0].k;
+    return PREFIXOS_TRILHA.some(([k])=>k===k0)||!MODELOS_CORPO.some(m=>m.k===k0)?PREFIXOS_TRILHA:[[k0,'o começo que você escolheu'],...PREFIXOS_TRILHA];};
   const seletor=()=>`<div>${trDeclHTML(d)}</div><div style="margin-top:14px">`+
-    PREFIXOS_TRILHA.map(([k,desc])=>{const m=MODELOS_CORPO.find(x=>x.k===k);const on=d.corpo.some(c=>c.k===k);
+    prefixos().map(([k,desc])=>{const m=MODELOS_CORPO.find(x=>x.k===k);const on=d.corpo.some(c=>c.k===k);
       return `<button type="button" class="sv-opt${on?' on':''}" data-pref="${k}"><b>${esc(m.pre)}…</b><span>${desc}</span></button>`;}).join('')+`</div>`+
-    `<p class="sv-dica" style="margin:14px 0 8px">Toque num prefixo para incluir ou tirar. Para ajustar as palavras, toque no texto de cada frase:</p>`+
+    `<p class="sv-dica" style="margin:14px 0 8px">Toque em outro começo para trocar. Para ajustar as palavras, toque no texto da frase:</p>`+
     d.corpo.map((c,i)=>{const m=MODELOS_CORPO.find(x=>x.k===c.k);return m?`<label class="sv-edit"><span>${esc(m.pre)}</span><input type="text" data-ei="${i}" value="${esc(c.texto||'')}" aria-label="${esc(m.pre)}"></label>`:'';}).join('');
   const ligar=r=>{
     r.querySelectorAll('[data-pref]').forEach(b=>b.onclick=()=>{
-      const k=b.dataset.pref,i=d.corpo.findIndex(c=>c.k===k);
-      if(i>=0){if(d.corpo.length<2){mostrarToast('Deixe pelo menos uma frase');return;}d.corpo.splice(i,1);}else d.corpo.push({k,texto:trBase(d)});
-      salva();sessaoAtualizar();
+      const k=b.dataset.pref;if(d.corpo[0]&&d.corpo[0].k===k)return;
+      /* troca só o começo; o texto que a pessoa ajustou continua */
+      d.corpo=[{k,texto:(d.corpo[0]&&d.corpo[0].texto)||trBase(d)}];
+      salva();svReage('sim',0);sessaoAtualizar();
     });
     r.querySelectorAll('[data-ei]').forEach(inp=>inp.oninput=()=>{
       const c=d.corpo[+inp.dataset.ei];const v=inp.value.trim();if(!c)return;
@@ -529,9 +535,9 @@ function sessaoDeclaracao(d){
   sessaoAbrir({...trMeta('declaracao'),telas:[
     [['p','Agora que você deu nome ao seu desejo, preparamos a sua Declaração Pessoal para mantê-lo por perto na rotina.'],['p','Uma declaração não é uma cobrança: é um lembrete leve de direção.']],
     [['sub','Como sua frase foi montada'],['lembrete',{titulo:'O que você quer',texto:()=>trTexto(d)}],['p','Combinamos o desejo que você escreveu com um prefixo acolhedor. Os prefixos funcionam como uma ponte: eles tiram a resistência da mente, permitindo que você leia a frase com naturalidade e sem a sensação de estar se forçando a acreditar em algo irreal.'],['html',()=>trDeclHTML(d)]],
-    {b:[['sub','Ajuste até soar verdadeiro'],['p','Leia em voz alta ou em pensamento e perceba a sensação no corpo. Busque sentir tranquilidade, alívio ou um entusiasmo suave.'],['p','Se a frase soar distante, troque o prefixo abaixo para testar novas combinações:'],['html',seletor,ligar]],
-      botoes:[{rot:'Tenho dúvida',acao:()=>{d.sensacao='duvida';salva();sessaoIr('permissao');}},
-        {rot:'Sim, faz bem',prim:true,acao:()=>{d.sensacao='boa';salva();confete(['✨','💫','🌟']);sessaoProxima('feliz');}}]},
+    {b:[['sub','Ajuste até soar verdadeiro'],['p','Leia em voz alta ou em pensamento e perceba a sensação no corpo. Busque sentir tranquilidade, alívio ou um entusiasmo suave.'],['p','Se a frase soar distante, troque o começo abaixo e leia de novo:'],['html',seletor,ligar],
+      ['atalho',{rot:'Algo nessa frase ainda me trava',acao:()=>{d.sensacao='duvida';salva();sessaoIr('permissao');}}]],
+      botoes:[{rot:'Sim, faz bem',prim:true,acao:()=>{d.sensacao='boa';salva();confete(['✨','💫','🌟']);sessaoProxima('feliz');}}]},
     [['p','Reserve um momento do dia para reler sua declaração. Sem transformar em obrigação: o objetivo é apenas acostumar sua mente com uma sensação positiva e aberta.'],['atalho',{rot:'Transformar em hábito: ler minha declaração',acao:()=>habitoLerDeclaracao()}],...(temDeclaracoes()?[['atalho',{rot:'Ver a declaração completa, de todos os desejos',acao:sessaoDeclaracaoCompleta}]]:[])]
   ]});
 }
