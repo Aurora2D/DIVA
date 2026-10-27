@@ -373,7 +373,10 @@ function sessaoOlhar(){
   const dev=()=>v('deveria').replace(/^eu\s+/i,'').replace(/^deveria\s+/i,'').replace(/[.!]+$/,'');
   const sen=()=>v('porque').replace(/^porque\s+/i,'').replace(/^sen[aã]o[,:]?\s+/i,'').replace(/[.!]+$/,'');
   const frDeveria=()=>dev()?'Eu deveria '+dev()+'.':'';
-  const frCompleta=()=>dev()&&sen()?`Eu deveria ${dev()}, senão ${sen()}.`:frDeveria();
+  /* resposta de uma frase só: "Eu deveria X, senão Y." Se o deveria tem mais de uma frase, colar o senão no fim dá um texto
+     estranho ("...Não entendo, senão..."), então o senão vai numa linha própria */
+  const frCompleta=()=>{if(!(dev()&&sen()))return frDeveria();
+    return /[.!?…]\s/.test(dev())?`Eu deveria ${dev()}.\nSenão, ${sen()}.`:`Eu deveria ${dev()}, senão ${sen()}.`;};
   const guarda=()=>{c.camadas={escolhido:v('escolhido'),frase:frCompleta(),origem:v('voz'),pedido:v('quero')};salva();};
   const itens=itensDaLista(c.naoQuero);
   const jaOlhado=t=>c.trabalhados.some(x=>x.item===t);
