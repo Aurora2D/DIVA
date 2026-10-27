@@ -456,8 +456,6 @@ function sessaoClareza(opc){
   /* o que restou: os tópicos do "se ninguém fosse te julgar", de todos os itens olhados */
   const restou=trab.flatMap(t=>String(t.quero||'').split(/\r?\n/)).map(x=>x.replace(/^[\s•·\-*]+/,'').trim()).filter(Boolean);
   const restouTxt=()=>restou.map(x=>'• '+x).join('\n');
-  const ultDev=[...trab].reverse().find(t=>(t.deveria||'').trim());
-  const deveriaTxt=ultDev?`Eu deveria ${ultDev.deveria}${ultDev.porque?', senão '+ultDev.porque:''}.`:'';
   const modelo=k=>MODELOS_CORPO.find(m=>m.k===k);
   const comeco=()=>(modelo(R.comeco)||modelo(CLAREZA_COMECOS[0])).pre;
   const consulta=restou.length?['lembrete',{titulo:'O que restou das suas frases',texto:restouTxt}]
@@ -467,22 +465,23 @@ function sessaoClareza(opc){
   const ligarComecos=r=>r.querySelectorAll('[data-comeco]').forEach(b=>b.onclick=()=>{R.comeco=b.dataset.comeco;salva();svReage('sim',0);sessaoAtualizar();});
   const areas=()=>'<div class="sv-chips">'+S.leiAtracao.areas.map(a=>`<button type="button" class="sv-chip${a.id===R.area?' on':''}" data-area="${esc(a.id)}">${esc(a.nome)}</button>`).join('')+'</div>';
   const ligarAreas=r=>r.querySelectorAll('[data-area]').forEach(b=>b.onclick=()=>{R.area=b.dataset.area;salva();r.querySelectorAll('[data-area]').forEach(x=>x.classList.toggle('on',x===b));});
+  /* os tópicos do que restou viram cartões: um toque leva pro campo, pra completar com o começo escolhido */
+  const cartoesRestou=()=>'<p class="sv-p">Toque no que você quer trazer pra perto agora:</p><div class="sv-itens" role="list">'+
+    restou.map((t,k)=>`<button type="button" role="listitem" class="sv-opt${(R.desejo||'').trim()===t?' on':''}" data-restou="${k}"><b>${esc(t)}</b></button>`).join('')+'</div>';
+  const ligarRestou=r=>r.querySelectorAll('[data-restou]').forEach(b=>b.onclick=()=>{svPreencher('desejo',restou[+b.dataset.restou]);
+    r.querySelectorAll('[data-restou]').forEach(x=>x.classList.toggle('on',x===b));svReage('sim',0);});
   const telas=[];
   if(restou.length)telas.push([['lembrete',{titulo:'O que restou das suas frases',texto:restouTxt}],
     ['p','Quando você tirou a cobrança e o medo, sobrou isso aqui. Já não é o que esperam de você. É o que você quer.'],
-    ['p','Agora é dar a isso a forma de um desejo.']]);
-  telas.push(deveriaTxt?[
-      ['p','Releia, devagar, a frase de onde você partiu, e repare no seu ânimo:'],['lembrete',{titulo:'O seu deveria',texto:deveriaTxt}],
-      ['p','Agora leia uma frase que conta o que alguém quer viver:'],['lembrete',{titulo:'Um desejo',texto:'Me sinto entusiasmada ao pensar que posso dividir as tarefas e ter tempo pra mim.'}],
-      ['p','A primeira pesa, porque fala de cobrança e de medo. A segunda dá vontade, traz leveza, às vezes até um sorriso. É essa sensação que vai te acompanhar toda vez que você voltar ao seu desejo. E é assim que você vai escrever o seu.']]
-    :[
+    ['p','Agora é trazer isso pro corpo. Quando uma frase começa com entusiasmo, você sente o desejo, em vez de só pensar nele.']]);
+  else telas.push([
       ['p','Leia estas duas frases, devagar, e repare no seu ânimo em cada uma:'],['lembrete',{titulo:'Uma',texto:'Não quero mais ficar sobrecarregada.'}],
       ['lembrete',{titulo:'Outra',texto:'Me sinto entusiasmada ao pensar que posso dividir as tarefas e ter tempo pra mim.'}],
       ['p','A primeira ainda te deixa olhando pra sobrecarga. A segunda dá vontade, traz leveza, às vezes até um sorriso. É essa sensação que vai te acompanhar toda vez que você voltar ao seu desejo. E é assim que você vai escrever o seu.']]);
-  telas.push({semFoco:true,b:[consulta,['html',comecos,ligarComecos],
+  telas.push({semFoco:true,b:[restou.length?['html',cartoesRestou,ligarRestou]:consulta,['html',comecos,ligarComecos],
       ['p','Complete com o que você quer viver:'],
       ['campo',{key:'desejo',get rot(){return comeco();},ph:'Ex.: pedir ajuda com tranquilidade'}],
-      ['p','Leia a frase inteira em voz alta. Se trouxer alegria ou alívio, é por aí. Se soar distante, troque o começo e leia de novo.']],
+      ['p','Leia a frase inteira em voz alta e repare no seu ânimo. Se trouxer alegria ou alívio, é por aí. Se soar distante, troque o começo e leia de novo.']],
     seguir:()=>{if(!(R.desejo||'').trim()){mostrarToast('Complete a frase com o que você quer');return false;}}});
   telas.push({reage:'brilho',b:[['sub','Em que parte da sua vida mora esse desejo?'],['html',areas,ligarAreas]],
     seguir:()=>{
