@@ -365,8 +365,8 @@ function sessaoOlhar(){
   trEst().foco.contrasteId=c.id;
   if(!Array.isArray(c.trabalhados))c.trabalhados=[];
   /* o caminho do "deveria" (Louise Hay, Você Pode Curar Sua Vida): deveria → por quê (o "senão" é a crença) → de quem é a voz →
-     é verdade? (exceção) → o que eu quero de verdade → trocar deveria por poderia → sai ou fica no armário */
-  const CH=['escolhido','deveria','porque','voz','excecao','quero','armario'];
+     é verdade? (exceção) → o que eu quero de verdade */
+  const CH=['escolhido','deveria','porque','voz','excecao','quero'];
   const R=trSinc('olhar',c.id,CH,{});
   const v=k=>(R[k]||'').trim();
   /* o que a pessoa escreve volta montado nas telas seguintes, com as palavras dela */
@@ -374,7 +374,6 @@ function sessaoOlhar(){
   const sen=()=>v('porque').replace(/^porque\s+/i,'').replace(/^sen[aã]o[,:]?\s+/i,'').replace(/[.!]+$/,'');
   const frDeveria=()=>dev()?'Eu deveria '+dev()+'.':'';
   const frCompleta=()=>dev()&&sen()?`Eu deveria ${dev()}, senão ${sen()}.`:frDeveria();
-  const frPoderia=()=>dev()?`Se eu quisesse de verdade, poderia ${dev()}.`:'';
   const guarda=()=>{c.camadas={escolhido:v('escolhido'),frase:frCompleta(),origem:v('voz'),pedido:v('quero')};salva();};
   const itens=itensDaLista(c.naoQuero);
   const jaOlhado=t=>c.trabalhados.some(x=>x.item===t);
@@ -382,7 +381,7 @@ function sessaoOlhar(){
   /* cada incômodo olhado fica guardado na lista (aparece marcado ao voltar) */
   const registrar=()=>{const it=v('escolhido');if(!it)return;guarda();
     c.trabalhados=c.trabalhados.filter(x=>x.item!==it);
-    c.trabalhados.push({item:it,deveria:dev(),porque:sen(),voz:v('voz'),excecao:v('excecao'),quero:v('quero'),armario:v('armario'),em:hoje()});salva();};
+    c.trabalhados.push({item:it,deveria:dev(),porque:sen(),voz:v('voz'),excecao:v('excecao'),quero:v('quero'),em:hoje()});salva();};
   const P=t=>`<p class="sv-p">${esc(t)}</p>`;
   const convite=()=>{
     if(itens.length<2)return P('Veja o que mais pesa no que você escreveu. Escolha uma coisa só pra olhar com mais calma.');
@@ -404,22 +403,16 @@ function sessaoOlhar(){
   if(itens.length===1&&!v('escolhido'))R.escolhido=itens[0];
   const olharOutro=()=>{registrar();CH.forEach(k=>R[k]='');salva();_sessao.i=1;_sessao.reacao='feliz';sessaoMostrar();mostrarToast('Guardado ✓ Agora, outro com calma 💜');};
   const exige=(k,msg)=>()=>{if(!v(k)){mostrarToast(msg);return false;}guarda();};
-  /* sai ou fica no armário: um toque escolhe */
-  const OPC_ARM=['Pode sair, com alívio','Fica, mas do meu jeito','Ainda não sei'];
-  const armario=()=>'<p class="sv-p">E agora, como uma roupa que você experimentou de novo:</p><p class="sv-pergunta">Esse deveria pode sair do seu armário?</p><div class="sv-chips">'+
-    OPC_ARM.map((o,k)=>`<button type="button" class="sv-chip${v('armario')===o?' on':''}" data-arm="${k}">${esc(o)}</button>`).join('')+'</div>';
-  const ligarArmario=r=>r.querySelectorAll('[data-arm]').forEach(b=>b.onclick=()=>{R.armario=OPC_ARM[+b.dataset.arm];salva();
-    r.querySelectorAll('[data-arm]').forEach(x=>x.classList.toggle('on',x===b));svReage('sim',0);});
-  const ultima={b:[
-      ['p','Todo “deveria” traz escondido um “você está errada”. Errada porque ainda não fez, porque não é como esperavam, porque não chegou lá.'],
-      ['p','Olhe a mesma frase com uma palavra trocada:'],
-      ['lembrete',{titulo:'Antes',texto:frDeveria}],['lembrete',{titulo:'Agora',texto:frPoderia}],
-      ['p','O “deveria” cobra. O “poderia” devolve a escolha pra você.'],
-      ['html',armario,ligarArmario],
+  const temQuero=()=>{if(!v('quero').replace(/[•\s]/g,'')){mostrarToast('Escreva o que você quer de verdade');return false;}return true;};
+  const ultima={b:[['lembrete',{titulo:'O seu deveria',texto:frCompleta}],
+      ['html',()=>v('excecao')?P('E lembre do que você mesma já viveu:'):''],
+      ['lembrete',{titulo:'A exceção que você encontrou',texto:()=>v('excecao')}],
+      ['p','Imagine essa frase sem ninguém olhando e sem nenhum “senão”.'],
+      ['campo',{key:'quero',lista:true,rot:'Se ninguém fosse te julgar, o que restaria dessa frase?',ph:'Ex.: dar conta do que dá e pedir ajuda sem vergonha'}],
       ['cuidado','Se isso trouxer algo muito pesado, você pode parar por aqui e conversar com alguém de confiança ou com quem te acompanha.'],
       ['html',()=>faltam()?'<p class="sv-p sv-gentil">Se quiser, dá pra olhar outro incômodo agora ou voltar outro dia. Um de cada vez, no seu ritmo.</p>':'']]};
-  Object.defineProperty(ultima,'botoes',{get:()=>faltam()?[{rot:'Olhar outro incômodo',cls:'linha',acao:olharOutro},{rot:'Concluir',prim:true,acao:()=>{registrar();sessaoConcluir();}}]:null});
-  ultima.seguir=registrar;
+  Object.defineProperty(ultima,'botoes',{get:()=>faltam()?[{rot:'Olhar outro incômodo',cls:'linha',acao:()=>{if(temQuero())olharOutro();}},{rot:'Concluir',prim:true,acao:()=>{if(temQuero()){registrar();sessaoConcluir();}}}]:null});
+  ultima.seguir=()=>{if(!temQuero())return false;registrar();};
   sessaoAbrir({...trMeta('olhar'),limpar:CH,gaveta:{titulo:'O que você escreveu',texto:()=>c.naoQuero},pular:{rot:'Já sei o que quero: ir para a Clareza',ate:'clareza'},telas:[
     [['p','Agora é hora de voltar para a lista que você fez, como quem abre o armário e experimenta cada roupa de novo. Algumas você continua escolhendo porque gosta. Outras, só continua usando porque se acostumou.'],
      ['p','Muita coisa que a gente sente como verdade sobre si mesma está ali há tanto tempo que parece que foi sempre assim. Talvez algumas dessas ideias tenham feito sentido em outra época, e até ajudado. Mas será que ainda fazem sentido hoje?']],
@@ -441,12 +434,6 @@ function sessaoOlhar(){
       ['p','Uma crença repetida muitas vezes começa a soar como regra: sempre, nunca, todo mundo, ninguém. Mas quase nenhuma regra assim resiste a um olhar de perto. Então, é verdade?'],
       ['campo',{key:'excecao',rot:'Já teve alguma vez em que não foi assim?',opcional:true,ph:'Ex.: já pedi ajuda e ninguém me achou fraca'}],
       ['p','Se tem exceção, não é um fato. É um pensamento, e pensamento pode mudar.']],seguir:guarda},
-    {b:[['lembrete',{titulo:'O seu deveria',texto:frCompleta}],
-      ['html',()=>v('excecao')?P('E lembre do que você mesma já viveu:'):''],
-      ['lembrete',{titulo:'A exceção que você encontrou',texto:()=>v('excecao')}],
-      ['p','Imagine essa frase sem ninguém olhando e sem nenhum “senão”.'],
-      ['campo',{key:'quero',lista:true,rot:'Se ninguém fosse te julgar, o que restaria dessa frase?',ph:'Ex.: dar conta do que dá e pedir ajuda sem vergonha'}]],
-      seguir:exige('quero','Escreva o que você quer de verdade')},
     ultima
   ]});
 }
