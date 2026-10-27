@@ -20,8 +20,8 @@ const ABERTURA_FIXA=t=>{
   // se ainda não tem "ideal" logo após o substantivo, formata
   if(!/\bideal\b/i.test(nucleo)) nucleo=formatarNucleoIdeal(nucleo);
   nucleo=nucleo.charAt(0).toLowerCase()+nucleo.slice(1);
-  // verbo encaixa direto ("ter tempo pra mim"); o resto ganha "ter" na frente
-  const frase=/^[a-záàâãéêíóôõúç]+(ar|er|ir|ôr)\b/i.test(nucleo)?nucleo:'ter '+nucleo;
+  // verbo encaixa direto ("ter tempo pra mim", "me alimentar bem"); o resto ganha "ter" na frente
+  const frase=/^(?:(?:me|te|se|nos)\s+)?[a-záàâãéêíóôõúç]+(ar|er|ir|ôr)\b/i.test(nucleo)?nucleo:'ter '+nucleo;
   return`Eu estou em processo de <b>${esc(frase)}</b>, do meu jeito e no meu tempo.`;
 };
 const FECHAMENTO_FIXO=`Eu deixo essa ideia descansar em mim, e ela segue trabalhando enquanto eu vivo o meu dia.`;
