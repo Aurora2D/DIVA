@@ -63,53 +63,61 @@ const CORES=['c1','c2','c3','c4','c5','c6'];
 
 /* ============ SUGESTÕES DE PERMISSÃO ============ */
 const SUGESTOES_IMPEDIMENTO=[
-  {palavras:['sou mae','sendo mae','como mae','maternidade','filha pequena','filho pequeno'],
+  {palavras:['sou mae','sendo mae','como mae','mae','maternidade','filha','filho','filhos','filhas','crianca','criancas'],
    categoria:'mães',
    frases:[
-     'Hoje, milhares de mães estão cuidando de si com alegria.',
-     'Na semana passada, centenas de mães voltaram a fazer algo que amam.',
-     'Neste exato momento, milhares de mães estão realizando os próprios sonhos ao lado dos filhos.'
+     'Centenas de mães voltaram a fazer algo que amam no mês passado.',
+     'Milhares de mães estão cuidando de si hoje.',
+     'Milhões de mães realizam sonhos enquanto criam os filhos.',
+     'Centenas de milhares de mães vão fazer algo só pra elas esta semana.'
    ]},
-  {palavras:['sem tempo','rotina cheia','correria','sobrecarga','exausta','cansada'],
+  {palavras:['sem tempo','ter tempo','tenho tempo','falta de tempo','pouco tempo','rotina cheia','correria','corrida','sobrecarga','sobrecarregada','exausta','cansada','cansaco','ocupada'],
    categoria:'pessoas com tempo pro que importa',
    frases:[
-     'Hoje, milhares de pessoas estão dedicando o tempo delas ao que mais importa.',
-     'Na semana passada, centenas de pessoas organizaram a semana e ganharam horas livres.',
-     'Todos os dias, milhões de pessoas tiram um tempo pra descansar e se cuidar.'
+     'Milhares de pessoas ganharam horas livres na semana passada.',
+     'Centenas de milhares de pessoas estão descansando neste momento.',
+     'Milhões de pessoas dedicam tempo ao que amam todos os dias.',
+     'Alguém acabou de terminar o dia com tempo de sobra pra si.'
    ]},
-  {palavras:['mereco','merecer','digna','digno','capaz','suficiente'],
-   categoria:'pessoas aprendendo a se valorizar',
+  {palavras:['mereco','merecer','digna','digno','capaz','suficiente','incapaz','nao sou boa','fraca','vergonha'],
+   categoria:'pessoas se valorizando',
    frases:[
-     'Todos os dias, milhares de pessoas aprendem a se valorizar antes de qualquer conquista.',
-     'Na semana passada, centenas de milhares de pessoas começaram a se levar a sério.',
-     'Neste momento, milhões de pessoas estão se permitindo o que querem.'
+     'Centenas de milhares de pessoas começaram a se levar a sério no mês passado.',
+     'Milhares de pessoas estão cobrando o que valem hoje.',
+     'Milhões de pessoas se tratam com respeito e carinho todos os dias.',
+     'Cada vez mais pessoas se permitem o que querem.'
    ]},
-  {palavras:['idade','velho','velha','jovem','tarde','tempo passou'],
+  {palavras:['idade','velho','velha','jovem','tarde','tempo passou','ja passou','altura da vida','anos'],
    categoria:'pessoas em qualquer idade',
    frases:[
-     'Todos os dias, milhares de pessoas conseguem o que querem em idades muito variadas.',
-     'Na semana passada, centenas de pessoas começaram algo novo e descobriram que era a hora certa.',
-     'Neste momento, milhões de pessoas, em todas as idades, estão realizando algo importante.'
+     'Milhares de pessoas começaram uma nova fase da vida no mês passado.',
+     'Neste momento, milhões de pessoas, em todas as idades, estão realizando algo importante.',
+     'Centenas de pessoas vão começar um projeto novo esta semana.',
+     'Cada vez mais pessoas descobrem que é a hora certa de começar.'
    ]},
-  {palavras:['dinheiro','grana','caro','pagar','preco','sem condicoes','apertado'],
+  {palavras:['dinheiro','grana','caro','cara','custa','pagar','preco','gastar','renda','salario','divida','dividas','conta','contas','sem condicoes','apertado'],
    categoria:'pessoas prosperando',
    frases:[
-     'Todos os dias, milhões de pessoas recebem dinheiro pelo que sabem fazer.',
-     'Hoje, milhares de pessoas estão fechando um negócio, ganhando um aumento ou vendendo algo que criaram.',
-     'Neste exato momento, alguém está recebendo um pagamento que deixou o dia mais leve.'
+     'Milhões de pessoas recebem dinheiro pelo que sabem fazer todos os dias.',
+     'Milhares de pessoas fecharam um bom negócio esta semana.',
+     'Centenas de milhares de pessoas ganharam um aumento no mês passado.',
+     'Alguém acabou de vender algo que criou.'
    ]},
-  {palavras:['nao sei','nao sei como','por onde comecar'],
-   categoria:'pessoas que ainda não sabem o como',
+  {palavras:['nao sei','nao sei como','como fazer','por onde comecar','por onde','perdida','nao entendo'],
+   categoria:'pessoas descobrindo o caminho',
    frases:[
-     'Todos os dias, milhares de pessoas dão o primeiro passo, e o caminho vai aparecendo.',
-     'Na semana passada, centenas de pessoas descobriram o como enquanto andavam.',
-     'Neste momento, milhões de pessoas estão descobrindo o próximo passo, um de cada vez.'
+     'Milhares de pessoas deram o primeiro passo hoje.',
+     'Centenas de milhares de pessoas descobriram o caminho enquanto andavam, no ano passado.',
+     'Milhões de pessoas estão aprendendo algo novo neste momento.',
+     'Cada vez mais pessoas começam e vão descobrindo o resto pelo caminho.'
    ]}
 ];
+
 const SUGESTOES_GENERICAS=[
-  'Todos os dias, milhares de pessoas conseguem o que querem, do jeito delas.',
-  'Neste momento, coisas boas estão acontecendo para milhões de pessoas, por caminhos que nem imaginam.',
-  'Na semana passada, centenas de milhares de pessoas viram o que queriam se aproximar.'
+  'Centenas de milhares de pessoas viram o que queriam se aproximar na semana passada.',
+  'Milhares de pessoas estão conseguindo o que querem hoje, do jeito delas.',
+  'Milhões de coisas boas acontecem todos os dias, por caminhos que ninguém imaginava.',
+  'Cada vez mais pessoas realizam seus desejos.'
 ];
 function normalizarSug(s){
   return String(s||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');
