@@ -301,8 +301,8 @@ function renderSessoesAtracao(){
     const ok=e.feitas[s.id],cur=i===primeira,emAnd=!ok&&e.tela[s.id]>0;
     /* as que vêm depois da atual ficam à vista, bem apagadas e com cadeado: uma de cada vez */
     const trav=!ok&&!cur&&!emAnd&&primeira>=0&&i>primeira;
-    h+=cardTrilha(cur?'atual':trav?'travada':ok?'feita':'',ok?SV_IC.check:'',esc(s.kicker),esc(s.titulo),esc(s.afirma),s.id,
-      ok?`<span class="sv-fim sv-feita">rever ${SV_IC.seta}</span>`:trav?`<span class="sv-fim sv-cadeado" aria-label="Ainda fechada">${SV_CADEADO}</span>`:`<span class="sv-fim">${cur||emAnd?'Continuar ':''}${SV_IC.seta}</span>`);
+    h+=cardTrilha(cur?'atual':trav?'travada':'',ok?SV_IC.check:'',esc(s.kicker),esc(s.titulo),esc(s.afirma),s.id,
+      ok?'':trav?`<span class="sv-fim sv-cadeado" aria-label="Ainda fechada">${SV_CADEADO}</span>`:`<span class="sv-fim">${cur||emAnd?'Continuar ':''}${SV_IC.seta}</span>`);
   });
   h+='</ol>';
   const ativos=desejosAtivos(),pend=contrastesPendentes();
@@ -422,7 +422,7 @@ function sessaoOlhar(){
     return `<button type="button" role="listitem" class="sv-opt${ok?' feito':''}${v('escolhido')===t?' on':''}" data-item="${k}"><b>${esc(t)}</b>${ok?'<span>✓ já olhado</span>':''}</button>`;}).join('')+'</div>';
   const ligarCartoes=r=>r.querySelectorAll('[data-item]').forEach(b=>b.onclick=()=>{
     const t=itens[+b.dataset.item];
-    if(t!==v('escolhido')){CH.slice(1).forEach(k=>R[k]='');
+    if(t!==v('escolhido')){if(v('escolhido')&&CH.slice(1).some(k=>v(k)))registrar();CH.slice(1).forEach(k=>R[k]='');
       const ant=c.trabalhados.find(x=>x.item===t);if(ant)CH.slice(1).forEach(k=>R[k]=ant[k]||'');}
     svPreencher('escolhido',t);
     r.querySelectorAll('[data-item]').forEach(x=>x.classList.toggle('on',x===b));
@@ -534,7 +534,7 @@ function sessaoDeclaracao(d){
   if(!Array.isArray(d.corpo))d.corpo=[];
   if(!d.corpo.length){d.corpo.push({k:'ad_ideia',texto:trBase(d)});salva();}
   /* um começo só por desejo: se ficou mais de um de antes, vale o primeiro */
-  if(d.corpo.length>1){d.corpo=d.corpo.slice(0,1);salva();}
+  if(d.corpo.length>1){d.corpoGuardado=(d.corpoGuardado||[]).concat(d.corpo.slice(1));d.corpo=d.corpo.slice(0,1);salva();}
   /* o começo escolhido na Clareza pode não estar na lista: entra no topo pra aparecer marcado */
   const prefixos=()=>{const k0=d.corpo[0]&&d.corpo[0].k;
     return PREFIXOS_TRILHA.some(([k])=>k===k0)||!MODELOS_CORPO.some(m=>m.k===k0)?PREFIXOS_TRILHA:[[k0,'o começo que você escolheu'],...PREFIXOS_TRILHA];};

@@ -209,3 +209,12 @@ Conserto junto: a linha "Conhecer a Diva" em Configurações não fazia nada ao 
 - Novo no desejo (Meus desejos → desejo): "O que eu escrevi" (`sessaoDesejoEscrito`), com o desejo, a lista de incômodos e, para cada item olhado, o deveria/senão, a voz, a exceção e o que restou; depois o porquê e as dúvidas da Permissão. Desejos antigos, cujo desabafo já tinha sido apagado, mostram o que ficou em `d.contrasteOrigem` e `d.camadas`.
 - Ir e voltar entre as sessões: depois da Clareza o foco continua no desabafo, e `trContraste()` acha o desabafo do foco mesmo que já tenha virado desejo; o Olhar reabre com os itens marcados e as respostas. Rever a Clareza da mesma lista atualiza o desejo em vez de criar outro.
 - Recuperação única (`trRecuperarDesabafos`, marca `S.leiAtracao.desabafosRecuperados`): desejos cujo desabafo foi apagado pela Clareza antiga ganham um desabafo novo com `d.contrasteOrigem` e as respostas de `d.camadas` (último incômodo olhado).
+
+## Regra: a trilha nunca apaga resposta da pessoa (27/out/2026)
+
+Pedido da Érica: nenhuma mudança pode apagar o que ela escreveu. Hoje:
+- Clareza não apaga o desabafo (fica marcado com `desejoId`).
+- No Olhar, trocar de incômodo antes de terminar guarda o que já foi escrito no item atual (`registrar()`), em vez de limpar.
+- Na Declaração, frases de outros começos que existiam antes da escolha única vão para `d.corpoGuardado`, não somem.
+- Os campos do Olhar de um incômodo já olhado voltam preenchidos e desbotados (`.sv-ja`) até a pessoa tocar.
+Antes de qualquer mudança que mexa em dados, conferir se algo deixa de ser guardado.
