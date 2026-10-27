@@ -66,16 +66,16 @@ const SUGESTOES_IMPEDIMENTO=[
   {palavras:['sou mae','sendo mae','como mae','maternidade','filha pequena','filho pequeno'],
    categoria:'mães',
    frases:[
-     'Hoje, milhares de mães encontram tempo para si dentro de rotinas cheias.',
-     'Na semana passada, centenas de mães retomaram algo que amavam fazer.',
-     'Neste exato momento, milhares de mães cuidam de filhos pequenos e ainda acham espaço para o que importa.'
+     'Hoje, milhares de mães estão cuidando de si com alegria.',
+     'Na semana passada, centenas de mães voltaram a fazer algo que amam.',
+     'Neste exato momento, milhares de mães estão realizando os próprios sonhos ao lado dos filhos.'
    ]},
   {palavras:['sem tempo','rotina cheia','correria','sobrecarga','exausta','cansada'],
-   categoria:'pessoas com rotina cheia',
+   categoria:'pessoas com tempo pro que importa',
    frases:[
-     'Hoje mesmo, milhares de pessoas com rotina cheia encontram espaço para o que importa.',
-     'Na semana passada, centenas de pessoas reorganizaram o tempo sem deixar de dar conta.',
-     'Todos os dias, milhares de pessoas cansadas conseguem parar alguns minutos e se cuidar.'
+     'Hoje, milhares de pessoas estão dedicando o tempo delas ao que mais importa.',
+     'Na semana passada, centenas de pessoas organizaram a semana e ganharam horas livres.',
+     'Todos os dias, milhões de pessoas tiram um tempo pra descansar e se cuidar.'
    ]},
   {palavras:['mereco','merecer','digna','digno','capaz','suficiente'],
    categoria:'pessoas aprendendo a se valorizar',
@@ -88,7 +88,7 @@ const SUGESTOES_IMPEDIMENTO=[
    categoria:'pessoas em qualquer idade',
    frases:[
      'Todos os dias, milhares de pessoas conseguem o que querem em idades muito variadas.',
-     'Na semana passada, centenas de pessoas começaram algo novo numa idade em que achavam que já era tarde.',
+     'Na semana passada, centenas de pessoas começaram algo novo e descobriram que era a hora certa.',
      'Neste momento, milhões de pessoas, em todas as idades, estão realizando algo importante.'
    ]},
   {palavras:['dinheiro','grana','caro','pagar','preco','sem condicoes','apertado'],
@@ -101,13 +101,13 @@ const SUGESTOES_IMPEDIMENTO=[
   {palavras:['nao sei','nao sei como','por onde comecar'],
    categoria:'pessoas que ainda não sabem o como',
    frases:[
-     'Todos os dias, milhares de pessoas começam sem saber como, e o caminho aparece no meio.',
+     'Todos os dias, milhares de pessoas dão o primeiro passo, e o caminho vai aparecendo.',
      'Na semana passada, centenas de pessoas descobriram o como enquanto andavam.',
-     'Neste momento, milhões de pessoas estão descobrindo o próximo passo sem ter o mapa inteiro.'
+     'Neste momento, milhões de pessoas estão descobrindo o próximo passo, um de cada vez.'
    ]}
 ];
 const SUGESTOES_GENERICAS=[
-  'Todos os dias, milhares de pessoas conseguem o que querem, do jeito que dá.',
+  'Todos os dias, milhares de pessoas conseguem o que querem, do jeito delas.',
   'Neste momento, coisas boas estão acontecendo para milhões de pessoas, por caminhos que nem imaginam.',
   'Na semana passada, centenas de milhares de pessoas viram o que queriam se aproximar.'
 ];
