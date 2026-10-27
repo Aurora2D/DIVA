@@ -114,7 +114,7 @@ function svBloco(b,st,binds){
   if(t==='lembrete'){const txt=String((typeof v.texto==='function'?v.texto():v.texto)||'').trim();if(!txt)return '';
     return `<figure class="sv-lembrete"><figcaption>${esc(v.titulo)}</figcaption><blockquote>${esc(txt)}</blockquote></figure>`;}
   if(t==='campo'){const id='c_'+v.key;
-    return `<div class="sv-campo"><label class="sv-campo-rot" for="${id}">${esc(v.rot)}${v.opcional?'<span class="sv-opc">opcional</span>':''}</label>${v.dica?`<p class="sv-dica" id="${id}_d">${esc(v.dica)}</p>`:''}<textarea id="${id}" class="sv-area${v.grande?' grande':''}${v.lista?' sv-lista':''}" data-campo="${v.key}"${v.dica?` aria-describedby="${id}_d"`:''} placeholder="${esc(v.ph||'Escreva aqui')}">${esc(st.dados[v.key]||'')}</textarea></div>`;}
+    return `<div class="sv-campo"><label class="sv-campo-rot" for="${id}">${esc(v.rot)}${v.opcional?'<span class="sv-opc">opcional</span>':''}</label>${v.dica?`<p class="sv-dica" id="${id}_d">${esc(v.dica)}</p>`:''}<textarea id="${id}" class="sv-area${v.grande?' grande':''}${v.lista?' sv-lista':''}${(typeof v.ja==='function'?v.ja():v.ja)&&String(st.dados[v.key]||'').trim()?' sv-ja':''}" data-campo="${v.key}"${v.dica?` aria-describedby="${id}_d"`:''} placeholder="${esc(v.ph||'Escreva aqui')}">${esc(st.dados[v.key]||'')}</textarea></div>`;}
   if(t==='html'){if(b[2])binds.push(b[2]);return typeof v==='function'?v():v;}
   return '';
 }
@@ -146,8 +146,10 @@ function sessaoMostrar(manter){
     if(t.seguir)try{t.seguir();}catch(err){}  /* guarda o que estiver escrito antes de pular */
     const p=def.pular,e=trEst();const a=TRILHA.findIndex(x=>x.id===def.id),z=TRILHA.findIndex(x=>x.id===p.ate);
     for(let k=a;k<z;k++)if(!e.feitas[TRILHA[k].id])e.feitas[TRILHA[k].id]='skipped';
+    if(p.concluir){e.feitas[def.id]='done';(def.limpar||[]).forEach(k=>delete e.rasc[k]);}
     delete e.tela[p.ate];salva();sessaoIr(p.ate);
   };
+  el.querySelectorAll('.sv-ja').forEach(t=>t.addEventListener('focus',()=>t.classList.remove('sv-ja'),{once:true}));
   binds.forEach(f=>f($('sessaoTela')));
   if(t.bind)t.bind($('sessaoTela'));
   if(!manter){const r=st.reacao;st.reacao=null;
@@ -299,8 +301,8 @@ function renderSessoesAtracao(){
     const ok=e.feitas[s.id],cur=i===primeira,emAnd=!ok&&e.tela[s.id]>0;
     /* as que vêm depois da atual ficam à vista, bem apagadas e com cadeado: uma de cada vez */
     const trav=!ok&&!cur&&!emAnd&&primeira>=0&&i>primeira;
-    h+=cardTrilha(cur?'atual':trav?'travada':'',ok?SV_IC.check:'',esc(s.kicker),esc(s.titulo),esc(s.afirma),s.id,
-      ok?'':trav?`<span class="sv-fim sv-cadeado" aria-label="Ainda fechada">${SV_CADEADO}</span>`:`<span class="sv-fim">${cur||emAnd?'Continuar ':''}${SV_IC.seta}</span>`);
+    h+=cardTrilha(cur?'atual':trav?'travada':ok?'feita':'',ok?SV_IC.check:'',esc(s.kicker),esc(s.titulo),esc(s.afirma),s.id,
+      ok?`<span class="sv-fim sv-feita">rever ${SV_IC.seta}</span>`:trav?`<span class="sv-fim sv-cadeado" aria-label="Ainda fechada">${SV_CADEADO}</span>`:`<span class="sv-fim">${cur||emAnd?'Continuar ':''}${SV_IC.seta}</span>`);
   });
   h+='</ol>';
   const ativos=desejosAtivos(),pend=contrastesPendentes();
@@ -343,13 +345,13 @@ function sessaoAbertura(){
 function sessaoDeixarSair(){
   const e=trEst(),R=e.rasc;
   /* a lista já guardada volta pro campo, pra pessoa completar em vez de começar do zero */
-  const cFoco=e.foco.contrasteId&&contrastesPendentes().find(x=>x.id===e.foco.contrasteId);
+  const cFoco=e.foco.contrasteId&&(S.leiAtracao.contrastes||[]).find(x=>x.id===e.foco.contrasteId);
   if(e.foco.contrasteId&&!cFoco){delete e.foco.contrasteId;delete R.incomodo;delete e.tela.sair;salva();}  /* essa lista já foi trabalhada ou removida: começa uma nova */
   else if(!(R.incomodo||'').trim()){
     if(cFoco&&(cFoco.naoQuero||'').trim()){R.incomodo=cFoco.naoQuero;if(!(e.tela.sair>0))e.tela.sair=2;salva();}
     else delete e.foco.contrasteId;
   }
-  sessaoAbrir({...trMeta('sair'),limpar:['incomodo'],pular:{rot:'Já sei o que quero: ir para a Clareza',ate:'clareza'},telas:[
+  sessaoAbrir({...trMeta('sair'),limpar:['incomodo'],pular:{rot:'Seguir agora para Olhar com outros olhos',ate:'olhar',concluir:true},telas:[
     [['p','Antes de falarmos sobre o que você quer, acolha o que está sentindo agora.'],['p','Às vezes, passamos tanto tempo tentando dar conta de tudo que nem conseguimos parar para reconhecer o que nos incomoda. Na Lei da Atração, chamamos de contraste aquilo que nos mostra, pela experiência do que não queremos, o que gostaríamos de viver de outra maneira.']],
     [['p','Aqui, você não precisa organizar seus pensamentos, encontrar soluções ou buscar o lado bom das coisas. Vamos apenas colocar para fora.'],['p','Faça uma lista em tópicos: vá anotando o que está pesando, exatamente como vier à cabeça.']],
     {reage:'suspirar',b:[['campo',{key:'incomodo',lista:true,rot:'Minha lista de incômodos',dica:'Anote em tópicos curtos. Não precisa filtrar, pontuar ou justificar. Podem ser dois itens ou vinte. Não existe jeito certo.',grande:true}]],
@@ -433,7 +435,7 @@ function sessaoOlhar(){
       ['html',()=>v('excecao')?P('E lembre do que você mesma já viveu:'):''],
       ['lembrete',{titulo:'A exceção que você encontrou',texto:()=>v('excecao')}],
       ['p','Imagine essa frase sem ninguém olhando e sem nenhum “senão”.'],
-      ['campo',{key:'quero',lista:true,rot:'Se ninguém fosse te julgar, o que restaria dessa frase?',ph:'Ex.: dar conta do que dá e pedir ajuda sem vergonha'}],
+      ['campo',{key:'quero',ja:()=>jaOlhado(v('escolhido')),lista:true,rot:'Se ninguém fosse te julgar, o que restaria dessa frase?',ph:'Ex.: dar conta do que dá e pedir ajuda sem vergonha'}],
       ['cuidado','Se isso trouxer algo muito pesado, você pode parar por aqui e conversar com alguém de confiança ou com quem te acompanha.'],
       ['html',()=>faltam()?'<p class="sv-p sv-gentil">Se quiser, dá pra olhar outro incômodo agora ou voltar outro dia. Um de cada vez, no seu ritmo.</p>':'']]};
   Object.defineProperty(ultima,'botoes',{get:()=>faltam()?[{rot:'Olhar outro incômodo',cls:'linha',acao:()=>{if(temQuero())olharOutro();}},{rot:'Concluir',prim:true,acao:()=>{if(temQuero()){registrar();sessaoConcluir();}}}]:null});
@@ -446,18 +448,18 @@ function sessaoOlhar(){
       seguir:exige('escolhido',itens.length>1?'Toque num item ou escreva o seu':'Escreva o incômodo que você escolheu')},
     {b:[['lembrete',{titulo:'O que você escolheu',texto:()=>v('escolhido')}],
       ['p','Por trás de quase todo incômodo tem um “eu deveria”. Uma cobrança que a gente repete por dentro, tantas vezes que nem percebe mais.'],
-      ['campo',{key:'deveria',rot:'Pensando nisso, complete: Eu deveria...',ph:'Ex.: dar conta de tudo sozinha'}]],
+      ['campo',{key:'deveria',ja:()=>jaOlhado(v('escolhido')),rot:'Pensando nisso, complete: Eu deveria...',ph:'Ex.: dar conta de tudo sozinha'}]],
       seguir:exige('deveria','Complete o seu “eu deveria”')},
     {b:[['lembrete',{titulo:'O seu deveria',texto:frDeveria}],
       ['p','Por quê? Responda o que vier primeiro, sem caprichar.'],
-      ['campo',{key:'porque',rot:'Porque senão...',ph:'Ex.: vão achar que eu sou fraca'}],
+      ['campo',{key:'porque',ja:()=>jaOlhado(v('escolhido')),rot:'Porque senão...',ph:'Ex.: vão achar que eu sou fraca'}],
       ['p','Leia sua resposta de novo. Ela fala de uma vontade sua ou de uma cobrança que veio de alguém? Muitas vezes, quando a gente vai fundo no porquê, chega numa voz que não é a nossa: alguém da família, a escola, um ex, o que “todo mundo” diz.'],
-      ['campo',{key:'voz',rot:'De quem é essa voz?',opcional:true,ph:'Ex.: da minha mãe, ou de uma época da escola'}]],
+      ['campo',{key:'voz',ja:()=>jaOlhado(v('escolhido')),rot:'De quem é essa voz?',opcional:true,ph:'Ex.: da minha mãe, ou de uma época da escola'}]],
       seguir:exige('porque','Complete o seu “porque senão”')},
     {b:[['lembrete',{titulo:'O seu deveria',texto:frCompleta}],
       ['html',()=>P(sen()?`Repare no “senão ${sen()}”. É ali que mora a crença: o que você acha que vai acontecer se não cumprir o deveria.`:'Repare no que você acha que vai acontecer se não cumprir o deveria. É ali que mora a crença.')],
       ['p','Uma crença repetida muitas vezes começa a soar como regra: sempre, nunca, todo mundo, ninguém. Mas quase nenhuma regra assim resiste a um olhar de perto. Então, é verdade?'],
-      ['campo',{key:'excecao',rot:'Já teve alguma vez em que não foi assim?',opcional:true,ph:'Ex.: já pedi ajuda e ninguém me achou fraca'}],
+      ['campo',{key:'excecao',ja:()=>jaOlhado(v('escolhido')),rot:'Já teve alguma vez em que não foi assim?',opcional:true,ph:'Ex.: já pedi ajuda e ninguém me achou fraca'}],
       ['p','Se tem exceção, não é um fato. É um pensamento, e pensamento pode mudar.']],seguir:guarda},
     ultima
   ]});

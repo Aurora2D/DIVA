@@ -154,3 +154,7 @@ gatinha-fantoche.pronta{opacity:1}
 .sv-gravetos .gr-bola{transition:transform .5s ease-out}
 .sv-gravetos .gr-bola.cai{transition:transform 1s cubic-bezier(.3,1.55,.55,1)}
 @media (prefers-reduced-motion:reduce){.sv-gravetos .gr-pau,.sv-gravetos .gr-bola,.sv-gravetos .gr-bola.cai{transition:none}}
+/* já feito: desbotado, mas dá pra abrir e editar */
+.sv-sessao.feita{opacity:.62}
+.sv-sessao.feita .sv-feita{font-size:12.5px;font-weight:700;gap:4px}
+.sv-area.sv-ja{opacity:.55;font-style:italic}
