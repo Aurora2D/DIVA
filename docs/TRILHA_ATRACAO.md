@@ -202,3 +202,8 @@ Conserto junto: a linha "Conhecer a Diva" em Configurações não fazia nada ao 
 
 - A etapa 2 da Permissão segue o Losier: "Quem já está vivendo isso?" (campo opcional `quem`, guardado em `graveto.quem`). Saíram as perguntas "de onde vem essa ideia" e "quem eu poderia ser", que repetiam o Olhar com outros olhos. Gravetos antigos com `origem` e `seFosse` continuam válidos.
 - Desenho dos gravetos (`svGravetos`, `svGravetosLigar`, `svGravetosSoltar` em `atracao/atracao.js`, estilos `.sv-gravetos` em `atracao/atracao.css`): na abertura da Permissão a pessoa toca nos gravetos e a bolinha cai; na etapa 4 o graveto da dúvida que ganhou frase sai com animação, e se não sobra nenhum a bolinha cai.
+
+## Desabafo não some mais na Clareza (27/out/2026)
+
+- Antes, ao criar o desejo, a Clareza tirava o desabafo de `S.leiAtracao.contrastes`, e com ele iam as respostas do Olhar (`c.trabalhados`). Agora o desabafo fica guardado e ganha `c.desejoId` e `c.virouDesejoEm`; o desejo guarda `d.contrasteId`. `contrastesPendentes()` ignora quem já virou desejo, então a fila continua igual.
+- Novo no desejo (Meus desejos → desejo): "O que eu escrevi" (`sessaoDesejoEscrito`), com o desejo, a lista de incômodos e, para cada item olhado, o deveria/senão, a voz, a exceção e o que restou; depois o porquê e as dúvidas da Permissão. Desejos antigos, cujo desabafo já tinha sido apagado, mostram o que ficou em `d.contrasteOrigem` e `d.camadas`.

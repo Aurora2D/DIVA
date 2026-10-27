@@ -63,7 +63,8 @@ function trEst(){
   const L=S.leiAtracao;if(!L.trilha||typeof L.trilha!=='object')L.trilha={};
   const t=L.trilha;['feitas','tela','rasc','foco'].forEach(k=>{if(!t[k]||typeof t[k]!=='object')t[k]={};});return t;
 }
-function contrastesPendentes(){return (S.leiAtracao.contrastes||[]);}
+/* desabafo que já virou desejo continua guardado (com as respostas do Olhar), só sai da fila */
+function contrastesPendentes(){return (S.leiAtracao.contrastes||[]).filter(c=>!c.desejoId);}
 const trDesejo=()=>{const id=trEst().foco.desejoId;return (id&&S.leiAtracao.desejos.find(x=>x.id===id&&!x.arquivado))||null;};
 const trContraste=()=>{const id=trEst().foco.contrasteId;return contrastesPendentes().find(x=>x.id===id)||contrastesPendentes().slice(-1)[0]||null;};
 const trGraveto=d=>{const id=trEst().foco.gravetoId;return (d&&id&&(d.gravetos||[]).find(g=>g.id===id))||null;};
@@ -491,7 +492,7 @@ function sessaoClareza(opc){
       else{
         d=novoDesejo(R.area||trAreaPadrao(),cl);d.nucleo='';
         if(c){d.contrasteOrigem=c.naoQuero;const cm=c.camadas||{};if(cm.pedido||cm.origem||cm.frase||cm.escolhido)d.camadas={pedido:cm.pedido||'',origem:cm.origem||'',frase:cm.frase||'',escolhido:cm.escolhido||''};
-          S.leiAtracao.contrastes=(S.leiAtracao.contrastes||[]).filter(x=>x.id!==c.id);}
+          c.desejoId=d.id;c.virouDesejoEm=hoje();d.contrasteId=c.id;}
         S.leiAtracao.desejos.push(d);R.desejoCriado=d.id;
       }
       /* o começo escolhido vira a primeira frase da Declaração (o desejo fica guardado sem ele, pra não sair dobrado) */
@@ -690,6 +691,25 @@ function sessaoMeusDesejos(){
   sessaoAbrir(svUtil('desejos','Seus desejos','Meus desejos',[...topo,['p','Escolha um desejo para continuar de onde parou.'],['html',()=>html,r=>svLigarOpcoes(r,todos)]],
     [{rot:'Fechar',acao:()=>sessaoFecharTudo()},{rot:'Novo desejo',prim:true,acao:()=>sessaoClareza({livre:true})}]),{});
 }
+/* tudo o que a pessoa escreveu na trilha até chegar neste desejo */
+function sessaoDesejoEscrito(d){
+  if(!d)return;
+  const c=d.contrasteId&&(S.leiAtracao.contrastes||[]).find(x=>x.id===d.contrasteId);
+  const cm=d.camadas||{},b=[];
+  const L=(t,x)=>{const v=String(x||'').trim();if(v)b.push(['lembrete',{titulo:t,texto:v}]);};
+  L('Seu desejo',trTexto(d));
+  L('O que te incomodava',(c&&c.naoQuero)||d.contrasteOrigem);
+  const trab=c&&Array.isArray(c.trabalhados)?c.trabalhados:[];
+  if(trab.length)trab.forEach(t=>{
+    b.push(['sub',t.item||'Um incômodo']);
+    L('O seu deveria',t.deveria?('Eu deveria '+t.deveria+'.'+(t.porque?'\nSenão, '+t.porque+'.':'')):'');
+    L('De quem é essa voz',t.voz);L('A exceção que você encontrou',t.excecao);L('O que restou',t.quero);});
+  else{if(cm.escolhido)b.push(['sub',cm.escolhido]);L('O seu deveria',cm.frase);L('De quem é essa voz',cm.origem);L('O que restou',cm.pedido);}
+  L('Por que isso é importante pra você',cm.importa);
+  (d.gravetos||[]).forEach(g=>{if(!g.duvida&&!g.alivio)return;b.push(['sub','Uma dúvida']);L('O que a voz disse',g.duvida);L('Quem já vive isso',g.quem);L('Sua frase de permissão',g.alivio);});
+  if(b.length<2)b.push(['p','Ainda não tem nada guardado da trilha para este desejo.']);
+  sessaoAbrir(svUtil('escrito','Desejo','O que eu escrevi',b,[{rot:'Voltar ao desejo',acao:()=>sessaoDesejoHub(d)}]),{});
+}
 function sessaoDesejoHub(d){
   if(!d)return;
   const abertas=(d.gravetos||[]).filter(g=>!g.solto);
@@ -699,6 +719,7 @@ function sessaoDesejoHub(d){
     {rot:'Permissão',sub:'Escutar a voz que duvida',acao:foco(sessaoPermissao)},
     ...abertas.map(g=>({rot:'Retomar dúvida',sub:esc(String(g.duvida).slice(0,90)),acao:()=>sessaoPermissaoNaFrase(d,g)})),
     {rot:'Menor passo',sub:d.menorPasso?esc(d.menorPasso.texto):'Algo de 5 a 15 minutos',acao:foco(sessaoMenorPasso)},
+    {rot:'O que eu escrevi',sub:'Seus incômodos e as respostas da trilha',acao:()=>sessaoDesejoEscrito(d)},
     {rot:'Editar o texto do desejo',acao:()=>sessaoEditarDesejo(d)},
     {rot:'Soltar este desejo',sub:'Arquivar e dizer o que ficou no lugar',acao:()=>sessaoSoltarDesejo(d)},
     {rot:'Apagar de vez',acao:()=>sessaoConfirmar('Apagar de vez?','Isso some pra sempre. Se só não faz mais sentido agora, use Soltar desejo: ele arquiva e pergunta o que ficou no lugar.','Apagar de vez',()=>{
