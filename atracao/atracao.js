@@ -66,7 +66,28 @@ function trEst(){
 /* desabafo que já virou desejo continua guardado (com as respostas do Olhar), só sai da fila */
 function contrastesPendentes(){return (S.leiAtracao.contrastes||[]).filter(c=>!c.desejoId);}
 const trDesejo=()=>{const id=trEst().foco.desejoId;return (id&&S.leiAtracao.desejos.find(x=>x.id===id&&!x.arquivado))||null;};
-const trContraste=()=>{const id=trEst().foco.contrasteId;return contrastesPendentes().find(x=>x.id===id)||contrastesPendentes().slice(-1)[0]||null;};
+/* o desabafo da vez: o do foco (mesmo que já tenha virado desejo, pra dar pra voltar ao Olhar),
+   senão o último pendente, senão o do desejo em foco, senão o último guardado */
+const trContraste=()=>{const todos=S.leiAtracao.contrastes||[],id=trEst().foco.contrasteId,d=trDesejo();
+  return (id&&todos.find(x=>x.id===id))||contrastesPendentes().slice(-1)[0]||(d&&d.contrasteId&&todos.find(x=>x.id===d.contrasteId))||todos.slice(-1)[0]||null;};
+/* uma vez só: desejos cujo desabafo foi apagado pela Clareza antiga ganham o desabafo de volta,
+   com o que tinha ficado guardado no desejo (a lista e as respostas do último incômodo olhado) */
+(function trRecuperarDesabafos(){try{
+  const L=S.leiAtracao;if(!L||L.desabafosRecuperados)return;if(!Array.isArray(L.contrastes))L.contrastes=[];
+  (L.desejos||[]).forEach(d=>{
+    if(!d.contrasteOrigem||(d.contrasteId&&L.contrastes.some(x=>x.id===d.contrasteId)))return;
+    const cm=d.camadas||{},c={id:'c'+Date.now().toString(36)+Math.random().toString(36).slice(2,6),naoQuero:d.contrasteOrigem,area:d.area,criadoEm:d.criadoEm||hoje(),desejoId:d.id,virouDesejoEm:d.criadoEm||hoje(),trabalhados:[]};
+    if(cm.escolhido||cm.frase||cm.pedido){
+      const fr=String(cm.frase||'').trim();
+      const m=fr.match(/^Eu deveria\s+([\s\S]+?)(?:,\s*sen[aã]o\s+|\.\s*\n\s*Sen[aã]o,\s*)([\s\S]+?)\.?$/i);
+      const dev=m?m[1]:fr.replace(/^Eu deveria\s+/i,'').replace(/\.$/,''),por=m?m[2]:'';
+      c.camadas={escolhido:cm.escolhido||'',frase:fr,origem:cm.origem||'',pedido:cm.pedido||''};
+      c.trabalhados.push({item:cm.escolhido||'',deveria:dev,porque:por,voz:cm.origem||'',excecao:'',quero:cm.pedido||'',em:d.criadoEm||hoje()});
+    }
+    L.contrastes.push(c);d.contrasteId=c.id;
+  });
+  L.desabafosRecuperados=true;salva();
+}catch(e){console.warn('recuperar desabafos',e);}})();
 const trGraveto=d=>{const id=trEst().foco.gravetoId;return (d&&id&&(d.gravetos||[]).find(g=>g.id===id))||null;};
 /* rascunhos de uma sessão pertencem a um item (desejo, desabafo...); se o item mudou, recomeçam do que está guardado nele */
 function trSinc(tag,id,chaves,inicial){
@@ -487,7 +508,7 @@ function sessaoClareza(opc){
   telas.push({reage:'brilho',b:[['sub','Em que parte da sua vida mora esse desejo?'],['html',areas,ligarAreas]],
     seguir:()=>{
       const cl=limparTextoDesejo(trSemQuero(R.desejo))||trSemQuero(R.desejo);
-      let d=R.desejoCriado&&S.leiAtracao.desejos.find(x=>x.id===R.desejoCriado);
+      let d=(R.desejoCriado&&S.leiAtracao.desejos.find(x=>x.id===R.desejoCriado))||(c&&c.desejoId&&S.leiAtracao.desejos.find(x=>x.id===c.desejoId));
       if(d){d.texto=cl;d.area=R.area;}
       else{
         d=novoDesejo(R.area||trAreaPadrao(),cl);d.nucleo='';
@@ -497,7 +518,7 @@ function sessaoClareza(opc){
       }
       /* o começo escolhido vira a primeira frase da Declaração (o desejo fica guardado sem ele, pra não sair dobrado) */
       if(modelo(R.comeco))d.corpo=[{k:R.comeco,texto:trBase(d)}];
-      const f=trEst().foco;f.desejoId=d.id;delete f.contrasteId;salva();
+      const f=trEst().foco;f.desejoId=d.id;if(c)f.contrasteId=c.id;salva();
     }});
   telas.push({b:[['p','Se quiser aprofundar um pouco mais:'],['campo',{key:'muda',rot:'Por que isso é importante para mim? O que muda na minha vida se eu me aproximar disso?',opcional:true}],['fecho','Você não precisa ter um plano inteiro agora. Basta reconhecer para onde quer caminhar.']],
     seguir:()=>{const d=S.leiAtracao.desejos.find(x=>x.id===R.desejoCriado),v=(R.muda||'').trim();if(d&&v){d.camadas=Object.assign({},d.camadas,{importa:v});salva();}}});
