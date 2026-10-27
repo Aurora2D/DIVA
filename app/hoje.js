@@ -518,25 +518,9 @@ function celebraTestar(){
   };
   linha.appendChild(bv);linha.appendChild(bf);b.appendChild(linha);
 }
+/* atualiza Configurações quando a comemoração muda (o card antigo do Celebrar saiu) */
 function renderCelebracaoCard(){
   try{if(!$('configModal').hidden)renderConfig();}catch(e){}
-  const box=$('celebracaoBox');if(!box)return;
-  const c=celebraAtual();
-  if(!c){
-    box.innerHTML=`<p class="mut" style="font-size:12.5px;line-height:1.55;margin:0 0 10px">Um gesto, um som ou uma frase rápida pra fazer logo depois de cumprir um hábito. Inventada por você.</p><button class="btn prim btn-full" id="btnCelebraCriar">🎉 Inventar a minha</button>`;
-  } else {
-    const data=new Date(c.criadaEm+'T12:00:00').toLocaleDateString('pt-BR',{day:'numeric',month:'long'});
-    const hist=(S.celebracao.historico||[]).slice().reverse();
-    box.innerHTML=`<div class="lp-item"><div class="lp-frase">${esc(c.texto)}</div><div class="lp-meta">${esc(CELEBRA_TIPOS[c.tipo]||'')} · criada por você em ${esc(data)}</div></div>
-      <button class="btn btn-full" id="btnCelebraCriar">✏️ Inventar outra</button>
-      ${hist.length?`<details class="generic" style="margin-top:10px"><summary style="font-size:12px">Comemorações anteriores (${hist.length})</summary><div class="conteudo">${hist.map(x=>`<div class="conq-item">${esc(x.texto)}<span class="quando">· ${esc(new Date(x.criadaEm+'T12:00:00').toLocaleDateString('pt-BR',{day:'numeric',month:'short'}))}</span></div>`).join('')}</div></details>`:''}`;
-  }
-  $('btnCelebraCriar').onclick=abrirCelebraConvite;
-}
-function celebraToastTexto(){
-  const c=celebraAtual();if(!c)return 'Marcado ✓';
-  S.celebracao.contador=(S.celebracao.contador||0)+1;salva();
-  return S.celebracao.contador%3===0?'Marcado ✓ · hora do seu '+c.texto+' 🎉':'Marcado ✓';
 }
 
 function desmarcarHabito(hb,h){delete hb.feitos[h];salva();renderHoje();renderHabitos();}

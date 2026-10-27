@@ -47,12 +47,6 @@ function abaTelaTrava(sec,t,trav){
   }
 }
 /* toque numa aba travada: balancinho no cadeado e a pista, sem trocar de tela */
-function abaTravadaToque(t){
-  const b=document.querySelector('.tabs-bar button[data-tab="'+t+'"]');
-  if(b){b.classList.remove('balanca');void b.offsetWidth;b.classList.add('balanca');setTimeout(()=>b.classList.remove('balanca'),500);}
-  if(navigator.vibrate)try{navigator.vibrate(15);}catch(e){}
-  mostrarToast('🔒 '+abaPista(t));
-}
 /* confere quem já merece abrir; mostrar=true também mostra a telinha de boas-vindas, se não houver outra coisa aberta */
 function abasAtualizar(mostrar){
   try{

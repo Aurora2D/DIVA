@@ -29,9 +29,6 @@ function novoIdDz(){return 'd'+Date.now().toString(36)+Math.random().toString(36
 function desejosAtivos(){
   return (S.leiAtracao.desejos||[]).filter(d=>!d.arquivado);
 }
-function desejosArquivados(){
-  return (S.leiAtracao.desejos||[]).filter(d=>!!d.arquivado);
-}
 
 function novoDesejo(area,texto){
   return{

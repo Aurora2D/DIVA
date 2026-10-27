@@ -48,7 +48,6 @@ const CATALOGO_PREMIOS=[
   ['Cortar ou arrumar o cabelo','toque','G',60,'pequeno',['livre']],
   ['Uma massagem','toque','G',60,'pequeno',['livre']]
 ].map(([nome,estilo,tamanho,dur,custo,cabe])=>({nome,estilo,tamanho,dur,custo,cabe,gratis:custo==='gratis'}));
-const CATALOGO_QUANDO_DER=['Uma viagem curta','Um show ou uma peça de teatro','Um passeio de dia inteiro','Um dia de spa','Um jantar especial fora'];
 function estadoInicial(){
   return{
     versao:25,
@@ -272,16 +271,6 @@ function confete(emojis){const arr=emojis&&emojis.length?emojis:['✨','🌸','�
 function horasDormidas(dormiu,acordou){const[dh,dm]=dormiu.split(':').map(Number);const[ah,am]=acordou.split(':').map(Number);let min=(ah*60+am)-(dh*60+dm);if(min<0)min+=24*60;return Math.floor(min/60)+'h'+pad2(min%60);}
 
 /* ============ ESPELHO ============ */
-const ESPELHO_TRIGGERS=['eu já','eu ja','eu consegui','eu mudei','eu fiz','eu falei','eu resolvi','eu comecei','eu parei','eu saí','eu sai','eu voltei','eu terminei','eu escrevi','eu liguei','eu conversei','eu disse','eu decidi','mesmo com medo','mesmo assim','apesar de','consegui ','arrumei','resolvi ','comecei ','falei ','liguei ','voltei ','terminei','decidi '];
-function frasesJaFeitas(texto){
-  const frases=String(texto||'').split(/(?<=[.!?])\s+|\n+/).map(s=>s.trim()).filter(s=>s.length>=8);
-  const out=[];
-  frases.forEach(f=>{
-    const lf=' '+f.toLowerCase()+' ';
-    if(ESPELHO_TRIGGERS.some(t=>lf.includes(t)))out.push(f);
-  });
-  return out;
-}
 /* ============ ONBOARDING ============ */
 function iniciarOnboarding(){
   $('onbOverlay').hidden=false;

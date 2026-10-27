@@ -6,223 +6,10 @@ function contarDias7(d){
   return n;
 }
 /* ============ PASSO 1 · CLAREZA ============ */
-function renderClarezaLista(){
-  const box=$('clarezaLista');if(!box)return;
-  const la=S.leiAtracao;
-  const todos=desejosAtivos();
-  if(!todos.length){
-    box.innerHTML='<div class="card mut" style="font-size:12.5px;line-height:1.55;text-align:center">Nada ainda. Toque em <b>+ Contraste</b> e comece pelo que te incomoda.</div>';
-    return;
-  }
-  let html='';
-  la.areas.forEach(area=>{
-    const ds=todos.filter(d=>d.area===area.id);
-    if(!ds.length)return;
-    html+=`<details class="grupo-card" style="margin-bottom:8px"><summary><span class="grupo-nome">${esc(area.nome)}</span><span class="grupo-badge">${ds.length}</span></summary><div class="grupo-conteudo">`;
-    ds.forEach(d=>{
-      const contraste=(d.contrasteOrigem||'').trim();
-      const pendente=!d.corpo||!d.corpo.length;
-      html+=`<div class="clareza-par ${pendente?'pendente':''}" data-clareza-id="${esc(d.id)}">`;
-      if(contraste)html+=`<div class="ce">${esc(contraste)}</div>`;
-      html+=`<div class="cd">${esc(limparTextoDesejo(d.texto)||d.texto)}</div>`;
-      html+=`<div class="dz-status">`;
-      if(d.corpo&&d.corpo.length)html+=`<span class="dz-pill ok">2 ✓</span>`;else html+=`<span class="dz-pill pend">2 pendente</span>`;
-      const abertos=(d.gravetos||[]).filter(g=>!g.solto).length;
-      if(abertos)html+=`<span class="dz-pill pend">${abertos} ${abertos===1?'dúvida':'dúvidas'}</span>`;
-      else if(d.gravetos&&d.gravetos.length)html+=`<span class="dz-pill ok">3 ✓</span>`;
-      html+=`</div></div>`;
-    });
-    html+=`</div></details>`;
-  });
-  // vontades / sem área
-  const idsArea=new Set(la.areas.map(a=>a.id));
-  const outros=todos.filter(d=>!idsArea.has(d.area));
-  if(outros.length){
-    html+=`<details class="grupo-card" style="margin-bottom:8px"><summary><span class="grupo-nome">Outros</span><span class="grupo-badge">${outros.length}</span></summary><div class="grupo-conteudo">`;
-    outros.forEach(d=>{
-      html+=`<div class="clareza-par" data-clareza-id="${esc(d.id)}"><div class="cd">${esc(limparTextoDesejo(d.texto)||d.texto)}</div></div>`;
-    });
-    html+=`</div></details>`;
-  }
-  const arq=desejosArquivados();
-  if(arq.length){
-    html+=`<details class="grupo-card" style="margin-top:12px;opacity:.85"><summary><span class="grupo-nome">🍃 Soltos / arquivados</span><span class="grupo-badge">${arq.length}</span></summary><div class="grupo-conteudo">`;
-    arq.forEach(d=>{
-      html+=`<div class="clareza-par" style="opacity:.9" data-clareza-arq="${esc(d.id)}">`;
-      html+=`<div class="cd">${esc(limparTextoDesejo(d.texto)||d.texto)}</div>`;
-      if(d.soltoNoLugar)html+=`<div class="mut" style="font-size:11.5px;margin-top:4px">No lugar: ${esc(d.soltoNoLugar)}</div>`;
-      html+=`<button class="btn" style="margin-top:6px;font-size:12px;padding:6px 10px" data-restaurar="${esc(d.id)}">Restaurar</button>`;
-      html+=`</div>`;
-    });
-    html+=`</div></details>`;
-  }
-  box.innerHTML=html;
-  box.querySelectorAll('[data-clareza-id]').forEach(el=>{
-    const id=el.dataset.clarezaId;
-    const abrir=()=>abrirDesejo(id);
-    const menu=()=>{
-      const d=(S.leiAtracao.desejos||[]).find(x=>x.id===id);if(!d)return;
-      abrirClarezaMenu(d);
-    };
-    el.onclick=null;
-    bindLongPress(el, menu, abrir, 550);
-  });
-  box.querySelectorAll('[data-restaurar]').forEach(b=>{
-    b.onclick=e=>{
-      e.stopPropagation();
-      const d=(S.leiAtracao.desejos||[]).find(x=>x.id===b.dataset.restaurar);
-      if(!d)return;
-      d.arquivado=false;delete d.arquivadoEm;salva();renderAtracaoTudo();mostrarToast('Desejo de volta à lista');
-    };
-  });
-}
-function abrirClarezaMenu(d){
-  $('cmNome').textContent=limparTextoDesejo(d.texto)||d.texto||'Desejo';
-  const area=(S.leiAtracao.areas.find(a=>a.id===d.area)||{}).nome||'';
-  $('cmInfo').textContent=area+(d.contrasteOrigem?(' · do contraste'):'');
-  const c=$('cmBotoes');c.innerHTML='';
-  const add=(rot,cls,fn)=>{const b=document.createElement('button');b.className='modal-btn '+cls;b.textContent=rot;b.onclick=()=>fecharOverlay($('clarezaMenuModal'),fn);c.appendChild(b);};
-  add('✏️ Abrir / editar','prim',()=>abrirDesejo(d.id));
-  add('📝 Renomear','sec',()=>{
-    const v=prompt('O que eu quero', limparTextoDesejo(d.texto)||d.texto||'');
-    if(v===null)return;
-    const t=v.trim();if(!t)return;
-    d.texto=t;salva();renderAtracaoTudo();mostrarToast('Atualizado ✓');
-  });
-  add('🗑️ Apagar','sec',()=>{
-    confirmar('Apagar este desejo de vez?',()=>{
-      S.leiAtracao.desejos=(S.leiAtracao.desejos||[]).filter(x=>x.id!==d.id);
-      salva();renderAtracaoTudo();mostrarToast('Desejo apagado');
-    },'Apagar');
-  });
-  add('Fechar','sec',()=>{});
-  abrirOverlayTopo($('clarezaMenuModal'));
-}
-function renderContrastesEsperando(){
-  const el=$('contrastesEsperando');if(!el)return;
-  const cs=S.leiAtracao.contrastes||[];
-  let html='<div class="ct-lista-card" id="listaContrastesCard">';
-  html+='<div style="display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:8px">';
-  html+='<div style="font-size:11px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;color:var(--b)">🪺 Contrastes</div>';
-  html+=`<span class="mut" style="font-size:11px">${cs.length?cs.length+' aguardando':'lista vazia'}</span>`;
-  html+='</div>';
-  if(!cs.length){
-    html+='<p class="mut" style="font-size:12.5px;line-height:1.55;margin:0">Nada aqui ainda. Toque em <b>＋ Contraste</b> quando algo te incomodar. Depois, do lado de cada um, você escreve o que quer.</p>';
-  } else {
-    html+='<p class="mut" style="font-size:12.5px;line-height:1.55;margin-bottom:10px">Ainda não virou "o que eu quero". Toque em <b>O que eu quero</b> ao lado de cada um.</p>';
-    cs.forEach(c=>{
-      const areaNome=(S.leiAtracao.areas.find(a=>a.id===c.area)||{}).nome||'';
-      html+=`<div style="background:var(--surf-mid);border:1px solid var(--borda);border-radius:12px;padding:10px 12px;margin-bottom:8px">`;
-      if(areaNome)html+=`<div style="font-size:10px;font-weight:800;letter-spacing:1.2px;text-transform:uppercase;color:var(--mut2);margin-bottom:4px">${esc(areaNome)}</div>`;
-      html+=`<div style="font-size:13.5px;color:var(--txt);line-height:1.45;margin-bottom:8px"><span style="color:var(--mut2);font-size:11px;font-weight:700">Não quero:</span> ${esc(c.naoQuero)}</div>`;
-      html+=`<div style="display:flex;gap:6px;flex-wrap:wrap">`;
-      html+=`<button class="btn prim" data-ct-processar="${esc(c.id)}" style="flex:1;min-width:140px;font-size:12.5px;padding:8px 12px">✨ O que eu quero</button>`;
-      html+=`<button class="btn fant" data-ct-apagar="${esc(c.id)}" style="font-size:12px">apagar</button>`;
-      html+=`</div></div>`;
-    });
-  }
-  html+='</div>';
-  el.innerHTML=html;
-  el.querySelectorAll('[data-ct-processar]').forEach(btn=>{
-    btn.onclick=()=>abrirProcessarContraste(btn.dataset.ctProcessar);
-  });
-  el.querySelectorAll('[data-ct-apagar]').forEach(btn=>{
-    btn.onclick=(e)=>{
-      e.stopPropagation();
-      const id=btn.dataset.ctApagar;
-      S.leiAtracao.contrastes=(S.leiAtracao.contrastes||[]).filter(x=>x.id!==id);
-      salva();renderAtracaoTudo();mostrarToast('Contraste removido');
-    };
-  });
-}
-let ctProcessando=null;
-function abrirProcessarContraste(id){
-  const c=(S.leiAtracao.contrastes||[]).find(x=>x.id===id);
-  if(!c){avisar('Esse contraste já foi trabalhado.');return;}
-  ctProcessando=id;
-  const o=$('processarModal');
-  $('prContrasteTxt').textContent=c.naoQuero;
-  $('prClareza').value='';
-  $('prArea').innerHTML=S.leiAtracao.areas.map(a=>`<option value="${esc(a.id)}">${esc(a.nome)}</option>`).join('');
-  $('prArea').value=c.area||(S.leiAtracao.areas[0]&&S.leiAtracao.areas[0].id);
-  abrirOverlay(o);
-  setTimeout(()=>{const inp=$('prClareza');if(inp)inp.focus();},300);
-}
-function fecharProcessarContraste(){
-  fecharOverlay($('processarModal'),()=>{ctProcessando=null;});
-}
 
 /* ============ PASSO 2 · DECLARAÇÕES ============ */
-function renderDeclaracoesLista(){
-  const box=$('declaracoesLista');if(!box)return;
-  const todos=desejosAtivos();
-  const ds=todos.filter(d=>d.corpo&&d.corpo.some(c=>(c.texto||'').trim()));
-  const semCorpo=todos.filter(d=>!d.corpo||!d.corpo.some(c=>(c.texto||'').trim()));
-  if(!todos.length){
-    box.innerHTML='<div class="card mut" style="font-size:12.5px;line-height:1.55;text-align:center">Sem clareza ainda. Comece pelo Passo 1.</div>';
-    return;
-  }
-  let html='';
-  if(ds.length){
-    html+=renderDeclaracaoTodosBloco();
-  }
-  if(semCorpo.length){
-    html+=`<div class="mut" style="font-size:11px;letter-spacing:1.2px;text-transform:uppercase;font-weight:800;color:var(--aviso);margin-bottom:6px">Falta montar · ${semCorpo.length}</div>`;
-    semCorpo.forEach(d=>{
-      html+=`<div class="dz-card" data-decl-id="${esc(d.id)}"><div class="dz-txt">${esc(limparTextoDesejo(d.texto)||d.texto)}</div><span class="dz-badge-status pend">+ Montar declaração</span></div>`;
-    });
-  }
-  if(ds.length){
-    html+=`<div class="mut" style="font-size:11px;letter-spacing:1.2px;text-transform:uppercase;font-weight:800;color:var(--ok);margin:12px 0 6px">Com declaração · ${ds.length}</div>`;
-    ds.forEach(d=>{
-      const n=(d.corpo||[]).filter(c=>(c.texto||'').trim()).length;
-      const s=d.sensacao==='boa'?'✓ fez bem':d.sensacao==='duvida'?'dúvida — reformular':'sentir de novo';
-      const cls=d.sensacao==='boa'?'ok':d.sensacao==='duvida'?'pend':'';
-      html+=`<div class="dz-card" data-decl-id="${esc(d.id)}"><div class="dz-txt">${esc(limparTextoDesejo(d.texto)||d.texto)}</div><span class="dz-badge-status ${cls}">${n} ${n===1?'frase':'frases'} · ${s}</span></div>`;
-    });
-  }
-  box.innerHTML=html;
-  box.querySelectorAll('[data-decl-id]').forEach(el=>{
-    el.onclick=()=>abrirDesejo(el.dataset.declId,2);
-  });
-}
 
 /* ============ PASSO 3 · PERMITIR ============ */
-function renderPermitirLista(){
-  const box=$('permitirLista');if(!box)return;
-  const ds=desejosAtivos();
-  const comDuvidas=ds.filter(d=>(d.gravetos||[]).some(g=>!g.solto));
-  const livres=ds.filter(d=>(d.gravetos||[]).length&&!(d.gravetos||[]).some(g=>!g.solto));
-  const semDuvidas=ds.filter(d=>!(d.gravetos||[]).length);
-  if(!ds.length){
-    box.innerHTML='<div class="card mut" style="font-size:12.5px;line-height:1.55;text-align:center">Nenhum desejo ainda — use a <b>dúvida rápida</b> acima, ou comece pela Clareza. A dúvida não precisa esperar declaração.</div>';
-    return;
-  }
-  let html='';
-  if(comDuvidas.length){
-    html+=`<div class="mut" style="font-size:11px;letter-spacing:1.2px;text-transform:uppercase;font-weight:800;color:var(--aviso);margin-bottom:6px">Com dúvida aberta</div>`;
-    comDuvidas.forEach(d=>{
-      const n=d.gravetos.filter(g=>!g.solto).length;
-      html+=`<div class="dz-card" data-perm-id="${esc(d.id)}"><div class="dz-txt">${esc(limparTextoDesejo(d.texto)||d.texto)}</div><span class="dz-badge-status pend">${n} ${n===1?'graveto':'gravetos'}</span></div>`;
-    });
-  }
-  if(semDuvidas.length){
-    html+=`<div class="mut" style="font-size:11px;letter-spacing:1.2px;text-transform:uppercase;font-weight:800;color:var(--mut2);margin:12px 0 6px">Sem dúvidas registradas</div>`;
-    semDuvidas.forEach(d=>{
-      html+=`<div class="dz-card" data-perm-id="${esc(d.id)}"><div class="dz-txt">${esc(limparTextoDesejo(d.texto)||d.texto)}</div><span class="dz-badge-status">+ anotar dúvida</span></div>`;
-    });
-  }
-  if(livres.length){
-    html+=`<div class="mut" style="font-size:11px;letter-spacing:1.2px;text-transform:uppercase;font-weight:800;color:var(--ok);margin:12px 0 6px">Sem dúvidas abertas ✓</div>`;
-    livres.forEach(d=>{
-      html+=`<div class="dz-card" data-perm-id="${esc(d.id)}"><div class="dz-txt">${esc(limparTextoDesejo(d.texto)||d.texto)}</div><span class="dz-badge-status ok">permitindo</span></div>`;
-    });
-  }
-  box.innerHTML=html;
-  box.querySelectorAll('[data-perm-id]').forEach(el=>{
-    el.onclick=()=>abrirDesejo(el.dataset.permId,3);
-  });
-}
 
 
 /* ============ Atração: menu em botões + hábito infinitivo ============ */
@@ -447,92 +234,6 @@ $('habSugConfirmar')&&($('habSugConfirmar').onclick=()=>{
   criarHabitoDeDesejo(d,nome,grupo);fecharHabitoSugestao();
 });
 
-function atualizarMetasAtracao(){
-  const todos=desejosAtivos();
-  const cs=S.leiAtracao.contrastes||[];
-  const comCorpo=todos.filter(d=>d.corpo&&d.corpo.some(c=>(c.texto||'').trim()));
-  const duvidas=todos.reduce((n,d)=>n+(d.gravetos||[]).filter(g=>!g.solto).length,0);
-  const elC=$('metaClareza');if(elC) elC.textContent=cs.length? (cs.length+' contraste(s) aguardando') : (todos.length? todos.length+' desejo(s)' : 'Comece por aqui');
-  const elD=$('metaDeclaracao');if(elD) elD.textContent=comCorpo.length? (comCorpo.length+' com declaração') : (todos.length? 'Falta montar' : 'Depois da clareza');
-  const elP=$('metaPermitir');if(elP) elP.textContent=duvidas? (duvidas+' dúvida(s) aberta(s)') : 'Pode anotar a qualquer momento';
-}
-function abrirSecaoAtracao(sec){
-  const map={clareza:'secClarezaContent',declaracao:'secDeclaracaoContent',permitir:'secPermitirContent'};
-  const tit={clareza:'Clareza',declaracao:'Declaração de desejo',permitir:'Permissão'};
-  const src=$(map[sec]);if(!src)return;
-  renderAtracaoTudo();
-  if(sec==='permitir') preencherSelectPermDuvida();
-  const body=$('atracaoSecaoBody');
-  body.innerHTML='<div class="rel-titulo" style="margin-bottom:8px">'+tit[sec]+'</div>';
-  // move nodes: clone content by innerHTML to keep ids working — re-bind after
-  body.innerHTML+='<div id="atracaoSecaoInner">'+src.innerHTML+'</div>';
-  // hide originals' interactive duplicates by emptying? Better: keep originals hidden and sync back on close
-  // Actually use the real nodes: appendChild moves them
-  body.innerHTML='<div class="rel-titulo" style="margin-bottom:8px">'+tit[sec]+'</div>';
-  const wrap=document.createElement('div');wrap.id='atracaoSecaoInner';
-  body.appendChild(wrap);
-  while(src.firstChild) wrap.appendChild(src.firstChild);
-  const o=$('atracaoSecaoModal');
-  abrirOverlay(o);
-  o.dataset.sec=sec;
-  // rebind section-specific
-  if(sec==='clareza'){
-    const b1=$('btnNovoContraste');
-    if(b1)b1.onclick=()=>{
-      const o=$('contrasteModal');$('ctNaoQuero').value='';
-      $('ctArea').innerHTML=S.leiAtracao.areas.map(a=>`<option value="${esc(a.id)}">${esc(a.nome)}</option>`).join('');
-      const bem=S.leiAtracao.areas.find(a=>a.id==='bemestar');$('ctArea').value=bem?bem.id:S.leiAtracao.areas[0].id;
-      abrirOverlay(o);
-    };
-    const b2=$('btnVerContrastes');
-    if(b2)b2.onclick=()=>abrirListaContrastesPopup();
-    const b3=$('btnNovoDesejoDireto');
-    if(b3)b3.onclick=abrirDesejoDireto;
-  }
-  if(sec==='permitir'){
-    preencherSelectPermDuvida();
-    const btn=$('btnPermDuvidaRapida');
-    if(btn)btn.onclick=salvarDuvidaRapida;
-  }
-  // re-render lists into moved containers
-  renderAtracaoTudo();
-  if(sec==='permitir') preencherSelectPermDuvida();
-}
-function fecharSecaoAtracao(){
-  const o=$('atracaoSecaoModal');
-  const sec=o.dataset.sec;
-  const map={clareza:'secClarezaContent',declaracao:'secDeclaracaoContent',permitir:'secPermitirContent'};
-  const src=$(map[sec]);
-  const wrap=$('atracaoSecaoInner');
-  if(src&&wrap){while(wrap.firstChild) src.appendChild(wrap.firstChild);}
-  fecharOverlay(o,()=>{renderAtracaoTudo();atualizarMetasAtracao();});
-}
-function preencherSelectPermDuvida(){
-  const sel=$('permDuvidaDesejo');if(!sel)return;
-  const todos=desejosAtivos();
-  let html='<option value="">Dúvida solta (sem desejo)</option>';
-  todos.forEach(d=>{html+=`<option value="${esc(d.id)}">${esc(limparTextoDesejo(d.texto)||d.texto||'desejo')}</option>`;});
-  sel.innerHTML=html;
-}
-function salvarDuvidaRapida(){
-  const txt=($('permDuvidaRapida')||{}).value;if(!txt||!txt.trim()){avisar('Escreva a dúvida.');return;}
-  const idDes=($('permDuvidaDesejo')||{}).value;
-  let d;
-  if(idDes){d=(S.leiAtracao.desejos||[]).find(x=>x.id===idDes);}
-  if(!d){
-    // criar desejo-placeholder solto em vontades
-    d=novoDesejo('vontades','Dúvida solta');
-    d.texto='Dúvida solta';
-    S.leiAtracao.desejos.push(d);
-  }
-  if(!Array.isArray(d.gravetos))d.gravetos=[];
-  d.gravetos.push({id:'g'+Date.now().toString(36),duvida:txt.trim(),alivio:'',solto:false,criadoEm:hoje()});
-  salva();
-  if($('permDuvidaRapida'))$('permDuvidaRapida').value='';
-  mostrarToast('Dúvida anotada ✓');
-  renderPermitirLista();
-  atualizarMetasAtracao();
-}
 
 function coletarPermissoesLivro(){
   const out=[];
@@ -587,38 +288,7 @@ function renderLivroPermissoes(){
 }
 function renderAtracaoTudo(){
   try{renderSessoesAtracao();}catch(e){console.warn('sessoes',e);}
-  renderContrastesEsperando();
-  renderClarezaLista();
-  renderDeclaracoesLista();
-  renderPermitirLista();
   renderLivroPermissoes();
-  atualizarMetasAtracao();
-}
-
-/* ============ ACONTECENDO + ESPELHO ============ */
-function renderAcontecendo(){
-  const box=$('acontecendoBox');if(!box)return;
-  const list=(S.acontecendo||[]).slice().sort((a,b)=>(b.data||'').localeCompare(a.data||''));
-  if(!list.length){
-    box.innerHTML='<div class="card mut" style="font-size:12.5px;line-height:1.5;text-align:center">Um lugar pra escrever sem revisar. Só seu.</div>';
-    return;
-  }
-  box.innerHTML=list.map(a=>{
-    const d=new Date(a.data+'T12:00:00').toLocaleDateString('pt-BR',{day:'numeric',month:'long',year:'numeric'});
-    const fez=frasesJaFeitas(a.texto);
-    const espelhoHTML=fez.length?`<div class="espelho-bloco"><div class="espelho-tit">✨ O que você já fez</div>${fez.map(f=>`<div class="espelho-frase">${esc(f)}</div>`).join('')}</div>`:'';
-    return`<div class="acontecendo-item">
-      <div class="data-linha">${esc(d)}</div>
-      <div class="corpo">${esc(a.texto)}</div>
-      ${espelhoHTML}
-      <button class="btn fant" data-ac-rm="${esc(a.id)}" style="font-size:11px;padding:2px 6px;margin-top:8px">apagar</button>
-    </div>`;
-  }).join('');
-  box.querySelectorAll('[data-ac-rm]').forEach(b=>{
-    b.onclick=()=>{const id=b.dataset.acRm;
-      confirmar('Apagar essa anotação?',()=>{S.acontecendo=S.acontecendo.filter(x=>x.id!==id);salva();renderAcontecendo();},'Apagar');
-    };
-  });
 }
 
 /* ============ TEMAS RECORRENTES ============ */
@@ -719,11 +389,6 @@ function montarDeclaracaoTodos(){
   });
   partes.push(FECHAMENTO_FIXO);
   return partes;
-}
-function renderDeclaracaoTodosBloco(){
-  const partes=montarDeclaracaoTodos();
-  if(!partes)return '';
-  return`<div class="declaracao-montada" style="margin-bottom:14px"><span class="dm-lb">Declaração completa · todos os desejos</span>${partes.map(p=>`<div style="margin-bottom:8px">${p}</div>`).join('')}</div>`;
 }
 function renderImpedimento(g){
   const temPorque=/porque/i.test(g.duvida);
@@ -1048,13 +713,11 @@ function dzSensacao(v){
   if(v==='boa'){
     confete(['✨','💫','🌟']);
     dzRender();
-    renderDeclaracoesLista();
     return;
   }
   // não me faz bem → vai direto pra Permissão
   dzPassoInicial=3;
   dzRender();
-  renderDeclaracoesLista();
   setTimeout(()=>dzAbrirPasso(3),60);
   mostrarToast('Vamos olhar a dúvida · Permissão');
 }
@@ -1075,7 +738,6 @@ function dzSoltar(id){
   if(!v){avisar('Escreva o que você se permite acreditar, ou toque numa sugestão.');return;}
   g.alivio=v;g.solto=true;g.soltoEm=hoje();
   salva();dzRender();
-  renderPermitirLista();
   try{renderLivroPermissoes();}catch(e){}
   mostrarToast('Frase guardada no livro ✓');
 }

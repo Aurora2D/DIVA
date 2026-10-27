@@ -1,7 +1,5 @@
 /* ============ CELEBRAR / LIVRO DE PROVAS ============ */
 function renderCelebrar(){
-  renderPremios();
-  renderQuandoDer();renderFormNovoPremio();
   renderPremiosGuardados();
   renderCelebracaoCard();
   atualizarBotaoConquistas();
@@ -63,12 +61,6 @@ $('btnAddCq').onclick=()=>{
   salva();renderCelebrar();som('guardado');mostrarToast('Anotado no Livro de Conquistas ✓');
 };
 $('cqInput').onkeydown=e=>{if(e.key==='Enter')$('btnAddCq').click();};
-$('btnAddPremio').onclick=()=>{const nome=$('pNome').value.trim();if(!nome){mostrarToast('Escreva o nome do prêmio');return;}const f=lerCamposPremio($('pCampos'));
-  if(f.custo==='planejar'){S.quandoDer.push({id:'q'+Date.now().toString(36),nome,criadoEm:hoje(),feitoEm:null});mostrarToast('Guardado em Quando der ✓');}
-  else{S.premios.push(premioNovo({nome,...f,estilo:estiloDoPremio(nome)}));mostrarToast('Prêmio adicionado ✓');}
-  $('pNome').value='';salva();renderPremios();renderQuandoDer();renderFormNovoPremio();};
-$('btnCardapio').onclick=()=>{if(S.estiloAutocuidado&&S.estiloAutocuidado.feito)abrirCardapio();else dialogo({titulo:'Antes, o seu estilo',texto:'O cardápio é montado a partir do seu estilo de autocuidado. São uns 5 minutos de teste, uma vez só.',botoes:[{rotulo:'Montar sem o teste',fn:abrirCardapio},{rotulo:'Fazer o teste',prim:true,fn:()=>estiloIniciar()}]});};
-$('btnVerPremios').onclick=()=>{const l=$('listaPremios');const a=!l.hidden;l.hidden=a;$('btnVerPremios').textContent=a?'📋 Ver meus prêmios disponíveis':'🙈 Esconder meus prêmios';};
 
 function cfgDataBr(d){return d?new Date(d+'T12:00:00').toLocaleDateString('pt-BR',{day:'numeric',month:'short'}):'';}
 function cfgTemNotas(){return (S.leiAtracao.desejos||[]).some(d=>(d.notas||[]).length);}
@@ -123,6 +115,7 @@ function renderConfig(){
   $('cfgRowSons').onclick=()=>$('cfgSons').click();
   $('cfgSons').onchange=()=>{S.sons={ligado:$('cfgSons').checked};salva();if(S.sons.ligado)som('plim');};
   $('btnOuvirSons').onclick=ev=>{ev.stopPropagation();const era=somLigado();if(!era)S.sons={ligado:true};som('plim');setTimeout(()=>som('guardado'),900);setTimeout(()=>som('caixinha'),1700);setTimeout(()=>{som('brilho');if(!era)S.sons={ligado:false};},2900);};
+  $('cfgRowConhecer').onclick=()=>fecharOverlay($('configModal'),()=>boasVindasDiva());
   $('cfgRowResumos').onclick=()=>fecharOverlay($('configModal'),abrirHistoricoResumos);
   $('cfgRowNuvem').onclick=()=>{if(window.DIVAnuvem)window.DIVAnuvem.abrir();else mostrarToast('Ainda carregando, tente em instantes');};
   $('btnExportar').onclick=()=>exportarBackup();
@@ -183,13 +176,7 @@ $('fileBackup').onchange=e=>{const file=e.target.files[0];if(!file)return;e.targ
   confirmar('Substituir seus dados atuais pelo backup?',()=>{S=garanteNovosCampos(d);salva();avisar('Backup restaurado 💛',()=>location.reload());},'Substituir');}catch(err){avisar('Arquivo inválido.');}};r.readAsText(file);};
 function trocaAba(t){
   document.querySelectorAll('section[id^="tab-"]').forEach(s=>s.hidden=(s.id!=='tab-'+t));
-  
-document.querySelectorAll('[data-atr-sec]').forEach(b=>{
-  b.onclick=()=>abrirSecaoAtracao(b.dataset.atrSec);
-});
-$('atracaoSecaoFechar')&&($('atracaoSecaoFechar').onclick=fecharSecaoAtracao);
-
-document.querySelectorAll('.tabs-bar button').forEach(b=>b.classList.toggle('on',b.dataset.tab===t));
+  document.querySelectorAll('.tabs-bar button').forEach(b=>b.classList.toggle('on',b.dataset.tab===t));
   if(t==='hoje')renderHoje();
   if(t==='diario'){atualizaStatusCheckin();renderCheckinResumos();atualizaRelatorio();renderDiario();}
   if(t==='mapa')renderCiclo();

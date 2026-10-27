@@ -1505,31 +1505,6 @@ addEventListener('pointerdown',avisa);addEventListener('keydown',avisa);
       <div class="grupo-conteudo"><div id="premiosGuardadosBox"></div></div>
     </details>
 
-    <!-- antigo: comemoração (agora em Configurações), cardápio de prêmios e "quando der" (o prêmio virou prática). Fica escondido para o código antigo continuar funcionando. -->
-    <div id="celebrarAntigo" hidden>
-    <details class="grupo-card">
-      <summary><span class="grupo-nome">Minha comemoração</span></summary>
-      <div class="grupo-conteudo"><div id="celebracaoBox"></div></div>
-    </details>
-
-    <details class="grupo-card">
-      <summary><span class="grupo-emoji"><svg class="ic"><use href="#i-lista"/></svg></span><span class="grupo-nome">Meus prêmios</span></summary>
-      <div class="grupo-conteudo">
-        <button class="btn prim btn-full" id="btnCardapio" style="margin-bottom:8px">🎁 Montar cardápio pelo meu estilo</button>
-        <button class="btn btn-full" id="btnVerPremios" style="margin-bottom:10px">📋 Ver lista</button>
-        <div id="listaPremios" hidden></div>
-        <div class="mut" style="font-size:11px;font-weight:800;letter-spacing:1px;text-transform:uppercase;margin:4px 0 8px">Adicionar prêmio</div>
-        <input id="pNome" placeholder="Nome do prêmio" style="margin-bottom:8px;width:100%">
-        <div id="pCampos"></div>
-        <button class="btn prim btn-full" id="btnAddPremio" style="margin-top:10px">Adicionar</button>
-      </div>
-    </details>
-
-    <details class="grupo-card">
-      <summary><span class="grupo-emoji"><svg class="ic"><use href="#i-calendario"/></svg></span><span class="grupo-nome">Quando der</span></summary>
-      <div class="grupo-conteudo"><div id="quandoDerBox"></div></div>
-    </details>
-    </div>
 
     <details class="grupo-card" open>
       <summary><span class="grupo-emoji"><svg class="ic"><use href="#i-livro"/></svg></span><span class="grupo-nome">Livro de Conquistas</span></summary>
@@ -1567,32 +1542,6 @@ addEventListener('pointerdown',avisa);addEventListener('keydown',avisa);
       <div id="livroPermissoesLista"></div>
     </div>
 
-    <!-- conteúdos das seções (abertos em popup) -->
-    <div id="secClarezaContent" hidden>
-      <p class="pt-instr">Quando algo te incomodar, anote em poucas palavras e pergunte: <b>"Então, o que eu quero?"</b>. Se já souber o que quer, pode escrever direto.</p>
-      <div class="col2" style="gap:8px;margin-bottom:4px">
-        <button class="btn prim" id="btnNovoContraste" style="width:100%">＋ Contraste</button>
-        <button class="btn" id="btnVerContrastes" style="width:100%">📋 Ver lista</button>
-      </div>
-      <button class="btn btn-full" id="btnNovoDesejoDireto" style="margin-bottom:8px">＋ Desejo (sem contraste)</button>
-      <div id="contrastesEsperando" hidden></div>
-      <p class="mut" style="font-size:11.5px;margin:8px 0 4px;line-height:1.45">Toque num desejo para abrir · segure para editar ou apagar.</p>
-      <div id="clarezaLista" style="margin-top:4px"></div>
-    </div>
-    <div id="secDeclaracaoContent" hidden>
-      <p class="pt-instr">O app monta o começo e o fim da frase. No meio, você completa com <b>verbos no infinitivo</b> (cuidar, criar, escolher…). Leia em voz alta: se não soar verdadeiro, ajuste até soar.</p>
-      <div id="declaracoesLista"></div>
-    </div>
-    <div id="secPermitirContent" hidden>
-      <p class="pt-instr">Anote o que te trava. Quando aparecer um <b>"porque"</b>, ali mora uma crença que limita. Não precisa resolver agora: só de anotar, ela perde força.</p>
-      <div class="card" style="margin-bottom:12px">
-        <div class="mut" style="font-size:11px;font-weight:800;letter-spacing:1px;text-transform:uppercase;margin-bottom:8px">Dúvida rápida</div>
-        <input id="permDuvidaRapida" placeholder="Eu não posso porque..." style="margin-bottom:8px">
-        <select id="permDuvidaDesejo" style="margin-bottom:8px"></select>
-        <button class="btn prim btn-full" id="btnPermDuvidaRapida">Anotar dúvida</button>
-      </div>
-      <div id="permitirLista"></div>
-    </div>
 
   </section>
 </div>
@@ -1699,12 +1648,6 @@ addEventListener('pointerdown',avisa);addEventListener('keydown',avisa);
   </div>
 </div>
 
-<div class="modal-overlay" id="cardapioModal" hidden>
-  <div class="modal-caixa alta" style="text-align:left;max-width:460px">
-    <div id="cardapioCorpo"></div>
-    <div class="modal-botoes" style="margin-top:14px"><button class="modal-btn sec" id="cardapioFechar">Agora não</button><button class="modal-btn prim" id="cardapioSalvar">Guardar no cardápio</button></div>
-  </div>
-</div>
 
 <div class="modal-overlay" id="quemCuidaModal" hidden>
   <div class="modal-caixa alta" style="text-align:left;max-width:460px">
@@ -1779,7 +1722,6 @@ addEventListener('pointerdown',avisa);addEventListener('keydown',avisa);
     <div class="modal-botoes" style="margin-top:16px;flex-wrap:wrap">
       <button class="modal-btn sec" id="estiloResultadoFechar" style="flex:1">Fechar</button>
       <button class="modal-btn prim" id="estiloResultadoHabitos" style="flex:1">Ver sugestões</button>
-      <button class="modal-btn prim" id="estiloResultadoCardapio" style="flex:1 1 100%" hidden>🎁 Montar meu cardápio de prêmios</button>
     </div>
   </div>
 </div>
@@ -1852,39 +1794,8 @@ addEventListener('pointerdown',avisa);addEventListener('keydown',avisa);
   </div>
 </div>
 
-<div class="modal-overlay" id="contrasteModal" hidden>
-  <div class="modal-caixa">
-    <div class="modal-emoji">🔄</div>
-    <div class="modal-pergunta">O que te incomodou?</div>
-    <div class="modal-campo"><label>Em poucas palavras</label><input id="ctNaoQuero" placeholder="Ex: reunião que me deixou pequena"></div>
-    <div class="modal-campo"><label>Em qual área isso se encaixa?</label><select id="ctArea"></select></div>
-    <p class="mut" style="font-size:11.5px;line-height:1.5;margin-top:8px">Só o incômodo. O que você quer vem depois, quando você voltar nessa lista com calma.</p>
-    <div class="modal-botoes" style="margin-top:18px"><button class="modal-btn sec" id="ctCancelar">Cancelar</button><button class="modal-btn prim" id="ctSalvar">Guardar</button></div>
-  </div>
-</div>
 
-<div class="modal-overlay" id="contrastesListaModal" hidden>
-  <div class="modal-caixa alta" style="text-align:left;max-width:440px">
-    <div class="modal-pergunta" style="text-align:center;margin-bottom:6px">🪺 Contrastes na lista</div>
-    <p class="mut" style="font-size:12.5px;text-align:center;margin-bottom:12px;line-height:1.5">Toque em <b>O que eu quero</b> para transformar em desejo.</p>
-    <div id="contrastesListaModalBody"></div>
-    <div class="modal-botoes" style="margin-top:14px"><button class="modal-btn sec" id="contrastesListaFechar">Fechar</button></div>
-  </div>
-</div>
 
-<div class="modal-overlay" id="desejoDiretoModal" hidden>
-  <div class="modal-caixa" style="text-align:left">
-    <div class="modal-emoji" style="text-align:center">✨</div>
-    <div class="modal-pergunta" style="text-align:center">Novo desejo</div>
-    <p class="mut" style="font-size:12.5px;line-height:1.5;margin-bottom:12px;text-align:center">Escreva o que você quer, no infinitivo — sem precisar de contraste.</p>
-    <div class="modal-campo"><label>O que eu quero</label><input id="ddTexto" placeholder="ex: cuidar do meu sono, fazer um passeio…"></div>
-    <div class="modal-campo"><label>Área</label><select id="ddArea"></select></div>
-    <div class="modal-botoes" style="margin-top:14px">
-      <button class="modal-btn sec" id="ddCancelar">Cancelar</button>
-      <button class="modal-btn prim" id="ddSalvar">Guardar desejo</button>
-    </div>
-  </div>
-</div>
 
 <div class="modal-overlay" id="sugMenuModal" hidden>
   <div class="modal-caixa">
@@ -1895,33 +1806,7 @@ addEventListener('pointerdown',avisa);addEventListener('keydown',avisa);
   </div>
 </div>
 
-<div class="modal-overlay" id="clarezaMenuModal" hidden>
-  <div class="modal-caixa">
-    <div class="modal-emoji" style="font-size:44px">✨</div>
-    <div class="modal-pergunta" id="cmNome"></div>
-    <div class="mut" id="cmInfo" style="font-size:12px;margin-bottom:14px"></div>
-    <div id="cmBotoes" style="display:flex;flex-direction:column;gap:8px"></div>
-  </div>
-</div>
 
-<div class="modal-overlay" id="processarModal" hidden>
-  <div class="modal-caixa" style="text-align:left">
-    <div class="modal-emoji">🪺</div>
-    <div class="modal-pergunta" style="text-align:center">Então, o que eu quero?</div>
-    <div style="background:var(--surf-mid);border-left:3px solid var(--mut2);border-radius:10px;padding:10px 14px;margin:14px 0 16px">
-      <div style="font-size:10px;font-weight:800;letter-spacing:1.2px;text-transform:uppercase;color:var(--mut2);margin-bottom:4px">Você anotou que te incomodou</div>
-      <div id="prContrasteTxt" style="font-size:13.5px;color:var(--txt);line-height:1.5;font-style:italic"></div>
-    </div>
-    <div class="modal-campo"><label>O que eu quero</label><input id="prClareza" placeholder="ex: fazer um passeio, cuidar do meu sono…"></div>
-    <p class="mut" style="font-size:12px;line-height:1.5;margin-top:4px">Se pudesse ser uma ação, qual verbo começaria a frase?</p>
-    <div class="modal-campo"><label>Em qual área isso se encaixa?</label><select id="prArea"></select></div>
-    <p class="mut" style="font-size:11.5px;line-height:1.5;margin-top:8px">Sem pressa. Se não vier nada agora, toque em "Ainda não sei" e ele fica guardado.</p>
-    <div class="modal-botoes" style="margin-top:18px">
-      <button class="modal-btn sec" id="prAinda">Ainda não sei</button>
-      <button class="modal-btn prim" id="prSalvar">Guardar clareza</button>
-    </div>
-  </div>
-</div>
 
 <div class="modal-overlay" id="desejoModal" hidden>
   <div class="modal-caixa alta" style="text-align:left">
@@ -2028,14 +1913,6 @@ addEventListener('pointerdown',avisa);addEventListener('keydown',avisa);
 </div>
 
 
-<div class="rel-overlay" id="atracaoSecaoModal" hidden>
-  <div class="rel-caixa" style="max-width:560px">
-    <div class="rel-topbar">
-      <button class="rel-btn-fechar" id="atracaoSecaoFechar" type="button">✕</button>
-    </div>
-    <div class="rel-scroll" id="atracaoSecaoBody" style="padding-top:0"></div>
-  </div>
-</div>
 
 
 <div class="rel-overlay" id="gerenciarModal" hidden>
@@ -2088,18 +1965,6 @@ addEventListener('pointerdown',avisa);addEventListener('keydown',avisa);
   </div>
 </div>
 
-<div class="modal-overlay" id="premioEditModal" hidden>
-  <div class="modal-caixa" style="text-align:left">
-    <div class="modal-emoji" style="text-align:center">🎁</div>
-    <div class="modal-pergunta" style="text-align:center">Editar prêmio</div>
-    <div class="modal-campo"><label>Nome do prêmio</label><input id="peNome"></div>
-    <div id="peCampos"></div>
-    <div class="modal-botoes" style="margin-top:14px">
-      <button class="modal-btn sec" id="peCancelar">Cancelar</button>
-      <button class="modal-btn prim" id="peSalvar">Salvar</button>
-    </div>
-  </div>
-</div>
 
 <div class="modal-overlay" id="msgMarcoModal" hidden>
   <div class="modal-caixa msg-marco" style="text-align:left">
@@ -2119,18 +1984,6 @@ addEventListener('pointerdown',avisa);addEventListener('keydown',avisa);
   </div>
 </div>
 
-<div class="modal-overlay" id="novoPremioModal" hidden>
-  <div class="modal-caixa" style="text-align:left">
-    <div class="modal-emoji" style="text-align:center">🎁</div>
-    <div class="modal-pergunta" id="npTitulo" style="text-align:center"></div>
-    <div class="modal-campo"><label>Nome do prêmio</label><input id="npNome" placeholder="ex: dançar uma música"></div>
-    <label class="linha" style="margin:6px 0 4px"><span class="mut" style="font-size:12.5px">De graça</span><input type="checkbox" id="npGratis" style="width:auto"></label>
-    <div class="modal-botoes" style="margin-top:14px">
-      <button class="modal-btn sec" id="npCancelar">Agora não</button>
-      <button class="modal-btn prim" id="npSalvar">Criar e usar</button>
-    </div>
-  </div>
-</div>
 
 <div class="modal-overlay" id="guardarModal" hidden>
   <div class="modal-caixa" style="text-align:left">
@@ -2272,20 +2125,20 @@ addEventListener('pointerdown',avisa);addEventListener('keydown',avisa);
 </div>
 
 <script src="app/base.js?v=20261023d"></script>
-<script src="app/atracao-dados.js?v=20261022s"></script>
-<script src="app/cuidado-premios.js?v=20261022s"></script>
-<script src="app/estado.js?v=20261023d"></script>
+<script src="app/atracao-dados.js?v=20261027faxina"></script>
+<script src="app/cuidado-premios.js?v=20261027faxina"></script>
+<script src="app/estado.js?v=20261027faxina"></script>
 <script src="app/linguagens.js?v=20261022s"></script>
-<script src="app/hoje.js?v=20261024a"></script>
+<script src="app/hoje.js?v=20261027faxina"></script>
 <script src="app/checkin.js?v=20261023g"></script>
-<script src="app/habitos.js?v=20261023a"></script>
-<script src="app/atracao-app.js?v=20261022s"></script>
+<script src="app/habitos.js?v=20261027faxina"></script>
+<script src="app/atracao-app.js?v=20261027faxina"></script>
 <script src="app/resumos.js?v=20261022s"></script>
 <script src="app/mapa.js?v=20261023h"></script>
-<script src="app/celebrar.js?v=20261024c"></script>
-<script src="app/abas.js?v=20261023h"></script>
-<script src="app/atracao-extras.js?v=20261022s"></script>
-<script src="app/estilo-autocuidado.js?v=20261022s"></script>
+<script src="app/celebrar.js?v=20261027faxina"></script>
+<script src="app/abas.js?v=20261027faxina"></script>
+<script src="app/atracao-extras.js?v=20261027faxina"></script>
+<script src="app/estilo-autocuidado.js?v=20261027faxina"></script>
 <script src="app/premio-pratica.js?v=20261022s"></script>
 <script src="app/celebra-momento.js?v=20261024a"></script>
 <script src="app/final.js?v=20261022s"></script>

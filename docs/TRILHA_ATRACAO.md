@@ -39,7 +39,7 @@ Os três botões antigos (Clareza, Declaração, Permissão, `#atracaoMenu`) sa�
 | Lista de declarações | `sessaoDeclaracao(d)` |
 | Dúvida rápida e lista de dúvidas | `sessaoDuvidaRapida`, "Retomar dúvida" no hub do desejo |
 
-`irParaDeclaracao()` abre a sessão de declaração. O HTML antigo dos popups (`secClarezaContent` etc.) e o modal antigo do desejo (`abrirDesejo`) continuam no arquivo, sem botão que leve a eles, para você remover quando quiser. Qualquer outro ponto do app que chame `abrirDesejo(id, passo)` ainda abre o modal antigo.
+`irParaDeclaracao()` abre a sessão de declaração. Os popups antigos das seções (Clareza, Declaração, Permissão, contrastes, desejo direto) saíram do código na faxina de 27/out/2026. O modal antigo do desejo (`abrirDesejo`) continua, porque ainda é aberto pelo Livro de Permissões, pela tela Hoje e pelo virar desejo em hábito.
 
 ## Estilo geral (serifada)
 
@@ -159,7 +159,7 @@ Em `app/base.js`: a categoria de cuidado (`FILA_CATEGORIAS`, `cuidado:true`) tem
 
 - Comemoração: aparece a cada hábito marcado (`celebraToastTexto`). Escolhe-se em Configurações > Minha comemoração.
 - Marcos de 3, 7 e 21 dias: sem pergunta de contexto e sem cardápio. O app diz "Hoje você merece uma das suas práticas" e sorteia uma das práticas do check-in (`S.praticas`, peso pelo estilo de autocuidado). "Vou fazer agora" marca a prática no check-in do dia; "Hoje não" fecha sem guardar nada. A festa dos 21 dias segue a mesma regra.
-- Aba Celebrar: "Meu caminho" (marcos de cada hábito e mapas feitos, montado automaticamente) e o Livro de Conquistas. Prêmios guardados só aparecem se ainda houver algum antigo. Cardápio, "quando der" e o card da comemoração ficam escondidos em `#celebrarAntigo` para o código antigo não quebrar.
+- Aba Celebrar: "Meu caminho" (marcos de cada hábito e mapas feitos, montado automaticamente) e o Livro de Conquistas. Prêmios guardados só aparecem se ainda houver algum antigo. Cardápio, "quando der" e o card antigo da comemoração saíram do código na faxina de 27/out/2026 (a comemoração fica em Configurações).
 
 ## Teste de estilo de autocuidado (as 5 linguagens)
 
@@ -185,3 +185,15 @@ No resultado, "Rever quais entram" reabre essa escolha. Quem fez o quiz antes di
 ## Como estou hoje
 
 Notas do check-in: seis pra todo mundo (Disposição física, Disposição mental, Humor, Calma, Casa em ordem, Autoconfiança) e, pra quem canta ou toca, dança, belting e canto lírico (`escalasHoje()` em `app/base.js`). `ESCALAS` guarda também as antigas (organização e limpeza do lar) pra mostrar o histórico. Ligar ou desligar a música refaz o check-in (`ciRemontar` em `app/checkin.js`).
+
+## Faxina (27/out/2026)
+
+Saiu do código o que nenhuma tela usava mais, sem mudar nada do que aparece no app:
+- popups antigos da Atração (seções Clareza, Declaração e Permissão, contraste, lista de contrastes, processar contraste, desejo direto, menu do desejo) e as listas escondidas que eles desenhavam;
+- a parte escondida do Celebrar (`#celebrarAntigo`: cardápio de prêmios, lista de prêmios, "quando der", card da comemoração) e os popups de prêmio novo e de editar prêmio;
+- as versões antigas das funções que `app/premio-pratica.js`, `app/quiz-praticas.js` e outras partes já substituíam (`premiosDoContexto`, `sortearPremioCtx`, `procurarPremio`, `abrirContextoPremio`, `celebraToastTexto`, `quizCardAtualizar`);
+- funções e listas soltas que ninguém chamava.
+
+Os dados guardados não mudaram (`S.premios`, `S.quandoDer` etc. continuam no estado, só não têm mais tela). Prêmios guardados antigos continuam aparecendo no Celebrar enquanto existirem.
+
+Conserto junto: a linha "Conhecer a Diva" em Configurações não fazia nada ao tocar; agora abre as telas de apresentação da gatinha (`boasVindasDiva`).

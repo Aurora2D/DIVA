@@ -423,12 +423,6 @@ const MENSAGENS_MARCO={
   ],
 };
 /* Convite para Gerenciar hábitos: entra no fim da mensagem, no mesmo tom dela */
-const CONVITES_MARCO={
-  acolhedor:"Agora que essa área está aberta, que tal dar uma olhada em *Gerenciar hábitos*? Talvez exista algo mais que você queira cuidar na sua vida, no seu ritmo.",
-  tcc:"Você acabou de reunir evidências de que consegue. Vale entrar em *Gerenciar hábitos* e escolher o próximo comportamento que gostaria de testar, começando por algo pequeno.",
-  desafiador:"*Gerenciar hábitos* está desbloqueado. Você já provou que sabe começar e sustentar, então olha lá e escolhe o próximo.",
-  leve:"Desbloqueou *Gerenciar hábitos*! Dá uma espiada lá e vê se tem mais alguma coisa que você quer trazer pra sua vida.",
-};
 /* ===== Revisão de hábitos a cada 90 dias ===== */
 const REVISAO_DIAS=90;
 function removerHabitoDaLista(hb){
@@ -495,20 +489,6 @@ function abrirRevisaoHabitos(){
 (function(){const b=$('btnRevisarHabitos');if(b)b.onclick=()=>{$('gerenciarFechar').click();setTimeout(()=>abrirRevisaoHabitos(),450);};})();
 
 /* ===== Editar prêmio (nome, categoria, tamanho) ===== */
-function abrirPremioEdit(p){
-  migrarPremio(p);$('peNome').value=p.nome||'';$('peCampos').innerHTML=htmlCamposPremio(p);ligarCamposPremio($('peCampos'));
-  const o=$('premioEditModal');
-  $('peCancelar').onclick=()=>fecharOverlay(o);
-  $('peSalvar').onclick=()=>{
-    const nome=$('peNome').value.trim();
-    if(!nome){mostrarToast('Escreva o nome do prêmio');return;}
-    const f=lerCamposPremio($('peCampos'));
-    if(f.custo==='planejar'){S.premios=S.premios.filter(x=>x.id!==p.id);S.quandoDer.push({id:'q'+Date.now().toString(36),nome,criadoEm:hoje(),feitoEm:null});salva();renderPremios();renderQuandoDer();fecharOverlay(o);mostrarToast('Movido pra Quando der ✓');return;}
-    Object.assign(p,f,{nome});
-    salva();renderPremios();fecharOverlay(o);mostrarToast('Prêmio atualizado ✓');
-  };
-  abrirOverlayTopo(o);
-}
 const MARCOS={
   3:{tit:'3 dias, hein? Você conseguiu, sua diva!',sub:'Pega esse prêmio aqui e segue brilhando.'},
   7:{tit:'7 dias, mulher! O puro suco do sucesso!',sub:'Isso é que é poder pessoal! Pega esse prêmio aqui e segue brilhando.'},
@@ -567,56 +547,9 @@ function finalizarMarco(){
   if(m&&m.hb&&MENSAGENS_MARCO[m.n]){setTimeout(()=>abrirMensagemMarco(m.hb,m.n,concluirMarco),450);return;}
   concluirMarco();
 }
-function premiosDoContexto(tam,ctx){
-  const sit=sitPorId(ctx);
-  return S.premios.filter(p=>p.tamanho===tam&&p.custo!=='planejar'&&premioCabe(migrarPremio(p),sit));
-}
-let ultimoPremioId=null;
-function sortearPremioCtx(tam,ctx,excluirId){
-  let l=premiosDoContexto(tam,ctx);
-  if(excluirId)l=l.filter(p=>p.id!==excluirId);
-  if(!l.length)return null;
-  const alt=l.filter(p=>p.id!==ultimoPremioId);
-  const pool=alt.length?alt:l;
-  const tot=pool.reduce((a,x)=>a+pesoPremio(x),0);let r=Math.random()*tot,p=pool[0];
-  for(const x of pool){r-=pesoPremio(x);if(r<=0){p=x;break;}}
-  ultimoPremioId=p.id;
-  return p;
-}
-function renderPremios(){$('listaPremios').innerHTML=S.premios.map(p=>`<div class="premio" data-pid="${p.id}"><div style="flex:1"><div class="nm">${esc(p.nome)}</div><div class="tg"><span class="tag">${esc(premioRotuloCabe(migrarPremio(p)))}</span><span class="tag c">${tamNome(p.tamanho)}</span>${p.gratis?'<span class="tag r">grátis</span>':''}</div></div><div class="mut" style="font-size:14px">✏️</div></div>`).join('')||'<div class="mut" style="font-size:12.5px">Nenhum prêmio ainda. Monte seu cardápio pelo seu estilo ou adicione um abaixo.</div>';$('listaPremios').querySelectorAll('.premio').forEach(el=>{el.onclick=()=>{const p=S.premios.find(x=>x.id===el.dataset.pid);if(p)abrirPremioEdit(p);};});}
 
 /* ---- popup de contexto (3, 7 e prêmio de 21 dias pelo Gerenciar) ---- */
-function abrirContextoPremio(n,onEscolher){
-  const M=MARCOS[n];
-  $('marcoEmoji').textContent=n===3?'🎉':n===7?'🌟':'👑';
-  $('marcoTitulo').textContent=M.tit;
-  $('marcoSub').textContent=M.sub;
-  botoesSituacao($('marcoBotoes'),'modal-btn prim','modal-btn sec',k=>fecharOverlay($('marcoModal'),()=>onEscolher(k)));
-  abrirOverlayTopo($('marcoModal'));
-}
 /* ---- não achou prêmio: cria um agora ---- */
-function abrirNovoPremio(tier,ctx,onShow,onCancel){
-  $('npTitulo').textContent='Não tenho prêmio '+tamNome(tier)+' pra "'+sitRotulo(sitPorId(ctx))+'". Cria um agora e ele fica salvo pra próxima.';
-  $('npNome').value='';$('npGratis').checked=false;
-  const o=$('novoPremioModal');
-  $('npCancelar').onclick=()=>fecharOverlay(o,()=>{if(onCancel)onCancel();});
-  $('npSalvar').onclick=()=>{
-    const nome=$('npNome').value.trim();
-    if(!nome){mostrarToast('Escreva o nome do prêmio');return;}
-    const sit=sitPorId(ctx)||{};const g=!!$('npGratis').checked;
-    const p=premioNovo({nome,tamanho:tier,gratis:g,custo:g?'gratis':'pequeno',cabe:sit.tag?[sit.tag]:TUDO,dur:sit.durMax&&sit.durMax<60?sit.durMax:(tier==='P'?5:tier==='M'?15:30),estilo:estiloDoPremio(nome)});
-    S.premios.push(p);ultimoPremioId=p.id;salva();renderPremios();
-    fecharOverlay(o,()=>onShow(p));
-  };
-  $('npNome').onkeydown=e=>{if(e.key==='Enter'){e.preventDefault();$('npSalvar').click();}};
-  abrirOverlayTopo(o);
-  setTimeout(()=>{const i=$('npNome');if(i)i.focus();},300);
-}
-function procurarPremio(tier,ctx,onShow,onCancel){
-  const p=sortearPremioCtx(tier,ctx,null);
-  if(p){onShow(p);return;}
-  abrirNovoPremio(tier,ctx,onShow,onCancel);
-}
 function abrirMarco(hb,n){
   marcoEmAndamento=true;marcoAtual={hb,n};
   if(n===21){abrirFesta(hb);return;}
