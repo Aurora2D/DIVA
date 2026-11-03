@@ -84,7 +84,7 @@ const CARTINHAS=[
    'Pensa em alguém que ficaria feliz em saber que você está aprendendo a {acao}.'],
   /* dia 20 · olhar pra trás */
   ['Amanhã fecha 21 dias. Hoje é dia de olhar pra trás com carinho: quanta coisa aconteceu desde a primeira cartinha?',
-   'Penúltima cartinha. Obrigada por ter deixado eu te acompanhar até aqui.',
+   'Penúltima cartinha. Antes de fechar, escolhe um momento destes 20 dias pra guardar com carinho. Pode ser bem pequenininho.',
    'Vinte dias convivendo com {acao}. O que você descobriu sobre você nesse tempo?'],
   /* dia 21 · fechamento */
   ['21 dias! Esta é a última cartinha da série, mas o caminho continua. O hábito agora é seu, e eu continuo por aqui.',
@@ -110,7 +110,10 @@ function cartinhaTexto(dia){
   if(!versoes.length)return '';
   /* sorteio fixo por dia: muda de um dia pro outro, mas não muda ao reabrir o app */
   let h=0;const sem=(S.cartinhas&&S.cartinhas.semente||'')+dia;for(let i=0;i<sem.length;i++)h=(h*31+sem.charCodeAt(i))>>>0;
-  return versoes[h%versoes.length].split('{acao}').join(acao);
+  let t=versoes[h%versoes.length].split('{acao}').join(acao);
+  /* dia 15 (o porquê): se a pessoa contou por que começou, a cartinha lembra com as palavras dela */
+  if(dia===15&&hb&&(hb.porque||'').trim())t+='\n\nVocê me contou, lá no começo: "'+hb.porque.trim()+'"';
+  return t;
 }
 /* próxima aba ainda fechada, pra mostrar quanto falta (só no modo "abre aos poucos") */
 function cartinhaProximaAba(){
