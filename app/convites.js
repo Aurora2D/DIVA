@@ -1,15 +1,15 @@
 /* ============ CONVITES GENTIS ============
-   1. O PORQUÊ DO HÁBITO: no primeiro toque num hábito (ou no segundo, se o primeiro já abriu outra tela),
-      a Diva pergunta por que a pessoa quer esse hábito. Fica em hb.porque e volta na cartinha do dia 15
-      e na lista de Gerenciar hábitos. Pergunta uma vez só por hábito; "Agora não" não pergunta de novo.
+   1. O QUE ELA QUER DA VIDA: no primeiro toque em hábito do app (ou no segundo, se o primeiro já abriu outra
+      tela), a Diva pergunta o que a pessoa quer da vida dela e o que espera da DIVA. Uma vez só por pessoa.
+      Fica em S.porqueVida e volta na cartinha do dia 15. "Agora não" não pergunta de novo.
    2. HÁBITOS QUIETINHOS: se nenhum hábito foi marcado há CONVITE_PARADO_DIAS dias, a tela Hoje mostra um
       convite pra revisar os hábitos (manter, ajustar, pausar ou tirar). "Agora não" espera mais uns dias.
    Pra mudar os textos, mexa só em CONVITE_TXT. Carregue depois de habitos.js, hoje.js e cartinhas.js. */
 const CONVITE_PARADO_DIAS=7;
 const CONVITE_TXT={
-  porqueTitulo:'Por que você quer {acao}?',
-  porqueSub:'Não precisa ser um motivo grande. Vale até "porque me faz bem". Eu guardo pra te lembrar nos dias difíceis.',
-  porquePh:'Porque…',
+  porqueTitulo:'O que você quer da sua vida?',
+  porqueSub:'E o que você espera que a DIVA te ajude a construir? Pode ser grande ou pequenininho. Eu guardo pra te lembrar nos dias difíceis.',
+  porquePh:'Eu quero…',
   porqueGuardar:'Guardar',
   porqueDepois:'Agora não',
   porqueGuardado:'Guardado. Eu te lembro quando precisar 💜',
@@ -23,8 +23,10 @@ const CONVITE_TXT={
 
 /* ---------- 1. o porquê ---------- */
 function porqueDevePerguntar(hb){
-  if(!hb||hb.pausado||(hb.porque||'').trim()||hb.porquePerguntado)return false;
-  return Object.keys(hb.feitos||{}).length<=2;
+  if(!hb||hb.pausado||(S.porqueVida||'').trim()||S.porquePerguntado)return false;
+  /* só no comecinho do app: no máximo 2 marcações somando todos os hábitos */
+  const total=(S.habitos||[]).reduce((n,h)=>n+Object.keys(h.feitos||{}).length,0);
+  return total<=2;
 }
 function abrirPorque(hb){
   let o=$('porqueModal');
@@ -33,22 +35,21 @@ function abrirPorque(hb){
     o.innerHTML='<div class="modal-caixa"><div class="modal-emoji" id="porqueEmoji">🌱</div><div class="modal-pergunta" id="porqueTit"></div><p class="mut" id="porqueSub" style="font-size:13px;line-height:1.55;margin:6px 0 12px"></p><textarea id="porqueCampo" rows="3"></textarea><div class="modal-botoes" style="margin-top:14px"><button type="button" class="modal-btn sec" id="porqueNao"></button><button type="button" class="modal-btn prim" id="porqueSim"></button></div></div>';
     document.body.appendChild(o);
   }
-  const acao=typeof acaoDoHabito==='function'?acaoDoHabito(hb):hb.nome;
-  $('porqueEmoji').textContent=hb.emoji||'🌱';
-  $('porqueTit').textContent=CONVITE_TXT.porqueTitulo.split('{acao}').join(acao);
+  $('porqueEmoji').textContent='💜';
+  $('porqueTit').textContent=CONVITE_TXT.porqueTitulo;
   $('porqueSub').textContent=CONVITE_TXT.porqueSub;
   const c=$('porqueCampo');c.value='';c.placeholder=CONVITE_TXT.porquePh;
   $('porqueSim').textContent=CONVITE_TXT.porqueGuardar;$('porqueNao').textContent=CONVITE_TXT.porqueDepois;
   $('porqueSim').onclick=()=>{
     const v=c.value.trim();if(!v){c.focus();return;}
-    hb.porque=v;hb.porquePerguntado=true;salva();
-    fecharOverlay(o,()=>{try{renderHabitos();}catch(e){}mostrarToast(CONVITE_TXT.porqueGuardado);});
+    S.porqueVida=v;S.porquePerguntado=true;salva();
+    fecharOverlay(o,()=>mostrarToast(CONVITE_TXT.porqueGuardado));
   };
-  $('porqueNao').onclick=()=>{hb.porquePerguntado=true;salva();fecharOverlay(o);};
+  $('porqueNao').onclick=()=>{S.porquePerguntado=true;salva();fecharOverlay(o);};
   abrirOverlayTopo(o);
   setTimeout(()=>{try{c.focus({preventScroll:true});}catch(e){}},350);
 }
-/* entra no lugar da pergunta do "lado bom" só quando o porquê ainda não foi perguntado; a do lado bom fica pro próximo toque */
+/* entra no lugar da pergunta do "lado bom" só quando essa pergunta ainda não foi feita; a do lado bom fica pro próximo toque */
 if(typeof relatoAoMarcar==='function'){
   const _relatoAoMarcarPorque=relatoAoMarcar;
   relatoAoMarcar=function(hb,lacuna){
