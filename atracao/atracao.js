@@ -613,16 +613,8 @@ function sessaoPermissao(d){
   if(!(R.voz||'').trim())delete F.gravetoId;
   const desejoLemb=['lembrete',{titulo:'Seu desejo',texto:()=>trTexto(d)}];
   const vozLemb=['lembrete',{titulo:'O que a voz disse',texto:()=>R.voz}];
-  const sugestoes=()=>{
-    const fr=(sugerirPermissoes(R.voz)||{}).frases||[];
-    return (fr.length?`<div>${fr.map((f,i)=>`<button type="button" class="sv-opt" data-f="${i}"><span>em terceira pessoa</span><b style="font-weight:600">${esc(f)}</b></button>`).join('')}</div>`:'')+
-      `<div class="sv-chips"><button type="button" class="sv-chip" data-fi="Eu estou em processo de ">Eu estou em processo de…</button><button type="button" class="sv-chip" data-fi="Muitas coisas podem acontecer para ">Muitas coisas podem acontecer…</button></div>`;
-  };
-  const ligarSug=r=>{
-    const fr=(sugerirPermissoes(R.voz)||{}).frases||[];
-    r.querySelectorAll('[data-f]').forEach(b=>b.onclick=()=>svPreencher('permissao',fr[+b.dataset.f]));
-    r.querySelectorAll('[data-fi]').forEach(b=>b.onclick=()=>svPreencher('permissao',b.dataset.fi));
-  };
+  /* exemplos só pra ler (sem botão): a pessoa escreve a frase dela, da cabeça */
+  const exemplos=['lembrete',{titulo:'Exemplos',texto:()=>frasesPermissao(trTexto(d)).join('\n\n')}];
   const salvarEvid=()=>{
     const v=(R.evid||'').trim();if(!v)return;
     if(!Array.isArray(d.evidencias))d.evidencias=[];
@@ -645,9 +637,9 @@ function sessaoPermissao(d){
         ['campo',{key:'quem',rot:'Pense em alguém, conhecida ou não, que já vive isso',opcional:true,ph:'Ex.: minha colega que trabalha fora e cozinha marmitas no domingo'}],
         ['p','Se tanta gente já vive isso, não é impossível. É possível pra outras pessoas, e pode ser pra você também.']],
       seguir:()=>{const g=trGraveto(d);if(g){g.quem=(R.quem||'').trim();salva();}}},
-    {reage:'brilho',b:[['sub','3. Experimente uma nova perspectiva'],vozLemb,['p','Imagine o que uma pessoa querida, que ama você e respeita seu tempo, diria sobre essa situação.'],['p','Escreva uma frase de permissão que ofereça esse mesmo olhar acolhedor. Não precisa prometer que tudo será perfeito, apenas lembrar que você pode aprender, pedir ajuda ou caminhar no seu tempo.'],['p','Se ajudar, comece com: “Eu estou em processo de...”'],['html',sugestoes,ligarSug],['campo',{key:'permissao',rot:'Minha frase de permissão'}]],
+    {reage:'brilho',b:[['sub','3. Experimente uma nova perspectiva'],vozLemb,['p','Imagine o que uma pessoa querida, que ama você e respeita seu tempo, diria sobre essa situação.'],['p','Agora escreva uma frase de permissão falando de outras pessoas, em terceira pessoa. Ela não precisa prometer nada: só lembrar que muita gente já vive isso, e que tem espaço pra você também.'],exemplos,['campo',{key:'permissao',rot:'Minha frase de permissão',ph:'Escreva a sua frase aqui'}]],
       seguir:()=>{
-        const v=(R.permissao||'').trim();if(!v){mostrarToast('Escreva a sua frase ou toque numa sugestão');return false;}
+        const v=(R.permissao||'').trim();if(!v){mostrarToast('Escreva a sua frase de permissão');return false;}
         const g=trGraveto(d);if(!g)return false;
         g.alivio=v;g.solto=true;g.soltoEm=hoje();salva();
         try{renderLivroPermissoes();}catch(e){}

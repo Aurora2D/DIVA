@@ -119,6 +119,26 @@ const SUGESTOES_GENERICAS=[
   'Milhões de coisas boas acontecem todos os dias, por caminhos que ninguém imaginava.',
   'Cada vez mais pessoas realizam seus desejos.'
 ];
+/* Frases de permissão da tela Permissão (sempre em terceira pessoa).
+   {desejo} é o que a pessoa escreveu, sem o "quero" (ex.: "andar de bicicleta").
+   As frases com {desejo} só entram quando o desejo começa com um verbo no infinitivo. */
+const PERMISSAO_GERAL='Centenas de coisas boas acontecem todos os dias, por caminhos que ninguém imaginava.';
+const PERMISSAO_COM_DESEJO=[
+  'Milhares de pessoas estão conseguindo {desejo}, do jeito delas.',
+  'Centenas de pessoas conseguem {desejo}, no tempo delas.',
+  'Todo dia tem alguém começando a {desejo}, com leveza.'
+];
+const PERMISSAO_SEM_DESEJO=[
+  'Milhares de pessoas estão conseguindo o que querem, do jeito delas.',
+  'Centenas de pessoas conseguem o que querem, no tempo delas.',
+  'Todo dia tem alguém começando algo novo, com leveza.'
+];
+function frasesPermissao(desejo){
+  const d=String(desejo||'').trim().replace(/^(eu\s+)?(quero|desejo|gostaria de|preciso)\s+/i,'').replace(/[.!]+$/,'');
+  const verbo=/^[a-záàâãéêíóôõúç]+(ar|er|ir|or|ar-se|er-se|ir-se)\b/i.test(d);
+  const dd=d.charAt(0).toLowerCase()+d.slice(1);
+  return [PERMISSAO_GERAL].concat(verbo?PERMISSAO_COM_DESEJO.map(f=>f.replace('{desejo}',dd)):PERMISSAO_SEM_DESEJO);
+}
 function normalizarSug(s){
   return String(s||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');
 }
