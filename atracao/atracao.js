@@ -607,7 +607,7 @@ function sessaoPermissao(d){
   if(!d)return;
   if(!Array.isArray(d.gravetos))d.gravetos=[];
   const F=trEst().foco;
-  const R=trSinc('perm',d.id,['voz','quem','permissao','evid'],{});
+  const R=trSinc('perm',d.id,['voz','quem','permissao','evid','caminho','naoSei'],{});
   /* gravetos que ainda seguram este desejo (dúvidas sem frase de permissão) */
   const abertos=()=>d.gravetos.filter(g=>!g.solto).length;
   if(!(R.voz||'').trim())delete F.gravetoId;
@@ -623,7 +623,7 @@ function sessaoPermissao(d){
   };
   const ligarEscolha=r=>r.querySelectorAll('[data-desejo]').forEach(b=>b.onclick=()=>{
     const novo=desejosAtivos().find(x=>x.id===b.dataset.desejo);if(!novo||novo.id===d.id)return;
-    F.desejoId=novo.id;delete F.gravetoId;trEst().tela.permissao=1;salva();
+    F.desejoId=novo.id;delete F.gravetoId;trEst().tela.permissao=1;delete trEst().rasc.caminho;salva();
     svReage('curiosa',0);sessaoPermissao(novo);
   });
   const desejoEtapa1=desejosAtivos().length>1?['html',escolhaDesejo,ligarEscolha]:desejoLemb;
@@ -634,46 +634,73 @@ function sessaoPermissao(d){
     if(!Array.isArray(d.evidencias))d.evidencias=[];
     d.evidencias.push({id:trNovaId('e'),texto:v,data:hoje()});R.evid='';salva();
   };
-  sessaoAbrir({...trMeta('permissao'),limpar:['voz','quem','permissao','evid'],telas:[
-    [['p','Às vezes, reconhecer o que queremos é só o começo. É comum uma parte de nós desejar muito algo, enquanto outra sussurra que não vai dar certo.'],
+  const LIMPAR=['voz','quem','permissao','evid','caminho','naoSei'];
+  /* etapa 1 começa sentindo: o caminho depende do que a pessoa sente (R.caminho: 'leve' ou 'trava') */
+  const irPor=c=>{R.caminho=c;delete R.naoSei;trEst().tela.permissao=2;salva();sessaoPermissao(d);svReage(c==='leve'?'comemorar':'sim');};
+  const intro=[['p','Às vezes, reconhecer o que queremos é só o começo. É comum uma parte de nós desejar muito algo, enquanto outra sussurra que não vai dar certo.'],
      ['p','Imagine que o seu desejo é uma bolinha apoiada em gravetos dentro de um tubo. Cada graveto é uma dúvida. A bolinha só chega lá embaixo quando os gravetos saem.'],
      ['html',()=>svGravetos(3,{brinca:true})+'<p class="sv-dica" style="text-align:center;margin-top:6px">Toque nos gravetos pra ver.</p>',svGravetosLigar],
-     ['p','Não precisamos brigar com essa voz. Vamos escutá-la e tirar um graveto de cada vez, em 4 etapas curtas.']],
-    {b:[['sub','1. Escute o receio'],desejoEtapa1,['p','Pense no desejo que você escreveu. O que essa voz interna diz quando você imagina essa conquista? Qual é o medo que surge?'],['campo',{key:'voz',rot:'O que essa voz me diz?',grande:true}]],
+     ['p','Não precisamos brigar com essa voz. Vamos escutá-la e tirar um graveto de cada vez, em 4 etapas curtas.']];
+  /* as três respostas ficam no corpo da tela (botões grandes); embaixo, só o Voltar */
+  const opcoesSentir=()=>`<div class="sv-sentir">
+      <button type="button" class="sv-opt" data-sentir="leve"><b>✨ Leve, animada</b><span>dá vontade só de pensar</span></button>
+      <button type="button" class="sv-opt" data-sentir="trava"><b>🪵 Eu quero, mas algo me trava</b><span>aparece uma vozinha dizendo que não vai dar</span></button>
+      ${R.naoSei?'':'<button type="button" class="sv-opt" data-sentir="naosei"><b>🤔 Não sei bem</b><span>ainda não consigo dizer</span></button>'}</div>`;
+  const ligarSentir=r=>r.querySelectorAll('[data-sentir]').forEach(bt=>bt.onclick=()=>{
+    const c=bt.dataset.sentir;
+    if(c==='naosei'){R.naoSei=true;trEst().tela.permissao=1;salva();sessaoPermissao(d);svReage('curiosa');return;}
+    irPor(c);
+  });
+  const sentir={b:[['sub','1. Como você se sente?'],desejoEtapa1,['p','Pense no desejo que você escreveu. Como você se sente com relação a ele, quando imagina ele acontecendo?'],
+      ...(R.naoSei?[['lembrete',{titulo:'Um jeito de perceber',texto:'Leia o seu desejo em voz alta, devagar, e repare no corpo. Ele aperta ou abre? Não tem resposta certa.'}]]:[]),
+      ['html',opcoesSentir,ligarSentir]],
+    botoes:[]};
+  const receio={b:[['sub','1. Escute o receio'],desejoLemb,['p','O que essa voz interna diz quando você imagina essa conquista? Qual é o medo que surge?'],['campo',{key:'voz',rot:'O que essa voz me diz?',grande:true}]],
       seguir:()=>{
         const v=(R.voz||'').trim();if(!v){mostrarToast('Escreva o que a voz diz');return false;}
         let g=trGraveto(d);
         if(g)g.duvida=v;else{g={id:trNovaId('g'),duvida:v,alivio:'',solto:false,criadoEm:hoje()};d.gravetos.push(g);}
         F.gravetoId=g.id;salva();
         if(/porque/i.test(v))mostrarToast('Você disse “porque”: achou uma crença que pode ser trocada. 🪵');
-      }},
-    {b:[['sub','2. Quem já está vivendo isso?'],desejoLemb,['p','Pense no que você quer. Tem alguém, hoje, vivendo isso? Quantas pessoas você imagina que conseguiram hoje? E nesta semana? E neste ano?'],
+      }};
+  const quem={b:[['sub','2. Quem já está vivendo isso?'],desejoLemb,['p','Pense no que você quer. Tem alguém, hoje, vivendo isso? Quantas pessoas você imagina que conseguiram hoje? E nesta semana? E neste ano?'],
         ['campo',{key:'quem',rot:'Pense em alguém, conhecida ou não, que já vive isso',opcional:true,ph:'Ex.: minha colega que trabalha fora e cozinha marmitas no domingo'}],
         ['p','Se tanta gente já vive isso, não é impossível. É possível pra outras pessoas, e pode ser pra você também.']],
-      seguir:()=>{const g=trGraveto(d);if(g){g.quem=(R.quem||'').trim();salva();}}},
-    {reage:'brilho',b:[['sub','3. Experimente uma nova perspectiva'],vozLemb,['p','Imagine o que uma pessoa querida, que ama você e respeita seu tempo, diria sobre essa situação.'],['p','Agora escreva uma frase de permissão falando de outras pessoas, em terceira pessoa. Ela não precisa prometer nada: só lembrar que muita gente já vive isso, e que tem espaço pra você também.'],exemplos,['campo',{key:'permissao',rot:'Minha frase de permissão',ph:'Escreva a sua frase aqui'}]],
+      seguir:()=>{const g=trGraveto(d);if(g){g.quem=(R.quem||'').trim();salva();}}};
+  const perspectiva={reage:'brilho',b:[['sub','3. Experimente uma nova perspectiva'],vozLemb,['p','Imagine o que uma pessoa querida, que ama você e respeita seu tempo, diria sobre essa situação.'],['p','Agora escreva uma frase de permissão falando de outras pessoas, em terceira pessoa. Ela não precisa prometer nada: só lembrar que muita gente já vive isso, e que tem espaço pra você também.'],exemplos,['campo',{key:'permissao',rot:'Minha frase de permissão',ph:'Escreva a sua frase aqui'}]],
       seguir:()=>{
         const v=(R.permissao||'').trim();if(!v){mostrarToast('Escreva a sua frase de permissão');return false;}
         const g=trGraveto(d);if(!g)return false;
         g.alivio=v;g.solto=true;g.soltoEm=hoje();salva();
         try{renderLivroPermissoes();}catch(e){}
         mostrarToast('Frase guardada no livro ✓');
-      }},
-    {b:[['sub','4. Dê espaço para a mudança'],
+      }};
+  const livro=['atalho',{rot:'Abrir o Livro de Permissões',acao:()=>{salvarEvid();sessaoFecharTudo(()=>{try{trocaAba('atracao');}catch(e){}setTimeout(()=>{const l=$('livroPermissoes');if(l)l.scrollIntoView({behavior:'smooth',block:'start'});},200);});}}];
+  const sinais=['p','Conforme for percebendo pequenas coincidências, novas ideias ou oportunidades no seu dia a dia, por menores que sejam, anote no seu Livro de Permissões. Grandes transformações costumam começar com pequenos sinais.'];
+  /* fecha a Permissão como feita e já abre o Menor passo */
+  const primeiroPasso=()=>{salvarEvid();const e=trEst();e.feitas.permissao='done';delete e.tela.permissao;LIMPAR.forEach(k=>delete e.rasc[k]);salva();sessaoIr('passo');};
+  const botoesFim=[{rot:'Concluir',acao:()=>{salvarEvid();sessaoConcluir();}},{rot:'Quero dar o primeiro passo',prim:true,acao:primeiroPasso}];
+  const espaco={b:[['sub','4. Dê espaço para a mudança'],
         ['html',()=>svGravetos(abertos()+1)+'<p class="sv-dica" style="text-align:center;margin-top:6px">'+(abertos()?'Um graveto a menos. Quando outra dúvida aparecer, é só voltar aqui.':'Nenhum graveto segurando esse desejo agora.')+'</p>',svGravetosSoltar],
-        ['p','Nos próximos dias, mantenha essa nova frase por perto.'],['lembrete',{titulo:'Sua frase',texto:()=>R.permissao}],['p','Conforme for percebendo pequenas coincidências, novas ideias ou oportunidades no seu dia a dia, por menores que sejam, anote no seu Livro de Permissões. Grandes transformações costumam começar com pequenos sinais.'],
-        ['campo',{key:'evid',rot:'Notou algo?',opcional:true,ph:'O que apareceu?'}],
-        ['atalho',{rot:'Abrir o Livro de Permissões',acao:()=>{salvarEvid();sessaoFecharTudo(()=>{try{trocaAba('atracao');}catch(e){}setTimeout(()=>{const l=$('livroPermissoes');if(l)l.scrollIntoView({behavior:'smooth',block:'start'});},200);});}}]],
-      seguir:salvarEvid}
-  ]});
+        ['p','Nos próximos dias, mantenha essa nova frase por perto.'],['lembrete',{titulo:'Sua frase',texto:()=>R.permissao}],sinais,
+        ['campo',{key:'evid',rot:'Notou algo?',opcional:true,ph:'O que apareceu?'}],livro],
+      botoes:botoesFim};
+  /* quem se sente leve: nenhum graveto pra tirar; deixa o desejo por perto e pode seguir pro Menor passo */
+  const espacoLeve={b:[['sub','Dê espaço para a mudança'],
+        ['html',()=>svGravetos(abertos())+'<p class="sv-dica" style="text-align:center;margin-top:6px">'+(abertos()?'Esse desejo ainda tem uma dúvida guardada. Quando quiser olhar pra ela, é só voltar aqui.':'Nenhum graveto segurando esse desejo. Que bom! 💜')+'</p>'],
+        ['p','Que delícia sentir leveza com o que você quer. Nos próximos dias, deixe esse desejo por perto.'],desejoLemb,sinais,
+        ['campo',{key:'evid',rot:'Notou algo?',opcional:true,ph:'O que apareceu?'}],livro],
+      botoes:botoesFim};
+  const telas=R.caminho==='leve'?[intro,sentir,espacoLeve]:R.caminho==='trava'?[intro,sentir,receio,quem,perspectiva,espaco]:[intro,sentir];
+  sessaoAbrir({...trMeta('permissao'),limpar:LIMPAR,telas});
 }
-/* abre a Permissão já na etapa 3, com a dúvida guardada (Retomar dúvida, Anotar e trabalhar agora) */
+/* abre a Permissão já na etapa 3 (tela 4: intro, sentir, receio, quem, perspectiva), com a dúvida guardada (Retomar dúvida, Anotar e trabalhar agora) */
 function sessaoPermissaoNaFrase(d,g){
   if(!d||!g)return;
   const F=trEst().foco;F.desejoId=d.id;F.gravetoId=g.id;
-  const R=trSinc('perm',d.id,['voz','quem','permissao','evid'],{});
-  R.voz=g.duvida||'';R.quem=g.quem||'';R.permissao=g.alivio||'';
-  trEst().tela.permissao=3;salva();
+  const R=trSinc('perm',d.id,['voz','quem','permissao','evid','caminho','naoSei'],{});
+  R.voz=g.duvida||'';R.quem=g.quem||'';R.permissao=g.alivio||'';R.caminho='trava';
+  trEst().tela.permissao=4;salva();
   sessaoPermissao(d);
 }
 
