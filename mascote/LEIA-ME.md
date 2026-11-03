@@ -1,6 +1,7 @@
 # Gatinha — mascote do app da Erica
 
 Abra o **index.html** (duplo clique já funciona) para ver a gatinha e testar as expressões e os gestos.
+A **brincar.html** é a página de brincar: é só tocar na gatinha que ela mia, troca de pose e faz um gesto.
 
 A gata é montada como um fantoche: cada parte (corpo, cabeça, orelhas, rabo, patas, olhos, boca, bochechas)
 é uma imagem em aquarela separada que só gira, se move ou troca. Nada é deformado.
@@ -9,7 +10,11 @@ A gata é montada como um fantoche: cada parte (corpo, cabeça, orelhas, rabo, p
 - `fantoche.js`: o motor da animação, a montagem das peças (`PARTS`), as expressões (`SLOTS`) e as ações (`ACTIONS`).
 - `fantoche-assets.js`: as peças embutidas no próprio arquivo (por isso funciona sem servidor).
 - `assets/pecas/*.webp`: as mesmas peças soltas. Se não incluir o `fantoche-assets.js`, o motor carrega daqui.
-- `index.html`: página de apresentação.
+- `index.html`: página de apresentação (botões de pose, expressões e gestos).
+- `brincar.html`: página de brincar, com miados e coraçõezinhos.
+- `miados.js` e `assets/sons/*.mp3`: os miados (embutidos e soltos).
+- `ferramentas/embutir.py`: regenera `fantoche-assets.js` e `miados.js` depois de mexer em `assets/`.
+- `ferramentas/miados.py`: gera os miados por síntese de voz, sem gravação.
 
 ## Como usar no app
 ```html
@@ -36,6 +41,8 @@ Na pose escrita ela escreve sozinha uns 5 segundos olhando o caderno, para, olha
 **Olhos:** `abertos`, `meio`, `fechados`, `felizes`, `brilhantes`, `cima`
 **Boca:** `sorriso`, `aberta`, `o`
 
+Na comemoração, as mãozinhas (`c-mao-esq`, `c-mao-dir`, recortadas do próprio `c-corpo`) balançam sozinhas.
+
 Sozinha, a gatinha respira, mexe a cabeça, balança o rabo, mexe a orelha e pisca de vez em quando.
 
 ## Criar uma ação nova
@@ -57,6 +64,9 @@ Estado disponível: `cabeca`, `orelhaEsq`, `orelhaDir`, `rabo`, `pata` (graus), 
 Cada peça em `PARTS` tem centro (`cx`, `cy`), largura (`w`), ponto de giro (`pivot`) e inclinação fixa (`rot`),
 em pixels de uma tela de 1024 × 1536.
 
+O rabo da sentada, da permissão e da comemoração é desenhado em tiras finas que formam uma curva (`_drawTailMesh` no `fantoche.js`):
+ele dobra como rabo de verdade, usando a aquarela original. Na escrita o rabo continua girando inteiro, dentro do `tailRange`.
+
 O desenho tem uma folga invisível dos lados (`FOLGA` no `fantoche.js`): o rabo pode passar da caixa do elemento quando balança, sem ser cortado. Só não coloque a gatinha dentro de algo com `overflow: hidden` se quiser o rabo inteiro.
 
 ## Poses
@@ -67,3 +77,15 @@ As peças da escrita começam com `e-` em `assets/pecas/` e vieram do "Escrita_K
 original da pose, sem redesenho, com as partes escondidas reconstruídas por baixo (pescoço sob a cabeça, peito sob o braço,
 base do rabo e raízes das orelhas). Os olhos meio fechados são do kit v4; os fechados são uma pálpebra pintada com o pelo
 da testa mais o risquinho de olho fechado do kit v3.
+
+## Trocar peças ou sons
+Depois de trocar, adicionar ou apagar um arquivo em `assets/pecas/` ou `assets/sons/`, rode na raiz:
+```bash
+python3 ferramentas/embutir.py
+```
+Para refazer os miados (precisa de numpy, scipy e ffmpeg):
+```bash
+mkdir -p /tmp/miados && python3 ferramentas/miados.py /tmp/miados
+for f in /tmp/miados/*.wav; do ffmpeg -y -i "$f" -ac 1 -ar 32000 -b:a 64k "assets/sons/$(basename "${f%.wav}").mp3"; done
+python3 ferramentas/embutir.py
+```
