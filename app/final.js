@@ -8,7 +8,8 @@ const EMOJI_ICONE_TUDO=Object.assign({},EMOJI_ICONE,{
   '👀':'olho','🙈':'olho','🔍':'olho','🔭':'olho','🧠':'lotus','🎨':'paleta','🧭':'bussola','🌊':'onda',
   '🌀':'vento','🔋':'bateria','💼':'maleta','🪺':'ninho','🪵':'graveto','📤':'enviar','📥':'baixar','💾':'baixar',
   '⏸️':'pausa','⚙️':'config','🛠️':'config','🎙️':'micro','🎧':'nota','🎚️':'escala','☕':'xicara','🍵':'xicara',
-  '▶':'play','📵':'celular','💃':'pegadas','🛁':'agua','🔔':'sino','🍽️':'prato','🎶':'nota'
+  '▶':'play','📵':'celular','💃':'pegadas','🛁':'agua','🔔':'sino','🍽️':'prato','🎶':'nota',
+  '🤔':'olho','🐾':'pegadas','🩷':'coracao','🔒':'cadeado'
 });
 const RE_EMOJI=/(?:\p{Extended_Pictographic}️?(?:‍\p{Extended_Pictographic}️?)*)/gu;
 const NAO_E_EMOJI=new Set(['✓','✕','↑','↓','→','↩','↗','©','®','™']);
