@@ -17,10 +17,16 @@
 const MASCOTE_BASE='mascote/assets/pecas/';
 const svMascote=(cls,pose)=>window.customElements&&customElements.get('gatinha-fantoche')?`<gatinha-fantoche class="${cls}" pose="${pose||'sentada'}" src-base="${MASCOTE_BASE}" aria-hidden="true"></gatinha-fantoche>`:'';
 /* reações: o que a gatinha faz em cada interação. Para mudar, troque os nomes das ações aqui. */
-const MASCOTE_ENTRADA={abertura:'tchau',sair:'suspirar',olhar:'piscar',declaracao:'brilho',clareza:'curiosa',permissao:'feliz',passo:'feliz'};
+/* Uma reação pode ser uma lista: as ações tocam uma depois da outra, e '@pose' troca a pose.
+   Declaração: começa comemorando (bracinhos pra cima), sorri, pisca e volta a ficar sentada. */
+const MASCOTE_ENTRADA={abertura:'tchau',sair:'suspirar',olhar:'piscar',declaracao:['comemorar','piscar','@sentada'],clareza:'curiosa',permissao:'feliz',passo:'feliz'};
+/* pose da gatinha pequena (no topo) depois da primeira tela, quando é diferente da pose de entrada */
+const MASCOTE_DEPOIS={declaracao:'sentada'};
 function svReage(acao,atraso){
   const go=()=>{const c=document.querySelector('#sessaoTela gatinha-fantoche');if(!c)return;
-    const f=()=>{try{if(typeof c.play==='function')c.play(acao);}catch(e){}};
+    const passo=a=>{if(typeof a==='string'&&a.charAt(0)==='@'){if(typeof c.setPose==='function')c.setPose(a.slice(1));return;}
+      if(typeof c.play==='function')return c.play(a);};
+    const f=()=>{try{if(Array.isArray(acao))acao.reduce((pr,a)=>pr.then(()=>passo(a)),Promise.resolve()).catch(()=>{});else passo(acao);}catch(e){}};
     if(c.classList.contains('pronta'))f();else c.addEventListener('ready',f,{once:true});};
   setTimeout(go,atraso==null?350:atraso);
 }
@@ -123,7 +129,7 @@ function sessaoMostrar(manter){
   st.acoes=[];const binds=[];let h='';
   if(st.i===0&&!def.compacto){
     h+=`<div class="sv-hero${def.mascote?' com-img':''}">${def.mascote?svMascote('sv-mascote',def.mascote):svAquarela(def.id||'x',420,320,5)}</div><div class="sv-cab"><p class="sv-kick">${esc(def.kicker)}</p><h1 class="sv-tit">${esc(def.titulo)}</h1>${def.afirma?`<p class="sv-afirma">${esc(def.afirma)}</p>`:''}</div>`;
-  }else h+=`<div class="sv-faixa">${def.compacto?svAquarela(def.id||'x',420,80,3,9):''}<span>${esc(def.kicker)} · ${esc(def.titulo)}</span>${def.compacto?'':svMascote('sv-espia',def.mascote)}</div>`;
+  }else h+=`<div class="sv-faixa">${def.compacto?svAquarela(def.id||'x',420,80,3,9):''}<span>${esc(def.kicker)} · ${esc(def.titulo)}</span>${def.compacto?'':svMascote('sv-espia',MASCOTE_DEPOIS[def.id]||def.mascote)}</div>`;
   const ult=st.i===st.telas.length-1;
   h+='<div class="sv-corpo">'+(t.b||[]).map(b=>svBloco(b,st,binds)).join('');
   if(ult&&def.pular)h+=`<button type="button" class="sv-pular" id="svPular">${esc(def.pular.rot)}</button>`;
