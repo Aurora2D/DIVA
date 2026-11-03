@@ -15,7 +15,6 @@
   'use strict';
 
   const W = 1024, H = 1536;
-  const TRAS_DIR_DESLOCA = 90;  // px (tela de montagem) que a pata de trás da direita anda pro lado no tchau
   /* Folga dos lados (px da tela de montagem): o desenho pode passar da caixa do elemento,
    * pra ponta do rabo não ser cortada quando balança. Não muda tamanho nem lugar da gatinha. */
   const FOLGA = 160;
@@ -31,9 +30,7 @@
     // pelo do próprio corpo, escondido sob o queixo: tapa a abertura quando a cabeça sobe ou inclina
     { id: 'pescoco',    img: 'pescoco',        cx: 505.5, cy: 678, w: 379, group: 'root' },
     { id: 'corpo',      img: 'corpo',          cx: 510, cy: 1075, w: 730, group: 'root' },
-    // patas de trás em duas metades: a da direita some no tchau junto com a pataDir (senão ficam pés demais no chão)
-    { id: 'patasTras',    img: 'patas-tras',   cx: 505, cy: 1335, w: 517, clip: [0, 506], group: 'root' },
-    { id: 'patasTrasDir', img: 'patas-tras',   cx: 505, cy: 1335, w: 517, clip: [505, 1024], group: 'root' },
+    { id: 'patasTras',  img: 'patas-tras',     cx: 505, cy: 1335, w: 517, group: 'root' },
     { id: 'pataEsq',    img: 'pata-esq',       cx: 390, cy: 1120, w: 260, pivot: [390, 1120], rot: 6.2, group: 'root' },  // perna mais curta, pé alinhado ao chão
     { id: 'pataDir',    img: 'pata-dir',       cx: 610, cy: 1120, w: 225, pivot: [610, 1120], rot: -2.2, group: 'root' },
     { id: 'cabeca',     img: 'cabeca',         cx: 505, cy: 478,  w: 615, group: 'head' },
@@ -89,7 +86,7 @@
    * Só o corpo é novo (desenho da pose, sem cabeça e sem rabo, com o pescoço da sentada por baixo).
    * Cabeça, orelhas, expressões e rabo são os da sentada, então todas as caras funcionam igual. */
   const comCorpo = (corpo) => PARTS
-    .filter((p) => !['corpo', 'patasTras', 'patasTrasDir', 'pataEsq', 'pataDir', 'pataLevantada'].includes(p.id))
+    .filter((p) => !['corpo', 'patasTras', 'pataEsq', 'pataDir', 'pataLevantada'].includes(p.id))
     .flatMap((p) => (p.id === 'orelhaDir' ? [p, corpo] : [p]));
   const PARTS_PERMISSAO = comCorpo({ id: 'corpo', img: 'p-corpo', cx: 510.5, cy: 1034, w: 733, group: 'root' });
   const PARTS_COMEMORACAO = (() => {
@@ -413,8 +410,6 @@
         if (p.id === 'orelhaDir') ang += s.orelhaDir * (P.earScale || 1);
         if (p.id === 'pataLevantada') { ang += s.pata + (1 - s.pataLevantada) * 35; alpha = s.pataLevantada; }
         if (p.id === 'pataDir') alpha = 1 - s.pataLevantada;
-        // no tchau, a pata de trás da direita (que ficava sob a pataDir) escorrega pro lado, onde fica a pata de trás de verdade
-        if (p.id === 'patasTrasDir' && s.pataLevantada) m = m.translate(TRAS_DIR_DESLOCA * s.pataLevantada, 0);
         if (p.id === 'bochechas') alpha = s.bochechas * 0.9;
         if (ang && p.pivot) m = g.translate(p.pivot[0], p.pivot[1]).rotate(ang).translate(-p.pivot[0], -p.pivot[1]);
         if (p.move === 'escrita') m = m.translate(s.escritaX, s.escritaY);
@@ -431,10 +426,6 @@
           const want = s[p.slot];
           const v = set[want] || set[P.fallback[want]] || set[Object.keys(set)[0]];
           if (v.img) this._drawImg(v.img, v.cx, v.cy, v.w);
-        } else if (p.clip) { // só uma faixa da peça (x da tela de montagem): usado nas metades das patas de trás
-          c.save(); c.beginPath(); c.rect(p.clip[0], 0, p.clip[1] - p.clip[0], H); c.clip();
-          this._drawImg(p.img, p.cx, p.cy, p.w, alpha);
-          c.restore();
         } else this._drawImg(p.img, p.cx, p.cy, p.w, alpha);
       }
     }
