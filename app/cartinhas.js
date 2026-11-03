@@ -129,30 +129,48 @@ function renderCartinha(){
   const txt=dia<=21?cartinhaTexto(dia):'';
   if(!txt&&!pista){box.innerHTML='';return;}
   const lida=!!(S.cartinhas.lidas&&S.cartinhas.lidas[dia]);
-  const gata=window.customElements&&customElements.get('gatinha-fantoche');
-  box.innerHTML=(txt?`<div class="carta-diva${lida?' aberta':''}" id="cartaDiva">
-      <button type="button" class="cd-cab" id="cartaDivaAbrir" aria-expanded="${lida}">
+  box.innerHTML=(txt?`<div class="carta-diva${lida?' lida':''}" id="cartaDiva">
+      <button type="button" class="cd-cab" id="cartaDivaAbrir">
         <span class="cd-env" aria-hidden="true">💌</span>
-        <span class="cd-tit"><b>Cartinha da Diva</b><span>dia ${dia} de 21${lida?'':' · toque pra abrir'}</span></span>
+        <span class="cd-tit"><b>Cartinha da Diva</b><span>dia ${dia} de 21 · ${lida?'ler de novo':'toque pra abrir'}</span></span>
       </button>
-      <div class="cd-corpo">
-        ${gata?'<div class="cd-gata"><gatinha-fantoche pose="sentada" src-base="mascote/assets/pecas/" aria-hidden="true"></gatinha-fantoche></div>':''}
-        <p class="cd-txt">${esc(txt)}</p>
-        <p class="cd-ass">Diva 🐾</p>
-      </div>
     </div>`:'')+(pista?`<p class="cd-pista">🔒 ${esc(pista)}</p>`:'');
-  const bt=$('cartaDivaAbrir');
-  if(bt)bt.onclick=()=>{
-    const card=$('cartaDiva');const abre=!card.classList.contains('aberta');
-    card.classList.toggle('aberta',abre);bt.setAttribute('aria-expanded',abre);
-    if(abre){
-      if(!S.cartinhas.lidas)S.cartinhas.lidas={};
-      if(!S.cartinhas.lidas[dia]){S.cartinhas.lidas[dia]=true;salva();const s=bt.querySelector('.cd-tit span');if(s)s.textContent='dia '+dia+' de 21';}
-      const g=card.querySelector('gatinha-fantoche');
-      if(g){const f=()=>{try{g.play(dia===21||dia===7||dia===14?'comemorar':'tchau');}catch(e){}};
-        if(g.classList.contains('pronta'))setTimeout(f,250);else g.addEventListener('ready',()=>setTimeout(f,250),{once:true});}
-    }
-  };
+  const bt=$('cartaDivaAbrir');if(bt)bt.onclick=()=>abrirCartinha(dia,txt);
+}
+/* a cartinha abre num popup com a gatinha: ela recebe a pessoa e dá pra brincar com ela (cada toque, um gesto e um coraçãozinho) */
+function abrirCartinha(dia,txt){
+  let o=$('cartaModal');
+  if(!o){
+    o=document.createElement('div');o.className='modal-overlay';o.id='cartaModal';o.hidden=true;
+    o.innerHTML='<div class="modal-caixa carta-pop"><div class="cp-gata" id="cpGata"></div><p class="cp-dica mut" id="cpDica">toque na Diva 🐾</p><div class="cp-k" id="cpK"></div><p class="cp-txt" id="cpTxt"></p><p class="cd-ass">Diva 🐾</p><button type="button" class="modal-btn prim" id="cpFechar" style="width:100%;margin-top:14px">Obrigada, Diva</button></div>';
+    document.body.appendChild(o);
+  }
+  const gata=window.customElements&&customElements.get('gatinha-fantoche');
+  const festa=dia===7||dia===14||dia===21;
+  $('cpGata').innerHTML=gata?`<gatinha-fantoche pose="${festa?'comemoracao':'sentada'}" src-base="mascote/assets/pecas/" aria-hidden="true"></gatinha-fantoche>`:'<div class="modal-emoji">💌</div>';
+  $('cpDica').hidden=!gata;
+  $('cpK').textContent='Cartinha do dia '+dia;
+  $('cpTxt').textContent=txt;
+  const g=$('cpGata').querySelector('gatinha-fantoche');
+  if(g){
+    const entra=()=>setTimeout(()=>{try{
+      if(festa)Promise.resolve(g.play('comemorar')).then(()=>g.setPose('sentada'));else g.play('tchau');
+    }catch(e){}},350);
+    if(g.classList.contains('pronta'))entra();else g.addEventListener('ready',entra,{once:true});
+    /* coraçãozinho subindo a cada toque (o gesto vem do toque geral das gatinhas, em base.js) */
+    $('cpGata').onclick=e=>{
+      const box=$('cpGata'),r=box.getBoundingClientRect(),c=document.createElement('span');
+      c.className='cp-coracao';c.textContent=['💜','💗','✨','🩷'][Math.floor(Math.random()*4)];
+      c.style.left=((e.clientX||r.left+r.width/2)-r.left)+'px';c.style.top=((e.clientY||r.top+r.height/2)-r.top)+'px';
+      box.appendChild(c);setTimeout(()=>c.remove(),1100);
+      $('cpDica').hidden=true;
+    };
+  }
+  $('cpFechar').onclick=()=>fecharOverlay(o);
+  o.onclick=e=>{if(e.target===o)fecharOverlay(o);};
+  if(!S.cartinhas.lidas)S.cartinhas.lidas={};
+  if(!S.cartinhas.lidas[dia]){S.cartinhas.lidas[dia]=true;salva();renderCartinha();}
+  abrirOverlayTopo(o);
 }
 document.addEventListener('ready',e=>{if(e.target&&e.target.tagName==='GATINHA-FANTOCHE')e.target.classList.add('pronta');},true);
 /* a cartinha entra junto com a tela Hoje */
