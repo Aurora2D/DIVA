@@ -112,7 +112,7 @@ function cartinhaTexto(dia){
   let h=0;const sem=(S.cartinhas&&S.cartinhas.semente||'')+dia;for(let i=0;i<sem.length;i++)h=(h*31+sem.charCodeAt(i))>>>0;
   let t=versoes[h%versoes.length].split('{acao}').join(acao);
   /* dia 15 (o porquê): se a pessoa contou o que quer da vida, a cartinha lembra com as palavras dela */
-  if(dia===15&&(S.porqueVida||'').trim())t+='\n\nVocê me contou, lá no começo: "'+S.porqueVida.trim()+'"';
+  if(dia===15&&(S.porqueVida||'').trim())t+='\n\nLá no começo, você me contou o que te trouxe até aqui: "'+S.porqueVida.trim()+'"';
   return t;
 }
 /* próxima aba ainda fechada, pra mostrar quanto falta (só no modo "abre aos poucos") */

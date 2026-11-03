@@ -7,9 +7,9 @@
    Pra mudar os textos, mexa só em CONVITE_TXT. Carregue depois de habitos.js, hoje.js e cartinhas.js. */
 const CONVITE_PARADO_DIAS=7;
 const CONVITE_TXT={
-  porqueTitulo:'O que você quer da sua vida?',
-  porqueSub:'E o que você espera que a DIVA te ajude a construir? Pode ser grande ou pequenininho. Eu guardo pra te lembrar nos dias difíceis.',
-  porquePh:'Eu quero…',
+  porqueTitulo:'O que te trouxe até aqui?',
+  porqueSub:'Cada pessoa chega na DIVA por um motivo. Pode ser cansaço, vontade de mudar alguma coisa ou só curiosidade. Se quiser, me conta. Eu guardo com carinho pra te lembrar, lá na frente, do caminho que você fez.',
+  porquePh:'Cheguei aqui porque…',
   porqueGuardar:'Guardar',
   porqueDepois:'Agora não',
   porqueGuardado:'Guardado. Eu te lembro quando precisar 💜',
