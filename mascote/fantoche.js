@@ -15,6 +15,7 @@
   'use strict';
 
   const W = 1024, H = 1536;
+  const TRAS_DIR_DESLOCA = 90;  // px (tela de montagem) que a pata de trás da direita anda pro lado no tchau
   /* Folga dos lados (px da tela de montagem): o desenho pode passar da caixa do elemento,
    * pra ponta do rabo não ser cortada quando balança. Não muda tamanho nem lugar da gatinha. */
   const FOLGA = 160;
@@ -411,7 +412,9 @@
         if (p.id === 'orelhaEsq') ang += s.orelhaEsq * (P.earScale || 1);
         if (p.id === 'orelhaDir') ang += s.orelhaDir * (P.earScale || 1);
         if (p.id === 'pataLevantada') { ang += s.pata + (1 - s.pataLevantada) * 35; alpha = s.pataLevantada; }
-        if (p.id === 'pataDir' || p.id === 'patasTrasDir') alpha = 1 - s.pataLevantada;
+        if (p.id === 'pataDir') alpha = 1 - s.pataLevantada;
+        // no tchau, a pata de trás da direita (que ficava sob a pataDir) escorrega pro lado, onde fica a pata de trás de verdade
+        if (p.id === 'patasTrasDir' && s.pataLevantada) m = m.translate(TRAS_DIR_DESLOCA * s.pataLevantada, 0);
         if (p.id === 'bochechas') alpha = s.bochechas * 0.9;
         if (ang && p.pivot) m = g.translate(p.pivot[0], p.pivot[1]).rotate(ang).translate(-p.pivot[0], -p.pivot[1]);
         if (p.move === 'escrita') m = m.translate(s.escritaX, s.escritaY);
