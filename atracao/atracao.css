@@ -156,3 +156,9 @@ gatinha-fantoche.pronta{opacity:1}
 @media (prefers-reduced-motion:reduce){.sv-gravetos .gr-pau,.sv-gravetos .gr-bola,.sv-gravetos .gr-bola.cai{transition:none}}
 /* já feito: desbotado, mas dá pra abrir e editar */
 .sv-area.sv-ja{opacity:.55;font-style:italic}
+
+/* Permissão, etapa 1: escolher o desejo (os que já passaram pela Permissão ficam cinzinha, mas tocáveis) */
+.sv-desejos .sv-opt b{font-weight:600;line-height:1.4}
+.sv-desejos .sv-opt.ja{background:transparent;opacity:.55;filter:grayscale(1)}
+.sv-desejos .sv-opt.ja span{font-size:11.5px}
+.sv-desejos .sv-opt.ja.on{opacity:1;filter:none;background:var(--sv-soft)}

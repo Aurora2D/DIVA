@@ -613,6 +613,20 @@ function sessaoPermissao(d){
   if(!(R.voz||'').trim())delete F.gravetoId;
   const desejoLemb=['lembrete',{titulo:'Seu desejo',texto:()=>trTexto(d)}];
   const vozLemb=['lembrete',{titulo:'O que a voz disse',texto:()=>R.voz}];
+  /* etapa 1: com mais de um desejo, todos aparecem pra escolher; os que já passaram pela Permissão ficam cinzinha, mas dá pra tocar */
+  const jaPermitido=x=>(x.gravetos||[]).some(g=>g.solto);
+  const escolhaDesejo=()=>{
+    const ds=desejosAtivos();
+    if(ds.length<2)return '';
+    return '<p class="sv-dica" style="margin:0 0 8px">De qual desejo você quer falar agora?</p><div class="sv-desejos">'+ds.map(x=>
+      `<button type="button" class="sv-opt${x.id===d.id?' on':''}${jaPermitido(x)?' ja':''}" data-desejo="${esc(x.id)}"><b>${esc(trTexto(x))}</b>${jaPermitido(x)?'<span>já passou por aqui</span>':''}</button>`).join('')+'</div>';
+  };
+  const ligarEscolha=r=>r.querySelectorAll('[data-desejo]').forEach(b=>b.onclick=()=>{
+    const novo=desejosAtivos().find(x=>x.id===b.dataset.desejo);if(!novo||novo.id===d.id)return;
+    F.desejoId=novo.id;delete F.gravetoId;trEst().tela.permissao=1;salva();
+    svReage('curiosa',0);sessaoPermissao(novo);
+  });
+  const desejoEtapa1=desejosAtivos().length>1?['html',escolhaDesejo,ligarEscolha]:desejoLemb;
   /* exemplos só pra ler (sem botão): a pessoa escreve a frase dela, da cabeça */
   const exemplos=['lembrete',{titulo:'Exemplos',texto:()=>frasesPermissao(trTexto(d)).join('\n\n')}];
   const salvarEvid=()=>{
@@ -625,7 +639,7 @@ function sessaoPermissao(d){
      ['p','Imagine que o seu desejo é uma bolinha apoiada em gravetos dentro de um tubo. Cada graveto é uma dúvida. A bolinha só chega lá embaixo quando os gravetos saem.'],
      ['html',()=>svGravetos(3,{brinca:true})+'<p class="sv-dica" style="text-align:center;margin-top:6px">Toque nos gravetos pra ver.</p>',svGravetosLigar],
      ['p','Não precisamos brigar com essa voz. Vamos escutá-la e tirar um graveto de cada vez, em 4 etapas curtas.']],
-    {b:[['sub','1. Escute o receio'],desejoLemb,['p','Pense no desejo que você escreveu. O que essa voz interna diz quando você imagina essa conquista? Qual é o medo que surge?'],['campo',{key:'voz',rot:'O que essa voz me diz?',grande:true}]],
+    {b:[['sub','1. Escute o receio'],desejoEtapa1,['p','Pense no desejo que você escreveu. O que essa voz interna diz quando você imagina essa conquista? Qual é o medo que surge?'],['campo',{key:'voz',rot:'O que essa voz me diz?',grande:true}]],
       seguir:()=>{
         const v=(R.voz||'').trim();if(!v){mostrarToast('Escreva o que a voz diz');return false;}
         let g=trGraveto(d);
