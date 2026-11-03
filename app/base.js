@@ -167,7 +167,11 @@ const FRASES_HABITO={batom:["Eu passei batom hoje, e a psiquiatra que se foda.",
 let fraseTimeout;
 function mostrarFraseHabito(id){let arr=FRASES_HABITO[id];if(id==='pijama'){if(!cuida()||!['filha','filho'].includes(S.cuidado.relacao)){frase();return;}arr=arr.map(t=>t.replace(/Aurora/g,nomeCuidado()));}if(!arr||!arr.length){frase();return;}const el=$('frase');el.style.opacity=0;clearTimeout(fraseTimeout);setTimeout(()=>{el.textContent=arr[Math.floor(Math.random()*arr.length)];el.style.opacity=1;fraseTimeout=setTimeout(frase,6000);},250);}
 function todosGrupos(){return GRUPOS.map(g=>g.id==='aurora'?{...g,nome:cuida()?'Ritmo de '+nomeCuidado():'Ritmo de quem eu cuido'}:g).concat(Array.isArray(S.gruposCustom)?S.gruposCustom:[]);}
-const GRUPOS=[{id:'palavras',emoji:'💌',nome:'Palavras de afirmação'},{id:'tempo',emoji:'⏳',nome:'Tempo de qualidade'},{id:'presentes',emoji:'🎁',nome:'Presentes'},{id:'servico',emoji:'🛠️',nome:'Atos de serviço'},{id:'toque',emoji:'🤍',nome:'Toque físico'},{id:'musica',emoji:'🎵',nome:'Música'},{id:'aurora',emoji:'🌙',nome:'Ritmo da Aurora'},{id:'essencial',emoji:'🎯',nome:'Essenciais'},{id:'outros',emoji:'✨',nome:'Outros'}];
+/* Nomes que aparecem na tela. Por dentro, os dados continuam guardados com os nomes das linguagens do amor
+   (o teste de estilo usa essas cinco), então troque o nome só aqui, nunca nas chaves. */
+const CAT_VER={'Palavras de afirmação':'Palavras que cuidam','Tempo de qualidade':'Tempo pra mim','Presentes':'Mimos','Atos de serviço':'Facilitar a vida','Toque físico':'Cuidar do corpo'};
+function catVer(n){let s=String(n||'');Object.entries(CAT_VER).forEach(([a,b])=>{s=s.split(a).join(b);});return s;}
+const GRUPOS=[{id:'palavras',emoji:'💌',nome:'Palavras que cuidam'},{id:'tempo',emoji:'⏳',nome:'Tempo pra mim'},{id:'presentes',emoji:'🎁',nome:'Mimos'},{id:'servico',emoji:'🛠️',nome:'Facilitar a vida'},{id:'toque',emoji:'🤍',nome:'Cuidar do corpo'},{id:'musica',emoji:'🎵',nome:'Música'},{id:'aurora',emoji:'🌙',nome:'Ritmo da Aurora'},{id:'essencial',emoji:'🎯',nome:'Essenciais'},{id:'outros',emoji:'✨',nome:'Outros'}];
 /* categorias antigas dos hábitos -> as cinco linguagens (vale pra hábitos criados antes e pra partes do código que ainda usam os nomes antigos) */
 const GRUPO_ALIAS={corpo:'toque',rituais:'toque',mente:'tempo',arte:'tempo',lar:'servico'};
 const grupoDe=h=>GRUPO_ALIAS[h.grupo]||h.grupo||'essencial';

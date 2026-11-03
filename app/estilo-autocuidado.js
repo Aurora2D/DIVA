@@ -1,10 +1,10 @@
 /* ============ ESTILO DE AUTOCUIDADO (teste) ============ */
 const ESTILO_CATS={
-  A:{id:'palavras',nome:'Palavras de afirmação',emoji:'💬',blurb:'Reconhecimento, incentivo e gentileza consigo.'},
-  B:{id:'tempo',nome:'Tempo de qualidade',emoji:'⏳',blurb:'Atenção, presença e tempo dedicado a si.'},
-  C:{id:'presentes',nome:'Presentes',emoji:'🎁',blurb:'Pequenos agrados, símbolos e experiências prazerosas.'},
-  D:{id:'servico',nome:'Atos de serviço',emoji:'🛠️',blurb:'Ações práticas que facilitam a própria vida.'},
-  E:{id:'toque',nome:'Toque físico',emoji:'🤍',blurb:'Conforto corporal, movimento e experiências sensoriais.'}
+  A:{id:'palavras',nome:'Palavras que cuidam',linguagem:'Palavras de afirmação',emoji:'💬',blurb:'Reconhecimento, incentivo e gentileza consigo.'},
+  B:{id:'tempo',nome:'Tempo pra mim',linguagem:'Tempo de qualidade',emoji:'⏳',blurb:'Atenção, presença e tempo dedicado a si.'},
+  C:{id:'presentes',nome:'Mimos',linguagem:'Presentes',emoji:'🎁',blurb:'Pequenos agrados, símbolos e experiências prazerosas.'},
+  D:{id:'servico',nome:'Facilitar a vida',linguagem:'Atos de serviço',emoji:'🛠️',blurb:'Ações práticas que facilitam a própria vida.'},
+  E:{id:'toque',nome:'Cuidar do corpo',linguagem:'Toque físico',emoji:'🤍',blurb:'Conforto corporal, movimento e experiências sensoriais.'}
 };
 const ESTILO_TEXTOS={
   palavras:'Para você, cuidar de si passa muito por reconhecimento e linguagem gentil. Nomear o esforço, reformular a autocrítica e guardar palavras boas para si mesma tendem a ter mais peso do que gestos só práticos.',
@@ -395,10 +395,10 @@ function estiloMostrarResultado(){
   const pMeta=Object.values(ESTILO_CATS).find(c=>c.id===e.principal);
   const sMeta=Object.values(ESTILO_CATS).find(c=>c.id===e.secundaria);
   html+=`<div class="card2" style="margin-bottom:10px"><div class="mut" style="font-size:10.5px;font-weight:800;letter-spacing:1.2px;text-transform:uppercase;color:var(--b);margin-bottom:6px">Preferência principal</div>
-    <div style="font-weight:800;font-size:15px;margin-bottom:6px">${pMeta.emoji} ${esc(pMeta.nome)}</div>
+    <div style="font-weight:800;font-size:15px;margin-bottom:6px">${pMeta.emoji} ${esc(pMeta.nome)}</div>${pMeta.linguagem?`<p class="mut" style="font-size:12px;margin:-2px 0 6px">Nas linguagens do amor: ${esc(pMeta.linguagem)}</p>`:''}
     <p style="font-size:13.5px;line-height:1.55;margin:0">${esc(ESTILO_TEXTOS[e.principal])}</p></div>`;
   html+=`<div class="card2" style="margin-bottom:12px"><div class="mut" style="font-size:10.5px;font-weight:800;letter-spacing:1.2px;text-transform:uppercase;color:var(--r);margin-bottom:6px">Preferência secundária</div>
-    <div style="font-weight:800;font-size:14px;margin-bottom:4px">${sMeta.emoji} ${esc(sMeta.nome)}</div>
+    <div style="font-weight:800;font-size:14px;margin-bottom:4px">${sMeta.emoji} ${esc(sMeta.nome)}</div>${sMeta.linguagem?`<p class="mut" style="font-size:12px;margin:0 0 6px">Nas linguagens do amor: ${esc(sMeta.linguagem)}</p>`:''}
     <p class="mut" style="font-size:12.5px;line-height:1.5;margin:0">Também entra com força nas sugestões, para o cuidado não ficar em uma faixa só.</p></div>`;
   if(_estiloPratGanhou>0){
     html+=`<div class="aviso" style="margin-bottom:12px">✨ Seu check-in ganhou <b>${_estiloPratGanhou} prática${_estiloPratGanhou===1?'':'s'}</b> de ${esc(pMeta.nome)} e ${esc(sMeta.nome)}. Elas já aparecem primeiro na lista.</div>`;

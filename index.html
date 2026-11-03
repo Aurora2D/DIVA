@@ -687,6 +687,24 @@ body{padding-bottom:calc(86px + env(safe-area-inset-bottom,0px));-webkit-overflo
 .mp-acao .acoes .btn{flex:1;padding:8px 10px;font-size:12.5px}
 .mp-acao .acoes .btn-x{flex:0 0 auto;width:40px;padding:8px 0;font-size:16px;line-height:1}
 .mp-card{cursor:pointer}
+/* Cartinha da Diva (app/cartinhas.js) */
+.carta-diva{background:linear-gradient(135deg, rgba(239,188,203,.18), rgba(143,128,209,.08));border:1px solid rgba(189,128,209,.28);border-radius:14px;margin:14px 0 6px;overflow:hidden}
+.carta-diva .cd-cab{display:flex;align-items:center;gap:12px;width:100%;padding:12px 14px;background:none;border:0;text-align:left;color:var(--txt);font:inherit;cursor:pointer}
+.carta-diva .cd-env{font-size:24px;line-height:1;transition:transform .3s}
+.carta-diva:not(.aberta) .cd-env{animation:cdBalanca 2.6s ease-in-out infinite}
+@keyframes cdBalanca{0%,80%,100%{transform:rotate(0)}85%{transform:rotate(-10deg)}90%{transform:rotate(8deg)}95%{transform:rotate(-4deg)}}
+@media (prefers-reduced-motion:reduce){.carta-diva .cd-env{animation:none!important}}
+.carta-diva .cd-tit{display:flex;flex-direction:column;gap:2px}
+.carta-diva .cd-tit b{font-family:'Cormorant Garamond',serif;font-size:19px;font-weight:700}
+.carta-diva .cd-tit span{font-size:11.5px;color:var(--mut)}
+.carta-diva .cd-corpo{display:none;padding:0 16px 14px}
+.carta-diva.aberta .cd-corpo{display:block;animation:cdAbre .35s ease}
+@keyframes cdAbre{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:none}}
+.carta-diva .cd-gata{width:96px;margin:0 auto 4px}
+.carta-diva .cd-gata gatinha-fantoche{display:block;width:96px}
+.carta-diva .cd-txt{margin:0;font-size:14.5px;line-height:1.6;color:var(--txt)}
+.carta-diva .cd-ass{margin:8px 0 0;text-align:right;font-family:'Cormorant Garamond',serif;font-size:17px;font-style:italic;color:var(--b)}
+.cd-pista{margin:6px 0 0;font-size:12px;line-height:1.5;color:var(--mut);text-align:center}
 .mp-card .cta{margin-top:10px;display:flex;gap:8px}
 .mp-card .cta .btn{flex:1;font-size:12.5px;padding:10px}
 
@@ -1437,6 +1455,7 @@ addEventListener('pointerdown',avisa);addEventListener('keydown',avisa);
     <p class="mut explica-secao" style="font-size:12px;line-height:1.45;margin:-4px 0 10px">Hábitos são o que você quer construir aos poucos, com uma meta pequena todo dia.</p>
     <div id="gruposHoje"></div>
     <p class="mut" id="dicaRemover" style="font-size:11.5px;text-align:center;margin:8px 0 0"></p>
+    <div id="cartinhaHojeBox"></div>
     <div id="relatoLembreteBox"></div>
     <div id="menorPassoHojeBox"></div>
     <p class="frase" id="frase"></p>
@@ -2124,21 +2143,22 @@ addEventListener('pointerdown',avisa);addEventListener('keydown',avisa);
   </div>
 </div>
 
-<script src="app/base.js?v=20261023d"></script>
-<script src="app/atracao-dados.js?v=20261027losier"></script>
+<script src="app/base.js?v=20261103a"></script>
+<script src="app/atracao-dados.js?v=20261103a"></script>
 <script src="app/cuidado-premios.js?v=20261027faxina"></script>
 <script src="app/estado.js?v=20261027faxina"></script>
 <script src="app/linguagens.js?v=20261022s"></script>
 <script src="app/hoje.js?v=20261027faxina"></script>
-<script src="app/checkin.js?v=20261023g"></script>
-<script src="app/habitos.js?v=20261027faxina"></script>
+<script src="app/checkin.js?v=20261103a"></script>
+<script src="app/habitos.js?v=20261103a"></script>
 <script src="app/atracao-app.js?v=20261027faxina"></script>
 <script src="app/resumos.js?v=20261022s"></script>
 <script src="app/mapa.js?v=20261023h"></script>
 <script src="app/celebrar.js?v=20261027faxina"></script>
 <script src="app/abas.js?v=20261027faxina"></script>
+<script src="app/cartinhas.js?v=20261103a"></script>
 <script src="app/atracao-extras.js?v=20261027faxina"></script>
-<script src="app/estilo-autocuidado.js?v=20261027faxina"></script>
+<script src="app/estilo-autocuidado.js?v=20261103a"></script>
 <script src="app/premio-pratica.js?v=20261022s"></script>
 <script src="app/celebra-momento.js?v=20261024a"></script>
 <script src="app/final.js?v=20261022s"></script>
@@ -2153,6 +2173,6 @@ addEventListener('pointerdown',avisa);addEventListener('keydown',avisa);
 <script src="relatorio/carta.js?v=20261022s"></script>
 <script src="relatorio/guarda-chuva.js?v=20261022s"></script>
 <script src="relatorio/carta-app.js?v=20261022s"></script>
-<script src="atracao/atracao.js?v=20261027guarda"></script>
+<script src="atracao/atracao.js?v=20261103a"></script>
 </body>
 </html>

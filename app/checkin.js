@@ -129,7 +129,7 @@ function hobbyClique(e,ci){
 }
 function renderPraticasCheckin(){
   const ci=S.checkins[hoje()]||(S.checkins[hoje()]={});
-  const grupoHTML=(grupo,itens)=>`<div style="margin-bottom:12px"><div class="mut" style="font-size:11.5px;margin-bottom:5px;font-weight:700;letter-spacing:.3px;text-transform:uppercase">${esc(grupo)}</div><div class="chips">${itens.map(it=>{const on=(ci.praticas||{})[grupo+'|'+it];return`<button type="button" class="chip ${on?'on alt':''}" data-prat="${esc(grupo)}|${esc(it)}">${esc(it)}</button>`;}).join('')}</div></div>`;
+  const grupoHTML=(grupo,itens)=>`<div style="margin-bottom:12px"><div class="mut" style="font-size:11.5px;margin-bottom:5px;font-weight:700;letter-spacing:.3px;text-transform:uppercase">${esc(catVer(grupo))}</div><div class="chips">${itens.map(it=>{const on=(ci.praticas||{})[grupo+'|'+it];return`<button type="button" class="chip ${on?'on alt':''}" data-prat="${esc(grupo)}|${esc(it)}">${esc(it)}</button>`;}).join('')}</div></div>`;
   /* perfil novo: explica prática x hábito e guarda as práticas gerais num "ver mais" depois do quiz (app/perfil-novo.js) */
   const corpo=(typeof perfilNovo==='function'&&perfilNovo())?perfilNovoPraticasHTML(ci,grupoHTML)
     :`<p class="mut explica-secao" style="font-size:12px;line-height:1.45;margin:0 0 12px">Marque o que você fez de bom pra você hoje. Sem meta, sem cobrança: é só um registro.</p>`+Object.entries(PRATICAS).map(([g,l])=>grupoHTML(g,l)).join('');
