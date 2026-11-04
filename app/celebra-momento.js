@@ -23,12 +23,10 @@
     monta();depois=aoFechar||null;
     document.getElementById('cmTxt').textContent=c.texto;
     const g=document.getElementById('cmGata');
-    if(window.customElements&&customElements.get('gatinha-fantoche')){
-      g.innerHTML='<gatinha-fantoche class="cm-fantoche" pose="comemoracao" src-base="mascote/assets/pecas/" aria-hidden="true"></gatinha-fantoche>';
-      const f=g.firstChild,vai=()=>{try{f.play('comemorar');}catch(e){}};
-      if(f.classList.contains('pronta'))vai();else f.addEventListener('ready',vai,{once:true});
-    } else g.innerHTML='<div class="cm-emoji">🎉</div>';
+    const anim=typeof bijuCelebra==='function';
+    if(anim)bijuCelebra(g,150);
+    else g.innerHTML='<div class="cm-emoji">🎉</div>';
     el.hidden=false;void el.offsetWidth;el.classList.add('on');
-    clearTimeout(timer);timer=setTimeout(fecha,3600);
+    clearTimeout(timer);timer=setTimeout(fecha,anim?BIJU_CELEBRA_MS+300:3600);
   };
 })();
