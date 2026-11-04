@@ -1,0 +1,261 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+
+
+
+
+<title>Niquinha</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@1,600&display=swap">
+<style>
+  /* Página de brincar: tela fixa, sem rolagem, só a gatinha no meio de um papel de aquarela.
+     Tocar na gatinha = miado + troca de pose + gesto, com coraçõezinhos subindo. */
+  :root {
+    --bg: #fff1eb;
+    --mancha-1: #8f80d1;
+    --mancha-2: #bd80d1;
+    --mancha-3: #80bbd1;
+    --ink: #493657;
+    --muted: #8a7a94;
+    --coracao-1: #e79ac0;
+    --coracao-2: #a79be0;
+    --display: "Cormorant Garamond", Georgia, "Times New Roman", serif;
+    --body: system-ui, -apple-system, "Segoe UI", sans-serif;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #1f1629; --mancha-1: #4a3a7a; --mancha-2: #6a4088; --mancha-3: #2e5a75;
+      --ink: #f0e8f8; --muted: #b0a0c0; --coracao-1: #f0a9cc; --coracao-2: #b9aef0; color-scheme: dark;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #1f1629; --mancha-1: #4a3a7a; --mancha-2: #6a4088; --mancha-3: #2e5a75;
+    --ink: #f0e8f8; --muted: #b0a0c0; --coracao-1: #f0a9cc; --coracao-2: #b9aef0; color-scheme: dark;
+  }
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent }
+  html, body { height: 100%; margin: 0; overflow: hidden; overscroll-behavior: none }
+  body {
+    background: var(--bg); color: var(--ink); font-family: var(--body);
+    position: fixed; inset: 0;
+    padding-left: max(16px, env(safe-area-inset-left, 0px));
+    padding-right: max(16px, env(safe-area-inset-right, 0px));
+    padding-block: env(safe-area-inset-top, 0px) env(safe-area-inset-bottom, 0px);
+    display: grid; grid-template-rows: auto 1fr auto; justify-items: center;
+    user-select: none; -webkit-user-select: none; -webkit-touch-callout: none;
+    touch-action: manipulation;
+  }
+  /* manchas de aquarela no fundo */
+  .aquarela { position: fixed; inset: 0; z-index: -1; pointer-events: none; overflow: hidden }
+  .aquarela i { position: absolute; border-radius: 50%; filter: blur(60px); opacity: .38 }
+  .aquarela i:nth-child(1) { width: 70vmax; height: 50vmax; left: -25vmax; top: -18vmax; background: var(--mancha-1) }
+  .aquarela i:nth-child(2) { width: 60vmax; height: 45vmax; right: -25vmax; top: 5vmax; background: var(--mancha-2) }
+  .aquarela i:nth-child(3) { width: 70vmax; height: 45vmax; left: -10vmax; bottom: -25vmax; background: var(--mancha-3); opacity: .3 }
+
+  h1 { font: italic 600 clamp(30px, 8vw, 44px)/1 var(--display); margin: 18px 0 0; letter-spacing: .01em }
+  .palco { display: grid; place-items: center; width: 100%; min-height: 0 }
+  [hidden] { display: none !important }
+  .cena { position: relative; width: min(100%, 64vh, 64dvh); aspect-ratio: 609 / 576 }
+  /* todas as animações e a gata-fantoche com o mesmo tamanho de gata e o mesmo chão */
+  .anim { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; object-position: center bottom; cursor: pointer; touch-action: manipulation }
+  .anim.celebra { transform-origin: 49.6% 98.1%; transform: translate(2.3%, -3.3%) scale(1.07) }
+  .anim.anda { transform: none }
+  .cena gatinha-fantoche {
+    position: absolute; left: 50%; bottom: 3.5%; height: 96%; width: auto; transform: translateX(-50%);
+    cursor: pointer; touch-action: manipulation;
+  }
+  .dica { margin: 0 0 18px; font-size: 14px; color: var(--muted); letter-spacing: .04em; transition: opacity .6s }
+  .dica.some { opacity: 0 }
+
+  .coracao { position: fixed; pointer-events: none; width: 34px; height: 34px; margin: -17px 0 0 -17px;
+             animation: sobe 1.4s ease-out forwards; z-index: 5 }
+  @keyframes sobe {
+    0% { transform: translate(0, 0) scale(.4); opacity: 0 }
+    15% { opacity: 1 }
+    100% { transform: translate(var(--dx), -170px) scale(1.1) rotate(var(--rot)); opacity: 0 }
+  }
+  @media (prefers-reduced-motion: reduce) { .coracao { animation-duration: .01s } }
+</style>
+</head>
+<body>
+
+
+
+<div class="aquarela" aria-hidden="true"><i></i><i></i><i></i></div>
+
+<h1>Niquinha</h1>
+<div class="palco"><div class="cena" id="cena"><img id="anim" class="anim" alt="" hidden><gatinha-fantoche id="cat" role="button" aria-label="Fazer carinho na Niquinha"></gatinha-fantoche></div></div>
+<p class="dica" id="dica">toque na gatinha</p>
+
+<script src="fantoche-assets.js"></script>
+<script src="fantoche.js"></script>
+<script>
+(function () {
+  const cat = document.getElementById('cat');
+  const dica = document.getElementById('dica');
+
+  /* ---------- Miados: os miados novos (pasta miados/) ----------
+     miadinho, miau, miaaau, miu (pergunta) e ronron.
+     Cada toque toca um pouco mais agudo ou mais grave, pra nunca soar igual. */
+  let audio = null;
+  const NOVOS = ['v1-1','v1-2','v2-1','v2-2','v2-3','v2-4','v3-1','v3-2','v3-3','v3-4','v4-1','v4-2','v4-3','v4-4','v4-5'];
+  const brutos = {}, novos = [];
+  NOVOS.forEach((n) => fetch('miados/' + n + '.mp3').then((r) => r.arrayBuffer()).then((b) => { brutos[n] = b; decodifica(); }).catch(() => {}));
+  function decodifica() {
+    if (!audio) return;
+    for (const n of Object.keys(brutos)) { const b = brutos[n]; delete brutos[n]; audio.decodeAudioData(b, (buf) => novos.push(buf), () => {}); }
+  }
+  function prepara() {
+    if (audio) return;
+    try { audio = new (window.AudioContext || window.webkitAudioContext)(); decodifica(); } catch (e) { audio = null; }
+  }
+  let ultimo = null;
+  /* cada miado sorteia um dos miados novos; 'ronron' (dormindo) toca um deles bem baixinho e mais grave */
+  function som(nome) {
+    try {
+      prepara(); if (!audio || !novos.length) return;
+      if (audio.state === 'suspended') audio.resume();
+      let b = novos[Math.floor(Math.random() * novos.length)];
+      if (b === ultimo && novos.length > 1) b = novos[Math.floor(Math.random() * novos.length)];
+      ultimo = b;
+      const src = audio.createBufferSource(); src.buffer = b;
+      const g = audio.createGain(); g.gain.value = nome === 'ronron' ? 0.35 : 1;
+      src.playbackRate.value = nome === 'ronron' ? 0.85 : 0.95 + Math.random() * 0.1;
+      src.connect(g); g.connect(audio.destination); src.start();
+    } catch (e) { /* sem som, a gatinha reage do mesmo jeito */ }
+  }
+  const SOM_DO_GESTO = { vergonha: 'ronron', suspirar: 'ronron', curiosa: 'miu', brilho: 'miu' };
+  const somPara = (gesto) => SOM_DO_GESTO[gesto] || sorteia(['miadinho', 'miau', 'miau', 'miaaau']);
+
+  /* ---------- Reações: cada toque troca de pose e faz um gesto que combina ---------- */
+  const REACOES = {
+    sentada:     ['feliz', 'tchau', 'pular', 'curiosa', 'brilho', 'abanar', 'vergonha', 'sim'],
+    permissao:   ['vergonha', 'feliz', 'suspirar', 'sim'],
+  };
+  const poses = Object.keys(REACOES).filter((p) => cat.poses ? cat.poses.includes(p) : true);
+  const sorteia = (lista) => lista[Math.floor(Math.random() * lista.length)];
+  let ultimoGesto = '';
+  let ocupada = false;
+
+  function coracoes(x, y) {
+    const n = 3 + Math.floor(Math.random() * 3);
+    for (let i = 0; i < n; i++) {
+      const el = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+      el.setAttribute('viewBox', '0 0 24 24'); el.setAttribute('class', 'coracao');
+      const cor = i % 2 ? 'var(--coracao-2)' : 'var(--coracao-1)';
+      el.innerHTML = `<path fill="${cor}" d="M12 21s-7.5-4.6-9.6-9.2C.9 8.4 2.9 4.5 6.6 4.5c2.2 0 3.6 1.3 5.4 3.3 1.8-2 3.2-3.3 5.4-3.3 3.7 0 5.7 3.9 4.2 7.3C19.5 16.4 12 21 12 21z"/>`;
+      el.style.left = (x + (Math.random() - 0.5) * 60) + 'px';
+      el.style.top = (y + (Math.random() - 0.5) * 30) + 'px';
+      el.style.setProperty('--dx', ((Math.random() - 0.5) * 120) + 'px');
+      el.style.setProperty('--rot', ((Math.random() - 0.5) * 50) + 'deg');
+      el.style.animationDelay = (i * 0.08) + 's';
+      document.body.appendChild(el);
+      setTimeout(() => el.remove(), 1700);
+    }
+  }
+
+  /* ---------- Passeio: de vez em quando ela sai andando, se enrola e dorme ----------
+     As animações são baixadas uma vez só (blob) e cada uma é decodificada antes de aparecer:
+     assim nunca pisca o quadro de outra animação nem fica um buraco vazio na troca. */
+  const cena = document.getElementById('cena');
+  let anim = document.getElementById('anim');
+  let passeio = null;   // null | 'andando' | 'dormindo' | 'acordando' | 'celebrando'
+  let toques = 0, vez = 0;
+  const ARQ = { andando: 'andando.webp', deitando: 'deitando.webp', acordando: 'acordando.webp', celebrando: 'celebrando.webp' };
+  const blobs = {};
+  for (const [k, f] of Object.entries(ARQ)) fetch(f).then((r) => r.blob()).then((b) => { blobs[k] = b; }).catch(() => {});
+  function toca(nome, cls) {
+    const v = ++vez;
+    const im = new Image(); im.alt = ''; im.className = cls;
+    im.src = blobs[nome] ? URL.createObjectURL(blobs[nome]) : ARQ[nome] + '?' + Date.now();
+    return (im.decode ? im.decode() : Promise.resolve()).catch(() => {}).then(() => {
+      if (v !== vez) return false;
+      const velho = anim; im.id = 'anim'; velho.replaceWith(im); anim = im;
+      if (velho.src.startsWith('blob:')) setTimeout(() => URL.revokeObjectURL(velho.src), 500);
+      cat.hidden = true; cat.setPose('sentada'); return true;   // troca de pose escondida, sem transição à vista
+    });
+  }
+  function voltaGata() {
+    vez++; cat.hidden = false; anim.hidden = true;
+  }
+  function comecaPasseio() {
+    passeio = 'andando';
+    toca('andando', 'anim anda').then((ok) => {
+      if (!ok) return; som('miaaau');
+      setTimeout(() => {
+        if (passeio !== 'andando') return;
+        passeio = 'dormindo';
+        toca('deitando', 'anim anda').then((ok2) => {
+          if (!ok2) return;
+          setTimeout(() => { if (passeio === 'dormindo') { som('ronron'); dica.textContent = 'shhh... toque pra acordar'; dica.classList.remove('some'); } }, 5200);
+        });
+      }, 4800);
+    });
+  }
+  /* comemoração nova: a Biju levanta as patinhas e pula, com o som do vídeo */
+  function celebra() {
+    passeio = 'celebrando';
+    toca('celebrando', 'anim celebra').then((ok) => {
+      if (!ok) return;
+      try { const a = new Audio('celebrando.mp3'); a.play().catch(() => {}); } catch (e) {}
+      setTimeout(() => { if (passeio !== 'celebrando') return; passeio = null; voltaGata(); cat.play('feliz'); }, 5250);
+    });
+  }
+  function acorda() {
+    passeio = 'acordando'; dica.classList.add('some');
+    toca('acordando', 'anim').then((ok) => {
+      if (!ok) return; som('miadinho');
+      setTimeout(() => {
+        if (passeio !== 'acordando') return;
+        passeio = null; voltaGata(); dica.textContent = 'toque na gatinha';
+        som('miau'); setTimeout(() => cat.play('feliz'), 200);
+      }, 5250);
+    });
+  }
+  cena.addEventListener('pointerdown', (ev) => {
+    if (!passeio) return;   // sem passeio, quem responde é a gatinha (toque)
+    ev.preventDefault(); prepara(); coracoes(ev.clientX, ev.clientY);
+    if (passeio === 'dormindo') acorda(); else if (passeio === 'andando') som('miadinho');
+  });
+
+  function toque(ev) {
+    ev.preventDefault(); if (ev.stopPropagation) ev.stopPropagation();
+    prepara();
+    coracoes(ev.clientX, ev.clientY);
+    dica.classList.add('some');
+    if (passeio) return;
+    toques++;
+    if (!ocupada && (toques >= 6 || (toques >= 3 && Math.random() < 0.35))) { toques = 0; comecaPasseio(); return; }
+    if (!ocupada && Math.random() < 0.2) { celebra(); return; }
+
+    // se ainda está no meio de um gesto, só mia e mexe a orelha (não embola)
+    if (ocupada) { som('miadinho'); cat.play('orelhas'); return; }
+    ocupada = true;
+
+    const atual = cat.poseName || 'sentada';
+    const outra = sorteia(poses.filter((p) => p !== atual));
+    cat.setPose(outra);
+    let gesto = sorteia(REACOES[outra]);
+    if (gesto === ultimoGesto) gesto = sorteia(REACOES[outra]);
+    ultimoGesto = gesto;
+    som(somPara(gesto));
+    setTimeout(() => {
+      Promise.resolve(cat.play(gesto)).finally(() => { ocupada = false; });
+    }, 250);
+    setTimeout(() => { ocupada = false; }, 3500); // segurança
+  }
+
+  cat.addEventListener('pointerdown', toque);
+  cat.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { const r = cat.getBoundingClientRect(); toque({ preventDefault() {}, clientX: r.left + r.width / 2, clientY: r.top + r.height / 3 }); } });
+  cat.tabIndex = 0;
+  document.addEventListener('contextmenu', (e) => e.preventDefault());
+  document.addEventListener('gesturestart', (e) => e.preventDefault());
+})();
+</script>
+
+
+
+</body>
+</html>

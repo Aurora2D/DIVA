@@ -10,6 +10,7 @@ App de hábitos diários para o bem-estar pessoal (Android e web).
 | `estilo/` | Estilo geral: títulos na serifada do logo (`app.css`) e a fonte (`fontes/`). |
 | `atracao/` | Trilha da aba Atração: `atracao.js` e `atracao.css`. |
 | `mascote/` | Cópia da gatinha (repositório Aurora2D/Mascote). Atualize com `sh scripts/atualizar-mascote.sh`. |
+| `niquinha/` | Niquinha: página de brincar com a Biju (de coleira, anda, dorme, acorda, comemora e mia). Abre em `niquinha/index.html`. |
 | `logo/index.html` | Animação do logo com controles (repetir, linha do tempo) — para estudar/ajustar. |
 | `logo/splash.html` | Versão tela cheia usada como abertura do app. Uma cópia dela fica embutida no `index.html` (bloco "ABERTURA DIVA"). |
 
