@@ -166,7 +166,6 @@ gatinha-fantoche.pronta{opacity:1}
 .sv-sinais{margin-top:-4px;padding-left:22px}
 .sv-sinais li{margin:2px 0}
 .sv-evid-nota{margin-top:8px}
-/* Biju em vídeo: o fundo do vídeo é branco; no tema claro o multiply some com ele e a gata fica sobre o cartão */
-.sv-hero .sv-video{width:min(56%,220px);height:auto;mix-blend-mode:multiply;filter:none;margin-top:-10px}
+/* Biju animada: fundo transparente, encaixa no cartão em qualquer tema */
+.sv-hero .sv-video{width:min(56%,220px);height:auto;filter:drop-shadow(0 6px 10px rgba(73,54,87,.14));margin-top:-10px}
 .sv-hero-fim{margin-bottom:6px}
-html.escuro .sv-hero .sv-video{mix-blend-mode:normal;border-radius:18px;margin-bottom:14px}
