@@ -698,7 +698,10 @@ body{padding-bottom:calc(86px + env(safe-area-inset-bottom,0px));-webkit-overflo
 .carta-diva .cd-tit b{font-family:'Cormorant Garamond',serif;font-size:19px;font-weight:700}
 .carta-diva .cd-tit span{font-size:11.5px;color:var(--mut)}
 .carta-diva.lida .cd-env{opacity:.75}
-.carta-pop{text-align:center}
+.carta-pop{text-align:center;position:relative}
+.carta-pop .cp-x{position:absolute;top:12px;right:12px;width:36px;height:36px;border-radius:50%;border:1px solid var(--modal-borda);background:transparent;color:var(--txt);display:grid;place-items:center;cursor:pointer;padding:0;z-index:2}
+/* nome Diva sempre na fonte do logo: Cormorant Garamond reta, sem itálico */
+.diva-marca{font-family:'Cormorant Garamond',Georgia,serif;font-style:normal;font-weight:600;letter-spacing:.5px}
 .carta-pop .cp-gata{position:relative;width:150px;margin:-6px auto 0;cursor:pointer;touch-action:manipulation}
 .carta-pop .cp-gata gatinha-fantoche{display:block;width:150px}
 .carta-pop .cp-dica{font-size:11px;margin:2px 0 8px}
@@ -2167,7 +2170,7 @@ addEventListener('pointerdown',avisa);addEventListener('keydown',avisa);
 <script src="app/mapa.js?v=20261023h"></script>
 <script src="app/celebrar.js?v=20261027faxina"></script>
 <script src="app/abas.js?v=20261027faxina"></script>
-<script src="app/cartinhas.js?v=20261104a"></script>
+<script src="app/cartinhas.js?v=20261104b"></script>
 <script src="app/convites.js?v=20261103c"></script>
 <script src="app/atracao-extras.js?v=20261027faxina"></script>
 <script src="app/estilo-autocuidado.js?v=20261103a"></script>

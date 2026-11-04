@@ -237,7 +237,7 @@ function abrirCartinha(dia,c){
   let o=$('cartaModal');
   if(!o){
     o=document.createElement('div');o.className='modal-overlay';o.id='cartaModal';o.hidden=true;
-    o.innerHTML='<div class="modal-caixa carta-pop"><div class="cp-gata" id="cpGata"></div><p class="cp-dica mut" id="cpDica">toque na Diva 🐾</p><div class="cp-k" id="cpK"></div><div class="cp-txt" id="cpTxt"></div><p class="cd-ass">Diva 🐾</p><button type="button" class="modal-btn prim" id="cpFechar" style="width:100%;margin-top:14px">Obrigada, Diva</button></div>';
+    o.innerHTML='<div class="modal-caixa carta-pop"><button type="button" class="cp-x" id="cpX" aria-label="Fechar"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round" fill="none"/></svg></button><div class="cp-gata" id="cpGata"></div><p class="cp-dica mut" id="cpDica">toque na Diva 🐾</p><div class="cp-k" id="cpK"></div><div class="cp-txt" id="cpTxt"></div><p class="cd-ass"><span class="diva-marca">Diva</span> 🐾</p><button type="button" class="modal-btn prim" id="cpFechar" style="width:100%;margin-top:14px">Obrigada, Diva</button></div>';
     document.body.appendChild(o);
   }
   const gata=window.customElements&&customElements.get('gatinha-fantoche');
@@ -263,6 +263,7 @@ function abrirCartinha(dia,c){
     };
   }
   $('cpFechar').onclick=()=>fecharOverlay(o);
+  $('cpX').onclick=()=>fecharOverlay(o);
   o.onclick=e=>{if(e.target===o)fecharOverlay(o);};
   if(!S.cartinhas.lidas)S.cartinhas.lidas={};
   if(!S.cartinhas.lidas[dia]){S.cartinhas.lidas[dia]=true;salva();renderCartinha();}
