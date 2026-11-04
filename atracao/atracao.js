@@ -15,6 +15,9 @@
    Aqui só a usamos: <gatinha-fantoche> + cat.play('acao'). Ações disponíveis: ver mascote/LEIA-ME.md.
    Se o motor dela não carregar, a tela funciona sem a gatinha. */
 const MASCOTE_BASE='mascote/assets/pecas/';
+/* tocar na Biju dormindo: ela acorda e senta (uma vez) */
+const svBijuAcorda=()=>{const h=$('svBijuDorme');if(!h)return;h.style.cursor='pointer';
+  h.onclick=()=>{if(h.dataset.acordou)return;h.dataset.acordou='1';const i=h.querySelector('img');if(i){const p=window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches;i.src='atracao/biju-acordando'+(p?'-parada':'')+'.webp?v=1&t='+Date.now();}};};
 /* Biju animada (andando, deitando): animação com fundo transparente, some com qualquer fundo do app.
    Com movimento reduzido mostra a imagem parada. */
 const svVideo=(cls,src)=>{const parada=window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -58,7 +61,7 @@ function svAquarela(chave,w,h,n,extra){
 
 /* ---------- as 8 sessões da trilha ---------- */
 const TRILHA=[
-  {id:'abertura',kicker:'Abertura',titulo:'Que bom que você chegou até aqui',afirma:'Eu posso cuidar da minha vida no meu ritmo.',mascote:'abertura'},
+  {id:'abertura',kicker:'Abertura',titulo:'Que bom que você chegou até aqui',afirma:'Eu posso cuidar da minha vida no meu ritmo.',mascote:'abertura',video:'atracao/biju-acordando.webp'},
   {id:'sair',kicker:'Contraste',titulo:'Deixar sair',afirma:'Eu posso deixar sair o que pesa.',mascote:'deixar-sair'},
   {id:'olhar',kicker:'Olhar com calma',titulo:'Olhar com outros olhos',afirma:'Eu posso olhar para o que escrevi com calma.',mascote:'escrita'},
   {id:'clareza',kicker:'Passo 1',titulo:'Clareza',afirma:'Eu estou em processo de descobrir o que eu quero, em todas as áreas da minha vida, do meu jeito e no meu tempo.',mascote:'clareza'},
@@ -730,7 +733,7 @@ function sessaoMenorPasso(d){
         else{item={id:trNovaId('mp'),texto:v,criadoEm:hoje(),sugestao:paraInfinitivoSugestao(v)};d.menorPassos.push(item);R.passoId=item.id;}
         d.menorPasso=item;salva();confete(['🌱','✨','💫']);
       }},
-    [['html',()=>`<div class="sv-hero com-img sv-hero-fim">${svVideo('sv-mascote sv-video','atracao/biju-deitando.webp')}</div>`],['sub','Seu passo está guardado'],['lembrete',{titulo:'Meu menor passo',texto:()=>R.passo}],['p','Quando concluir, reconheça o que fez. Não porque um pequeno passo resolve tudo de uma vez, mas porque ele é a prova viva de que você já começou a construir o que deseja.'],['fecho','Você pode começar de onde está, com o que tem e no ritmo que consegue sustentar.'],
+    [['html',()=>`<div class="sv-hero com-img sv-hero-fim" id="svBijuDorme" title="Toque pra acordar a Biju">${svVideo('sv-mascote sv-video','atracao/biju-deitando.webp')}</div>`,svBijuAcorda],['sub','Seu passo está guardado'],['lembrete',{titulo:'Meu menor passo',texto:()=>R.passo}],['p','Quando concluir, reconheça o que fez. Não porque um pequeno passo resolve tudo de uma vez, mas porque ele é a prova viva de que você já começou a construir o que deseja.'],['fecho','Você pode começar de onde está, com o que tem e no ritmo que consegue sustentar.'],
       ['html','<button type="button" class="sv-atalho" id="svVirarHab"><span>🌱 Transformar em hábito</span></button><p class="sv-dica" style="margin-top:8px">Opcional. Um hábito novo por vez: o próximo libera 3 dias depois. Se preferir, o passo fica guardado e você decide depois.</p>',r=>{const b=r.querySelector('#svVirarHab');if(b)b.onclick=()=>{svReage('brilho',0);virarDesejoEmHabito(d,R.passo);};}]]
   ]});
 }
