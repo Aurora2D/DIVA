@@ -120,7 +120,7 @@ function svBloco(b,st,binds){
   if(t==='lembrete'){const txt=String((typeof v.texto==='function'?v.texto():v.texto)||'').trim();if(!txt)return '';
     return `<figure class="sv-lembrete"><figcaption>${esc(v.titulo)}</figcaption><blockquote>${esc(txt)}</blockquote></figure>`;}
   if(t==='campo'){const id='c_'+v.key;
-    return `<div class="sv-campo"><label class="sv-campo-rot" for="${id}">${esc(v.rot)}${v.opcional?'<span class="sv-opc">opcional</span>':''}</label>${v.dica?`<p class="sv-dica" id="${id}_d">${esc(v.dica)}</p>`:''}<textarea id="${id}" class="sv-area${v.grande?' grande':''}${v.lista?' sv-lista':''}${(typeof v.ja==='function'?v.ja():v.ja)&&String(st.dados[v.key]||'').trim()?' sv-ja':''}" data-campo="${v.key}"${v.dica?` aria-describedby="${id}_d"`:''} placeholder="${esc(v.ph||'Escreva aqui')}">${esc(st.dados[v.key]||'')}</textarea></div>`;}
+    return `<div class="sv-campo"><label class="sv-campo-rot" for="${id}">${esc(typeof v.rot==='function'?v.rot():v.rot)}${v.opcional?'<span class="sv-opc">opcional</span>':''}</label>${v.dica?`<p class="sv-dica" id="${id}_d">${esc(v.dica)}</p>`:''}<textarea id="${id}" class="sv-area${v.grande?' grande':''}${v.lista?' sv-lista':''}${(typeof v.ja==='function'?v.ja():v.ja)&&String(st.dados[v.key]||'').trim()?' sv-ja':''}" data-campo="${v.key}"${v.dica?` aria-describedby="${id}_d"`:''} placeholder="${esc(v.ph||'Escreva aqui')}">${esc(st.dados[v.key]||'')}</textarea></div>`;}
   if(t==='html'){if(b[2])binds.push(b[2]);return typeof v==='function'?v():v;}
   return '';
 }
@@ -679,20 +679,24 @@ function sessaoPermissao(d){
         mostrarToast('Frase guardada no livro ✓');
       }};
   const livro=['atalho',{rot:'Abrir o Livro de Permissões',acao:()=>{salvarEvid();sessaoFecharTudo(()=>{try{trocaAba('atracao');}catch(e){}setTimeout(()=>{const l=$('livroPermissoes');if(l)l.scrollIntoView({behavior:'smooth',block:'start'});},200);});}}];
-  const sinais=['p','Conforme for percebendo pequenas coincidências, novas ideias ou oportunidades no seu dia a dia, por menores que sejam, anote no seu Livro de Permissões. Grandes transformações costumam começar com pequenos sinais.'];
+  const sinais=['html',()=>'<p class="sv-p">Ao longo do dia, observe tudo o que se relacionar com o seu desejo, por menor que pareça. Por exemplo:</p><ul class="sv-p sv-sinais"><li>Uma conversa ou comentário de alguém</li><li>Uma ideia que surgiu de repente</li><li>Uma vontade de agir, mesmo pequena</li><li>Algo que você viu, leu ou ouviu por acaso</li><li>Algo que aconteceu com mais facilidade do que o esperado</li></ul><p class="sv-p">Grandes mudanças costumam começar com sinais discretos.</p>'];
+  /* a pergunta repete o desejo entre aspas: primeira letra minúscula, sem ponto final */
+  const desejoNaFrase=()=>{let v=String(trTexto(d)||'').trim().replace(/[.!…]+$/,'');return v?v.charAt(0).toLowerCase()+v.slice(1):'';};
+  const evidCampo=['campo',{key:'evid',rot:()=>{const v=desejoNaFrase();return v?'O que você percebeu hoje sobre "'+v+'"?':'O que você percebeu hoje?';},opcional:true,ph:'Ex: uma amiga comentou sobre o assunto, tive uma ideia no banho, consegui dar um primeiro passo.'}];
+  const evidNota=['html','<p class="sv-dica sv-evid-nota">Suas anotações ficam guardadas no seu Livro de Permissões. Se nada chamou sua atenção hoje, tudo bem.</p>'];
   /* fecha a Permissão como feita e já abre o Menor passo */
   const primeiroPasso=()=>{salvarEvid();const e=trEst();e.feitas.permissao='done';delete e.tela.permissao;LIMPAR.forEach(k=>delete e.rasc[k]);salva();sessaoIr('passo');};
   const passoAtalho=['atalho',{rot:'🌱 Quero dar o primeiro passo',acao:primeiroPasso}];
   const espaco={b:[['sub','4. Dê espaço para a mudança'],
         ['html',()=>svGravetos(abertos()+1)+'<p class="sv-dica" style="text-align:center;margin-top:6px">'+(abertos()?'Um graveto a menos. Quando outra dúvida aparecer, é só voltar aqui.':'Nenhum graveto segurando esse desejo agora.')+'</p>',svGravetosSoltar],
         ['p','Nos próximos dias, mantenha essa nova frase por perto.'],['lembrete',{titulo:'Sua frase',texto:()=>R.permissao}],sinais,
-        ['campo',{key:'evid',rot:'Notou algo?',opcional:true,ph:'O que apareceu?'}],livro,passoAtalho],
+        evidCampo,evidNota,livro,passoAtalho],
       seguir:salvarEvid};
   /* quem se sente leve: nenhum graveto pra tirar; deixa o desejo por perto e pode seguir pro Menor passo */
   const espacoLeve={b:[['sub','Dê espaço para a mudança'],
         ['html',()=>svGravetos(abertos())+'<p class="sv-dica" style="text-align:center;margin-top:6px">'+(abertos()?'Esse desejo ainda tem uma dúvida guardada. Quando quiser olhar pra ela, é só voltar aqui.':'Nenhum graveto segurando esse desejo. Que bom! 💜')+'</p>'],
         ['p','Que delícia sentir leveza com o que você quer. Nos próximos dias, deixe esse desejo por perto.'],desejoLemb,sinais,
-        ['campo',{key:'evid',rot:'Notou algo?',opcional:true,ph:'O que apareceu?'}],livro,passoAtalho],
+        evidCampo,evidNota,livro,passoAtalho],
       seguir:salvarEvid};
   const telas=R.caminho==='leve'?[intro,sentir,espacoLeve]:R.caminho==='trava'?[intro,sentir,receio,quem,perspectiva,espaco]:[intro,sentir];
   sessaoAbrir({...trMeta('permissao'),limpar:LIMPAR,telas});

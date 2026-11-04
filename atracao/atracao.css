@@ -162,3 +162,7 @@ gatinha-fantoche.pronta{opacity:1}
 .sv-desejos .sv-opt.ja{background:transparent;opacity:.55;filter:grayscale(1)}
 .sv-desejos .sv-opt.ja span{font-size:11.5px}
 .sv-desejos .sv-opt.ja.on{opacity:1;filter:none;background:var(--sv-soft)}
+/* lista de exemplos de sinais (Permissão, Dê espaço para a mudança) */
+.sv-sinais{margin-top:-4px;padding-left:22px}
+.sv-sinais li{margin:2px 0}
+.sv-evid-nota{margin-top:8px}
