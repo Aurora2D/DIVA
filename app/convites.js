@@ -1,7 +1,7 @@
 /* ============ CONVITES GENTIS ============
    1. O QUE ELA QUER DA VIDA: no primeiro toque em hábito do app (ou no segundo, se o primeiro já abriu outra
       tela), a Diva pergunta o que a pessoa quer da vida dela e o que espera da DIVA. Uma vez só por pessoa.
-      Fica em S.porqueVida e volta na cartinha do dia 15. "Agora não" não pergunta de novo.
+      Fica em S.porqueVida e volta na cartinha 16 (Permita-se querer alguma coisa). "Agora não" não pergunta de novo.
    2. HÁBITOS QUIETINHOS: se nenhum hábito foi marcado há CONVITE_PARADO_DIAS dias, a tela Hoje mostra um
       convite pra revisar os hábitos (manter, ajustar, pausar ou tirar). "Agora não" espera mais uns dias.
    Pra mudar os textos, mexa só em CONVITE_TXT. Carregue depois de habitos.js, hoje.js e cartinhas.js. */
