@@ -15,6 +15,8 @@
    Aqui só a usamos: <gatinha-fantoche> + cat.play('acao'). Ações disponíveis: ver mascote/LEIA-ME.md.
    Se o motor dela não carregar, a tela funciona sem a gatinha. */
 const MASCOTE_BASE='mascote/assets/pecas/';
+/* Biju em vídeo (andando, deitando): sem som, toca sozinho; com movimento reduzido fica parada no 1º quadro */
+const svVideo=(cls,src,loop)=>`<video class="${cls}" src="${src}" muted playsinline preload="auto"${loop?' loop':''}${window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches?'':' autoplay'} aria-hidden="true"></video>`;
 const svMascote=(cls,pose)=>window.customElements&&customElements.get('gatinha-fantoche')?`<gatinha-fantoche class="${cls}" pose="${pose||'sentada'}" src-base="${MASCOTE_BASE}" aria-hidden="true"></gatinha-fantoche>`:'';
 /* reações: o que a gatinha faz em cada interação. Para mudar, troque os nomes das ações aqui. */
 /* Uma reação pode ser uma lista: as ações tocam uma depois da outra, e '@pose' troca a pose.
@@ -60,7 +62,7 @@ const TRILHA=[
   {id:'clareza',kicker:'Passo 1',titulo:'Clareza',afirma:'Eu estou em processo de descobrir o que eu quero, em todas as áreas da minha vida, do meu jeito e no meu tempo.',mascote:'clareza'},
   {id:'declaracao',kicker:'Passo 2',titulo:'Declaração de desejo',afirma:'Eu estou em processo de ter realizações em todas as áreas da minha vida, do meu jeito e no meu tempo.',mascote:'comemoracao'},
   {id:'permissao',kicker:'Passo 3',titulo:'Permissão',afirma:'Eu estou em processo de me permitir receber realizações em todas as áreas da minha vida, do meu jeito e no meu tempo.',mascote:'permissao'},
-  {id:'passo',kicker:'Ação',titulo:'Menor passo',afirma:'Eu posso começar pequeno.',mascote:'menor-passo'}
+  {id:'passo',kicker:'Ação',titulo:'Menor passo',afirma:'Eu posso começar pequeno.',mascote:'menor-passo',video:'atracao/biju-andando.mp4'}
 ];
 const trMeta=id=>TRILHA.find(x=>x.id===id);
 
@@ -128,7 +130,7 @@ function sessaoMostrar(manter){
   const st=_sessao,def=st.def,t=svNorm(st.telas[st.i]);
   st.acoes=[];const binds=[];let h='';
   if(st.i===0&&!def.compacto){
-    h+=`<div class="sv-hero${def.mascote?' com-img':''}">${def.mascote?svMascote('sv-mascote',def.mascote):svAquarela(def.id||'x',420,320,5)}</div><div class="sv-cab"><p class="sv-kick">${esc(def.kicker)}</p><h1 class="sv-tit">${esc(def.titulo)}</h1>${def.afirma?`<p class="sv-afirma">${esc(def.afirma)}</p>`:''}</div>`;
+    h+=`<div class="sv-hero${def.mascote?' com-img':''}">${def.video?svVideo('sv-mascote sv-video',def.video,true):def.mascote?svMascote('sv-mascote',def.mascote):svAquarela(def.id||'x',420,320,5)}</div><div class="sv-cab"><p class="sv-kick">${esc(def.kicker)}</p><h1 class="sv-tit">${esc(def.titulo)}</h1>${def.afirma?`<p class="sv-afirma">${esc(def.afirma)}</p>`:''}</div>`;
   }else h+=`<div class="sv-faixa">${def.compacto?svAquarela(def.id||'x',420,80,3,9):''}<span>${esc(def.kicker)} · ${esc(def.titulo)}</span>${def.compacto?'':svMascote('sv-espia',MASCOTE_DEPOIS[def.id]||def.mascote)}</div>`;
   const ult=st.i===st.telas.length-1;
   h+='<div class="sv-corpo">'+(t.b||[]).map(b=>svBloco(b,st,binds)).join('');
@@ -726,7 +728,7 @@ function sessaoMenorPasso(d){
         else{item={id:trNovaId('mp'),texto:v,criadoEm:hoje(),sugestao:paraInfinitivoSugestao(v)};d.menorPassos.push(item);R.passoId=item.id;}
         d.menorPasso=item;salva();confete(['🌱','✨','💫']);
       }},
-    [['sub','Seu passo está guardado'],['lembrete',{titulo:'Meu menor passo',texto:()=>R.passo}],['p','Quando concluir, reconheça o que fez. Não porque um pequeno passo resolve tudo de uma vez, mas porque ele é a prova viva de que você já começou a construir o que deseja.'],['fecho','Você pode começar de onde está, com o que tem e no ritmo que consegue sustentar.'],
+    [['html',()=>`<div class="sv-hero com-img sv-hero-fim">${svVideo('sv-mascote sv-video','atracao/biju-deitando.mp4',false)}</div>`],['sub','Seu passo está guardado'],['lembrete',{titulo:'Meu menor passo',texto:()=>R.passo}],['p','Quando concluir, reconheça o que fez. Não porque um pequeno passo resolve tudo de uma vez, mas porque ele é a prova viva de que você já começou a construir o que deseja.'],['fecho','Você pode começar de onde está, com o que tem e no ritmo que consegue sustentar.'],
       ['html','<button type="button" class="sv-atalho" id="svVirarHab"><span>🌱 Transformar em hábito</span></button><p class="sv-dica" style="margin-top:8px">Opcional. Um hábito novo por vez: o próximo libera 3 dias depois. Se preferir, o passo fica guardado e você decide depois.</p>',r=>{const b=r.querySelector('#svVirarHab');if(b)b.onclick=()=>{svReage('brilho',0);virarDesejoEmHabito(d,R.passo);};}]]
   ]});
 }
