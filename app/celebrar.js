@@ -86,7 +86,7 @@ function renderConfig(){
     +row('cfgRowSaude','folha','Cuidados fora do app',(()=>{const n=cuidadosPendentes().length;return n?n+(n===1?' pendente':' pendentes'):'nada pendente';})())
     +`</div>`;
   h+=`<div class="cfg-grupo-tit">Experiência</div><div class="cfg-grupo">`
-    +row('cfgRowConhecer','atracao','Conhecer a Diva<small>A gatinha mostra o que tem no app</small>','')
+    +row('cfgRowConhecer','atracao','Conhecer o app<small>A Biju mostra o que tem por aqui</small>','')
     +row('cfgRowMusica','nota','Sugestões de música<small>Pra quem canta ou toca</small>','',sw('cfgMusica',musicaAtiva()))
     +`<div class="cfg-row" id="cfgRowTema">${I('lua')}<span class="cfg-txt">Aparência<small>Auto segue o celular</small></span><span class="cfg-tema" role="group" aria-label="Aparência">${[['auto','Auto'],['claro','Claro'],['escuro','Escuro']].map(([v,t])=>`<button type="button" data-tema="${v}" aria-pressed="${temaAtual===v}">${t}</button>`).join('')}</span></div>`
     +row('cfgRowSons','sino','Sons<small>Ao marcar hábitos, comemorar e na abertura</small>','',`<span class="cfg-mini" id="btnOuvirSons">Ouvir</span>`+sw('cfgSons',somLigado()))

@@ -1,11 +1,12 @@
 /* ============ BOAS-VINDAS DA DIVA ============
-   A gatinha se apresenta para quem chega novo, conta o que o app tem e como ele vai abrindo aos poucos.
-   Aparece antes do cadastro (nome, quem cuida...). Quem já usa o app pode rever em Configurações > "Conhecer a Diva".
+   A gatinha (Biju) se apresenta para quem chega novo, conta o que o app tem e como ele vai abrindo aos poucos.
+   Aparece antes do cadastro (nome, quem cuida...). Quem já usa o app pode rever em Configurações > "Conhecer o app".
    Para mudar os textos, mexa só em BV_TELAS. A gatinha vem de mascote/ (ver mascote/LEIA-ME.md). */
 const BV_TELAS=[
   {acao:'tchau',
    titulo:'Bem-vinda, diva!',
-   html:`<p class="onb-texto">Você fez uma boa escolha: cuidar de si. Aqui você tem um espaço de autocuidado diário, pra lembrar todo dia que você é a pessoa mais importante da sua vida.</p>
+   html:`<p class="onb-texto">Eu sou a Biju, e vou te acompanhar por aqui.</p>
+         <p class="onb-texto">Você fez uma boa escolha: cuidar de si. Aqui você tem um espaço de autocuidado diário, pra lembrar todo dia que você é a pessoa mais importante da sua vida.</p>
          <p class="onb-texto">E cada vez que você volta aqui, está fazendo essa escolha de novo.</p>`},
   {acao:'feliz',
    titulo:'Com pequenos passos a gente chega longe',

@@ -202,7 +202,7 @@ function cartinhaDoDia(dia){
 function cartinhaHTML(c){
   let h=`<h3 class="cp-titulo">${esc(c.titulo)}</h3>`;
   h+=c.p.map(t=>`<p>${esc(t)}</p>`).join('');
-  /* cartinha 16 (desejos): se a pessoa contou o que quer da vida, a Diva lembra com as palavras dela */
+  /* cartinha 16 (desejos): se a pessoa contou o que quer da vida, a Biju lembra com as palavras dela */
   if(c.porque&&(S.porqueVida||'').trim())h+=`<p>Lá no começo, você me contou o que te trouxe até aqui: "${esc(S.porqueVida.trim())}"</p>`;
   h+=`<p class="cp-frase">${esc(c.frase)}</p>`;
   /* cartinha 31 (dia 21): convite pro Mapa Emocional, só quando o mapa já está liberado */
@@ -227,7 +227,7 @@ function renderCartinha(){
   box.innerHTML=(c?`<div class="carta-diva${lida?' lida':''}" id="cartaDiva">
       <button type="button" class="cd-cab" id="cartaDivaAbrir">
         <span class="cd-env" aria-hidden="true">💌</span>
-        <span class="cd-tit"><b>Cartinha da Diva</b><span>dia ${dia} de ${CARTINHAS_TOTAL} · ${lida?'ler de novo':'toque pra abrir'}</span></span>
+        <span class="cd-tit"><b>Cartinha da Biju</b><span>dia ${dia} de ${CARTINHAS_TOTAL} · ${lida?'ler de novo':'toque pra abrir'}</span></span>
       </button>
     </div>`:'')+(pista?`<p class="cd-pista">🔒 ${esc(pista)}</p>`:'');
   const bt=$('cartaDivaAbrir');if(bt)bt.onclick=()=>abrirCartinha(dia,c);
@@ -237,7 +237,7 @@ function abrirCartinha(dia,c){
   let o=$('cartaModal');
   if(!o){
     o=document.createElement('div');o.className='modal-overlay';o.id='cartaModal';o.hidden=true;
-    o.innerHTML='<div class="modal-caixa carta-pop"><button type="button" class="cp-x" id="cpX" aria-label="Fechar"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round" fill="none"/></svg></button><div class="cp-gata" id="cpGata"></div><p class="cp-dica mut" id="cpDica">toque na Diva 🐾</p><div class="cp-k" id="cpK"></div><div class="cp-txt" id="cpTxt"></div><p class="cd-ass"><span class="diva-marca">Diva</span> 🐾</p><button type="button" class="modal-btn prim" id="cpFechar" style="width:100%;margin-top:14px">Obrigada, Diva</button></div>';
+    o.innerHTML='<div class="modal-caixa carta-pop"><button type="button" class="cp-x" id="cpX" aria-label="Fechar"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round" fill="none"/></svg></button><div class="cp-gata" id="cpGata"></div><p class="cp-dica mut" id="cpDica">toque na Biju 🐾</p><div class="cp-k" id="cpK"></div><div class="cp-txt" id="cpTxt"></div><p class="cd-ass">Biju 🐾</p><button type="button" class="modal-btn prim" id="cpFechar" style="width:100%;margin-top:14px">Obrigada, Biju</button></div>';
     document.body.appendChild(o);
   }
   const gata=window.customElements&&customElements.get('gatinha-fantoche');
