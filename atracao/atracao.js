@@ -536,7 +536,11 @@ function sessaoClareza(opc){
       const f=trEst().foco;f.desejoId=d.id;if(c)f.contrasteId=c.id;salva();
     }});
   telas.push({b:[['p','Se quiser aprofundar um pouco mais:'],['campo',{key:'muda',rot:'Por que isso é importante para mim? O que muda na minha vida se eu me aproximar disso?',opcional:true}],['fecho','Você não precisa ter um plano inteiro agora. Basta reconhecer para onde quer caminhar.']],
-    seguir:()=>{const d=S.leiAtracao.desejos.find(x=>x.id===R.desejoCriado),v=(R.muda||'').trim();if(d&&v){d.camadas=Object.assign({},d.camadas,{importa:v});salva();}}});
+    seguir:()=>{const d=S.leiAtracao.desejos.find(x=>x.id===R.desejoCriado),v=(R.muda||'').trim();
+      /* se a resposta repete o que já está no desejo, não insiste: avisa com carinho e deixa seguir */
+      const nz=x=>String(x||'').toLowerCase().replace(/^(porque|pois)\s+/,'').replace(/[.!?…]+$/,'').replace(/\s+/g,' ').trim();
+      if(d&&v&&nz(d.texto).includes(nz(v)))mostrarToast('Isso já está no seu desejo 💜 Pode deixar assim');
+      else if(d&&v){d.camadas=Object.assign({},d.camadas,{importa:v});salva();}}});
   sessaoAbrir({...trMeta('clareza'),limpar:CH,telas});
 }
 

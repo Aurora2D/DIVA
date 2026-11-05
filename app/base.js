@@ -404,10 +404,23 @@ function formatarNucleoIdeal(t){
   if(art) return (art+' '+subst+' ideal'+comp).replace(/\s+/g,' ').trim();
   return (subst+' ideal'+comp).replace(/\s+/g,' ').trim();
 }
+/* tira trechos repetidos de uma frase ("..., porque X e X, e Y" vira "..., porque X, e Y"); só corta repetição exata de 3+ palavras */
+function semRepeticao(t){
+  const s=String(t||'');
+  const pd=s.split(/(,\s*e\s+|,\s*|\s+e\s+)/);
+  const norm=x=>x.toLowerCase().replace(/^(porque|pois|já que)\s+/,'').replace(/[.!?…]+$/,'').replace(/\s+/g,' ').trim();
+  const vistos=[];let out=pd[0]||'';vistos.push(norm(out));
+  for(let i=2;i<pd.length;i+=2){
+    const seg=pd[i],n=norm(seg);
+    if(n.split(' ').length>=3&&vistos.includes(n))continue;
+    vistos.push(n);out+=pd[i-1]+seg;
+  }
+  return out;
+}
 function limparTextoDesejo(t){
   let s=String(t||'').trim();
   s=s.replace(/^(estou em processo de|estou no processo de|adoro a ideia de|adoro saber que|adoro a sensação de quando|adoro me ver|estou animado\(a\) com a ideia de|eu decidi|cada vez mais|me anima|muitas coisas podem acontecer para|amo a ideia de|me faz bem pensar em|eu escolho|fico feliz em|tenho vontade de|estou aprendendo a|hoje eu me permito|eu mereço|amo saber que posso|amo a ideia de|me sinto feliz ao imaginar que posso|é tão bom saber que posso|me empolga pensar em|amo sentir que posso|sinto alegria em|eu estou em processo de|a cada dia, de todas as formas, eu me abro mais para)\s*/i,'');
-  s=s.replace(/\s+/g,' ').trim();
+  s=semRepeticao(s.replace(/\s+/g,' ').trim());
   if(s) s=s.charAt(0).toUpperCase()+s.slice(1);
   return s;
 }
