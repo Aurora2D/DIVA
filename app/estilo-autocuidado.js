@@ -67,14 +67,12 @@ function estiloAdicionarPratica(catId,nome){
   const lista=ESTILO_PRATICAS[catId]||[];
   const pr=lista.find(p=>p.nome===nome);
   if(!pr){avisar('Não encontrei essa prática.');return;}
-  if(S.habitos.some(h=>h.nome===pr.nome)){avisar('Você já tem esse hábito. 💛');return;}
-  if(S.habitos.some(h=>!h.pausado)&&!habitoLiberado()){
-    const dias=diasAteLiberar();
-    avisar('Sem pressa. Próximo hábito libera em '+dias+' dia'+(dias===1?'':'s')+'.');
-    return;
-  }
+  if(S.habitos.some(h=>h.nome===pr.nome)){mostrarToast('Você já tem esse hábito 💛');return false;}
+  // sem bloqueio e sem sair da tela: vai pra lista personalizada, e a pessoa escolhe depois por qual começar
   const item=estiloPraticaParaItem(pr,catId);
-  fecharOverlay($('estiloResultadoModal'),()=>abrirModalFila(item));
+  if(!guardarNaMinhaLista(item))return false;
+  mostrarToast(avisoListaGuardado());
+  return true;
 }
 /* 30 perguntas: cada alternativa tem cat (A-E). Ordem das alternativas é embaralhada na UI. */
 const ESTILO_PERGUNTAS=[
@@ -406,7 +404,7 @@ function estiloMostrarResultado(){
   }
   // práticas prioritárias — clicáveis para virar hábito
   html+=`<div class="mut" style="font-size:11px;font-weight:800;letter-spacing:1.2px;text-transform:uppercase;margin-bottom:6px">Práticas que combinam com você</div>`;
-  html+=`<p class="mut" style="font-size:12px;line-height:1.45;margin:0 0 10px">Toque em uma pra virar <b>hábito</b>: algo pra construir com uma meta.${S.praticasModo==='generica'?' As práticas do seu check-in já foram atualizadas.':''}</p>`;
+  html+=`<p class="mut" style="font-size:12px;line-height:1.45;margin:0 0 10px">Toque nas que quiser: elas vão pra <b>sua lista</b>, e depois você escolhe por qual hábito começar.${S.praticasModo==='generica'?' As práticas do seu check-in já foram atualizadas.':''}</p>`;
   const ids=[e.principal,e.secundaria];
   ordem.forEach(([id])=>{if(!ids.includes(id))ids.push(id);});
   ids.slice(0,3).forEach(id=>{
@@ -415,9 +413,10 @@ function estiloMostrarResultado(){
     html+=`<div style="margin-bottom:12px"><div style="font-weight:800;font-size:13px;margin-bottom:6px">${meta.emoji} ${esc(meta.nome)}</div>`;
     lista.forEach(pr=>{
       const jaTem=S.habitos.some(h=>h.nome===pr.nome);
-      html+=`<div class="cat-sugestao ${jaTem?'ja-tem':''}" data-estilo-cat="${esc(id)}" data-estilo-prat="${esc(pr.nome)}" style="margin-bottom:6px;cursor:pointer">
-        <div class="txt"><b>${pr.emoji} ${esc(pr.nome)}</b>${pr.unidade?`<br><span class="mut">${esc(pr.unidade)}</span>`:''}</div>
-        <div class="add">${jaTem?'✓':'+'}</div>
+      const naLista=!jaTem&&naMinhaLista(pr.nome);
+      html+=`<div class="cat-sugestao ${jaTem||naLista?'ja-tem':''}" data-estilo-cat="${esc(id)}" data-estilo-prat="${esc(pr.nome)}" style="margin-bottom:6px;cursor:pointer">
+        <div class="txt"><b>${pr.emoji} ${esc(pr.nome)}</b>${pr.unidade||naLista?`<br><span class="mut">${[pr.unidade?esc(pr.unidade):'',naLista?'na sua lista':''].filter(Boolean).join(' · ')}</span>`:''}</div>
+        <div class="add">${jaTem||naLista?'✓':'+'}</div>
       </div>`;
     });
     html+=`</div>`;
@@ -427,8 +426,12 @@ function estiloMostrarResultado(){
   ligarPraticaPropria('er',adicionarPraticaPropria);
   $('estiloResultadoCorpo').querySelectorAll('[data-estilo-prat]').forEach(el=>{
     el.onclick=()=>{
-      if(el.classList.contains('ja-tem')){mostrarToast('Você já tem esse hábito 💛');return;}
-      estiloAdicionarPratica(el.dataset.estiloCat, el.dataset.estiloPrat);
+      if(el.classList.contains('ja-tem')){mostrarToast(S.habitos.some(h=>h.nome===el.dataset.estiloPrat)?'Você já tem esse hábito 💛':'Esse já está na sua lista 💛');return;}
+      if(estiloAdicionarPratica(el.dataset.estiloCat, el.dataset.estiloPrat)){
+        el.classList.add('ja-tem');
+        const a=el.querySelector('.add');if(a)a.textContent='✓';
+        const t=el.querySelector('.txt');if(t)t.insertAdjacentHTML('beforeend',' <span class="mut">· na sua lista</span>');
+      }
     };
   });
   const o=$('estiloResultadoModal');

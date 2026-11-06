@@ -44,8 +44,33 @@ function adicionarHabitoFila(item){
   S.ultimoConviteEm=Date.now();
   salva();confete([item.emoji,'✨','🌸']);renderHoje();renderHabitos();
 }
+/* ============ MINHA LISTA ============
+   Hábitos que a pessoa escolheu (no quiz ou na fila) e ainda não começou.
+   Não tem limite: o ritmo de um hábito por vez vale só pra começar, não pra guardar. */
+function minhaListaItens(){
+  const l=(S.minhaLista||[]).filter(i=>i&&i.nome&&!S.habitos.some(h=>h.nome===i.nome||(i.id&&h.id===i.id)));
+  if(S.minhaLista&&l.length!==S.minhaLista.length){S.minhaLista=l;}
+  return l;
+}
+function naMinhaLista(nome){return (S.minhaLista||[]).some(i=>i.nome===nome);}
+function guardarNaMinhaLista(item){
+  if(S.habitos.some(h=>h.nome===item.nome)){mostrarToast('Você já tem esse hábito 💛');return false;}
+  if(naMinhaLista(item.nome)){mostrarToast('Esse já está na sua lista 💛');return false;}
+  S.minhaLista=(S.minhaLista||[]).concat([{...item,emojis:(item.emojis||[item.emoji]).slice(),dims:(item.dims||[]).slice()}]);
+  salva();
+  return true;
+}
+function avisoListaGuardado(){
+  const ativos=S.habitos.some(h=>!h.pausado);
+  if(ativos&&!habitoLiberado()){
+    const d=diasAteLiberar();
+    return 'O hábito foi adicionado na sua lista ✓ Em '+d+' dia'+(d===1?'':'s')+' você escolhe por qual quer começar.';
+  }
+  return 'O hábito foi adicionado na sua lista ✓ Em Gerenciar hábitos você escolhe por qual quer começar.';
+}
 function filaCompleta(){
-  const base=filaBase();
+  const lista=minhaListaItens();
+  const base=lista.length?[{nome:'💛 Minha lista',itens:lista},...filaBase()]:filaBase();
   const nomes=new Set(base.flatMap(c=>c.itens.map(i=>i.nome)));
   const extras=Object.entries(S.historicoRemovidos||{})
     .filter(([n,v])=>v&&v.meta&&!nomes.has(n)&&!S.habitos.some(h=>h.nome===n))
@@ -156,7 +181,7 @@ function renderHabitos(){
   const blocoCat=(nome,sugs,itens)=>`<div class="cat-bloco"><div class="cat-titulo">${esc(catVer(nome))}</div>${sugs.map(sugRow).join('')}${itens.map(itemRow).join('')}</div>`;
   const cartaoMusica=`<div class="cat-bloco musica-convite"><div class="txt"><b>🎵 Você canta ou toca algum instrumento?</b><br><span class="mut">Tem sugestões pra cuidar da voz e do instrumento.</span></div><button type="button" class="btn btn-full" id="btnMostrarMusica" style="margin-top:10px">Mostrar sugestões de música</button></div>`;
   $('sugestoesFilaBox').innerHTML=filaCats.map(cat=>{
-    const itens=cat.itens.filter(item=>!ocultas.has(item.nome));
+    const itens=cat.nome==='💛 Minha lista'?cat.itens:cat.itens.filter(item=>!ocultas.has(item.nome));
     const sugs=sugPorCat[cat.nome]||[];
     if(!itens.length&&!sugs.length)return '';
     return blocoCat(cat.nome,sugs,itens)+(cat.nome==='⏳ Tempo de qualidade'&&!musicaAtiva()&&S.musica!==false?cartaoMusica:'');
@@ -169,8 +194,10 @@ function renderHabitos(){
       if(!item)return;
       if(S.habitos.some(h=>h.nome===item.nome)){avisar('Você já tem esse hábito. 💛');return;}
       if(S.habitos.some(h=>!h.pausado) && !habitoLiberado()){
+        // não bloqueia: guarda na lista, e a pessoa escolhe por qual começar quando liberar
         const dias=diasAteLiberar();
-        avisar('Sem pressa. Próximo hábito libera em '+dias+' dia'+(dias===1?'':'s')+'.');
+        if(naMinhaLista(item.nome))mostrarToast('Esse já está na sua lista 💛 O próximo hábito começa em '+dias+' dia'+(dias===1?'':'s')+'.');
+        else if(guardarNaMinhaLista(item)){mostrarToast(avisoListaGuardado());renderHabitos();}
         return;
       }
       abrirModalFila(item);
@@ -187,6 +214,17 @@ function renderHabitos(){
 
 
   bindSugHab();
+
+  // "Tem alguma prática só sua?" também aqui (mesmo bloco da tela pós-quiz)
+  let ppBox=$('praticaPropriaGerenciar');
+  if(!ppBox){
+    ppBox=document.createElement('div');ppBox.id='praticaPropriaGerenciar';
+    const fb=$('sugestoesFilaBox');if(fb&&fb.parentNode)fb.parentNode.insertBefore(ppBox,fb.nextSibling);
+  }
+  if(ppBox&&typeof praticaPropriaHTML==='function'){
+    ppBox.innerHTML=praticaPropriaHTML('gh');
+    ligarPraticaPropria('gh',adicionarPraticaPropria);
+  }
 
 
 }
@@ -253,6 +291,10 @@ function abrirSugMenu(info){
       if(!Array.isArray(S.habitosFilaOcultas))S.habitosFilaOcultas=[];
       if(!S.habitosFilaOcultas.includes(info.nome))S.habitosFilaOcultas.push(info.nome);
       salva();renderHabitos();mostrarToast('Movido para '+lista[idx].nome+' ✓');
+    });
+    if(naMinhaLista(info.nome))add('💛 Tirar da minha lista','sec',()=>{
+      S.minhaLista=(S.minhaLista||[]).filter(i=>i.nome!==info.nome);
+      salva();renderHabitos();mostrarToast('Tirado da sua lista');
     });
     add('🗑️ Esconder da fila','sec',()=>{
       confirmar('Esconder essa sugestão da fila?',()=>{

@@ -33,6 +33,7 @@
     { id: 'patasTras',  img: 'patas-tras',     cx: 505, cy: 1335, w: 517, group: 'root' },
     { id: 'pataEsq',    img: 'pata-esq',       cx: 390, cy: 1120, w: 260, pivot: [390, 1120], rot: 6.2, group: 'root' },  // perna mais curta, pé alinhado ao chão
     { id: 'pataDir',    img: 'pata-dir',       cx: 610, cy: 1120, w: 225, pivot: [610, 1120], rot: -2.2, group: 'root' },
+    { id: 'coleira',    img: 'coleira',        cx: 505, cy: 748,  w: 370, group: 'root' },  // coleira de pérola (a mesma da Niquinha)
     { id: 'cabeca',     img: 'cabeca',         cx: 505, cy: 478,  w: 615, group: 'head' },
     { id: 'bochechas',  img: 'bochechas',      cx: 506, cy: 562,  w: 415, group: 'head' },
     { id: 'olhos',      slot: 'olhos', group: 'head' },
@@ -88,7 +89,10 @@
   const comCorpo = (corpo) => PARTS
     .filter((p) => !['corpo', 'patasTras', 'pataEsq', 'pataDir', 'pataLevantada'].includes(p.id))
     .flatMap((p) => (p.id === 'orelhaDir' ? [p, corpo] : [p]));
-  const PARTS_PERMISSAO = comCorpo({ id: 'corpo', img: 'p-corpo', cx: 510.5, cy: 1034, w: 733, group: 'root' });
+  /* Permissão: as patinhas ficam NA FRENTE da coleira (p-maos = só as patinhas recortadas do p-corpo),
+     e a coleira sobe um pouco, aparecendo dos lados, por trás das patinhas */
+  const PARTS_PERMISSAO = comCorpo({ id: 'corpo', img: 'p-corpo', cx: 510.5, cy: 1034, w: 733, group: 'root' })
+    .flatMap((p) => (p.id === 'coleira' ? [{ ...p, img: 'coleira-p', cy: 738, w: 420 }, { id: 'maos', img: 'p-maos', cx: 510.5, cy: 1034, w: 733, group: 'root' }] : [p]));
   const PARTS_COMEMORACAO = (() => {
     const parts = comCorpo({ id: 'corpo', img: 'c-corpo', cx: 516, cy: 933.5, w: 980, group: 'root' });
     // Ampliações discretas das mãos, recortadas diretamente do corpo original para manter a aquarela.
