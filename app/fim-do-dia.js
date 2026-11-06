@@ -1,6 +1,7 @@
 /* ============ LISTINHA DO FIM DO DIA (app/fim-do-dia.js) ============
    Quando a pessoa abre o app depois das 19h, aparece uma vez por dia a lista do que ela fez hoje:
-   hábitos marcados, práticas do check-in e o que ela anotou no Livro de Conquistas.
+   hábitos marcados, práticas do check-in, conquistas anotadas, frases sobre os hábitos e o que ela trabalhou na Atração.
+   O check-in em si (sono, refeições, notas) fica de fora: ele já aparece enquanto ela preenche.
    Ideia de TCC: enxergar as ações do caminho, não só "pronto ou não pronto".
    Se o dia ficou vazio, não aparece (não vira cobrança). */
 const FIM_DIA_HORA=19;
@@ -10,6 +11,27 @@ function fimDoDiaItens(){
   const ci=(S.checkins||{})[h]||{};
   Object.keys(ci.praticas||{}).forEach(p=>{if(ci.praticas[p]&&!itens.some(i=>i.txt===p))itens.push({emoji:'✨',txt:p});});
   ((S.conquistas&&S.conquistas.itens)||[]).forEach(c=>{if(c&&c.criadoEm===h&&c.txt)itens.push({emoji:'📖',txt:c.txt});});
+  // frases sobre os hábitos ("o lado bom é que...")
+  (S.habitos||[]).forEach(hb=>{(hb.relatos||[]).forEach(r=>{
+    if(r&&r.data===h&&!r.naoPercebi&&(r.texto||'').trim()){
+      const t=typeof relatoLimpar==='function'?relatoLimpar(r.texto):r.texto.trim();
+      itens.push({emoji:'💬',txt:'Sobre '+(typeof acaoDoHabito==='function'?acaoDoHabito(hb):hb.nome)+': o lado bom é que '+t});
+    }
+  });});
+  // Atração: o que ela trabalhou hoje (uma linha por tipo, sem contar quantas)
+  const la=S.leiAtracao||{},ds=(la.desejos||[]).filter(d=>d&&!d.arquivado);
+  const at=new Set();
+  (la.contrastes||[]).forEach(c=>{
+    if(c.criadoEm===h)at.add('Deixou sair algo que incomodava');
+    if((c.trabalhados||[]).some(t=>t.em===h))at.add('Olhou uma coisa com outros olhos');
+    if(c.virouDesejoEm===h)at.add('Transformou um incômodo em desejo');
+  });
+  ds.forEach(d=>{
+    if((d.gravetos||[]).some(g=>g.soltoEm===h))at.add('Escreveu uma permissão pra você');
+    if((d.evidencias||[]).some(e=>e.data===h))at.add('Anotou uma prova de que é possível');
+  });
+  at.forEach(t=>itens.push({emoji:'💫',txt:t}));
+  ds.forEach(d=>(d.menorPassos||[]).forEach(m=>{if(m.criadoEm===h&&m.texto)itens.push({emoji:'👣',txt:'Escolheu o seu menor passo: '+m.texto});}));
   return itens;
 }
 function fimDoDiaOcupado(){
@@ -33,7 +55,7 @@ function fimDoDiaMostrar(itens){
     o.innerHTML=`<div class="modal-caixa" style="text-align:center">
       <div id="fimDiaGata" style="margin:0 auto 4px"></div>
       <div class="modal-pergunta">Olha o que você fez hoje</div>
-      <div id="fimDiaLista" style="text-align:left;margin:10px 0 6px"></div>
+      <div id="fimDiaLista" style="text-align:left;margin:10px 0 6px;max-height:48vh;overflow-y:auto"></div>
       <p class="mut" style="font-size:12.5px;line-height:1.5;margin:8px 0 0">Cada coisinha dessas é cuidado com você. Conta, sim.</p>
       <div class="modal-botoes" style="margin-top:14px"><button class="modal-btn prim" id="fimDiaOk" style="width:100%">Que bom 💜</button></div>
     </div>`;
