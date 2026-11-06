@@ -341,6 +341,7 @@ function dzSalvaCampos(){
   const t=$('dzTexto');
   if(t){const v=limparTextoDesejo(t.value)||t.value.trim();if(v&&v!==d.texto){d.texto=v;salva();}}
 }
+let _cpTrocaIdx=null; // frase do corpo com a escolha de prefixo aberta
 function renderCorpoCorpo(d){
   const chaves=d.corpo.map(c=>c.k);
   const modelos=MODELOS_CORPO.filter(m=>!m.oculto&&!chaves.includes(m.k));
@@ -349,7 +350,8 @@ function renderCorpoCorpo(d){
     const mod=MODELOS_CORPO.find(m=>m.k===c.k);
     if(!mod)return;
     let corpoTxt=limparTextoDesejo(c.texto)||c.texto||'…';corpoTxt=corpoTxt.charAt(0).toLowerCase()+corpoTxt.slice(1);
-    html+=`<div class="corpo-item"><span class="cp-txt"><b style="color:var(--b)">${esc(mod.pre)}</b> ${esc(corpoTxt)}</span><button class="cp-rm" data-cp-rm="${i}" title="remover">×</button></div>`;
+    const troca=_cpTrocaIdx===i&&modelos.length?`<div class="corpo-modelos" style="margin-top:8px">${modelos.map(m=>`<button class="corpo-add" data-cp-troca="${i}" data-cp-k="${m.k}">${esc(m.pre)}</button>`).join('')}</div>`:'';
+    html+=`<div class="corpo-item"><span class="cp-txt"><b class="cp-pre" data-cp-pre="${i}" style="color:var(--b);cursor:pointer;text-decoration:underline dotted;text-underline-offset:3px" title="Trocar o começo">${esc(mod.pre)}</b> ${esc(corpoTxt)}${troca}</span><button class="cp-rm" data-cp-rm="${i}" title="remover">×</button></div>`;
   });
   html+='</div>';
   if(modelos.length){
@@ -359,7 +361,7 @@ function renderCorpoCorpo(d){
     });
     html+='</div>';
   }
-  html+='<div class="mut dz-dica" style="margin-top:8px">Toque num prefixo: a frase da clareza entra sozinha. Toque nela se quiser ajustar. Use quantas quiser — se soar falso, apague.</div>';
+  html+='<div class="mut dz-dica" style="margin-top:8px">Toque num prefixo: a frase da clareza entra sozinha. Toque no começo de uma frase pra trocar o prefixo sem perder o resto, ou no texto pra ajustar. Use quantas quiser — se soar falso, apague.</div>';
   return html;
 }
 function montarDeclaracao(d){
@@ -539,17 +541,31 @@ function dzRender(){
     if(v!==(dd.nucleo||'').trim()){dd.nucleo=v;salva();dzRender();}
   };
   $('dzP2').querySelectorAll('[data-cp-rm]').forEach(b=>{
-    b.onclick=()=>{const dd=dzFind();dd.corpo.splice(+b.dataset.cpRm,1);salva();dzRender();};
+    b.onclick=()=>{const dd=dzFind();dd.corpo.splice(+b.dataset.cpRm,1);_cpTrocaIdx=null;salva();dzRender();};
   });
   $('dzP2').querySelectorAll('[data-cp-add]').forEach(b=>{
     b.onclick=()=>{
       const dd=dzFind();const k=b.dataset.cpAdd;
       const mod=MODELOS_CORPO.find(m=>m.k===k);if(!mod)return;
-      // reusa a clareza já escrita — sem digitar de novo
-      let base=(limparTextoDesejo(dd.texto)||dd.texto||'').trim();
+      // reusa a clareza já escrita — sem digitar de novo.
+      // Desejo que veio de um hábito: reusa a frase com o porque dela, não só o nome do hábito.
+      const doHab=dd.habitoOrigem&&(dd.corpo||[]).find(c=>c.doHabito&&c.texto);
+      let base=doHab?doHab.texto.trim():(limparTextoDesejo(dd.texto)||dd.texto||'').trim();
       if(base) base=base.charAt(0).toLowerCase()+base.slice(1);
       dd.corpo.push({k,texto:base});
       salva();dzRender();
+    };
+  });
+  // toque no começo da frase: abre a escolha de outro prefixo, mantendo o texto (e o porque) igual
+  $('dzP2').querySelectorAll('[data-cp-pre]').forEach(b=>{
+    b.onclick=e=>{e.stopPropagation();const i=+b.dataset.cpPre;_cpTrocaIdx=_cpTrocaIdx===i?null:i;dzRender();};
+  });
+  $('dzP2').querySelectorAll('[data-cp-troca]').forEach(b=>{
+    b.onclick=e=>{
+      e.stopPropagation();
+      const dd=dzFind();const c=dd&&dd.corpo[+b.dataset.cpTroca];if(!c)return;
+      c.k=b.dataset.cpK;_cpTrocaIdx=null;
+      salva();dzRender();mostrarToast('Prefixo trocado ✓');
     };
   });
   // toque na frase do corpo para editar (opcional)

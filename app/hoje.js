@@ -396,14 +396,17 @@ function relatoLevarAtracao(hb){
   const texto=acao+', porque '+juntar(fr);
   const ids=new Set((S.leiAtracao.areas||[]).map(a=>a.id));
   let d=(S.leiAtracao.desejos||[]).find(x=>x.habitoOrigem===hb.id&&!x.arquivado);
+  let kAntes='ad_sensacao';
   if(d){
+    // mantém o prefixo que ela escolheu pra essa frase
+    const ant=(d.corpo||[]).find(c=>c.doHabito);if(ant&&ant.k)kAntes=ant.k;
     d.corpo=(d.corpo||[]).filter(c=>!c.doHabito);
   } else {
     let area=GRUPO_PARA_AREA[grupoDe(hb)]||'bemestar';if(!ids.has(area))area=ids.has('vontades')?'vontades':[...ids][0];
     d=novoDesejo(area,acao);d.habitoOrigem=hb.id;d.nucleo='o cuidado ideal comigo';
     S.leiAtracao.desejos.push(d);
   }
-  d.corpo.unshift({k:'ad_sensacao',texto,doHabito:true});
+  d.corpo.unshift({k:kAntes,texto,doHabito:true});
   d.sensacao=null;
   salva();
   fecharOverlay($('relatosHabModal'),()=>{trocaAba('atracao');setTimeout(()=>abrirDesejo(d.id,2),400);mostrarToast('Levado pra Atração ✓');});
