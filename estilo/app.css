@@ -119,3 +119,20 @@ section.aba-travada > :not(.aba-trava-aviso){opacity:.35;filter:grayscale(.85);p
 .cm-txt{margin:0;font-family:'Cormorant Garamond',serif;font-weight:600;font-size:30px;line-height:1.15;color:var(--txt);text-wrap:balance}
 .cm-dica{margin:10px 0 0;font-size:11.5px;color:var(--mut)}
 @media (prefers-reduced-motion:reduce){.cm-overlay,.cm-caixa{transition:none}}
+
+/* ===== Tela do prêmio: clara, em aquarela, com a Biju (app/premio-tela.js) ===== */
+#premioModal{background:var(--bg);background-image:radial-gradient(60% 42% at 18% 12%,rgba(239,188,203,.55),transparent 70%),radial-gradient(55% 40% at 86% 20%,rgba(189,128,209,.30),transparent 70%),radial-gradient(70% 45% at 50% 100%,rgba(231,199,138,.28),transparent 70%);z-index:410}
+#premioModal canvas{pointer-events:none}
+#premioModal #premioCanvas{display:none}
+#premioModal .premio-caixa{color:var(--txt);max-width:360px}
+#premioModal .premio-emoji{animation:none;font-size:0;line-height:0;margin:0 auto 6px;width:190px;min-height:190px;display:flex;align-items:flex-end;justify-content:center;border-radius:50%}
+#premioModal .premio-emoji img{width:190px;max-width:100%;height:auto;display:block}
+#premioModal[data-marco="G"] .premio-emoji{background:radial-gradient(circle,rgba(231,199,138,.55) 0%,rgba(231,199,138,.22) 45%,transparent 70%)}
+#premioModal .premio-pretitulo{display:none}
+#premioModal .premio-nome{background:none;-webkit-background-clip:border-box;background-clip:border-box;color:var(--txt);font-size:30px;line-height:1.15;margin-bottom:12px;text-wrap:balance}
+#premioModal .premio-tags{margin-bottom:24px}
+#premioModal .premio-tag{background:var(--surf-mid);border:1px solid var(--borda);color:var(--mut);font-weight:600}
+#premioModal .premio-btn-row{flex-direction:row;flex-wrap:wrap;align-items:center;justify-content:center;gap:4px 18px}
+#premioModal .premio-principal{order:-1;flex:0 0 100%;max-width:300px;font-size:15.5px;margin-bottom:8px}
+#premioModal .premio-link{background:none;border:none;color:var(--mut);font:inherit;font-size:14px;font-weight:600;text-decoration:underline;text-underline-offset:3px;padding:10px 14px;min-height:44px;cursor:pointer}
+@media (prefers-color-scheme: dark){#premioModal{background-image:radial-gradient(60% 42% at 18% 12%,rgba(189,128,209,.22),transparent 70%),radial-gradient(55% 40% at 86% 20%,rgba(143,128,209,.20),transparent 70%),radial-gradient(70% 45% at 50% 100%,rgba(231,199,138,.12),transparent 70%)}}

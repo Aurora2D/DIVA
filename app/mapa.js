@@ -35,6 +35,9 @@ function renderCicloSaudacao(){
   const el=$('cicloSaudacao');if(!el)return;
   const nome=primeiroNome();
   const saudacoes=nome?['Oi, '+esc(nome)+'.',esc(nome)+', olha o que você construiu.','Vamos ver como você está, '+esc(nome)+'?']:['Oi.','Olha o que você construiu.','Vamos ver como você está?'];
+  /* "olha o que você construiu" só faz sentido pra quem já tem um mapa feito */
+  const temMapa=!!(S.ciclo&&((S.ciclo.historico&&S.ciclo.historico.length)||S.ciclo.proximoEm));
+  if(!temMapa)saudacoes.splice(1,1);
   const idx=new Date().getDate()%saudacoes.length;
   el.innerHTML=`<div class="ciclo-saudacao"><div class="tt">${saudacoes[idx]}</div><div class="sub">Este mapa é sobre como você está, não sobre como você deveria estar.</div></div>`;
 }

@@ -27,6 +27,9 @@ function abaLiberada(t){return t==='hoje'||!abasProgressivo()||!!(S.abasLiberada
 function abaPista(t){
   const dias=Math.max(0,...(S.habitos||[]).map(h=>Object.keys(h.feitos||{}).length));
   const falta=n=>{const f=n-dias;return f===1?'Falta só 1 dia de hábito':'Faltam '+f+' dias de hábito';};
+  /* já chegou nos dias, só falta a tela abrir (acontece logo depois da comemoração) */
+  if(t==='diario'&&dias>=3)return 'O Check-in já vai abrir pra você 💜';
+  if(t==='mapa'&&dias>=7)return 'O Mapa emocional já vai abrir pra você 💜';
   if(t==='diario')return dias?falta(3)+' pra abrir o Check-in. Sem pressa 💜':'O Check-in abre quando você marcar um hábito em 3 dias. Sem pressa 💜';
   if(t==='mapa')return dias?falta(7)+' pra abrir o Mapa emocional. No seu ritmo 💜':'O Mapa emocional abre com 7 dias de hábito. No seu ritmo 💜';
   if(t==='celebrar')return abaLiberada('mapa')?'O Celebrar abre quando o seu primeiro Mapa emocional ficar pronto 🎁':'O Celebrar abre depois do Mapa emocional. Ainda tem caminho bonito antes 🎁';
