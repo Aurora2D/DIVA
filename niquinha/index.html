@@ -154,13 +154,13 @@
   let anim = document.getElementById('anim');
   let passeio = null;   // null | 'andando' | 'dormindo' | 'acordando' | 'celebrando'
   let toques = 0, vez = 0;
-  const ARQ = { andando: 'andando.webp', deitando: 'deitando.webp', acordando: 'acordando.webp', celebrando: 'celebrando.webp' };
+  const ARQ = { andando: 'andando.webp', deitando: 'deitando.webp', acordando: 'acordando.webp', celebrando: 'celebrando.webp?v=2' };
   const blobs = {};
   for (const [k, f] of Object.entries(ARQ)) fetch(f).then((r) => r.blob()).then((b) => { blobs[k] = b; }).catch(() => {});
   function toca(nome, cls) {
     const v = ++vez;
     const im = new Image(); im.alt = ''; im.className = cls;
-    im.src = blobs[nome] ? URL.createObjectURL(blobs[nome]) : ARQ[nome] + '?' + Date.now();
+    im.src = blobs[nome] ? URL.createObjectURL(blobs[nome]) : ARQ[nome] + (ARQ[nome].includes('?') ? '&' : '?') + Date.now();
     return (im.decode ? im.decode() : Promise.resolve()).catch(() => {}).then(() => {
       if (v !== vez) return false;
       const velho = anim; im.id = 'anim'; velho.replaceWith(im); anim = im;
