@@ -36,7 +36,7 @@ function premioAprender(p,gostou){
 /* migração dos prêmios antigos (campo "onde") para cabe/dur/custo/estilo */
 function migrarPremio(p){
   if(!Array.isArray(p.cabe)){
-    p.cabe=p.onde==='Aurora'?['junto','descanso','livre']:p.onde==='só eu em casa'?['descanso','livre']:['livre'];
+    p.cabe=p.onde==='só eu em casa'?['descanso','livre']:(p.onde&&p.onde!=='livre')?['junto','descanso','livre']:['livre'];
   }
   if(!p.dur)p.dur=p.tamanho==='P'?5:p.tamanho==='M'?15:30;
   if(!p.custo)p.custo=p.gratis?'gratis':'pequeno';

@@ -92,7 +92,6 @@ const NOMES_ANTIGOS={'Passei batom':'Passar batom','Dei risada':'Dar risada','Cr
 function nomeHabitoInfinitivo(n){
   const t=String(n||'').trim();if(!t)return t;
   if(NOMES_ANTIGOS[t])return NOMES_ANTIGOS[t];
-  if(/^aurora dorme de pijama$/i.test(t))return 'Vestir Aurora de pijama pra dormir';
   if(/^copo d.?água ao acordar$/i.test(t))return 'Beber um copo d’água ao acordar';
   const m=t.match(/^([A-Za-zÀ-ÿ]+)\b(.*)$/);
   if(m){const v=m[1].toLowerCase();if(RELATO_PRETERITO[v]||(/ei$/.test(v)&&v.length>3)){const inf=relatoAcaoSugerida(t);return inf.charAt(0).toUpperCase()+inf.slice(1);}}
@@ -204,14 +203,11 @@ function garanteNovosCampos(s){
   if(typeof s.perfilOriginal==='undefined')s.perfilOriginal=!!(s.onboarding&&s.onboarding.feito);
   if(!Array.isArray(s.hobbies))s.hobbies=hobbiesIniciais(s);
   registrarHobbiesEscalas(s);
-  if(typeof s.cuidado==='undefined')s.cuidado=s.perfilOriginal?{cuida:true,nome:'Aurora',relacao:'filha'}:null;
+  if(typeof s.cuidado==='undefined')s.cuidado=null;
   if(!Array.isArray(s.situacoes)||!s.situacoes.length)s.situacoes=situacoesPadrao(!!(s.cuidado&&s.cuidado.cuida));
   if(!Array.isArray(s.quandoDer))s.quandoDer=[];
   (s.premios||[]).forEach(migrarPremio);
-  /* os dois cuidados de exemplo são do perfil original; quem chega novo começa com a lista vazia */
-  if(!Array.isArray(s.cuidados))s.cuidados=s.perfilOriginal?[
-    {id:'c_clinico',texto:'Ir ao clínico geral e checar a vitamina D',feitoEm:null},
-    {id:'c_terapia',texto:'Escolher um terapeuta pra chamar de meu',feitoEm:null}]:[];
+  if(!Array.isArray(s.cuidados))s.cuidados=[];
   (s.habitos||[]).forEach(h=>{
     if(!Array.isArray(h.relatos))h.relatos=[];
     if(!Array.isArray(h.relatoRotina))h.relatoRotina=[];

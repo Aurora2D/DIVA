@@ -122,10 +122,10 @@ function renderHoje(){
 function toggleHabito(id){
   const hb=S.habitos.find(x=>x.id===id);if(!hb)return;
   const h=hoje();
-  if(hb.feitos[h]){confete(hb.emojis);if(FRASES_HABITO[id])mostrarFraseHabito(id);else frase();mostrarToast('Marcado hoje ✓','Desmarcar',()=>desmarcarHabito(hb,h));return;}
+  if(hb.feitos[h]){confete(hb.emojis);if(temFraseHabito(id))mostrarFraseHabito(id);else frase();mostrarToast('Marcado hoje ✓','Desmarcar',()=>desmarcarHabito(hb,h));return;}
   const lacunaRelato=relatoLacuna(hb,h);
   hb.feitos[h]=true;confete(hb.emojis);som('plim');
-  if(FRASES_HABITO[id])mostrarFraseHabito(id);else frase();
+  if(temFraseHabito(id))mostrarFraseHabito(id);else frase();
   const total=Object.keys(hb.feitos).length;
   const tierMarco=tierParaTotal(total);
   let disparou=false;

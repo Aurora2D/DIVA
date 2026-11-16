@@ -32,17 +32,9 @@
 function clonarPraticas(o){const r={};Object.entries(o||{}).forEach(([g,l])=>{r[g]=(Array.isArray(l)?l:[]).slice();});return r;}
 function iniciarPraticas(){
   if(!S.praticas||typeof S.praticas!=='object'){
-    let base;
-    if(S.perfilOriginal){base=clonarPraticas(PRATICAS);}
-    else{
-      // quem já marcava práticas antes continua com a lista que conhecia
-      const usou=Object.values(S.checkins||{}).some(ci=>ci&&ci.praticas&&Object.keys(ci.praticas).length);
-      if(usou){
-        base=clonarPraticas(PRATICAS);
-        base['🤍 Toque físico']=base['🤍 Toque físico'].filter(x=>x!=='Carinho na Nica').map(x=>x==='Carinho no Pituca'?'Carinho num bichinho':x);
-        base['💌 Palavras de afirmação']=base['💌 Palavras de afirmação'].map(x=>x==='Vídeos da Ana Beatriz'?'Vídeos que me inspiram':x);
-      }else{base=clonarPraticas(PRATICAS_GENERICAS);S.praticasModo='generica';}
-    }
+    /* todo mundo que ainda não tem lista começa pela genérica e monta a sua */
+    const base=clonarPraticas(PRATICAS_GENERICAS);
+    if(!S.perfilOriginal)S.praticasModo='generica';
     S.praticas=base;salva();
   }
   if(!S.praticasModo&&!S.perfilOriginal&&S.praticas['🛠️ Atos de serviço']){S.praticasModo='generica';salva();}

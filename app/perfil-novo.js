@@ -1,6 +1,6 @@
 /* ============ PERFIL NOVO ============
    Ajustes só pra quem começa o app do zero (S.perfilOriginal === false).
-   O perfil original (o da Érica) não passa por nada daqui: tudo checa perfilNovo() antes.
+   O perfil original não passa por nada daqui: tudo checa perfilNovo() antes.
    O que muda pra quem chega:
    - saudação do topo neutra (sem "Estou em processo de ficar bem");
    - "Voz e arte" no Livro de Conquistas vira "Arte e criatividade" (volta a "Voz e arte" se ligar Sugestões de música);

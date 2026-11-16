@@ -339,6 +339,7 @@ function abrirHabEditar(hb,depois){
   $('hePara').value=(hb.paraQue&&hb.paraQue!=='-')?hb.paraQue:'';
   $('heUnid').value=hb.unidade||'';
   $('heAcao').value=acaoDoHabito(hb);
+  $('heFrases').value=(Array.isArray(hb.frases)?hb.frases:[]).join('\n');
   const prevAcao=()=>{const t=$('heAcao').value.trim()||relatoAcaoSugerida($('heNome').value);$('heAcaoPrev').textContent='Vai aparecer assim: “Vem cá… o hábito de '+t+' está fazendo diferença na sua vida?”';};
   $('heAcao').oninput=prevAcao;prevAcao();
   const dimsSel=new Set(habDimsDe(hb.nome,hb.id,hb.dims,hb.dimsDefinidas));
@@ -358,6 +359,8 @@ function abrirHabEditar(hb,depois){
     hb.unidade=$('heUnid').value.trim();
     const acaoDig=$('heAcao').value.trim();
     hb.acao=(acaoDig&&acaoDig!==relatoAcaoSugerida(nome))?acaoDig:'';
+    const fr=$('heFrases').value.split('\n').map(t=>t.trim()).filter(Boolean);
+    if(fr.length)hb.frases=fr;else delete hb.frases;
     hb.dims=[...dimsSel];hb.dimsDefinidas=true;
     salva();fecharOverlay(o);renderHoje();renderHabitos();mostrarToast('Hábito atualizado ✓');if(depois)depois();
   };

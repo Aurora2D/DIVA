@@ -6,7 +6,7 @@
    montarCartaRelatorio(dados) -> { tom, blocos:[{t:'h2'|'p'|'pergunta'|'cuidado'|'despedida', txt}], barras:{...} }
 
    dados = {
-     nome: 'Érica',
+     nome: 'Maria',
      dims: { sobrecarga:0-100, ansiedade, energia, corpo, prazer, conexao, autopercepcao, regulacao, direcao },   // valores do mapa (como o app guarda)
      anterior: { ...mesmas chaves } | null,
      ci: { dias: 14, pares:[{ lbl, mlbl, dim, ci, ciPct, mapaBom, dif, txt }] },    // cruzamentos check-in x mapa (txt = frase curta de cada par)
