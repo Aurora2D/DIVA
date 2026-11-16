@@ -11,6 +11,10 @@ on:
       - 'docs/**'
       - '**.md'
 
+# precisa escrever no repositório pra publicar o APK de teste num link direto
+permissions:
+  contents: write
+
 concurrency:
   group: android-${{ github.ref }}
   cancel-in-progress: true
@@ -19,14 +23,14 @@ jobs:
   montar:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v7
         with:
           node-version: 22
           cache: npm
 
-      - uses: actions/setup-java@v4
+      - uses: actions/setup-java@v6
         with:
           distribution: temurin
           java-version: 21
@@ -42,11 +46,22 @@ jobs:
         run: ./gradlew assembleDebug --no-daemon
 
       - name: Guardar o APK de teste
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: DIVA-teste-apk
           path: android/app/build/outputs/apk/debug/app-debug.apk
           if-no-files-found: error
+
+      # Link direto, sem precisar de login: fica sempre no mesmo endereço e é trocado a cada montagem.
+      - name: Publicar o APK de teste num link direto
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          cp android/app/build/outputs/apk/debug/app-debug.apk DIVA-teste.apk
+          gh release view teste >/dev/null 2>&1 || gh release create teste --prerelease \
+            --title "DIVA (versão de teste)" \
+            --notes "Versão de teste do app de Android, montada automaticamente. Não é a versão da loja."
+          gh release upload teste DIVA-teste.apk --clobber
 
       # O arquivo da loja (AAB) só é montado quando a chave de assinatura estiver
       # cadastrada nos segredos do repositório (veja docs/ANDROID.md).
@@ -69,7 +84,7 @@ jobs:
 
       - name: Guardar o arquivo da loja
         if: ${{ env.TEM_CHAVE == 'sim' }}
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: DIVA-loja-aab
           path: android/app/build/outputs/bundle/release/app-release.aab

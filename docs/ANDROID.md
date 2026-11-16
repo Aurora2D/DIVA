@@ -10,7 +10,7 @@ Também dá pra rodar na mão: Actions > App Android > **Run workflow**.
 
 No fim de cada rodada, em **Artifacts**:
 
-- `DIVA-teste-apk`: o app pra instalar direto num celular Android e testar.
+- `DIVA-teste-apk`: o app pra instalar direto num celular Android e testar. O mesmo arquivo fica num link direto, sem login: https://github.com/Aurora2D/DIVA/releases/download/teste/DIVA-teste.apk
 - `DIVA-loja-aab`: o arquivo que sobe no Google Play. Só aparece depois que a chave de assinatura estiver cadastrada (abaixo).
 
 ## Chave de assinatura (uma vez só)
