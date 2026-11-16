@@ -1,0 +1,9 @@
+{
+  "appId": "com.ericahotts.diva",
+  "appName": "DIVA",
+  "webDir": "www",
+  "backgroundColor": "#FFF1EB",
+  "android": {
+    "allowMixedContent": false
+  }
+}

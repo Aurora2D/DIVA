@@ -1,0 +1,79 @@
+name: App Android
+
+# Monta o app de Android nos servidores do GitHub.
+# Roda sozinho quando a main muda, ou na mão em Actions > App Android > Run workflow.
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths-ignore:
+      - 'niquinha/**'
+      - 'docs/**'
+      - '**.md'
+
+concurrency:
+  group: android-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  montar:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 21
+
+      - name: Instalar dependências
+        run: npm ci
+
+      - name: Juntar os arquivos do app e sincronizar com o Android
+        run: npm run android:sync
+
+      - name: Montar o APK de teste (instala direto no celular)
+        working-directory: android
+        run: ./gradlew assembleDebug --no-daemon
+
+      - name: Guardar o APK de teste
+        uses: actions/upload-artifact@v4
+        with:
+          name: DIVA-teste-apk
+          path: android/app/build/outputs/apk/debug/app-debug.apk
+          if-no-files-found: error
+
+      # O arquivo da loja (AAB) só é montado quando a chave de assinatura estiver
+      # cadastrada nos segredos do repositório (veja docs/ANDROID.md).
+      - name: Montar o arquivo da loja (AAB assinado)
+        if: ${{ env.TEM_CHAVE == 'sim' }}
+        working-directory: android
+        env:
+          DIVA_KEYSTORE_BASE64: ${{ secrets.DIVA_KEYSTORE_BASE64 }}
+          DIVA_KEYSTORE_SENHA: ${{ secrets.DIVA_KEYSTORE_SENHA }}
+          DIVA_CHAVE_ALIAS: ${{ secrets.DIVA_CHAVE_ALIAS }}
+          DIVA_CHAVE_SENHA: ${{ secrets.DIVA_CHAVE_SENHA }}
+        run: |
+          echo "$DIVA_KEYSTORE_BASE64" | base64 -d > "$RUNNER_TEMP/diva.jks"
+          ./gradlew bundleRelease --no-daemon \
+            -Pandroid.injected.signing.store.file="$RUNNER_TEMP/diva.jks" \
+            -Pandroid.injected.signing.store.password="$DIVA_KEYSTORE_SENHA" \
+            -Pandroid.injected.signing.key.alias="$DIVA_CHAVE_ALIAS" \
+            -Pandroid.injected.signing.key.password="$DIVA_CHAVE_SENHA"
+          rm -f "$RUNNER_TEMP/diva.jks"
+
+      - name: Guardar o arquivo da loja
+        if: ${{ env.TEM_CHAVE == 'sim' }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: DIVA-loja-aab
+          path: android/app/build/outputs/bundle/release/app-release.aab
+          if-no-files-found: error
+
+    env:
+      TEM_CHAVE: ${{ secrets.DIVA_KEYSTORE_BASE64 != '' && 'sim' || 'nao' }}

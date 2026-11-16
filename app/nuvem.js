@@ -102,6 +102,9 @@ async function apagaChave(uid) {
   return new Promise((res, rej) => { const tx = d.transaction('k', 'readwrite'); tx.objectStore('k').delete(uid); tx.oncomplete = res; tx.onerror = () => rej(tx.error); });
 }
 
+/* o app está rodando empacotado no Android (Capacitor)? */
+function noAppNativo() { try { return !!(window.Capacitor && window.Capacitor.isNativePlatform && window.Capacitor.isNativePlatform()); } catch (e) { return false; } }
+
 /* ---- Google Drive (pasta oculta do app) ---- */
 const ESCOPO_DRIVE = 'https://www.googleapis.com/auth/drive.appdata';
 const ARQ_DRIVE = 'diva-chave.json';
@@ -394,6 +397,7 @@ const erros = {
   'auth/invalid-api-key': 'A chave do Firebase no app está inválida.',
   'auth/admin-restricted-operation': 'Criar contas está desativado no Firebase.',
   'auth/app-not-authorized': 'Este app não está autorizado a usar esse projeto do Firebase.',
+  'diva/app-nativo': 'O login com Google ainda não funciona dentro do app. Seus dados continuam guardados neste aparelho. Essa parte chega numa próxima versão.',
   'diva/sem-token': 'O Google não liberou o acesso ao Drive. Tente de novo e marque a permissão do DIVA.',
   'diva/drive-permissao': 'O DIVA não recebeu permissão para a pasta dele no seu Drive. Tente de novo e marque essa permissão.',
   'diva/drive': 'Não consegui falar com o Google Drive agora. Tente de novo.',
@@ -483,7 +487,11 @@ async function mostraNuvem() {
   if (!user) {
     prepara('Guardar seus dados com segurança', 'Entre com sua conta Google para guardar seus dados na nuvem e usar o DIVA em mais de um aparelho. Tudo é embaralhado antes de sair daqui: só você consegue ler.');
     botoes.append(
-      botao('Entrar com o Google', 'prim', acao(async () => { await signInWithPopup(auth, new GoogleAuthProvider()); })),
+      botao('Entrar com o Google', 'prim', acao(async () => {
+        /* dentro do app de Android a janelinha do Google não abre; o login nativo entra numa próxima versão */
+        if (noAppNativo()) throw Object.assign(new Error('app-nativo'), { code: 'diva/app-nativo' });
+        await signInWithPopup(auth, new GoogleAuthProvider());
+      })),
       botao('Agora não', 'sec', () => { try { localStorage.setItem('divaAdiar', '1'); } catch (e) {} fecha(); })
     );
     abre(); return;

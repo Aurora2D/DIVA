@@ -1,0 +1,17 @@
+{
+  "name": "diva",
+  "version": "1.0.0",
+  "private": true,
+  "description": "DIVA: app de hábitos e autocuidado (empacotamento Android)",
+  "scripts": {
+    "www": "sh scripts/montar-www.sh",
+    "android:sync": "npm run www && cap sync android"
+  },
+  "dependencies": {
+    "@capacitor/android": "^8.6.2",
+    "@capacitor/core": "^8.6.2"
+  },
+  "devDependencies": {
+    "@capacitor/cli": "^8.6.2"
+  }
+}
