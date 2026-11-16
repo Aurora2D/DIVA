@@ -47,8 +47,8 @@ const app = initializeApp(firebaseConfig);
 
 /* ---- app de Android (Capacitor) ---- */
 /* ID de cliente OAuth do tipo "Aplicativo da Web" do projeto diva-b3ce4 (termina em .apps.googleusercontent.com).
-   Enquanto estiver vazio, o login dentro do app de Android fica desligado e avisa. Passo a passo: docs/ANDROID.md */
-const WEB_CLIENT_ID = '';
+   Se ficar vazio, o login dentro do app de Android fica desligado e avisa. Passo a passo: docs/ANDROID.md */
+const WEB_CLIENT_ID = '1068566024808-dq3ijkc0vg20chv0sj7sfmmi923jdthd.apps.googleusercontent.com';
 function noAppNativo() { try { return !!(window.Capacitor && window.Capacitor.isNativePlatform && window.Capacitor.isNativePlatform()); } catch (e) { return false; } }
 let googleNativoPronto = false;
 /* abre a tela do Google do próprio Android; devolve { idToken, accessToken:{token}, profile } */

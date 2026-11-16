@@ -120,14 +120,13 @@ autoexecutável e a lista de frases dentro dela). O resto do recurso "minhas fra
 (`frasesDoHabito`, `temFraseHabito`) e em `app/habitos.js` (campo `heFrases`).
 Não apagar antes da confirmação: ela perderia as frases.
 
-### 2. Login com Google no app de Android (espera o cadastro no Firebase)
-O código está pronto em `app/nuvem.js` (`googleNativo`, plugin `@capgo/capacitor-social-login`), mas desligado:
-`WEB_CLIENT_ID` está vazio. Falta alguém com acesso ao projeto Firebase `diva-b3ce4` fazer os três passos de
-`docs/ANDROID.md` e mandar o ID de cliente da Web. Aí: preencher `WEB_CLIENT_ID`, subir o `?v=` do `nuvem.js`,
-esperar a montagem e pedir pra Érica testar no celular.
-Nunca foi testado em aparelho. Pontos que podem falhar: restrição da chave de API por site (liberar `https://localhost/*`),
-conta fora da lista de teste na tela de consentimento, e o destravar por digital, que pode não funcionar dentro do app
-(a recuperação pelo Google Drive é o plano B).
+### 2. Login com Google no app de Android (espera o teste no celular)
+O código está em `app/nuvem.js` (`googleNativo`, plugin `@capgo/capacitor-social-login`) e o `WEB_CLIENT_ID`
+foi preenchido em 16/nov/2026. Falta confirmar que o app de Android foi cadastrado no Firebase `diva-b3ce4`
+com o pacote e o SHA-1 de `docs/ANDROID.md` (passo 1), e a Érica testar o login no celular.
+Nunca foi testado em aparelho. Se falhar, conferir nesta ordem: o cadastro do SHA-1; a conta dela na lista de
+teste da tela de consentimento; restrição da chave de API por site (liberar `https://localhost/*`).
+O destravar por digital pode não funcionar dentro do app (a recuperação pelo Google Drive é o plano B).
 
 ### 3. Botão "apagar minha conta" (antes de o login ir pra loja)
 A loja exige de todo app que cria conta. Hoje só existe "Sair da conta" (`sair_` em `app/nuvem.js`).
@@ -173,5 +172,5 @@ tirar as capturas de tela do app, fazer a imagem de capa (1024 x 500) e responde
 - Biju comemorando sem o branco entre as pernas (DIVA e Niquinha).
 - Coisas pessoais fora do código; campo "Minhas frases ao marcar".
 - App de Android montando no GitHub, com link direto pro APK de teste.
-- Login nativo com Google pronto e desligado.
+- Login nativo com Google pronto, com o ID de cliente preenchido. Falta o teste no celular.
 - Convite de compra e trava das partes pagas, prontos e desligados.
