@@ -16,7 +16,20 @@ android {
             ignoreAssetsPattern = '!.svn:!.git:!.ds_store:!*.scc:.*:!CVS:!thumbs.db:!picasa.ini:!*~'
         }
     }
+    signingConfigs {
+        // Chave fixa só das versões de teste: assim a "impressão digital" do app de teste é sempre a mesma
+        // e o login com Google reconhece ele. Não é a chave da loja (essa fica nos segredos do GitHub).
+        debug {
+            storeFile file('diva-teste.keystore')
+            storePassword 'android'
+            keyAlias 'diva-teste'
+            keyPassword 'android'
+        }
+    }
     buildTypes {
+        debug {
+            signingConfig signingConfigs.debug
+        }
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'

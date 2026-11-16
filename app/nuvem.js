@@ -30,7 +30,7 @@
    - Na tela de consentimento OAuth, incluir o escopo .../auth/drive.appdata e,
      com o app em modo de teste, cadastrar o e-mail da usuária como testadora. */
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-import { getAuth, onAuthStateChanged, GoogleAuthProvider, signInWithPopup, reauthenticateWithPopup, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+import { getAuth, initializeAuth, indexedDBLocalPersistence, onAuthStateChanged, GoogleAuthProvider, signInWithPopup, signInWithCredential, reauthenticateWithPopup, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 import { getDatabase, ref, get, set, update } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
 const firebaseConfig = {
@@ -44,7 +44,30 @@ const firebaseConfig = {
 };
 
 const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
+
+/* ---- app de Android (Capacitor) ---- */
+/* ID de cliente OAuth do tipo "Aplicativo da Web" do projeto diva-b3ce4 (termina em .apps.googleusercontent.com).
+   Enquanto estiver vazio, o login dentro do app de Android fica desligado e avisa. Passo a passo: docs/ANDROID.md */
+const WEB_CLIENT_ID = '';
+function noAppNativo() { try { return !!(window.Capacitor && window.Capacitor.isNativePlatform && window.Capacitor.isNativePlatform()); } catch (e) { return false; } }
+let googleNativoPronto = false;
+/* abre a tela do Google do próprio Android; devolve { idToken, accessToken:{token}, profile } */
+async function googleNativo(escopos) {
+  if (!WEB_CLIENT_ID) throw Object.assign(new Error('app-nativo'), { code: 'diva/app-nativo' });
+  if (!googleNativoPronto) {
+    await window.Capacitor.nativePromise('SocialLogin', 'initialize', { google: { webClientId: WEB_CLIENT_ID } });
+    googleNativoPronto = true;
+  }
+  let r;
+  try { r = await window.Capacitor.nativePromise('SocialLogin', 'login', { provider: 'google', options: escopos ? { scopes: escopos } : {} }); }
+  catch (e) { console.error('login nativo', e); throw Object.assign(new Error('google-nativo'), { code: 'diva/google-nativo', causa: e }); }
+  const g = r && r.result;
+  if (!g || !g.idToken) throw Object.assign(new Error('google-nativo'), { code: 'diva/google-nativo' });
+  return g;
+}
+
+/* dentro do app, o getAuth() padrão tenta carregar uma página do Google que não abre ali: usa a versão enxuta */
+const auth = noAppNativo() ? initializeAuth(app, { persistence: indexedDBLocalPersistence }) : getAuth(app);
 const db = getDatabase(app);
 
 const $ = id => document.getElementById(id);
@@ -102,15 +125,18 @@ async function apagaChave(uid) {
   return new Promise((res, rej) => { const tx = d.transaction('k', 'readwrite'); tx.objectStore('k').delete(uid); tx.oncomplete = res; tx.onerror = () => rej(tx.error); });
 }
 
-/* o app está rodando empacotado no Android (Capacitor)? */
-function noAppNativo() { try { return !!(window.Capacitor && window.Capacitor.isNativePlatform && window.Capacitor.isNativePlatform()); } catch (e) { return false; } }
-
 /* ---- Google Drive (pasta oculta do app) ---- */
 const ESCOPO_DRIVE = 'https://www.googleapis.com/auth/drive.appdata';
 const ARQ_DRIVE = 'diva-chave.json';
 
 // abre a janela do Google pedindo a permissão do Drive; precisa vir de um toque
 async function tokenDrive() {
+  if (noAppNativo()) {
+    const g = await googleNativo([ESCOPO_DRIVE]);
+    const t = g.accessToken && g.accessToken.token;
+    if (!t) throw Object.assign(new Error('sem-token'), { code: 'diva/sem-token' });
+    return t;
+  }
   const p = new GoogleAuthProvider();
   p.addScope(ESCOPO_DRIVE);
   if (user.email) p.setCustomParameters({ login_hint: user.email });
@@ -398,6 +424,7 @@ const erros = {
   'auth/admin-restricted-operation': 'Criar contas está desativado no Firebase.',
   'auth/app-not-authorized': 'Este app não está autorizado a usar esse projeto do Firebase.',
   'diva/app-nativo': 'O login com Google ainda não funciona dentro do app. Seus dados continuam guardados neste aparelho. Essa parte chega numa próxima versão.',
+  'diva/google-nativo': 'O Google não completou o login. Confira se há uma conta Google neste aparelho e tente de novo.',
   'diva/sem-token': 'O Google não liberou o acesso ao Drive. Tente de novo e marque a permissão do DIVA.',
   'diva/drive-permissao': 'O DIVA não recebeu permissão para a pasta dele no seu Drive. Tente de novo e marque essa permissão.',
   'diva/drive': 'Não consegui falar com o Google Drive agora. Tente de novo.',
@@ -488,8 +515,8 @@ async function mostraNuvem() {
     prepara('Guardar seus dados com segurança', 'Entre com sua conta Google para guardar seus dados na nuvem e usar o DIVA em mais de um aparelho. Tudo é embaralhado antes de sair daqui: só você consegue ler.');
     botoes.append(
       botao('Entrar com o Google', 'prim', acao(async () => {
-        /* dentro do app de Android a janelinha do Google não abre; o login nativo entra numa próxima versão */
-        if (noAppNativo()) throw Object.assign(new Error('app-nativo'), { code: 'diva/app-nativo' });
+        /* dentro do app de Android a janelinha do Google não abre: usa a tela de contas do próprio Android */
+        if (noAppNativo()) { const g = await googleNativo(); await signInWithCredential(auth, GoogleAuthProvider.credential(g.idToken)); return; }
         await signInWithPopup(auth, new GoogleAuthProvider());
       })),
       botao('Agora não', 'sec', () => { try { localStorage.setItem('divaAdiar', '1'); } catch (e) {} fecha(); })
@@ -566,6 +593,7 @@ async function sair_() {
   const uid = user && user.uid;
   try { if (uid) await apagaChave(uid); } catch (e) {}
   chave = null; chaveAntiga = null;
+  if (noAppNativo() && googleNativoPronto) { try { await window.Capacitor.nativePromise('SocialLogin', 'logout', { provider: 'google' }); } catch (e) {} }
   await signOut(auth);
   fecha();
 }

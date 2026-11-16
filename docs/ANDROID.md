@@ -45,12 +45,45 @@ Em `android/app/build.gradle`, aumentar o `versionCode` em 1 (a loja recusa núm
 `com.ericahotts.diva` (em `capacitor.config.json` e `android/app/build.gradle`).
 Depois do primeiro envio pra loja ele não pode mais mudar. Se for trocar, é antes.
 
+## Login com Google dentro do app
+
+O código do login já está pronto (plugin `@capgo/capacitor-social-login` + Firebase). Falta só o cadastro
+no painel do Google, que precisa de quem tem acesso ao projeto **diva-b3ce4**. São três passos:
+
+1. **Cadastrar o app de Android no Firebase.**
+   Console do Firebase > diva-b3ce4 > Configurações do projeto > Seus apps > Adicionar app > Android.
+
+   | Campo | Valor |
+   |---|---|
+   | Nome do pacote | `com.ericahotts.diva` |
+   | SHA-1 (versão de teste) | `9D:87:EB:3E:E3:77:73:E8:C3:85:09:EC:75:8E:8B:70:37:98:47:73` |
+
+   Não precisa baixar o `google-services.json`.
+
+2. **Pegar o ID de cliente da Web.**
+   Google Cloud Console > APIs e serviços > Credenciais > IDs do cliente OAuth 2.0 > o do tipo
+   **Aplicativo da Web** (costuma se chamar "Web client (auto created by Google Service)").
+   Copiar o ID, que termina em `.apps.googleusercontent.com`, e colar em `WEB_CLIENT_ID`, no começo de `app/nuvem.js`.
+   Esse ID não é segredo.
+
+3. **Liberar quem pode entrar.**
+   Na tela de consentimento OAuth, enquanto o app estiver em "Teste", cada conta que for testar precisa estar
+   na lista de usuários de teste. Pra abrir pra todo mundo, publicar a tela de consentimento.
+
+Se a chave de API do Firebase tiver restrição por site, liberar também `https://localhost/*`
+(é o endereço que o app usa por dentro).
+
+Quando o app for pra loja, voltar no passo 1 e adicionar mais dois SHA-1: o da chave de assinatura acima e o
+da chave do Google Play (Play Console > Integridade do app).
+
+Se o login falhar no aparelho, o plugin escreve no Logcat (filtro `GoogleProvider`) o pacote, o SHA-1 e o ID que ele viu.
+
 ## O que ainda falta dentro do app de Android
 
-- **Login com Google:** a janelinha do Google não abre dentro de app. Por enquanto o botão avisa que essa parte chega depois.
-  Pra funcionar precisa do login nativo e de cadastrar o app no painel do Firebase.
+- **Botão de apagar a conta:** a loja exige de todo app que cria conta. Hoje só existe "Sair da conta".
 - **Sem internet:** o Firebase é baixado da internet. O app abre e funciona offline, mas sem a parte da nuvem.
-- **Testar no aparelho:** destravar por digital/rosto e baixar o relatório em PDF.
+- **Destravar por digital/rosto:** precisa de teste no aparelho. Se não funcionar dentro do app, a recuperação pelo Google Drive continua valendo.
+- **Baixar o relatório em PDF:** precisa de teste no aparelho.
 
 ## Rodar no computador (opcional)
 
