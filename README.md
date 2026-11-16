@@ -2,6 +2,9 @@
 
 App de hábitos diários para o bem-estar pessoal (Android e web).
 
+> Vai continuar o trabalho? Comece pelo [`CLAUDE.md`](CLAUDE.md): regras do projeto, estado atual e pendências.
+> O app de Android está explicado em [`docs/ANDROID.md`](docs/ANDROID.md).
+
 ## Estrutura
 
 | Pasta | O que tem |
