@@ -12,21 +12,21 @@ const QUIZ_GRUPO='🪞 Escolhidas por você no quiz';
 /* índice da pergunta (começando em 1) -> frases das alternativas A, B, C, D, E */
 const QUIZ_PRATICAS={
   1:['Escrever pra mim algo que eu gostaria de ouvir','Ter um tempo só meu, sem pressa e sem celular','Preparar uma bebida especial ou algo que eu aprecio','Tirar da frente uma pendência pequena','Tomar um banho confortável e passar creme'],
-  2:['Anotar três coisas que consegui hoje','Ficar uns minutos presente comigo, sem tarefa','Me dar uma pequena recompensa','Facilitar algo do dia seguinte','Alongar o corpo ou buscar uma sensação boa'],
+  2:["Anotar três coisas que consegui hoje","Sentar cinco minutos sem fazer nada","Comer um doce de que gosto","Separar a roupa de amanhã","Alongar os ombros"],
   3:['Lembrar, com palavras claras, que eu também mereço cuidado','Ter um momento só meu, sem atender ninguém','Preparar um mimo pro resto do dia','Fazer uma coisa que deixe a rotina mais leve','Dar ao corpo um momento de conforto'],
   4:['Falar comigo como falaria com uma amiga','Fazer uma pausa pra entender o que aconteceu','Criar um pequeno ritual de conforto','Separar o que dá pra ajustar agora do que pode esperar','Respirar fundo e soltar os ombros'],
   5:['Escrever uma mensagem de incentivo pra mim','Ler, ouvir música ou tomar um chá sem fazer outra coisa','Usar algo especial que eu costumo guardar','Organizar uma coisa que facilite os próximos dias','Dançar, alongar ou curtir uma sensação boa no corpo'],
-  6:['Reconhecer, com palavras, algo em que melhorei','Proteger um tempo pra algo importante pra mim','Me dar algo bonito ou prazeroso','Fazer um ajuste que deixe a rotina mais fácil','Fazer algo que deixe meu corpo mais confortável'],
+  6:["Escrever uma coisa em que melhorei","Marcar na agenda uma hora só minha","Comprar uma flor pra mim","Arrumar uma gaveta","Vestir a roupa mais confortável que tenho"],
   7:['Ler uma frase que defina uma intenção gentil pro dia','Tomar minha bebida favorita sem olhar o celular','Usar uma caneca, roupa ou perfume que me dê prazer','Deixar o essencial pronto na noite anterior','Fazer movimentos suaves ao acordar'],
-  8:['Escrever um balanço do que eu enfrentei na semana','Reservar um tempo pra um hobby de que sinto falta','Me dar um agrado por ter chegado até aqui','Resolver algo que deixe a próxima semana mais tranquila','Tomar um banho relaxante no fim da semana'],
+  8:["Escrever três coisas que enfrentei na semana","Passar meia hora no meu hobby","Tomar um sorvete","Fazer a lista de compras da semana","Tomar um banho demorado"],
   11:['Dizer pra mim que começar pequeno já conta','Dedicar 5 minutos a algo de que eu gosto','Escolher uma coisa agradável pra começar mais leve','Fazer uma tarefa mínima que tire uma preocupação','Levantar, me espreguiçar e buscar conforto'],
   12:['Escrever o que estou sentindo, sem me julgar','Ficar um pouco em silêncio, com música ou só observando','Criar um momento de aconchego com algo de que gosto','Ver se alguma necessidade prática ficou de lado','Respirar com calma, tomar um banho ou relaxar o corpo'],
   13:['Escrever sobre quem eu sou além das obrigações','Retomar algo que eu fazia só por gosto','Escolher um objeto, aroma ou detalhe que tenha significado pra mim','Ajustar um canto da casa pro que eu preciso agora','Dançar ou caminhar devagar, prestando atenção no corpo'],
   14:['Lembrar que descansar não precisa ser prêmio','Agendar um intervalo de verdade, como um compromisso','Preparar algo gostoso pra acompanhar o descanso','Escolher o que pode esperar e liberar um tempo','Deitar com conforto e deixar o corpo descansar'],
-  15:['Validar com palavras o esforço que fiz hoje','Me dar um tempo sem cobrança','Me oferecer um pequeno prazer sem precisar merecer','Preparar o mínimo pro dia seguinte pesar menos','Cuidar das necessidades do corpo que ficaram pra depois'],
+  15:["Dizer em voz alta: \"hoje eu me esforcei\"","Deitar dez minutos sem fazer nada","Tomar minha bebida preferida","Deixar a bolsa de amanhã pronta","Beber um copo d'água com calma"],
   19:['Valorizar as escolhas possíveis que fiz na alimentação','Fazer uma refeição com calma e atenção','Comer algo que me dá prazer de verdade','Deixar uma refeição simples encaminhada','Prestar atenção na fome e na saciedade'],
   20:['Reconhecer o que já melhorou na casa','Reservar um tempo tranquilo pra cuidar da casa','Deixar um cantinho da casa mais agradável','Criar um jeito simples de a casa funcionar','Arrumar a casa fazendo pausas'],
-  21:['Nomear o esforço que fiz pra concluir algo','Usar o tempo que sobrou pro que importa','Comemorar uma conquista com algo gostoso','Aproveitar a rotina mais simples','Sentir o corpo mais leve depois de resolver algo'],
+  21:["Escrever o que acabei de concluir","Assistir um episódio de uma série","Comer minha sobremesa preferida","Tirar uma tarefa da lista de amanhã","Deitar cinco minutos de olhos fechados"],
   22:['Escrever uma carta pra mim','Fazer algo de que gosto, com atenção só nisso','Montar um pequeno presente pra mim com o que já tenho','Fazer por mim uma coisa prática que eu vinha precisando','Massagear as mãos ou me aconchegar numa manta'],
   26:['Anotar algo de que me orgulho','Ouvir uma música de que gosto, sem fazer outra coisa','Preparar uma bebida ou um pequeno agrado','Resolver uma pendência minúscula','Alongar, passar creme nas mãos ou respirar com calma'],
   27:['Escrever algo que eu reconheço em mim hoje','Ter alguns minutos de tranquilidade antes de dormir','Deixar o quarto gostoso: aroma, luz suave','Deixar coisas prontas pra manhã seguinte','Cuidar da pele ou alongar antes de dormir'],
@@ -201,3 +201,42 @@ if(typeof DV_TEXTOS!=='undefined'){
     try{return orig(depois);}finally{DV_TEXTOS.abertura=base;}
   };})(window.deVolta);
 }
+
+/* ---- frases do quiz reescritas (nov/2026): cada prática é uma ação só e concreta.
+   Quem já tinha as frases antigas na lista ou marcadas em check-ins passados
+   continua com tudo: só o texto é trocado, nada é apagado. ---- */
+const QUIZ_TROCAS={
+ "Ficar uns minutos presente comigo, sem tarefa": "Sentar cinco minutos sem fazer nada",
+ "Me dar uma pequena recompensa": "Comer um doce de que gosto",
+ "Facilitar algo do dia seguinte": "Separar a roupa de amanhã",
+ "Alongar o corpo ou buscar uma sensação boa": "Alongar os ombros",
+ "Reconhecer, com palavras, algo em que melhorei": "Escrever uma coisa em que melhorei",
+ "Proteger um tempo pra algo importante pra mim": "Marcar na agenda uma hora só minha",
+ "Me dar algo bonito ou prazeroso": "Comprar uma flor pra mim",
+ "Fazer um ajuste que deixe a rotina mais fácil": "Arrumar uma gaveta",
+ "Fazer algo que deixe meu corpo mais confortável": "Vestir a roupa mais confortável que tenho",
+ "Escrever um balanço do que eu enfrentei na semana": "Escrever três coisas que enfrentei na semana",
+ "Reservar um tempo pra um hobby de que sinto falta": "Passar meia hora no meu hobby",
+ "Me dar um agrado por ter chegado até aqui": "Tomar um sorvete",
+ "Resolver algo que deixe a próxima semana mais tranquila": "Fazer a lista de compras da semana",
+ "Tomar um banho relaxante no fim da semana": "Tomar um banho demorado",
+ "Validar com palavras o esforço que fiz hoje": "Dizer em voz alta: \"hoje eu me esforcei\"",
+ "Me dar um tempo sem cobrança": "Deitar dez minutos sem fazer nada",
+ "Me oferecer um pequeno prazer sem precisar merecer": "Tomar minha bebida preferida",
+ "Preparar o mínimo pro dia seguinte pesar menos": "Deixar a bolsa de amanhã pronta",
+ "Cuidar das necessidades do corpo que ficaram pra depois": "Beber um copo d'água com calma",
+ "Nomear o esforço que fiz pra concluir algo": "Escrever o que acabei de concluir",
+ "Usar o tempo que sobrou pro que importa": "Assistir um episódio de uma série",
+ "Comemorar uma conquista com algo gostoso": "Comer minha sobremesa preferida",
+ "Aproveitar a rotina mais simples": "Tirar uma tarefa da lista de amanhã",
+ "Sentir o corpo mais leve depois de resolver algo": "Deitar cinco minutos de olhos fechados"
+};
+function quizMigrarFrases(s){
+  let mudou=false;const pre=QUIZ_GRUPO+'|';
+  const l=s.praticas&&s.praticas[QUIZ_GRUPO];
+  if(Array.isArray(l)){const n=[];l.forEach(t=>{const x=QUIZ_TROCAS[t]||t;if(x!==t)mudou=true;if(!n.includes(x))n.push(x);});if(mudou)s.praticas[QUIZ_GRUPO]=n;}
+  Object.values(s.checkins||{}).forEach(ci=>{const p=ci&&ci.praticas;if(!p)return;
+    Object.keys(p).forEach(k=>{if(!k.startsWith(pre))return;const x=QUIZ_TROCAS[k.slice(pre.length)];if(!x)return;p[pre+x]=p[pre+x]||p[k];delete p[k];mudou=true;});});
+  return mudou;
+}
+try{if(quizMigrarFrases(S))salva();}catch(e){console.warn('quiz frases',e);}
