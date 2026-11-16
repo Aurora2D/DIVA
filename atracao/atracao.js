@@ -726,10 +726,21 @@ function sessaoPermissaoNaFrase(d,g){
 function sessaoMenorPasso(d){
   if(!d)return;
   if(!Array.isArray(d.menorPassos))d.menorPassos=[];
-  const R=trSinc('passo',d.id,['passo','passoId'],{passo:(d.menorPasso&&d.menorPasso.texto)||''});
+  /* com passos já escritos, a tela abre com o campo vazio pra um novo; a lista mostra os anteriores */
+  const R=trSinc('passo',d.id,['passo','passoId'],{passo:''});
+  /* lista dos menores passos deste desejo; os que já foram (fila ou hábito) ficam cinzinha */
+  const passosDoDesejo=()=>{
+    const ps=(d.menorPassos||[]).filter(x=>x&&x.texto&&x.id!==R.passoId);
+    if(!ps.length)return '';
+    const st=x=>typeof menorPassoFoi==='function'?menorPassoFoi(d,x):'';
+    const ord=[...ps.filter(x=>!st(x)),...ps.filter(x=>st(x))];
+    return '<p class="sv-dica" style="margin:0 0 8px">Seus menores passos pra este desejo:</p><ul class="sv-passos">'+ord.map(x=>{
+      const f=st(x);return `<li class="${f?'ja':''}">${esc(x.texto)}${f?`<span>${f==='habito'?'✓ já é hábito':'📋 na fila'}</span>`:''}</li>`;}).join('')+'</ul>';
+  };
   sessaoAbrir({...trMeta('passo'),limpar:['passo','passoId'],telas:[
     {reage:'feliz',b:[['lembrete',{titulo:'Seu desejo',texto:()=>trTexto(d)}],['p','Chegamos ao momento de dar corpo ao seu desejo na rotina real.'],['p','Não tente reorganizar sua vida inteira hoje. Pense em algo simples, que leve de 5 a 15 minutos, e que ajude você a dar um pequeno passo em direção ao que quer.'],['p','Exemplos: fazer uma pesquisa rápida, enviar uma mensagem, arrumar uma gaveta, guardar um material ou reservar 10 minutos de silêncio.'],
-        ['campo',{key:'passo',rot:'Qual é o menor passo que posso dar hoje?'}]],
+        ['html',passosDoDesejo],
+        ['campo',{key:'passo',rot:()=>(d.menorPassos||[]).some(x=>x.id!==R.passoId)?'Qual é o próximo menor passo?':'Qual é o menor passo que posso dar hoje?'}]],
       seguir:()=>{
         const v=(R.passo||'').trim();if(!v){mostrarToast('Escreva o seu menor passo');return false;}
         let item=R.passoId&&d.menorPassos.find(x=>x.id===R.passoId);

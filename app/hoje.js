@@ -14,43 +14,51 @@ function ultimoMenorPasso(){
   });
   return ult;
 }
+/* o menor passo já foi? 'habito' (virou hábito), 'fila' (esperando liberar) ou '' (ainda aberto) */
+function menorPassoFoi(d,mp){
+  if(!mp||!mp.texto)return '';
+  const t=mp.texto,tf=mp.textoFila||'';
+  if(mp.virouHabito||(S.habitos||[]).some(h=>h.nome===t||(tf&&h.nome===tf)))return 'habito';
+  if(mp.naFila||(S.habitosSugestoes||[]).some(s=>s.texto===t||(tf&&s.texto===tf)))return 'fila';
+  return '';
+}
+/* todos os menores passos, de todos os desejos, do mais novo pro mais antigo */
+function todosMenoresPassos(){
+  const out=[],vistos=new Set();
+  (S.leiAtracao.desejos||[]).filter(d=>!d.arquivado).forEach(d=>{
+    const lista=Array.isArray(d.menorPassos)&&d.menorPassos.length?d.menorPassos:(d.menorPasso&&d.menorPasso.texto?[d.menorPasso]:[]);
+    lista.forEach(mp=>{
+      if(!mp||!mp.texto)return;
+      const k=d.id+'|'+mp.texto.trim().toLowerCase();if(vistos.has(k))return;vistos.add(k);
+      out.push({mp,d,foi:menorPassoFoi(d,mp)});
+    });
+  });
+  return out.sort((x,y)=>String(y.mp.criadoEm||'').localeCompare(String(x.mp.criadoEm||'')));
+}
 function renderMenorPassoHoje(){
   const box=$('menorPassoHojeBox');if(!box)return;
-  const ult=ultimoMenorPasso();
-  if(!ult){box.innerHTML='';return;}
-  const naFilaSug=(S.habitosSugestoes||[]).some(s=>s.texto===ult.texto||s.desejoId===ult.desejoId);
-  const dObj=(S.leiAtracao.desejos||[]).find(x=>x.id===ult.desejoId);
-  const naFilaMp=!!(dObj&&((dObj.menorPasso&&dObj.menorPasso.naFila)||(dObj.menorPassos||[]).some(m=>m.naFila&&(m.texto===ult.texto||m.textoFila===ult.texto))));
-  const naFila=naFilaSug||naFilaMp;
-  const jaHabito=(S.habitos||[]).some(h=>h.nome===ult.texto);
-  /* some da tela principal quando já foi pra fila ou já é hábito */
-  if(jaHabito||naFila){box.innerHTML='';return;}
-  const d=new Date(ult.criadoEm+'T12:00:00');
-  const diasAtras=Math.floor((new Date(hoje())-d)/86400000);
-  const quando=diasAtras===0?'hoje':diasAtras===1?'ontem':diasAtras+' dias atrás';
-  const cta=`<div class="cta">
-      <button type="button" class="btn prim" id="mpVirarHabito">＋ Virar hábito</button>
-      <button type="button" class="btn" id="mpAbrirDesejo">Ver desejo</button>
-    </div>`;
+  const lista=todosMenoresPassos();
+  if(!lista.length){box.innerHTML='';return;}
+  const quando=dt=>{if(!dt)return '';const n=Math.round((new Date(hoje()+'T12:00:00')-new Date(dt+'T12:00:00'))/86400000);return n<=0?'hoje':n===1?'ontem':n+' dias atrás';};
+  /* os que ainda estão abertos vêm primeiro; os que já foram ficam cinza, embaixo */
+  const ordem=[...lista.filter(x=>!x.foi),...lista.filter(x=>x.foi)];
+  const itens=ordem.map((x,i)=>{
+    const meta=[quando(x.mp.criadoEm),'desejo "'+esc(limparTextoDesejo(x.d.texto)||x.d.texto||'')+'"'].filter(Boolean).join(' · ');
+    const fim=x.foi==='habito'?'<span class="mp-selo">✓ já é hábito</span>':x.foi==='fila'?'<span class="mp-selo">📋 na fila</span>':
+      `<div class="cta"><button type="button" class="btn prim" data-mph="${i}">＋ Virar hábito</button><button type="button" class="btn" data-mpd="${i}">Ver desejo</button></div>`;
+    return `<div class="mp-item${x.foi?' foi':''}"><div class="txt">${esc(x.mp.texto)}</div><div class="meta">${meta}</div>${fim}</div>`;
+  }).join('');
   box.innerHTML=`<div class="mp-card" id="mpCard">
-    <div class="lbl">🌱 O último menor passo que você escreveu</div>
-    <div class="txt">${esc(ult.texto)}</div>
-    <div class="meta">${quando} · veio do desejo "${esc(ult.desejoTexto)}"</div>
-    ${cta}
+    <div class="lbl">🌱 ${lista.length>1?'Seus menores passos':'Seu menor passo'}</div>
+    ${itens}
   </div>`;
-  const btnH=$('mpVirarHabito');
-  if(btnH)btnH.onclick=e=>{
-    e.stopPropagation();
-    const d=(S.leiAtracao.desejos||[]).find(x=>x.id===ult.desejoId);
-    if(!d){avisar('Desejo não encontrado.');return;}
-    virarDesejoEmHabito(d, ult.texto);
-  };
-  const btnD=$('mpAbrirDesejo');
-  if(btnD)btnD.onclick=e=>{
-    e.stopPropagation();
-    trocaAba('atracao');
-    setTimeout(()=>abrirDesejo(ult.desejoId),400);
-  };
+  box.querySelectorAll('[data-mph]').forEach(b=>b.onclick=e=>{
+    e.stopPropagation();const x=ordem[+b.dataset.mph];if(x)virarDesejoEmHabito(x.d,x.mp.texto);
+  });
+  box.querySelectorAll('[data-mpd]').forEach(b=>b.onclick=e=>{
+    e.stopPropagation();const x=ordem[+b.dataset.mpd];if(!x)return;
+    trocaAba('atracao');setTimeout(()=>abrirDesejo(x.d.id),400);
+  });
 }
 
 /* ============ ÍCONES DOS HÁBITOS ============ */
