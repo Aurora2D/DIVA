@@ -48,7 +48,7 @@ window.mostrarPremioModal=(function(orig){return function(premio,info){
     const e=o.querySelector('.premio-emoji');
     if(e&&!e.querySelector('img')){
       const parada=window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches;
-      e.innerHTML=`<img src="atracao/biju-celebrando${parada?'-parada':''}.webp?v=1&t=${Date.now()}" alt="" aria-hidden="true">`;
+      e.innerHTML=`<img src="atracao/biju-celebrando${parada?'-parada':''}.webp?v=2&t=${Date.now()}" alt="" aria-hidden="true">`;
     }
     /* o tipo de cuidado, com os nomes do app (sem "linguagens do amor") */
     o.querySelectorAll('#premioModalTags .premio-tag').forEach(t=>{t.textContent=catVer(t.textContent).replace(/^[^\p{L}]+/u,'');});
