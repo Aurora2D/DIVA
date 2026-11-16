@@ -80,7 +80,7 @@ function renderHoje(){
   const ativos=S.habitos.filter(hb=>!hb.pausado);
   const mapaGrupos={};
   ativos.forEach(hb=>{const g=grupoDe(hb);if(!mapaGrupos[g])mapaGrupos[g]=[];mapaGrupos[g].push(hb);});
-  const ordemGrupos=todosGrupos().map(g=>g.id);
+  const ordemGrupos=ordemGruposPerfil();
   const gruposUsados=Object.keys(mapaGrupos).sort((a,b)=>ordemGrupos.indexOf(a)-ordemGrupos.indexOf(b));
   $('gruposHoje').innerHTML=gruposUsados.length?gruposUsados.map(gId=>{
     const meta=todosGrupos().find(g=>g.id===gId)||{emoji:'✨',nome:gId};

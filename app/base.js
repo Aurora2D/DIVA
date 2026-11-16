@@ -175,6 +175,13 @@ const GRUPOS=[{id:'palavras',emoji:'💌',nome:'Palavras que cuidam'},{id:'tempo
 /* categorias antigas dos hábitos -> as cinco linguagens (vale pra hábitos criados antes e pra partes do código que ainda usam os nomes antigos) */
 const GRUPO_ALIAS={corpo:'toque',rituais:'toque',mente:'tempo',arte:'tempo',lar:'servico'};
 const grupoDe=h=>GRUPO_ALIAS[h.grupo]||h.grupo||'essencial';
+/* ordem das categorias: quem fez o teste vê primeiro os dois tipos de cuidado do seu perfil */
+function ordemGruposPerfil(){
+  const ids=todosGrupos().map(g=>g.id);const e=S.estiloAutocuidado;
+  if(!e||!e.feito)return ids;
+  const topo=[e.principal,e.secundaria].filter((x,i,a)=>x&&ids.includes(x)&&a.indexOf(x)===i);
+  return topo.concat(ids.filter(x=>!topo.includes(x)));
+}
 let PRATICAS={'🎤 Treino vocal':['Respiração','Aquecimento vocal','Canto'],'🤍 Toque físico':['Auto-cafuné','Auto-massagem','Creme no corpo','Carinho no Pituca','Carinho na Nica','Banho relaxante','Música enquanto se arruma','Bebida especial','Roupa de cama limpa','Perfume favorito','Batom','Hidratação nos cabelos','Peça de roupa favorita','Joia ou acessório especial'],'⏳ Tempo de qualidade':['Vídeos no YouTube','Música','Dança','Meditação','Jardim do prédio','Culinária','Filme com pipoca','Livro divertido','Caminhada no quarteirão','Viagem','Apreciação da beleza de dentro de casa','Canva por hobby','Direção','Videogame','Duolingo / curso de inteligência emocional','Caminhada no parque','Louça / arrumação da casa','Canto'],'💌 Palavras de afirmação':['Questionário','Conversa com amigos','Terapia','Canto das minhas músicas','Escrita no caderno','Leitura do caderno','Curso online','Livro revigorante','Vídeos da Ana Beatriz']};
 /* Catálogo por estilo: as 2 primeiras aparecem sem teste; depois do teste o estilo principal abre 8 e o secundário 5 */
 const PRATICAS_CATALOGO=[

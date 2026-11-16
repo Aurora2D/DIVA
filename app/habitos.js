@@ -154,7 +154,8 @@ function renderHabitos(){
     bindLongPress(el, menu, ativar, 550);
   });
 
-  $('progressoBox').innerHTML=S.habitos.map(hb=>{
+  const ordemProg=ordemGruposPerfil();const posProg=h=>{const i=ordemProg.indexOf(grupoDe(h));return i<0?999:i;};
+  $('progressoBox').innerHTML=S.habitos.map((hb,i)=>[hb,i]).sort((a,b)=>posProg(a[0])-posProg(b[0])||a[1]-b[1]).map(([hb])=>{
     const feitos=Object.keys(hb.feitos).length;const pronto=feitos>=21;
     const g=todosGrupos().find(x=>x.id===grupoDe(hb));
     const pausado=!!hb.pausado;
