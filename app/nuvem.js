@@ -30,8 +30,8 @@
    - Na tela de consentimento OAuth, incluir o escopo .../auth/drive.appdata e,
      com o app em modo de teste, cadastrar o e-mail da usuária como testadora. */
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-import { getAuth, initializeAuth, indexedDBLocalPersistence, onAuthStateChanged, GoogleAuthProvider, signInWithPopup, signInWithCredential, reauthenticateWithPopup, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-import { getDatabase, ref, get, set, update } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+import { getAuth, initializeAuth, indexedDBLocalPersistence, onAuthStateChanged, GoogleAuthProvider, signInWithPopup, signInWithCredential, reauthenticateWithPopup, reauthenticateWithCredential, deleteUser, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+import { getDatabase, ref, get, set, update, remove } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyAQcFNLHkrNuMN7fJ0E2pbnou4cZy99Tlk",
@@ -428,6 +428,7 @@ const erros = {
   'diva/sem-token': 'O Google não liberou o acesso ao Drive. Tente de novo e marque a permissão do DIVA.',
   'diva/drive-permissao': 'O DIVA não recebeu permissão para a pasta dele no seu Drive. Tente de novo e marque essa permissão.',
   'diva/drive': 'Não consegui falar com o Google Drive agora. Tente de novo.',
+  'auth/requires-recent-login': 'Por segurança, o Google precisa confirmar que é você. Tente de novo e escolha a sua conta.',
   'diva/sem-arquivo-drive': 'Não achei a chave do DIVA no seu Google Drive. Confira se escolheu a conta certa.',
   'diva/drive-nao-bate': 'A chave do Drive não abre este cofre. Confira se escolheu a conta certa.',
   'diva/sem-prf': 'Este aparelho ou navegador não consegue trancar os dados com a digital. Use o Google Drive.',
@@ -439,6 +440,7 @@ const erros = {
 const msgErro = e => erros[e && e.code] || erros[e && e.name] || ('Algo deu errado (' + ((e && e.code) || (e && e.name) || (e && e.message) || 'sem código') + ').');
 
 let modal = null;
+let apagandoConta = false;
 function garanteModal() {
   if (modal) return modal;
   modal = document.createElement('div');
@@ -559,6 +561,7 @@ async function mostraNuvem() {
       prepara('Proteger seus dados', 'O DIVA embaralha seus dados antes de irem para a nuvem. A chave fica numa pasta escondida do seu Google Drive, que só o DIVA enxerga: se trocar de celular, é só entrar com o Google. O Google vai pedir uma permissão a mais para isso.');
       botoes.append(botao('Criar meu cofre', 'prim', acao(async () => { await criaCofre(null); await depoisDeAbrir(); })), sair);
     }
+    botoes.append(botaoApagarConta());
     abre(); return;
   }
 
@@ -572,6 +575,7 @@ async function mostraNuvem() {
   botoes.append(botao('Fechar', 'prim', fecha));
   if (!comDigital && await digitalDisponivel()) { const meta = await leMeta(); botoes.append(botao('Usar a digital neste aparelho', 'sec', acao(async () => { await cadastraDigital(meta); mostraNuvem(); }))); }
   botoes.append(botao('Sair desta conta', 'sec', async () => { await sair_(); }));
+  botoes.append(botaoApagarConta());
   abre();
 }
 
@@ -586,6 +590,51 @@ function esqueciFrase(voltar) {
     botao('Começar o cofre novo', 'prim', acao(async () => { await criaCofre(null, true); await depoisDeAbrir(); })),
     botao('Voltar', 'sec', voltar)
   );
+  abre();
+}
+
+/* Apagar a conta: tira da nuvem tudo o que é da pessoa (dados, chave do Drive e a conta).
+   Os dados que estão neste aparelho NÃO são apagados. */
+function botaoApagarConta() {
+  const b = botao('Apagar minha conta', 'sec', () => confirmaApagarConta());
+  b.style.fontSize = '12.5px'; b.style.opacity = '.75';
+  return b;
+}
+function confirmaApagarConta() {
+  prepara('Apagar sua conta?', 'Isso apaga da nuvem os seus dados guardados, a chave que está na pasta escondida do seu Drive e a sua conta no DIVA. Os dados que estão neste aparelho continuam aqui. Não tem volta.');
+  $('nvBotoes').append(
+    botao('Sim, apagar minha conta', 'prim', acao(async () => { await apagaConta(); })),
+    botao('Voltar', 'sec', mostraNuvem)
+  );
+  abre();
+}
+async function apagaConta() {
+  if (!user) return;
+  const uid = user.uid;
+  let tok;
+  // o Google confirma que é a pessoa (a exclusão da conta exige login recente) e libera a pasta escondida do Drive
+  if (noAppNativo()) {
+    const g = await googleNativo([ESCOPO_DRIVE]);
+    tok = g.accessToken && g.accessToken.token;
+    if (!tok) throw Object.assign(new Error('sem-token'), { code: 'diva/sem-token' });
+    await reauthenticateWithCredential(user, GoogleAuthProvider.credential(g.idToken));
+  } else {
+    tok = await tokenDrive();
+  }
+  const id = await driveAcha(tok);
+  if (id) {
+    const r = await fetch('https://www.googleapis.com/drive/v3/files/' + id, { method: 'DELETE', headers: { Authorization: 'Bearer ' + tok } });
+    if (!r.ok && r.status !== 404) throw erroDrive(r.status);
+  }
+  await remove(ref(db, 'usuarios/' + uid));
+  try { await apagaChave(uid); } catch (e) {}
+  chave = null; chaveAntiga = null;
+  try { localStorage.setItem('divaAdiar', '1'); } catch (e) {}
+  apagandoConta = true;
+  try { await deleteUser(user); } catch (e) { apagandoConta = false; throw e; }
+  if (noAppNativo() && googleNativoPronto) { try { await window.Capacitor.nativePromise('SocialLogin', 'logout', { provider: 'google' }); } catch (e) {} }
+  prepara('Conta apagada', 'Pronto. Seus dados da nuvem e a sua conta foram apagados. Os dados deste aparelho continuam aqui.');
+  $('nvBotoes').append(botao('Fechar', 'prim', fecha));
   abre();
 }
 
@@ -611,6 +660,7 @@ onAuthStateChanged(auth, async (u) => {
   user = u;
   if (!u) {
     chave = null; chaveAntiga = null; setStatus('Desconectada');
+    if (apagandoConta) { apagandoConta = false; return; }
     let adiou = false; try { adiou = !!localStorage.getItem('divaAdiar'); } catch (e) {}
     if (onboardingFeito() && !adiou) setTimeout(() => conviteQuandoLivre(10), 4500);
     else if (modal && !modal.hidden) mostraNuvem();
