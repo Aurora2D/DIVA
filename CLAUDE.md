@@ -129,7 +129,7 @@ teste da tela de consentimento; restrição da chave de API por site (liberar `h
 O destravar por digital pode não funcionar dentro do app (a recuperação pelo Google Drive é o plano B).
 
 ### 3. Botão "apagar minha conta" (antes de o login ir pra loja)
-**Feito num ramo de rascunho (`rascunho-apagar-conta`), não testado em conta real e fora da `main`. Falta a Érica aprovar e testar com uma conta de teste; depois juntar na `main`.** Falta também a regra do banco permitir apagar `usuarios/<uid>` (conferir no Firebase) e o texto da política de privacidade.
+**Feito e na `main` (aprovado pela Érica em 17/nov/2026), mas não testado em conta real. Falta testar com uma conta de teste.** Falta também a regra do banco permitir apagar `usuarios/<uid>` (conferir no Firebase) e o texto da política de privacidade.
 O texto abaixo é o plano original:
 A loja exige de todo app que cria conta. Hoje só existe "Sair da conta" (`sair_` em `app/nuvem.js`).
 Precisa apagar `usuarios/<uid>` no banco, o arquivo na pasta oculta do Drive e a conta do Firebase,
