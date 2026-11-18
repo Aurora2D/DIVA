@@ -60,9 +60,9 @@ async function googleNativo(escopos) {
   }
   let r;
   try { r = await window.Capacitor.nativePromise('SocialLogin', 'login', { provider: 'google', options: escopos ? { scopes: escopos } : {} }); }
-  catch (e) { console.error('login nativo', e); throw Object.assign(new Error('google-nativo'), { code: 'diva/google-nativo', causa: e }); }
+  catch (e) { console.error('login nativo', e); throw Object.assign(new Error('google-nativo'), { code: 'diva/google-nativo', causa: e, detalhe: [e && e.code, e && e.message].filter(Boolean).join(': ').slice(0, 200) }); }
   const g = r && r.result;
-  if (!g || !g.idToken) throw Object.assign(new Error('google-nativo'), { code: 'diva/google-nativo' });
+  if (!g || !g.idToken) throw Object.assign(new Error('google-nativo'), { code: 'diva/google-nativo', detalhe: 'o Google não devolveu o idToken' });
   return g;
 }
 
@@ -437,7 +437,7 @@ const erros = {
   'NotAllowedError': 'A digital foi cancelada ou o tempo acabou. Tente de novo.',
   'InvalidStateError': 'Este aparelho já tem a digital do DIVA. Da próxima vez, é só tocar em "Abrir com a digital".'
 };
-const msgErro = e => erros[e && e.code] || erros[e && e.name] || ('Algo deu errado (' + ((e && e.code) || (e && e.name) || (e && e.message) || 'sem código') + ').');
+const msgErro = e => (e && e.code === 'diva/google-nativo' && e.detalhe) ? erros['diva/google-nativo'] + ' [Detalhe: ' + e.detalhe + ']' : erros[e && e.code] || erros[e && e.name] || ('Algo deu errado (' + ((e && e.code) || (e && e.name) || (e && e.message) || 'sem código') + ').');
 
 let modal = null;
 let apagandoConta = false;
