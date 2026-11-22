@@ -8,6 +8,8 @@ on:
     branches: [main]
     paths-ignore:
       - 'niquinha/**'
+      - 'niquinha-android/**'
+      - '.github/workflows/niquinha-android.yml'
       - 'docs/**'
       - '**.md'
 

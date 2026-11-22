@@ -1,0 +1,60 @@
+name: App Niquinha
+
+# Monta o app de Android da Niquinha (pasta niquinha/) nos servidores do GitHub.
+# Roda sozinho quando a Niquinha muda, ou na mão em Actions > App Niquinha > Run workflow.
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - 'niquinha/**'
+      - 'niquinha-android/**'
+      - '.github/workflows/niquinha-android.yml'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: niquinha-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  montar:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: niquinha-android
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: niquinha-android/package-lock.json
+
+      - uses: actions/setup-java@v6
+        with:
+          distribution: temurin
+          java-version: 21
+
+      - name: Instalar dependências
+        run: npm ci
+
+      - name: Juntar os arquivos da Niquinha e sincronizar com o Android
+        run: npm run android:sync
+
+      - name: Montar o APK (instala direto no celular)
+        working-directory: niquinha-android/android
+        run: ./gradlew assembleDebug --no-daemon
+
+      # Link direto, sem login: sempre no mesmo endereço, trocado a cada montagem.
+      - name: Publicar o APK num link direto
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          cp android/app/build/outputs/apk/debug/app-debug.apk Niquinha.apk
+          gh release view niquinha >/dev/null 2>&1 || gh release create niquinha --prerelease \
+            --title "Niquinha (app de Android)" \
+            --notes "App de Android da Niquinha, montado automaticamente."
+          gh release upload niquinha Niquinha.apk --clobber

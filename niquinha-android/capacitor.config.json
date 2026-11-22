@@ -1,0 +1,9 @@
+{
+  "appId": "com.ericahotts.niquinha",
+  "appName": "Niquinha",
+  "webDir": "www",
+  "backgroundColor": "#FFF1EB",
+  "android": {
+    "allowMixedContent": false
+  }
+}

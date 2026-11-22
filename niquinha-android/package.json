@@ -1,0 +1,18 @@
+{
+  "name": "niquinha",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Niquinha: empacotamento Android da página de brincar (pasta niquinha/)",
+  "scripts": {
+    "www": "sh montar-www.sh",
+    "android:sync": "npm run www && cap sync android"
+  },
+  "dependencies": {
+    "@capacitor/android": "8.6.2",
+    "@capacitor/core": "8.6.2"
+  },
+  "devDependencies": {
+    "@capacitor/cli": "8.6.2",
+    "@capacitor/assets": "3.0.5"
+  }
+}
