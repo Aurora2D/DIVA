@@ -519,7 +519,8 @@ async function mostraNuvem() {
       botao('Entrar com o Google', 'prim', acao(async () => {
         /* dentro do app de Android a janelinha do Google não abre: usa a tela de contas do próprio Android */
         if (noAppNativo()) { const g = await googleNativo(); await signInWithCredential(auth, GoogleAuthProvider.credential(g.idToken)); return; }
-        await signInWithPopup(auth, new GoogleAuthProvider());
+        const pv = new GoogleAuthProvider(); pv.setCustomParameters({ prompt: 'select_account' });
+        await signInWithPopup(auth, pv);
       })),
       botao('Agora não', 'sec', () => { try { localStorage.setItem('divaAdiar', '1'); } catch (e) {} fecha(); })
     );
@@ -574,6 +575,7 @@ async function mostraNuvem() {
   prepara('Tudo certo', 'Seus dados estão sendo guardados na nuvem, embaralhados' + (user.email ? ', na conta ' + user.email : '') + '. Em outro aparelho, entre com a mesma conta Google' + (comDigital ? ' e use a digital ou o Google Drive.' : ' e recupere pelo Google Drive.'));
   botoes.append(botao('Fechar', 'prim', fecha));
   if (!comDigital && await digitalDisponivel()) { const meta = await leMeta(); botoes.append(botao('Usar a digital neste aparelho', 'sec', acao(async () => { await cadastraDigital(meta); mostraNuvem(); }))); }
+  botoes.append(botao('Entrar com outra conta', 'sec', async () => { await sair_(); try { localStorage.removeItem('divaAdiar'); } catch (e) {} setTimeout(mostraNuvem, 400); }));
   botoes.append(botao('Sair desta conta', 'sec', async () => { await sair_(); }));
   botoes.append(botaoApagarConta());
   abre();
@@ -682,6 +684,7 @@ onAuthStateChanged(auth, async (u) => {
 // permite abrir o login de outras telas (Configurações e primeira tela do onboarding)
 window.DIVAnuvem = {
   abrir: () => { try { localStorage.removeItem('divaAdiar'); } catch (e) {} mostraNuvem(); },
-  status: () => statusTxt
+  status: () => statusTxt,
+  sair: () => sair_()
 };
 setStatus(statusTxt);
