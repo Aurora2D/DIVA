@@ -60,6 +60,7 @@ Arquivos criados em 16/nov/2026:
 | `app/ja-faco.js` | Hábitos que a pessoa já faz: comemora ao marcar, sem marcos de 3, 7 e 21 dias |
 | `app/premio-tela.js` | Tela do prêmio clara, com a Biju e pétalas |
 | `app/minhas-frases.js` | Frases próprias por hábito (e a cópia temporária das frases antigas, veja pendência 1) |
+| `app/pessoas.js` | Trocar de pessoa no mesmo aparelho (23/nov). Cada pessoa fica em `divaPessoa_<id>`, lista em `divaPessoas`. Ao trocar, sai da nuvem |
 | `app/completo.js` | Convite de compra e trava das partes pagas. **Desligado** |
 | `android/`, `capacitor.config.json`, `package.json` | App de Android |
 | `.github/workflows/android.yml` | O GitHub monta o app |
